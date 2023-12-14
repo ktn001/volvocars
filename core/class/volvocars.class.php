@@ -1,4 +1,5 @@
 <?php
+// vim: tabstop=4 autoindent
 /* This file is part of Jeedom.
 *
 * Jeedom is free software: you can redistribute it and/or modify
@@ -19,157 +20,124 @@
 require_once __DIR__  . '/../../../../core/php/core.inc.php';
 
 class volvocars extends eqLogic {
-  /*     * *************************Attributs****************************** */
+	/*     * *************************Attributs****************************** */
 
-  /*
-  * Permet de définir les possibilités de personnalisation du widget (en cas d'utilisation de la fonction 'toHtml' par exemple)
-  * Tableau multidimensionnel - exemple: array('custom' => true, 'custom::layout' => false)
-  public static $_widgetPossibility = array();
-  */
+	/*
+	* Permet de définir les possibilités de personnalisation du widget (en cas d'utilisation de la fonction 'toHtml' par exemple)
+	* Tableau multidimensionnel - exemple: array('custom' => true, 'custom::layout' => false)
+	public static $_widgetPossibility = array();
+	*/
 
-  /*
-  * Permet de crypter/décrypter automatiquement des champs de configuration du plugin
-  * Exemple : "param1" & "param2" seront cryptés mais pas "param3"
-  public static $_encryptConfigKey = array('param1', 'param2');
-  */
+	/*
+	* Permet de crypter/décrypter automatiquement des champs de configuration du plugin
+	* Exemple : "param1" & "param2" seront cryptés mais pas "param3"
+	public static $_encryptConfigKey = array('param1', 'param2');
+	*/
 
-  /*     * ***********************Methode static*************************** */
+	/*     * ***********************Methode static*************************** */
 
-  /*
-  * Fonction exécutée automatiquement toutes les minutes par Jeedom
-  public static function cron() {}
-  */
+	/*
+	 * Permet d'indiquer des éléments supplémentaires à remonter dans les informations de configuration
+	 * lors de la création semi-automatique d'un post sur le forum community
+	 public static function getConfigForCommunity() {
+		return "les infos essentiel de mon plugin";
+	 }
+	 */
 
-  /*
-  * Fonction exécutée automatiquement toutes les 5 minutes par Jeedom
-  public static function cron5() {}
-  */
+	 public static function byAccount_id($_account_id, $_onlyEnable = false) {
+		$cars = array();
+		foreach (self::byType(__CLASS__, $_onlyEnable) as $car) {
+			if ($car->getAccount_id() == $_account_id) {
+				$cars[] = $car;
+			}
+		}
+		return $cars;
+	}
 
-  /*
-  * Fonction exécutée automatiquement toutes les 10 minutes par Jeedom
-  public static function cron10() {}
-  */
+	public static function byVin($_vin, $_onlyEnable = false) {
+		return self::byLogicalId($_vin, __CLASS__);
+	}
 
-  /*
-  * Fonction exécutée automatiquement toutes les 15 minutes par Jeedom
-  public static function cron15() {}
-  */
+	/*     * *********************Méthodes d'instance************************* */
 
-  /*
-  * Fonction exécutée automatiquement toutes les 30 minutes par Jeedom
-  public static function cron30() {}
-  */
+	// Fonction exécutée automatiquement avant la création de l'équipement
+	public function preInsert() {
+		if ($this->getVin() != '') {
+			$car = self::byVin($this->getVin());
+			if (is_object($car)){
+				throw new Exception (__("Il y a déjà un véhicule avec ce vin!",__FILE__));
+			}
+		}
+	}
 
-  /*
-  * Fonction exécutée automatiquement toutes les heures par Jeedom
-  public static function cronHourly() {}
-  */
+	// Fonction exécutée automatiquement avant la mise à jour de l'équipement
+	public function preUpdate() {
+		if ($this->getVin() == '') {
+			throw new Exception (__("Le vin n'est pas défini",__FILE__));
+		}
+		$car = self::byVin($this->getVin());
+		if (is_object($car) and ($car->getId() != $this->getId())){
+			throw new Exception (__("Il y a un autre véhicule avec ce vin!",__FILE__));
+		}
+	}
 
-  /*
-  * Fonction exécutée automatiquement tous les jours par Jeedom
-  public static function cronDaily() {}
-  */
-  
-  /*
-  * Permet de déclencher une action avant modification d'une variable de configuration du plugin
-  * Exemple avec la variable "param3"
-  public static function preConfig_param3( $value ) {
-    // do some checks or modify on $value
-    return $value;
-  }
-  */
+	public retrieveInfos() {
+		$account = $this->getAccount();
+	}
 
-  /*
-  * Permet de déclencher une action après modification d'une variable de configuration du plugin
-  * Exemple avec la variable "param3"
-  public static function postConfig_param3($value) {
-    // no return value
-  }
-  */
+	/*
+	* Permet de modifier l'affichage du widget (également utilisable par les commandes)
+	public function toHtml($_version = 'dashboard') {}
+	*/
 
-  /*
-   * Permet d'indiquer des éléments supplémentaires à remonter dans les informations de configuration
-   * lors de la création semi-automatique d'un post sur le forum community
-   public static function getConfigForCommunity() {
-      return "les infos essentiel de mon plugin";
-   }
-   */
+	/*     * **********************Getteur Setteur*************************** */
+	public function setVin($_vin){
+		$this->setLogicalId($_vin);
+		return $this;
+	}
 
-  /*     * *********************Méthodes d'instance************************* */
+	public function getVin(){
+		return $this->getLogicalId();
+	}
 
-  // Fonction exécutée automatiquement avant la création de l'équipement
-  public function preInsert() {
-  }
+	public function setAccount_id($_account_id){
+		$this->setConfiguration('account_id',$_account_id);
+		return $this;
+	}
 
-  // Fonction exécutée automatiquement après la création de l'équipement
-  public function postInsert() {
-  }
+	public function getAccount_id(){
+		return $this->getConfiguration('account_id');
+	}
 
-  // Fonction exécutée automatiquement avant la mise à jour de l'équipement
-  public function preUpdate() {
-  }
+	public function getAccount(){
+		return volvoAccount::byId($this->getAccount_id);
+	}
 
-  // Fonction exécutée automatiquement après la mise à jour de l'équipement
-  public function postUpdate() {
-  }
-
-  // Fonction exécutée automatiquement avant la sauvegarde (création ou mise à jour) de l'équipement
-  public function preSave() {
-  }
-
-  // Fonction exécutée automatiquement après la sauvegarde (création ou mise à jour) de l'équipement
-  public function postSave() {
-  }
-
-  // Fonction exécutée automatiquement avant la suppression de l'équipement
-  public function preRemove() {
-  }
-
-  // Fonction exécutée automatiquement après la suppression de l'équipement
-  public function postRemove() {
-  }
-
-  /*
-  * Permet de crypter/décrypter automatiquement des champs de configuration des équipements
-  * Exemple avec le champ "Mot de passe" (password)
-  public function decrypt() {
-    $this->setConfiguration('password', utils::decrypt($this->getConfiguration('password')));
-  }
-  public function encrypt() {
-    $this->setConfiguration('password', utils::encrypt($this->getConfiguration('password')));
-  }
-  */
-
-  /*
-  * Permet de modifier l'affichage du widget (également utilisable par les commandes)
-  public function toHtml($_version = 'dashboard') {}
-  */
-
-  /*     * **********************Getteur Setteur*************************** */
 }
 
 class volvocarsCmd extends cmd {
-  /*     * *************************Attributs****************************** */
+	/*     * *************************Attributs****************************** */
 
-  /*
-  public static $_widgetPossibility = array();
-  */
+	/*
+	public static $_widgetPossibility = array();
+	*/
 
-  /*     * ***********************Methode static*************************** */
+	/*     * ***********************Methode static*************************** */
 
 
-  /*     * *********************Methode d'instance************************* */
+	/*     * *********************Methode d'instance************************* */
 
-  /*
-  * Permet d'empêcher la suppression des commandes même si elles ne sont pas dans la nouvelle configuration de l'équipement envoyé en JS
-  public function dontRemoveCmd() {
-    return true;
-  }
-  */
+	/*
+	* Permet d'empêcher la suppression des commandes même si elles ne sont pas dans la nouvelle configuration de l'équipement envoyé en JS
+	public function dontRemoveCmd() {
+		return true;
+	}
+	*/
 
-  // Exécution d'une commande
-  public function execute($_options = array()) {
-  }
+	// Exécution d'une commande
+	public function execute($_options = array()) {
+	}
 
-  /*     * **********************Getteur Setteur*************************** */
+	/*     * **********************Getteur Setteur*************************** */
+
 }

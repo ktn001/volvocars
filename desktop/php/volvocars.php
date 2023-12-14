@@ -1,4 +1,7 @@
 <?php
+// vim: tabstop=4 autoindent
+
+require_once __DIR__ . '/../../core/php/volvocars.inc.php';
 if (!isConnect('admin')) {
 	throw new Exception('{{401 - Accès non autorisé}}');
 }
@@ -6,27 +9,48 @@ if (!isConnect('admin')) {
 $plugin = plugin::byId('volvocars');
 sendVarToJS('eqType', $plugin->getId());
 $eqLogics = eqLogic::byType($plugin->getId());
+$accounts = volvoAccount::all();
 ?>
 
 <div class="row row-overflow">
+	<!-- ======================== -->
 	<!-- Page d'accueil du plugin -->
+	<!-- ======================== -->
 	<div class="col-xs-12 eqLogicThumbnailDisplay">
+
 		<div class="row">
 			<div class="col-sm-10">
 				<legend><i class="fas fa-cog"></i> {{Gestion}}</legend>
 				<!-- Boutons de gestion du plugin -->
+				<!-- ============================= -->
 				<div class="eqLogicThumbnailContainer">
-					<div class="cursor eqLogicAction logoPrimary" data-action="add">
-						<i class="fas fa-plus-circle"></i>
+					<div class="cursor accountAction logoPrimary" data-action="add">
+						<i class="fas fa-user-plus"></i>
 						<br>
 						<span>{{Ajouter}}</span>
 					</div>
+					<?php
+					if (count($accounts) > 0) {
+						?>
+						<div class="cursor accountAction" data-action="sync">
+							<i class="fas fa-sync-alt"></i>
+							<br>
+							<span>{{Synchronisation}}</span>
+						</div>
+						<div class="cursor eqLogicAction logoPrimary" data-action="add">
+							<i class="fas fa-plus-circle"></i>
+							<br>
+							<span>{{Ajouter}}</span>
+						</div>
+						<?php
+					}
+					?>
 					<div class="cursor eqLogicAction logoSecondary" data-action="gotoPluginConf">
 						<i class="fas fa-wrench"></i>
 						<br>
 						<span>{{Configuration}}</span>
 					</div>
-				</div>
+				</div> <!-- Boutons de gestion du plugin -->
 			</div>
 			<?php
 			// à conserver
@@ -48,11 +72,52 @@ $eqLogics = eqLogic::byType($plugin->getId());
 			<?php
 			}
 			?>
-		</div>
-		<legend><i class="fas fa-table"></i> {{Mes volvocars}}</legend>
+		</div> <!-- Boutons de gestion du plugin -->
+
+		<!-- Les comptes -->
+		<!-- =========== -->
+		<legend><i class="fas fa-table"></i> {{Mes comptes volvoId}}</legend>
+		<?php
+		if (count($accounts) == 0) {
+			?>
+			<br><div class="text-center" style="font-size:1.2em;font-weight:bold;">{{Aucun compte VolvoId trouvé, cliquer sur "Ajouter" pour commencer}}</div>
+			<?php
+		} else {
+			?>
+			<!-- Champ de recherche -->
+			<div class="input-group" style="margin:5px;">
+				<input class="form-control roundedLeft" placeholder="{{Rechercher}}" id="in_searchAccount">
+				<div class="input-group-btn">
+					<a id="bt_resetSearch" class="btn" style="width:30px"><i class="fas fa-times"></i></a>
+					<a class="btn roundedRight hidden" id="bt_pluginDisplayAsTable" data-coreSupport="1" data-state="0"><i class="fas fa-grip-lines"></i></a>
+				</div>
+			</div>
+			<!-- liste das comptes -->
+			<div class="eqLogicThumbnailContainer" data-type='account'>
+				<?php
+				foreach ($accounts as $account) {
+					echo "<div class='accountDisplayCard cursor' data-account_id='{$account->getId()}' data-account_name='{$account->getName()}'>";
+					echo "<img src='/plugins/volvocars/desktop/img/account.png'/>";
+					echo "<br>";
+					echo "<span class='name'>{$account->getName()}</span>";
+					echo "</div>";
+				}
+				?>
+			</div>
+			<?php
+		}
+		?>
+
+		<!-- Les véhicules -->
+		<!-- ============= -->
+		<legend><i class="fas fa-table"></i> {{Mes véhicules}}</legend>
 		<?php
 		if (count($eqLogics) == 0) {
-			echo '<br><div class="text-center" style="font-size:1.2em;font-weight:bold;">{{Aucun équipement Template trouvé, cliquer sur "Ajouter" pour commencer}}</div>';
+			if (count($accounts) == 0) {
+				echo '<br><div class="text-center" style="font-size:1.2em;font-weight:bold;">{{Vous devez créer un compte volvoId avant de pouvoir créer un véhicule}}</div>';
+			} else {
+				echo '<br><div class="text-center" style="font-size:1.2em;font-weight:bold;">{{Aucun véhicule trouvé, cliquer sur "Ajouter" pour commencer}}</div>';
+			}
 		} else {
 			// Champ de recherche
 			echo '<div class="input-group" style="margin:5px;">';
@@ -152,36 +217,23 @@ $eqLogics = eqLogic::byType($plugin->getId());
 
 							<legend><i class="fas fa-cogs"></i> {{Paramètres spécifiques}}</legend>
 							<div class="form-group">
-								<label class="col-sm-4 control-label">{{Nom du paramètre n°1}}
-									<sup><i class="fas fa-question-circle tooltips" title="{{Renseignez le paramètre n°1 de l'équipement}}"></i></sup>
+								<label class="col-sm-4 control-label">vin
+									<sup><i class="fas fa-question-circle tooltips" title="{{vin du véhicule}}"></i></sup>
 								</label>
 								<div class="col-sm-6">
-									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="param1" placeholder="{{Paramètre n°1}}">
+									<input type="text" class="eqLogicAttr form-control" data-l1key="logicalId" placeholder="{{vin}}">
 								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label"> {{Mot de passe}}
-									<sup><i class="fas fa-question-circle tooltips" title="{{Renseignez le mot de passe}}"></i></sup>
+								<label class="col-sm-4 control-label">{{Compte VolvoId}}
+									<sup><i class="fas fa-question-circle tooltips" title="{{vin du véhicule}}"></i></sup>
 								</label>
 								<div class="col-sm-6">
-									<input type="text" class="eqLogicAttr form-control inputPassword" data-l1key="configuration" data-l2key="password">
-								</div>
-							</div>
-							<!-- Exemple de champ de saisie du cron d'auto-actualisation avec assistant -->
-							<!-- La fonction cron de la classe du plugin doit contenir le code prévu pour que ce champ soit fonctionnel -->
-							<div class="form-group">
-								<label class="col-sm-4 control-label">{{Auto-actualisation}}
-									<sup><i class="fas fa-question-circle tooltips" title="{{Fréquence de rafraîchissement des commandes infos de l'équipement}}"></i></sup>
-								</label>
-								<div class="col-sm-6">
-									<div class="input-group">
-										<input type="text" class="eqLogicAttr form-control roundedLeft" data-l1key="configuration" data-l2key="autorefresh" placeholder="{{Cliquer sur ? pour afficher l'assistant cron}}">
-										<span class="input-group-btn">
-											<a class="btn btn-default cursor jeeHelper roundedRight" data-helper="cron" title="Assistant cron">
-												<i class="fas fa-question-circle"></i>
-											</a>
-										</span>
-									</div>
+									<select id="sel_account" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="account_id">
+									<?php
+									foreach ($accounts as $account) {
+										echo "<option value='{$account->getId()}'>{$account->getName()}</option>";
+									}
+									?>
+									</select>
 								</div>
 							</div>
 						</div>
