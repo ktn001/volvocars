@@ -67,7 +67,7 @@ class volvocars extends eqLogic {
 		}
 		return $cars;
 	}
-		
+
 
 	/*     * *********************Méthodes d'instance************************* */
 
@@ -92,6 +92,11 @@ class volvocars extends eqLogic {
 		}
 	}
 
+	public function synchronize() {
+		$this->updateDetails();
+		$this->createCmds();
+	}
+
 	public function updateDetails() {
 		$changed = false;
 		$account = $this->getAccount();
@@ -103,10 +108,12 @@ class volvocars extends eqLogic {
 		if (! isset($details['descriptions'])){
 			 log::add("volvocars","error",(__("Pas de key 'descriptions' dans les détails[data]",__FILE__)));
 		} else {
+
 			// Le modèle
 			// ---------
 			if (isset($details['descriptions']['model'])) {
 				if ($details['descriptions']['model'] != $this->getConfiguration('model')) {
+					log::add("volvocars","info",sprintf(__("Mise à jour du modèle pour le véhicule %s",__FILE__),$this->getVin()));
 					$this->setConfiguration('model',$details['descriptions']['model']);
 					$changed = true;
 					if ($this->getName() == $this->getVin()) {
@@ -132,17 +139,19 @@ class volvocars extends eqLogic {
 			log::add("volvocars","warning",sprintf(__("L'année de construction du le véhicule %s indéninie",__FILE__),$this->getVin()));
 		} else {
 			if ($details['modelYear'] != $this->getConfiguration('modelYear')){
+				log::add("volvocars","info",sprintf(__("Mise à jour de l'année pour le véhicule %s",__FILE__),$this->getVin()));
 				$this->setConfiguration('modelYear',$details['modelYear']);
 				$changed = true;
 			}
 		}
-		
+
 		// Couleur
 		// -------
 		if (! isset($details['externalColour'])) {
 			log::add("volvocars","warning",sprintf(__("la couleur du véhicule %s n'est pas définie",__FILE__),$this->getVin()));
 		} else {
 			if ($details['externalColour'] != $this->getConfiguration('externalColour')){
+				log::add("volvocars","info",sprintf(__("Mise à jour de la couleur pour le véhicule %s",__FILE__),$this->getVin()));
 				$this->setConfiguration('externalColour',$details['externalColour']);
 				$changed = true;
 			}
@@ -164,6 +173,7 @@ class volvocars extends eqLogic {
 					$gearbox = $details['gearbox'];
 			}
 			if ($gearbox != $this->getConfiguration('gearbox')){
+				log::add("volvocars","info",sprintf(__("Mise à jour du type de boîte à vitesse pour le véhicule %s",__FILE__),$this->getVin()));
 				$this->setConfiguration('gearbox',$gearbox);
 				$changed = true;
 			}
@@ -194,6 +204,7 @@ class volvocars extends eqLogic {
 					$fuelType = $details['fuelType'];
 			}
 			if ($fuelType != $this->getConfiguration('fuelType')){
+				log::add("volvocars","info",sprintf(__("Mise à jour du carburant pour le véhicule %s",__FILE__),$this->getVin()));
 				$this->setConfiguration('fuelType',$fuelType);
 				$changed = true;
 			}
@@ -203,6 +214,7 @@ class volvocars extends eqLogic {
 		// -----------------
 		if (isset($details['batteryCapacityKWH'])){
 			if ($details['batteryCapacityKWH'] != $this->getConfiguration('batteryCapacityKWH')){
+				log::add("volvocars","info",sprintf(__("Mise à jour da capacité de la batterie pour le véhicule %s",__FILE__),$this->getVin()));
 				$this->setConfiguration('batteryCapacityKWH',$details['batteryCapacityKWH']);
 				$changed = true;
 			}
@@ -211,10 +223,74 @@ class volvocars extends eqLogic {
 		if ($changed) {
 			$this->save();
 		}
-		log::add("volvocars","debug", print_r($details,true));
-
 	}
 
+	public function createCmds() {
+		$account = $this->getAccount();
+		$windowsState = $account->windowsState($this->getVin());
+		if (! isset($windowsState['data'])){
+			throw new Exception (__("Pas de key 'data' dans les infos des fenêtres",__FILE__));
+		}
+		$windowsState = $windowsState['data'];
+		foreach (array_keys($windowsState) as $key) {
+			$logicalId = [];
+			$name = [];
+			switch ($key) {
+				case 'frontLeftWindow':
+					$logicalId['c'] = 'win_fl_closed';
+					$logicalId['s'] = 'win_fl_state';
+					$name['c'] = __('fenêtre avant gauche fermée',__FILE__);
+					$name['s'] = __('état fenêtre avant gauche',__FILE__);
+					break;
+				case 'frontRightWindow':
+					$logicalId['c'] = 'win_fr_closed';
+					$logicalId['s'] = 'win_fr_state';
+					$name['c'] = __('fenêtre avant droite fermée',__FILE__);
+					$name['s'] = __('état fenêtre avant droite',__FILE__);
+					break;
+				case 'rearLeftWindow':
+					$logicalId['c'] = 'win_rl_closed';
+					$logicalId['s'] = 'win_rl_state';
+					$name['c'] = __('fenêtre arrière gauche fermée',__FILE__);
+					$name['s'] = __('état fenêtre arrière gauche',__FILE__);
+					break;
+				case 'rearRightWindow':
+					$logicalId['c'] = 'win_rr_closed';
+					$logicalId['s'] = 'win_rr_state';
+					$name['c'] = __('fenêtre arrière droite fermée',__FILE__);
+					$name['s'] = __('état fenêtre arrière droite',__FILE__);
+					break;
+				case 'sunroof':
+					$logicalId['c'] = 'roof_closed';
+					$logicalId['s'] = 'roof_state';
+					$name['c'] = __('toit fermé',__FILE__);
+					$name['s'] = __('état toit',__FILE__);
+					break;
+			}
+			foreach (['c', 's'] as $i) {
+				switch ($i) {
+					case 'c':
+						$subType = 'binary';
+						break;
+					case 's':
+						$subType = 'numeric';
+						break;
+				}
+				$cmd = $this->getCmd('info',$logicalId[$i]);
+				if (is_object($cmd)) {
+					continue;
+				}
+				log::add("volvocars","info",sprintf(__("Création de la commande %s",__FILE__),$logicalId[$i]));
+				$cmd = new volvocarsCmd();
+				$cmd->setEqLogic_id($this->getId());
+				$cmd->setLogicalId($logicalId[$i]);
+				$cmd->setName($name[$i]);
+				$cmd->setType('info');
+				$cmd->setSubType($subType);
+				$cmd->save();
+			}
+		}
+	}
 	/*
 	* Permet de modifier l'affichage du widget (également utilisable par les commandes)
 	public function toHtml($_version = 'dashboard') {}

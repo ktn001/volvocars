@@ -292,7 +292,7 @@ class volvoAccount {
 				$car->setVin($vin);
 				$car->save();
 			}
-			$car->UpdateDetails();
+			$car->synchronize();
 		}
 	}
 
@@ -306,6 +306,15 @@ class volvoAccount {
 		return is_json($content,$content);
 	}
 
+	public function windowsState($vin) {
+		$session = $this->session(sprintf(self::WINDOWS_STATE_URL,$vin));
+		$content = curl_exec($session);
+		$httpCode = curl_getinfo($session,CURLINFO_HTTP_CODE);
+		if ( $httpCode != 200) {
+			throw new Exception (sprintf(__("Erreur de la récupération de infos fenêtres du véhicule '%s' (http_code: %s)",__FILE__), $vin, $httpCode));
+		}
+		return is_json($content,$content);
+	}
 	/* *********************************************** */
 	/* *************** Getters setters *************** */
 	/* *********************************************** */
