@@ -58,6 +58,17 @@ class volvocars extends eqLogic {
 		return self::byLogicalId($_vin, __CLASS__);
 	}
 
+	public static function byName($_name, $_onlyEnable = false) {
+		$cars = array();
+		foreach (self::byType(__CLASS__, $_onlyEnable) as $car) {
+			if ($car->getName() == $_name) {
+				$cars[] = $car;
+			}
+		}
+		return $cars;
+	}
+		
+
 	/*     * *********************Méthodes d'instance************************* */
 
 	// Fonction exécutée automatiquement avant la création de l'équipement
@@ -81,8 +92,127 @@ class volvocars extends eqLogic {
 		}
 	}
 
-	public retrieveInfos() {
+	public function updateDetails() {
+		$changed = false;
 		$account = $this->getAccount();
+		$details = $account->carDetails($this->getVin());
+		if (! isset($details['data'])){
+			throw new Exception (__("Pas de key 'data' dans les détails",__FILE__));
+		}
+		$details = $details['data'];
+		if (! isset($details['descriptions'])){
+			 log::add("volvocars","error",(__("Pas de key 'descriptions' dans les détails[data]",__FILE__)));
+		} else {
+			// Le modèle
+			// ---------
+			if (isset($details['descriptions']['model'])) {
+				if ($details['descriptions']['model'] != $this->getConfiguration('model')) {
+					$this->setConfiguration('model',$details['descriptions']['model']);
+					$changed = true;
+					if ($this->getName() == $this->getVin()) {
+						if (count(self::byName($details['descriptions']['model'])) == 0) {
+							$this->setName($details['descriptions']['model']);
+						} else {
+							$i = 1;
+							$name = $details['descriptions']['model'] . ' (' . $i . ')';
+							while (count(self::byName($name)) > 0) {
+								$i += 1;
+								$name = $details['descriptions']['model'] . ' (' . $i . ')';
+							}
+							$this->setName($name);
+						}
+					}
+				}
+			}
+		}
+
+		// L'année
+		// -------
+		if (! isset($details['modelYear'])) {
+			log::add("volvocars","warning",sprintf(__("L'année de construction du le véhicule %s indéninie",__FILE__),$this->getVin()));
+		} else {
+			if ($details['modelYear'] != $this->getConfiguration('modelYear')){
+				$this->setConfiguration('modelYear',$details['modelYear']);
+				$changed = true;
+			}
+		}
+		
+		// Couleur
+		// -------
+		if (! isset($details['externalColour'])) {
+			log::add("volvocars","warning",sprintf(__("la couleur du véhicule %s n'est pas définie",__FILE__),$this->getVin()));
+		} else {
+			if ($details['externalColour'] != $this->getConfiguration('externalColour')){
+				$this->setConfiguration('externalColour',$details['externalColour']);
+				$changed = true;
+			}
+		}
+
+		// Boîte à vitesse
+		// ---------------
+		if (! isset($details['gearbox'])) {
+			log::add("volvocars","warning",sprintf(__("Le type de boîte à vitesse n'est pas défini pour le véhicule %s",__FILE__),$this->getVin()));
+		} else {
+			switch ($details['gearbox']) {
+				case 'AUTOMATIC':
+					$gearbox = __('Automatique',__FILE__);
+					break;
+				case 'MANUAL':
+					$gearbox = __('Manuelle',__FILE__);
+					break;
+				default:
+					$gearbox = $details['gearbox'];
+			}
+			if ($gearbox != $this->getConfiguration('gearbox')){
+				$this->setConfiguration('gearbox',$gearbox);
+				$changed = true;
+			}
+		}
+
+		// Carburant
+		// ---------
+		if (! isset($details['fuelType'])) {
+			log::add("volvocars","warning",sprintf(__("Le carburant n'est pas défini pour le véicule %s",__FILE__),$this->getVin()));
+		} else {
+			switch ($details['fuelType']) {
+				case 'DIESEL':
+					$fuelType = __('Diesel',__FILE__);
+					break;
+				case 'PETROL':
+					$fuelType = __('Essence',__FILE__);
+					break;
+				case 'PETROL/ELECTRIC':
+					$fuelType = __('Hybride',__FILE__);
+					break;
+				case 'ELECTRIC':
+					$fuelType = __('Electricité',__FILE__);
+					break;
+				case 'NONE':
+					$fuelType = __('Aucun',__FILE__);
+					break;
+				default:
+					$fuelType = $details['fuelType'];
+			}
+			if ($fuelType != $this->getConfiguration('fuelType')){
+				$this->setConfiguration('fuelType',$fuelType);
+				$changed = true;
+			}
+		}
+
+		// Capacité batterie
+		// -----------------
+		if (isset($details['batteryCapacityKWH'])){
+			if ($details['batteryCapacityKWH'] != $this->getConfiguration('batteryCapacityKWH')){
+				$this->setConfiguration('batteryCapacityKWH',$details['batteryCapacityKWH']);
+				$changed = true;
+			}
+		}
+
+		if ($changed) {
+			$this->save();
+		}
+		log::add("volvocars","debug", print_r($details,true));
+
 	}
 
 	/*
@@ -110,7 +240,11 @@ class volvocars extends eqLogic {
 	}
 
 	public function getAccount(){
-		return volvoAccount::byId($this->getAccount_id);
+		$account = volvoAccount::byId($this->getAccount_id());
+		if (!is_object($account)) {
+			throw new Exception (sprintf(__("L'account '%s' est introuvable",__FILE__),$this->getAccount_id()));
+		}
+		return $account;
 	}
 
 }

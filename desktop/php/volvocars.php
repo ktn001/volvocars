@@ -174,7 +174,7 @@ $accounts = volvoAccount::all();
 						<div class="col-lg-6">
 							<legend><i class="fas fa-wrench"></i> {{Paramètres généraux}}</legend>
 							<div class="form-group">
-								<label class="col-sm-4 control-label">{{Nom de l'équipement}}</label>
+								<label class="col-sm-4 control-label">{{Nom du véhicule}}</label>
 								<div class="col-sm-6">
 									<input type="text" class="eqLogicAttr form-control" data-l1key="id" style="display:none;">
 									<input type="text" class="eqLogicAttr form-control" data-l1key="name" placeholder="{{Nom de l'équipement}}">
@@ -223,6 +223,8 @@ $accounts = volvoAccount::all();
 								<div class="col-sm-6">
 									<input type="text" class="eqLogicAttr form-control" data-l1key="logicalId" placeholder="{{vin}}">
 								</div>
+							</div>
+							<div class="form-group">
 								<label class="col-sm-4 control-label">{{Compte VolvoId}}
 									<sup><i class="fas fa-question-circle tooltips" title="{{vin du véhicule}}"></i></sup>
 								</label>
@@ -234,6 +236,44 @@ $accounts = volvoAccount::all();
 									}
 									?>
 									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">{{Modèle}}
+									<sup><i class="fas fa-question-circle tooltips" title="{{Modèle du véhicule}}"></i></sup>
+								</label>
+								<div class="col-sm-6">
+									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="model" placeholder="{{Modèle}}">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">{{Couleur}}</label>
+								<div class="col-sm-6">
+									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="externalColour" placeholder="{{Couleur}}">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">{{Année}}</label>
+								<div class="col-sm-6">
+									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="modelYear" placeholder="{{Année}}">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">{{Carburant}}</label>
+								<div class="col-sm-6">
+									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="fuelType" placeholder="{{Carburant}}">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">{{Capacité de la batterie (KWH)}}</label>
+								<div class="col-sm-6">
+									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="batteryCapacityKWH" placeholder="KWH">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">{{Boîte à vitesse}}</label>
+								<div class="col-sm-6">
+									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="gearbox" placeholder="{{Boîte à vitesse}}">
 								</div>
 							</div>
 						</div>
