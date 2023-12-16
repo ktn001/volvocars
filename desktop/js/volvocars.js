@@ -220,8 +220,29 @@ $('.eqLogicThumbnailContainer[data-type=account]').off().on('click','.accountDis
 	editAccount($(this).data('account_id'))
 })
 
+/*
+ * Action du bouton Editer
+ */
+$('.eqLogicAction[data-action=edit]').off('click').on('click',function() {
+	bootbox.alert({
+		message: '{{Les données modifiées seront remises à jour lors de la prochaine synchronisation!}}',
+		callback : function(){
+			$('.eqLogicAction[data-action=edit]').addClass('hidden')
+			$('.eqLogicAction[data-action=protect]').removeClass('hidden')
+			$('.eqLogicAttr.sensible').removeClass('disabled')
+		}
+	})
+})
 
-
+/*
+ * Action du bouton Protéger
+ */
+$('.eqLogicAction[data-action=protect]').off('click').on('click',function() {
+	$(this).addClass('hidden')
+	$('.eqLogicAction[data-action=edit]').removeClass('hidden')
+	$('.eqLogicAttr.sensible').addClass('disabled')
+})
+$('.eqLogicAction[data-action=protect]').trigger('click')
 
 /* Fonction permettant l'affichage des commandes dans l'équipement */
 function addCmdToTable(_cmd) {

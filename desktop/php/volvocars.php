@@ -221,15 +221,15 @@ $accounts = volvoAccount::all();
 									<sup><i class="fas fa-question-circle tooltips" title="{{vin du véhicule}}"></i></sup>
 								</label>
 								<div class="col-sm-6">
-									<input type="text" class="eqLogicAttr form-control" data-l1key="logicalId" placeholder="{{vin}}">
+									<input type="text" class="eqLogicAttr form-control sensible" data-l1key="logicalId" placeholder="{{vin}}">
 								</div>
 							</div>
 							<div class="form-group">
 								<label class="col-sm-4 control-label">{{Compte VolvoId}}
-									<sup><i class="fas fa-question-circle tooltips" title="{{vin du véhicule}}"></i></sup>
+									<sup><i class="fas fa-question-circle tooltips" title="{{Compte VolvoId pour la gestion du véhicule}}"></i></sup>
 								</label>
 								<div class="col-sm-6">
-									<select id="sel_account" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="account_id">
+									<select id="sel_account" class="eqLogicAttr form-control sensible" data-l1key="configuration" data-l2key="account_id">
 									<?php
 									foreach ($accounts as $account) {
 										echo "<option value='{$account->getId()}'>{$account->getName()}</option>";
@@ -243,37 +243,45 @@ $accounts = volvoAccount::all();
 									<sup><i class="fas fa-question-circle tooltips" title="{{Modèle du véhicule}}"></i></sup>
 								</label>
 								<div class="col-sm-6">
-									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="model" placeholder="{{Modèle}}">
+									<input type="text" class="eqLogicAttr form-control sensible" data-l1key="configuration" data-l2key="model" placeholder="{{Modèle}}">
 								</div>
 							</div>
 							<div class="form-group">
 								<label class="col-sm-4 control-label">{{Couleur}}</label>
 								<div class="col-sm-6">
-									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="externalColour" placeholder="{{Couleur}}">
+									<input type="text" class="eqLogicAttr form-control sensible" data-l1key="configuration" data-l2key="externalColour" placeholder="{{Couleur}}">
 								</div>
 							</div>
 							<div class="form-group">
 								<label class="col-sm-4 control-label">{{Année}}</label>
 								<div class="col-sm-6">
-									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="modelYear" placeholder="{{Année}}">
+									<input type="text" class="eqLogicAttr form-control sensible" data-l1key="configuration" data-l2key="modelYear" placeholder="{{Année}}">
 								</div>
 							</div>
 							<div class="form-group">
 								<label class="col-sm-4 control-label">{{Carburant}}</label>
 								<div class="col-sm-6">
-									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="fuelType" placeholder="{{Carburant}}">
+									<input type="text" class="eqLogicAttr form-control sensible" data-l1key="configuration" data-l2key="fuelType" placeholder="{{Carburant}}">
 								</div>
 							</div>
 							<div class="form-group">
 								<label class="col-sm-4 control-label">{{Capacité de la batterie (KWH)}}</label>
 								<div class="col-sm-6">
-									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="batteryCapacityKWH" placeholder="KWH">
+									<input type="text" class="eqLogicAttr form-control sensible" data-l1key="configuration" data-l2key="batteryCapacityKWH" placeholder="KWH">
 								</div>
 							</div>
 							<div class="form-group">
 								<label class="col-sm-4 control-label">{{Boîte à vitesse}}</label>
 								<div class="col-sm-6">
-									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="gearbox" placeholder="{{Boîte à vitesse}}">
+									<input type="text" class="eqLogicAttr form-control sensible" data-l1key="configuration" data-l2key="gearbox" placeholder="{{Boîte à vitesse}}">
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-sm-4">
+								</div>
+								<div class="col-sm-6">
+									<a class="btn btn-sm btn-danger eqLogicAction pull-right" data-action="edit"><i class="fas fa-edit"></i> {{Editer}}</a>
+									<a class="btn btn-sm btn-success eqLogicAction pull-right" data-action="protect"><i class="fas fa-ban"></i> {{Protéger}}</a>
 								</div>
 							</div>
 						</div>
