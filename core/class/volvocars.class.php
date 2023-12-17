@@ -94,7 +94,7 @@ class volvocars extends eqLogic {
 
 	public function synchronize() {
 		$this->updateDetails();
-		$this->createCmds();
+		$this->retrieveInfos(true);
 	}
 
 	public function updateDetails() {
@@ -225,7 +225,11 @@ class volvocars extends eqLogic {
 		}
 	}
 
-	public function createCmds() {
+	public function retrieveInfos($createCmds=false) {
+		$this->retrieveWindowsInfos($createCmds);
+	}
+
+	public function retrieveWindowsInfos($createCmds=false) {
 		$account = $this->getAccount();
 		$windowsState = $account->windowsState($this->getVin());
 		if (! isset($windowsState['data'])){
@@ -276,21 +280,44 @@ class volvocars extends eqLogic {
 						$subType = 'numeric';
 						break;
 				}
-				$cmd = $this->getCmd('info',$logicalId[$i]);
-				if (is_object($cmd)) {
-					continue;
+				if ($createCmds) {
+					$cmd = $this->getCmd('info',$logicalId[$i]);
+					if (! is_object($cmd)) {
+						log::add("volvocars","info",sprintf(__("Création de la commande %s",__FILE__),$logicalId[$i]));
+						$cmd = new volvocarsCmd();
+						$cmd->setEqLogic_id($this->getId());
+						$cmd->setLogicalId($logicalId[$i]);
+						$cmd->setName($name[$i]);
+						$cmd->setType('info');
+						$cmd->setSubType($subType);
+						$cmd->save();
+					}
 				}
-				log::add("volvocars","info",sprintf(__("Création de la commande %s",__FILE__),$logicalId[$i]));
-				$cmd = new volvocarsCmd();
-				$cmd->setEqLogic_id($this->getId());
-				$cmd->setLogicalId($logicalId[$i]);
-				$cmd->setName($name[$i]);
-				$cmd->setType('info');
-				$cmd->setSubType($subType);
-				$cmd->save();
 			}
+			log::add("volvocars","debug","DDD " . print_r($windowsState[$key],true));
+			$value = [];
+			switch ($windowsState[$key]['value']){
+				case 'UNSPECIFIED':
+					$value['c'] = 0;
+					$value['s'] = -1;
+					break;
+				case 'CLOSED':
+					$value['c'] = 1;
+					$value['s'] = 0;
+					break;
+				case 'AJAR':
+					$value['c'] = 0;
+					$value['s'] = 1;
+					break;
+				case 'OPEN':
+					$value['c'] = 0;
+					$value['s'] = 2;
+					break;
+			}
+			$time = date('Y-m-d H:i:s', strtotime($windowsState[$key]['timestamp']));
 		}
 	}
+
 	/*
 	* Permet de modifier l'affichage du widget (également utilisable par les commandes)
 	public function toHtml($_version = 'dashboard') {}
