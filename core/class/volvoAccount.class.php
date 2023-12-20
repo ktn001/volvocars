@@ -21,11 +21,12 @@ class volvoAccount {
 
 	const OAUTH_URL = "https://volvoid.eu.volvocars.com/as/token.oauth2";
 	const VEHICLES_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles";
+	const COMMANDS_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands";
 	const VEHICLE_DETAILS_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s";
 	const WINDOWS_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/windows";
 	const CLIMATE_START_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands/climatization-start";
 	const CLIMATE_STOP_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands/climatization-stop";
-	const LOCK_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/doors";
+	const DOORS_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/doors";
 	const CAR_LOCK_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands/lock";
 	const CAR_UNLOCK_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands/unlock";
 	const RECHARGE_STATE_URL = "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status";
@@ -296,25 +297,32 @@ class volvoAccount {
 		}
 	}
 
-	public function CarDetails($vin) {
-		$session = $this->session(sprintf(self::VEHICLE_DETAILS_URL,$vin));
+	public function getUrl($url) {
+		$session = $this->session($url);
 		$content = curl_exec($session);
 		$httpCode = curl_getinfo($session,CURLINFO_HTTP_CODE);
 		if ( $httpCode != 200) {
-			throw new Exception (sprintf(__("Erreur de la récupération des détails du véhicule '%s' (http_code: %s)",__FILE__), $vin, $httpCode));
+			throw new Exception (sprintf(__("Erreur de la récupération d'infos pour le  véhicule '%s' (http_code: %s)",__FILE__), $vin, $httpCode));
 		}
 		return is_json($content,$content);
 	}
 
-	public function windowsState($vin) {
-		$session = $this->session(sprintf(self::WINDOWS_STATE_URL,$vin));
-		$content = curl_exec($session);
-		$httpCode = curl_getinfo($session,CURLINFO_HTTP_CODE);
-		if ( $httpCode != 200) {
-			throw new Exception (sprintf(__("Erreur de la récupération de infos fenêtres du véhicule '%s' (http_code: %s)",__FILE__), $vin, $httpCode));
-		}
-		return is_json($content,$content);
+	public function CarDetails($vin) {
+		return $this->getUrl(sprintf(self::VEHICLE_DETAILS_URL,$vin));
 	}
+
+	public function windowsState($vin) {
+		return $this->getUrl(sprintf(self::WINDOWS_STATE_URL,$vin));
+	}
+
+	public function doorsState($vin) {
+		return $this->getUrl(sprintf(self::DOORS_STATE_URL,$vin));
+	}
+
+	public function commands($vin) {
+		return $this->getUrl(sprintf(self::COMMANDS_URL,$vin));
+	}
+
 	/* *********************************************** */
 	/* *************** Getters setters *************** */
 	/* *********************************************** */

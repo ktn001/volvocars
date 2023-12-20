@@ -23,15 +23,15 @@ class volvocars extends eqLogic {
 	/*     * *************************Attributs****************************** */
 
 	/*
-	* Permet de définir les possibilités de personnalisation du widget (en cas d'utilisation de la fonction 'toHtml' par exemple)
-	* Tableau multidimensionnel - exemple: array('custom' => true, 'custom::layout' => false)
-	public static $_widgetPossibility = array();
+	 * Permet de définir les possibilités de personnalisation du widget (en cas d'utilisation de la fonction 'toHtml' par exemple)
+	 * Tableau multidimensionnel - exemple: array('custom' => true, 'custom::layout' => false)
+	 * public static $_widgetPossibility = array();
 	*/
 
 	/*
-	* Permet de crypter/décrypter automatiquement des champs de configuration du plugin
-	* Exemple : "param1" & "param2" seront cryptés mais pas "param3"
-	public static $_encryptConfigKey = array('param1', 'param2');
+	 * Permet de crypter/décrypter automatiquement des champs de configuration du plugin
+	 * Exemple : "param1" & "param2" seront cryptés mais pas "param3"
+	 * public static $_encryptConfigKey = array('param1', 'param2');
 	*/
 
 	/*     * ***********************Methode static*************************** */
@@ -39,12 +39,12 @@ class volvocars extends eqLogic {
 	/*
 	 * Permet d'indiquer des éléments supplémentaires à remonter dans les informations de configuration
 	 * lors de la création semi-automatique d'un post sur le forum community
-	 public static function getConfigForCommunity() {
-		return "les infos essentiel de mon plugin";
-	 }
+	 * public static function getConfigForCommunity() {
+	 *	return "les infos essentiel de mon plugin";
+	 * }
 	 */
 
-	 public static function byAccount_id($_account_id, $_onlyEnable = false) {
+	public static function byAccount_id($_account_id, $_onlyEnable = false) {
 		$cars = array();
 		foreach (self::byType(__CLASS__, $_onlyEnable) as $car) {
 			if ($car->getAccount_id() == $_account_id) {
@@ -68,6 +68,36 @@ class volvocars extends eqLogic {
 		return $cars;
 	}
 
+	private static function convertKeyword($keyword, $ignoreUnspecified = true) {
+		$value = [];
+		switch ($keyword){
+			case 'CLOSED':
+			case 'LOCKED':
+				$value['c'] = 1;
+				$value['o'] = 0;
+				$value['s'] = 0;
+				break;
+			case 'AJAR':
+				$value['c'] = 0;
+				$value['o'] = 0;
+				$value['s'] = 1;
+				break;
+			case 'OPEN':
+			case 'UNLOCKED':
+				$value['c'] = 0;
+				$value['o'] = 1;
+				$value['s'] = 2;
+				break;
+			case 'UNSPECIFIED':
+				if (! $ignoreUnspecified) {
+					$value['c'] = 0;
+					$value['o'] = 0;
+					$value['s'] = -1;
+				}
+				break;
+		}
+		return $value;
+	}
 
 	/*     * *********************Méthodes d'instance************************* */
 
@@ -92,9 +122,20 @@ class volvocars extends eqLogic {
 		}
 	}
 
+	public function getImage() {
+		$img = $this->getVin() .'.png';
+		$imgPath = __DIR__ . '/../../data/' . $img;
+		if (file_exists($imgPath)){
+			return '/plugins/volvocars/data/' . $img;
+		}
+		$plugin = plugin::byId($this->getEqType_name());
+        return $plugin->getPathImgIcon();
+	}
+
 	public function synchronize() {
 		$this->updateDetails();
 		$this->retrieveInfos(true);
+		$this->updateActionCmds();
 	}
 
 	public function updateDetails() {
@@ -105,8 +146,9 @@ class volvocars extends eqLogic {
 			throw new Exception (__("Pas de key 'data' dans les détails",__FILE__));
 		}
 		$details = $details['data'];
+		log::add("volvocars","debug","DETAILS: " . json_encode($details));
 		if (! isset($details['descriptions'])){
-			 log::add("volvocars","error",(__("Pas de key 'descriptions' dans les détails[data]",__FILE__)));
+			log::add("volvocars","error",(__("Pas de key 'descriptions' dans les détails[data]",__FILE__)));
 		} else {
 
 			// Le modèle
@@ -187,18 +229,28 @@ class volvocars extends eqLogic {
 			switch ($details['fuelType']) {
 				case 'DIESEL':
 					$fuelType = __('Diesel',__FILE__);
+					$electric = 0;
+					$combustion = 1;
 					break;
 				case 'PETROL':
 					$fuelType = __('Essence',__FILE__);
+					$electric = 0;
+					$combustion = 1;
 					break;
 				case 'PETROL/ELECTRIC':
 					$fuelType = __('Hybride',__FILE__);
+					$electric = 1;
+					$combustion = 1;
 					break;
 				case 'ELECTRIC':
 					$fuelType = __('Electricité',__FILE__);
+					$electric = 1;
+					$combustion = 0;
 					break;
 				case 'NONE':
 					$fuelType = __('Aucun',__FILE__);
+					$electric = 0;
+					$combustion = 0;
 					break;
 				default:
 					$fuelType = $details['fuelType'];
@@ -206,6 +258,8 @@ class volvocars extends eqLogic {
 			if ($fuelType != $this->getConfiguration('fuelType')){
 				log::add("volvocars","info",sprintf(__("Mise à jour du carburant pour le véhicule %s",__FILE__),$this->getVin()));
 				$this->setConfiguration('fuelType',$fuelType);
+				$this->setConfiguration('heatEngine',$combustion);
+				$this->setConfiguration('electricEngine',$electric);
 				$changed = true;
 			}
 		}
@@ -220,13 +274,213 @@ class volvocars extends eqLogic {
 			}
 		}
 
+		// Les images
+		// ----------
+		if (isset($details['images'])){
+			if (isset($details['images']['exteriorImageUrl'])){
+				$url = $details['images']['exteriorImageUrl'];
+				$parsedURL = parse_url($url);
+				parse_str($parsedURL['query'],$params);
+				$params['bg'] = 'ffffff00';
+				$params['w'] = '384';
+				$parsedURL['query'] = http_build_query($params);
+				$url = ((isset($parsedURL['scheme'])) ? $parsedURL['scheme'] . '://' : '')
+					  .((isset($parsedURL['user'])) ? $parsedURL['user'] . ((isset($parsedURL['pass'])) ? ':' . $parsedURL['pass'] : '') .'@' : '')
+					  .((isset($parsedURL['host'])) ? $parsedURL['host'] : '')
+					  .((isset($parsedURL['port'])) ? ':' . $parsedURL['port'] : '')
+					  .((isset($parsedURL['path'])) ? $parsedURL['path'] : '')
+					  .((isset($parsedURL['query'])) ? '?' . $parsedURL['query'] : '')
+					  .((isset($parsedURL['fragment'])) ? '#' . $parsedURL['fragment'] : '');
+				log::add("volvocars","debug","IMAGE: " . $url);
+				$imgPath = __DIR__ . '/../../data';
+				if (! is_dir($imgPath)){
+					mkdir($imgPath);
+				}
+				$imgPath .= '/'.$this->getVin() . ".png";
+				log::add("volvocars","debug",$imgPath);
+				// file_put_contents($imgPath, file_get_contents($url));
+				$session = curl_init($url);
+				$image = fopen($imgPath, 'wb');
+				curl_setopt($session,CURLOPT_FILE, $image);
+				curl_setopt($session,CURLOPT_HEADER,0);
+				curl_exec($session);
+				$httpCode = curl_getinfo($session,CURLINFO_HTTP_CODE);
+				if ($httpCode != 200) {
+					log::add("volvocars","info",sprintf(__("Erreur lors du éléchargement de l'image. HTTPCODE: %s",__FILE__) . $httpCode));
+				}
+				curl_close($session);
+				fclose($image);
+			}
+			if (isset($details['images']['internalImageUrl'])){
+			}
+		}
+
 		if ($changed) {
 			$this->save();
 		}
 	}
 
+	public function updateActionCmds() {
+		$account = $this->getAccount();
+		$commands = $account->commands($this->getVin());
+		// log::add("volvocars","info",print_r($commands,true));
+	}
+
 	public function retrieveInfos($createCmds=false) {
+		$this->retrieveDoorsInfos($createCmds);
 		$this->retrieveWindowsInfos($createCmds);
+	}
+
+	private function treatVolvoInfos($category, $infos, $createCmds){
+		foreach (array_keys($infos) as $key) {
+			$logicalId = [];
+			$name = [];
+			$subType = array(
+				'c' => 'binary',
+				'o' => 'binary',
+				's' => 'numeric',
+			);
+			switch ($key) {
+				case 'frontLeftWindow':
+					$logicalId['c'] = 'win_fl_closed';
+					$logicalId['o'] = 'win_fl_open';
+					$logicalId['s'] = 'win_fl_state';
+					$name['c'] = __('fenêtre avant gauche fermée',__FILE__);
+					$name['o'] = __('fenêtre avant gauche ouverte',__FILE__);
+					$name['s'] = __('état fenêtre avant gauche',__FILE__);
+					break;
+				case 'frontRightWindow':
+					$logicalId['c'] = 'win_fr_closed';
+					$logicalId['o'] = 'win_fr_open';
+					$logicalId['s'] = 'win_fr_state';
+					$name['c'] = __('fenêtre avant droite fermée',__FILE__);
+					$name['o'] = __('fenêtre avant droite ouverte',__FILE__);
+					$name['s'] = __('état fenêtre avant droite',__FILE__);
+					break;
+				case 'rearLeftWindow':
+					$logicalId['c'] = 'win_rl_closed';
+					$logicalId['o'] = 'win_rl_open';
+					$logicalId['s'] = 'win_rl_state';
+					$name['c'] = __('fenêtre arrière gauche fermée',__FILE__);
+					$name['o'] = __('fenêtre arrière gauche ouverte',__FILE__);
+					$name['s'] = __('état fenêtre arrière gauche',__FILE__);
+					break;
+				case 'rearRightWindow':
+					$logicalId['c'] = 'win_rr_closed';
+					$logicalId['o'] = 'win_rr_open';
+					$logicalId['s'] = 'win_rr_state';
+					$name['c'] = __('fenêtre arrière droite fermée',__FILE__);
+					$name['o'] = __('fenêtre arrière droite ouverte',__FILE__);
+					$name['s'] = __('état fenêtre arrière droite',__FILE__);
+					break;
+				case 'sunroof':
+					$logicalId['c'] = 'roof_closed';
+					$logicalId['o'] = 'roof_open';
+					$logicalId['s'] = 'roof_state';
+					$name['c'] = __('toit fermé',__FILE__);
+					$name['o'] = __('toit ouvert',__FILE__);
+					$name['s'] = __('état toit',__FILE__);
+					break;
+				case 'centralLock':
+					$logicalId['c'] = 'lock_locked';
+					$logicalId['o'] = 'lock_unlocked';
+					$logicalId['s'] = 'lock_state';
+					$name['c'] = __('vérouillé',__FILE__);
+					$name['o'] = __('dévérouillé',__FILE__);
+					$name['s'] = __('état verouillage',__FILE__);
+					break;
+				case 'frontLeftDoor':
+					$logicalId['c'] = 'door_fl_closed';
+					$logicalId['o'] = 'door_fl_open';
+					$logicalId['s'] = 'door_fl_state';
+					$name['c'] = __('porte avant gauche fermée',__FILE__);
+					$name['o'] = __('porte avant gauche ouverte',__FILE__);
+					$name['s'] = __('état porte avant gauche',__FILE__);
+					break;
+				case 'frontRightDoor':
+					$logicalId['c'] = 'door_fr_closed';
+					$logicalId['o'] = 'door_fr_open';
+					$logicalId['s'] = 'door_fr_state';
+					$name['c'] = __('porte avant droite fermée',__FILE__);
+					$name['o'] = __('porte avant droite ouverte',__FILE__);
+					$name['s'] = __('état porte avant droite',__FILE__);
+					break;
+				case 'rearLeftDoor':
+					$logicalId['c'] = 'door_rl_closed';
+					$logicalId['o'] = 'door_rl_open';
+					$logicalId['s'] = 'door_rl_state';
+					$name['c'] = __('porte arrière gauche fermée',__FILE__);
+					$name['o'] = __('porte arrière gauche ouverte',__FILE__);
+					$name['s'] = __('état porte arrière gauche',__FILE__);
+					break;
+				case 'rearRightDoor':
+					$logicalId['c'] = 'door_rr_closed';
+					$logicalId['o'] = 'door_rr_open';
+					$logicalId['s'] = 'door_rr_state';
+					$name['c'] = __('porte arrière droite fermée',__FILE__);
+					$name['o'] = __('porte arrière droite ouverte',__FILE__);
+					$name['s'] = __('état porte arrière droite',__FILE__);
+					break;
+				case 'tailgate':
+					$logicalId['c'] = 'tail_closed';
+					$logicalId['o'] = 'tail_open';
+					$logicalId['s'] = 'tail_state';
+					$name['c'] = __('hayon fermé',__FILE__);
+					$name['o'] = __('hayon ouvert',__FILE__);
+					$name['s'] = __('état hayon',__FILE__);
+					break;
+				case 'hood':
+					$logicalId['c'] = 'hood_closed';
+					$logicalId['o'] = 'hood_open';
+					$logicalId['s'] = 'hood_state';
+					$name['c'] = __('capot fermé',__FILE__);
+					$name['o'] = __('capot ouvert',__FILE__);
+					$name['s'] = __('état capot',__FILE__);
+					break;
+				case 'tankLid':
+					$logicalId['c'] = 'tank_closed';
+					$logicalId['o'] = 'tank_open';
+					$logicalId['s'] = 'tank_state';
+					$name['c'] = __('trappe fermée',__FILE__);
+					$name['o'] = __('trappe ouverte',__FILE__);
+					$name['s'] = __('état trappe',__FILE__);
+					break;
+				default:
+					log::add('volvocars','error',sprintf(__("%s.%s inconnu",__FILE__),$category, $key));
+			}
+			if ($createCmds) {
+				foreach (array_keys($logicalId) as $i) {
+					if ($i == 'c' and config::byKey('create_cmd_closed','volvocars') == '0') {
+						continue;
+					}
+					if ($i == 'o' and config::byKey('create_cmd_open','volvocars') == '0') {
+						continue;
+					}
+					if ($i == 's' and config::byKey('create_cmd_state','volvocars') == '0') {
+						continue;
+					}
+					$cmd = $this->getCmd('info',$logicalId[$i]);
+					if (! is_object($cmd)) {
+						log::add("volvocars","info",sprintf(__("Création de la commande %s",__FILE__),$logicalId[$i]));
+						$cmd = new volvocarsCmd();
+						$cmd->setEqLogic_id($this->getId());
+						$cmd->setLogicalId($logicalId[$i]);
+						$cmd->setName($name[$i]);
+						$cmd->setType('info');
+						$cmd->setSubType($subType{$i});
+						$cmd->save();
+					}
+				}
+			}
+			$value = [];
+			$value = self::convertKeyword($infos[$key]['value']);
+			$time = date('Y-m-d H:i:s', strtotime($infos[$key]['timestamp']));
+			foreach (array_keys($logicalId) as $i) {
+				if (isset($value[$i]) and isset($logicalId[$i])) {
+					$this->checkAndUpdateCmd($logicalId[$i],$value[$i],$time);
+				}
+			}
+		}
 	}
 
 	public function retrieveWindowsInfos($createCmds=false) {
@@ -236,87 +490,21 @@ class volvocars extends eqLogic {
 			throw new Exception (__("Pas de key 'data' dans les infos des fenêtres",__FILE__));
 		}
 		$windowsState = $windowsState['data'];
-		foreach (array_keys($windowsState) as $key) {
-			$logicalId = [];
-			$name = [];
-			switch ($key) {
-				case 'frontLeftWindow':
-					$logicalId['c'] = 'win_fl_closed';
-					$logicalId['s'] = 'win_fl_state';
-					$name['c'] = __('fenêtre avant gauche fermée',__FILE__);
-					$name['s'] = __('état fenêtre avant gauche',__FILE__);
-					break;
-				case 'frontRightWindow':
-					$logicalId['c'] = 'win_fr_closed';
-					$logicalId['s'] = 'win_fr_state';
-					$name['c'] = __('fenêtre avant droite fermée',__FILE__);
-					$name['s'] = __('état fenêtre avant droite',__FILE__);
-					break;
-				case 'rearLeftWindow':
-					$logicalId['c'] = 'win_rl_closed';
-					$logicalId['s'] = 'win_rl_state';
-					$name['c'] = __('fenêtre arrière gauche fermée',__FILE__);
-					$name['s'] = __('état fenêtre arrière gauche',__FILE__);
-					break;
-				case 'rearRightWindow':
-					$logicalId['c'] = 'win_rr_closed';
-					$logicalId['s'] = 'win_rr_state';
-					$name['c'] = __('fenêtre arrière droite fermée',__FILE__);
-					$name['s'] = __('état fenêtre arrière droite',__FILE__);
-					break;
-				case 'sunroof':
-					$logicalId['c'] = 'roof_closed';
-					$logicalId['s'] = 'roof_state';
-					$name['c'] = __('toit fermé',__FILE__);
-					$name['s'] = __('état toit',__FILE__);
-					break;
-			}
-			foreach (['c', 's'] as $i) {
-				switch ($i) {
-					case 'c':
-						$subType = 'binary';
-						break;
-					case 's':
-						$subType = 'numeric';
-						break;
-				}
-				if ($createCmds) {
-					$cmd = $this->getCmd('info',$logicalId[$i]);
-					if (! is_object($cmd)) {
-						log::add("volvocars","info",sprintf(__("Création de la commande %s",__FILE__),$logicalId[$i]));
-						$cmd = new volvocarsCmd();
-						$cmd->setEqLogic_id($this->getId());
-						$cmd->setLogicalId($logicalId[$i]);
-						$cmd->setName($name[$i]);
-						$cmd->setType('info');
-						$cmd->setSubType($subType);
-						$cmd->save();
-					}
-				}
-			}
-			log::add("volvocars","debug","DDD " . print_r($windowsState[$key],true));
-			$value = [];
-			switch ($windowsState[$key]['value']){
-				case 'UNSPECIFIED':
-					$value['c'] = 0;
-					$value['s'] = -1;
-					break;
-				case 'CLOSED':
-					$value['c'] = 1;
-					$value['s'] = 0;
-					break;
-				case 'AJAR':
-					$value['c'] = 0;
-					$value['s'] = 1;
-					break;
-				case 'OPEN':
-					$value['c'] = 0;
-					$value['s'] = 2;
-					break;
-			}
-			$time = date('Y-m-d H:i:s', strtotime($windowsState[$key]['timestamp']));
-		}
+		log::add('volvocars','debug',"WINDOS: " . json_encode($windowsState));
+		$this->treatVolvoInfos('Windows', $windowsState, $createCmds);
 	}
+
+	public function retrieveDoorsInfos($createCmds=false) {
+		$account = $this->getAccount();
+		$doorsState = $account->doorsState($this->getVin());
+		if (! isset($doorsState['data'])){
+			throw new Exception (__("Pas de key 'data' dans les infos des ouvrants",__FILE__));
+		}
+		$doorsState = $doorsState['data'];
+		log::add('volvocars','debug',"DOORS: " . json_encode($doorsState));
+		$this->treatVolvoInfos('Doors', $doorsState, $createCmds);
+	}
+
 
 	/*
 	* Permet de modifier l'affichage du widget (également utilisable par les commandes)

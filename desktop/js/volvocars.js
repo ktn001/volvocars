@@ -221,6 +221,17 @@ $('.eqLogicThumbnailContainer[data-type=account]').off().on('click','.accountDis
 })
 
 /*
+ * Sur modification de "moteur électrique"
+ */
+$('.eqLogicAttr[data-l2key=electricEngine]').off('change').on('change',function(){
+	if ($(this).value() == 1){
+		$('.eqLogicAttr[data-l2key=batteryCapacityKWH]').closest('div.form-group').removeClass('hidden')
+	} else {
+		$('.eqLogicAttr[data-l2key=batteryCapacityKWH]').closest('div.form-group').addClass('hidden')
+	}
+})
+
+/*
  * Action du bouton Editer
  */
 $('.eqLogicAction[data-action=edit]').off('click').on('click',function() {
@@ -230,6 +241,7 @@ $('.eqLogicAction[data-action=edit]').off('click').on('click',function() {
 			$('.eqLogicAction[data-action=edit]').addClass('hidden')
 			$('.eqLogicAction[data-action=protect]').removeClass('hidden')
 			$('.eqLogicAttr.sensible').removeClass('disabled')
+			$('label.checkbox-inline:has(.eqLogicAttr.sensible)').removeClass('disabled')
 		}
 	})
 })
@@ -241,8 +253,19 @@ $('.eqLogicAction[data-action=protect]').off('click').on('click',function() {
 	$(this).addClass('hidden')
 	$('.eqLogicAction[data-action=edit]').removeClass('hidden')
 	$('.eqLogicAttr.sensible').addClass('disabled')
+	$('label.checkbox-inline:has(.eqLogicAttr.sensible)').addClass('disabled')
 })
 $('.eqLogicAction[data-action=protect]').trigger('click')
+
+/*
+ * function appelée lors du chargement d'un eqLogic
+ */
+function printEqLogic(data) {
+	console.log(data)
+	img = $('.eqLogicDisplayCard[data-eqLogic_id=' + data.id + '] img').attr('src')
+	$('#img_car').attr('src',img)
+	console.log(img)
+}
 
 /* Fonction permettant l'affichage des commandes dans l'équipement */
 function addCmdToTable(_cmd) {

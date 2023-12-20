@@ -215,7 +215,7 @@ $accounts = volvoAccount::all();
 								</div>
 							</div>
 
-							<legend><i class="fas fa-cogs"></i> {{Paramètres spécifiques}}</legend>
+							<legend><i class="fas fa-cogs"></i> {{Détails du véhicule}}</legend>
 							<div class="form-group">
 								<label class="col-sm-4 control-label">vin
 									<sup><i class="fas fa-question-circle tooltips" title="{{vin du véhicule}}"></i></sup>
@@ -277,6 +277,15 @@ $accounts = volvoAccount::all();
 								</div>
 							</div>
 							<div class="form-group">
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">{{Moteur}}</label>
+								<div class="col-sm-6">
+									<label class="checkbox-inline"><input class="eqLogicAttr sensible" type="checkbox" data-l1key="configuration" data-l2key="electricEngine">{{Electrique}}</label>
+									<label class="checkbox-inline"><input class="eqLogicAttr sensible" type="checkbox" data-l1key="configuration" data-l2key="heatEngine">{{Thermique}}</label>
+								</div>
+							</div>
+							<div class="form-group">
 								<div class="col-sm-4">
 								</div>
 								<div class="col-sm-6">
@@ -292,9 +301,14 @@ $accounts = volvoAccount::all();
 							<legend><i class="fas fa-info"></i> {{Informations}}</legend>
 							<div class="form-group">
 								<label class="col-sm-4 control-label">{{Description}}</label>
-								<div class="col-sm-6">
+								<div class="col-sm-7">
 									<textarea class="form-control eqLogicAttr autogrow" data-l1key="comment"></textarea>
 								</div>
+							</div>
+							<div class='col-sm-4'>
+							</div>
+							<div clas='col-sm-6'>
+								<img id="img_car" class="img-responsive"></div>
 							</div>
 						</div>
 					</fieldset>
