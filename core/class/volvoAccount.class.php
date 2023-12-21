@@ -20,15 +20,20 @@
 class volvoAccount {
 
 	const OAUTH_URL = "https://volvoid.eu.volvocars.com/as/token.oauth2";
+
 	const VEHICLES_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles";
 	const COMMANDS_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands";
+
 	const VEHICLE_DETAILS_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s";
+	const DOORS_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/doors";
 	const WINDOWS_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/windows";
+
+	const CAR_LOCK_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands/lock";
+	const CAR_LOCK_REDUCED_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands/lock-reduced-guard";
+	const CAR_UNLOCK_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands/unlock";
 	const CLIMATE_START_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands/climatization-start";
 	const CLIMATE_STOP_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands/climatization-stop";
-	const DOORS_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/doors";
-	const CAR_LOCK_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands/lock";
-	const CAR_UNLOCK_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands/unlock";
+
 	const RECHARGE_STATE_URL = "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status";
 	const ODOMETER_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/odometer";
 	const LOCATION_STATE_URL = "https://api.volvocars.com/location/v1/vehicles/%s/location";
@@ -267,22 +272,17 @@ class volvoAccount {
 		curl_setopt($session, CURLOPT_HTTPHEADER, [
 			"authorization: Bearer " . $this->_token['access_token'],
 			"vcc-api-key: f3eeea40752040b88125725896290bad",
-			"accept: application/json"
+			"accept: application/json",
+			"content-type: application/json"
 		]);
 		curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
 		return $session;
 	}
 
 	public function synchronize() {
-		$session = $this->session(self::VEHICLES_URL);
-		$content = curl_exec($session);
-		$httpCode = curl_getinfo($session,CURLINFO_HTTP_CODE);
-		if ( $httpCode != 200) {
-			throw new Exception (sprintf(__("Erreur de l'interrogation de la liste des véhicules (http_code: %s)",__FILE__), $httpCode));
-		}
-		$content = is_json($content,$content);
-		foreach ($content['data'] as $data) {
-			$vin = $data['vin'];
+		$cars_infos = $this->getInfos('vehicles');
+		foreach ($cars_infos as $car_infos) {
+			$vin = $car_infos['vin'];
 			$car = volvocars::byVin($vin);
 			if (! is_object($car)) {
 				log::add("volvocars","info",sprintf(__("Créaion du véhicule '%s'",__FILE__),$vin));
@@ -297,30 +297,63 @@ class volvoAccount {
 		}
 	}
 
-	public function getUrl($url) {
+	public function getInfos($endpoint, $vin=null) {
+		switch ($endpoint) {
+			case 'commands':
+				$url = sprintf(self::COMMANDS_URL,$vin);
+				break;
+			case 'details':
+				$url = sprintf(self::VEHICLE_DETAILS_URL,$vin);
+				break;
+			case 'doors':
+				$url = sprintf(self::DOORS_STATE_URL,$vin);
+				break;
+			case 'vehicles':
+				$url = sprintf(self::VEHICLES_URL,$vin);
+				break;
+			case 'windows':
+				$url = sprintf(self::WINDOWS_STATE_URL,$vin);
+				break;
+		}
 		$session = $this->session($url);
 		$content = curl_exec($session);
 		$httpCode = curl_getinfo($session,CURLINFO_HTTP_CODE);
 		if ( $httpCode != 200) {
 			throw new Exception (sprintf(__("Erreur de la récupération d'infos pour le  véhicule '%s' (http_code: %s)",__FILE__), $vin, $httpCode));
 		}
-		return is_json($content,$content);
+		$content = is_json($content,$content);
+		if (isset($content['data'])) {
+			$content = $content['data'];
+		}
+		return $content;
 	}
 
-	public function CarDetails($vin) {
-		return $this->getUrl(sprintf(self::VEHICLE_DETAILS_URL,$vin));
-	}
-
-	public function windowsState($vin) {
-		return $this->getUrl(sprintf(self::WINDOWS_STATE_URL,$vin));
-	}
-
-	public function doorsState($vin) {
-		return $this->getUrl(sprintf(self::DOORS_STATE_URL,$vin));
-	}
-
-	public function commands($vin) {
-		return $this->getUrl(sprintf(self::COMMANDS_URL,$vin));
+	public function sendCommand($command, $vin) {
+		switch ($command) {
+			case 'lock':
+				$url =  sprintf(self::CAR_LOCK_URL,$vin);
+				break;
+			case 'lock-reduced':
+				$url =  sprintf(self::CAR_LOCK_REDUCED_URL,$vin);
+				break;
+			case 'unlock':
+				$url =  sprintf(self::CAR_UNLOCK_URL,$vin);
+				break;
+			case 'clim_start':
+				$url =  sprintf(self::CLIMATE_START_URL,$vin);
+				break;
+			case 'clim_stop':
+				$url =  sprintf(self::CLIMATE_STOP_URL,$vin);
+				break;
+		}
+		log::add("volvocars","debug",sprintf(__('Envoi de la commande %s (%s)',__FILE__),$command,$url));
+		$session = $this->session($url);
+		curl_setopt($session,CURLOPT_POST,1);
+		$content = curl_exec($session);
+		$httpCode = curl_getinfo($session,CURLINFO_HTTP_CODE);
+		if ( $httpCode != 200) {
+			throw new Exception (sprintf(__("Erreur de l'envoi d'une commande pour le  véhicule '%s' (http_code: %s)",__FILE__), $vin, $httpCode));
+		}
 	}
 
 	/* *********************************************** */

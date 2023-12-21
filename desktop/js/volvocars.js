@@ -189,6 +189,7 @@ $('.accountAction[data-action=sync]').off('click').on('click',function() {
 			if (accountId == null) {
 				return
 			}
+			$.showLoading()
 			$.ajax({
 				type: 'POST',
 				url: 'plugins/volvocars/core/ajax/volvocars.ajax.php',
@@ -199,10 +200,12 @@ $('.accountAction[data-action=sync]').off('click').on('click',function() {
 				dataType: 'json',
 				global: false,
 				error: function (request, status, error) {
+					$.hideLoading()
 					handleAjaxError(request, status, error)
 				},
 				success: function(data) {
 					if (data.state != 'ok') {
+						$.hideLoading()
 						$.fn.showAlert({message: data.result, level:'danger'})
 						return
 					}

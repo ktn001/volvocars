@@ -18,6 +18,7 @@
 
 /* * ***************************Includes********************************* */
 require_once __DIR__  . '/../../../../core/php/core.inc.php';
+require_once __DIR__  . '/volvoAccount.class.php';
 
 class volvocars extends eqLogic {
 	/*     * *************************Attributs****************************** */
@@ -135,17 +136,13 @@ class volvocars extends eqLogic {
 	public function synchronize() {
 		$this->updateDetails();
 		$this->retrieveInfos(true);
-		$this->updateActionCmds();
+		$this->createActionCmds();
 	}
 
 	public function updateDetails() {
 		$changed = false;
 		$account = $this->getAccount();
-		$details = $account->carDetails($this->getVin());
-		if (! isset($details['data'])){
-			throw new Exception (__("Pas de key 'data' dans les détails",__FILE__));
-		}
-		$details = $details['data'];
+		$details = $account->getInfos('details',$this->getVin());
 		log::add("volvocars","debug","DETAILS: " . json_encode($details));
 		if (! isset($details['descriptions'])){
 			log::add("volvocars","error",(__("Pas de key 'descriptions' dans les détails[data]",__FILE__)));
@@ -320,18 +317,60 @@ class volvocars extends eqLogic {
 		}
 	}
 
-	public function updateActionCmds() {
+	public function createActionCmds() {
 		$account = $this->getAccount();
-		$commands = $account->commands($this->getVin());
-		// log::add("volvocars","info",print_r($commands,true));
+		$commands = $account->getInfos('commands',$this->getVin());
+		foreach ($commands as $command) {
+			log::add("volvocars","debug",print_r($command,true));
+			$logicalId = '';
+			$name = '';
+			switch($command['command']) {
+				case 'LOCK_REDUCED_GUARD':
+					$logicalId = 'lock_reduced';
+					$name = __('Vérrouillage réduit',__FILE__);
+					break;
+				case 'LOCK':
+					$logicalId = 'lock';
+					$name = __('Vérrouillage',__FILE__);
+					break;
+				case 'UNLOCK':
+					$logicalId = 'unlock';
+					$name = __('Dévérrouillage',__FILE__);
+					break;
+				case 'CLIMATIZATION_START':
+					$logicalId = 'clim_start';
+					$name = __('Climatisation EN',__FILE__);
+					break;
+				case 'CLIMATIZATION_STOP':
+					$logicalId = 'clim_stop';
+					$name = __('Climatisation HORS',__FILE__);
+					break;
+				default:
+					log::add("volvocars","warning",sprintf(__("Command %s inconnue! pas de créaction de command action",__FILE__),$command['command']));
+					continue 2;
+			}
+			$cmd = $this->getCmd('action',$logicalId);
+			if (!is_object($cmd)) {
+				log::add("volvocars","debug",sprintf(__("Création de la commande %s",__FILE__),$logicalId));
+				$cmd = new volvocarsCmd();
+				$cmd->setEqLogic_id($this->getId());
+				$cmd->setType('action');
+				$cmd->setSubtype('other');
+				$cmd->setName($name);
+				$cmd->setLogicalid($logicalId);
+				$cmd->save();
+			}
+		}
 	}
 
 	public function retrieveInfos($createCmds=false) {
-		$this->retrieveDoorsInfos($createCmds);
-		$this->retrieveWindowsInfos($createCmds);
+		$this->getInfosFromApi('doors',$createCmds);
+		$this->getInfosFromApi('windows',$createCmds);
 	}
 
-	private function treatVolvoInfos($category, $infos, $createCmds){
+	private function getInfosFromApi($endpoint, $createCmds){
+		$account = $this->getAccount();
+		$infos = $account->getInfos($endpoint,$this->getVin());
 		foreach (array_keys($infos) as $key) {
 			$logicalId = [];
 			$name = [];
@@ -483,29 +522,6 @@ class volvocars extends eqLogic {
 		}
 	}
 
-	public function retrieveWindowsInfos($createCmds=false) {
-		$account = $this->getAccount();
-		$windowsState = $account->windowsState($this->getVin());
-		if (! isset($windowsState['data'])){
-			throw new Exception (__("Pas de key 'data' dans les infos des fenêtres",__FILE__));
-		}
-		$windowsState = $windowsState['data'];
-		log::add('volvocars','debug',"WINDOS: " . json_encode($windowsState));
-		$this->treatVolvoInfos('Windows', $windowsState, $createCmds);
-	}
-
-	public function retrieveDoorsInfos($createCmds=false) {
-		$account = $this->getAccount();
-		$doorsState = $account->doorsState($this->getVin());
-		if (! isset($doorsState['data'])){
-			throw new Exception (__("Pas de key 'data' dans les infos des ouvrants",__FILE__));
-		}
-		$doorsState = $doorsState['data'];
-		log::add('volvocars','debug',"DOORS: " . json_encode($doorsState));
-		$this->treatVolvoInfos('Doors', $doorsState, $createCmds);
-	}
-
-
 	/*
 	* Permet de modifier l'affichage du widget (également utilisable par les commandes)
 	public function toHtml($_version = 'dashboard') {}
@@ -561,6 +577,19 @@ class volvocarsCmd extends cmd {
 
 	// Exécution d'une commande
 	public function execute($_options = array()) {
+		$car = $this->getEqLogic();
+		switch ($this->getLogicalId()) {
+			case ('lock'):
+			case ('lock-reduced'):
+			case ('unlock'):
+			case ('clim_start'):
+			case ('clim_stop'):
+				$car->getAccount()->sendCommand($this->getLogicalId(),$car->getVin());
+				break;
+			default:
+				log::add("volvocars","error",sprintf(__('Exécution de la commande "%s" non définie',__FILE__),$this->getLogicalId()));
+				return false;
+		}
 	}
 
 	/*     * **********************Getteur Setteur*************************** */

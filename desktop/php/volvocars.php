@@ -308,7 +308,7 @@ $accounts = volvoAccount::all();
 							<div class='col-sm-4'>
 							</div>
 							<div clas='col-sm-6'>
-								<img id="img_car" class="img-responsive"></div>
+								<img id="img_car" class="img-responsive">
 							</div>
 						</div>
 					</fieldset>
