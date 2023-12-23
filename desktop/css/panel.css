@@ -1,0 +1,145 @@
+/*
+ * vim: tabstop=4 autoindent
+ */
+
+body[data-theme=core2019_Dark] {
+	--vlv-bg-color: black;
+	--vlv-display-light: none;
+	--vlv-display-dark: inherit;
+}
+	
+body[data-theme=core2019_Light] {
+	--vlv-bg-color: inherit;
+	--vlv-display-light: inherit;
+	--vlv-display-dark: none;
+}
+
+body[data-theme=core2019_Legacy] {
+	--vlv-bg-color: inherit;
+	--vlv-display-light: inherit;
+	--vlv-display-dark: none;
+}
+
+#bckgd {
+	background-color: var(--vlv-bg-color);
+}
+	
+#title {
+	font-size: 17px;
+	line-height: 2.32;
+	color: var(--link-color);
+}
+
+#titre img {
+	height: 40px;
+}
+
+#titre img.volvo_logo_white {
+	display: var(--vlv-display-dark);
+}
+
+#titre img.volvo_logo_black {
+	display: var(--vlv-display-light);
+}
+
+#titre span {
+	padding-left: 10px;
+	font-size: 17px;
+}
+
+.bs-sidebar {
+	background-color: rgba(var(--eq-bg-color)) !important;
+}
+
+.nav-list .li_object a {
+	padding: 5px 0px;
+	margin-left: -10px;
+	padding: 0px 2px !important;
+	background-color: rgba(var(--eq-bg-color)) !important;
+}
+
+#ul_object .img-container {
+	padding: 0px;
+	display: inline-block;
+	width: 70px;
+	text-align: center;
+}
+
+#ul_object li {
+	padding: 0px 0px;
+}
+
+#ul_object img {
+	height: 30px !important;
+}
+
+#div_display_eqLogic {
+	overflow-x: auto;
+}
+
+#volvocars_panel_ID.eqLogic-widget {
+	background-color: inherit !important;
+	min-width:1392px !important;
+	max-width:1392px !important;
+	min-height:1650px;
+	max-height:1650px;
+	text-align:center;
+}
+
+#volvocars_panel_ID .column {
+	padding : 0px !important;
+}
+
+#volvocars_panel_ID .tile {
+	background-color: rgba(var(--eq-bg-color));
+	margin: 5px;
+}
+
+#volvocars_panel_ID .tile.col-xs-12 {
+	width: calc( 100% - 10px );
+}
+
+#volvocars_panel_ID .tile.col-xs-11 {
+	width: calc( 91.66666667% - 10px );
+}
+
+#volvocars_panel_ID .tile.col-xs-10 {
+	width: calc( 83.33333333% - 10px );
+}
+
+#volvocars_panel_ID .tile.col-xs-9 {
+	width: calc( 75% - 10px );
+}
+
+#volvocars_panel_ID .tile.col-xs-8 {
+	width: calc( 66.66666667% - 10px );
+}
+
+#volvocars_panel_ID .tile.col-xs-7 {
+	width: calc( 58.33333333% - 10px );
+}
+
+#volvocars_panel_ID .tile.col-xs-6 {
+	width: calc( 50% - 10px );
+}
+
+#volvocars_panel_ID .tile.col-xs-5 {
+	width: calc( 41.66666667%- 10px );
+}
+
+#volvocars_panel_ID .tile.col-xs-4 {
+	width: calc( 33.33333333% - 10px );
+}
+
+#volvocars_panel_ID .tile.col-xs-3 {
+	width: calc( 25% - 10px );
+}
+
+#volvocars_panel_ID .tile.col-xs-2 {
+	width: calc( 16.66666667% - 10px );
+}
+
+#volvocars_panel_ID .tile.col-xs-1 {
+	width: calc( 8.33333333% - 10px );
+}
+

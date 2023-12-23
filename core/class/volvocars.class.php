@@ -524,8 +524,29 @@ class volvocars extends eqLogic {
 
 	/*
 	* Permet de modifier l'affichage du widget (également utilisable par les commandes)
-	public function toHtml($_version = 'dashboard') {}
 	*/
+	public function toHtml($_version = 'dashboard') {
+
+		// $this->emptyCacheWidget();
+
+		$panel = false;
+		if ($_version == 'panel') {
+			$panel = true;
+			$_version = 'dashboard';
+		}
+
+		$replace = $this->preToHtml($_version);
+		log::add("volvocars","debug",$this->getId() . "  ". print_r($replace,true));
+		if (!is_array($replace)){
+			return $replace;
+		}
+
+		$replace['#vehicle_img#'] = $this->getImage();
+		if ($panel == true) {
+			$template = 'volvocars_panel';
+		}
+		return $this->postToHtml($_version, template_replace($replace, getTemplate('core',$_version,$template, 'volvocars')));
+	}
 
 	/*     * **********************Getteur Setteur*************************** */
 	public function setVin($_vin){

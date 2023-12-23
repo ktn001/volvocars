@@ -104,6 +104,19 @@ try {
 		ajax::success();
 	}
 
+	if ($action == 'panelWidget'){
+		$id = init('id');
+		if ($id == ''){
+			throw new Exception(__("l'id du véhicule n'est pas défini",__FILE__));
+		}
+		$car = volvocars::byid($id);
+		if (! is_object($car)){
+			throw new Exception (sprintf(__("Le véhicule %s est introuvable",__FILE__),$id));
+		}
+		$widget = $car->toHtml('panel');
+		ajax::success($widget);
+	}
+
 	throw new Exception(__('Aucune méthode correspondante à', __FILE__) . ' : ' . init('action'));
 	/*     * *********Catch exeption*************** */
 }
