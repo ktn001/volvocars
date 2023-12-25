@@ -215,7 +215,7 @@ $accounts = volvoAccount::all();
 								</div>
 							</div>
 
-							<legend><i class="fas fa-cogs"></i> {{Détails du véhicule}}</legend>
+							<legend><i class="fas fa-cogs"></i> {{Paramètres du véhicule}}</legend>
 							<div class="form-group">
 								<label class="col-sm-4 control-label">vin
 									<sup><i class="fas fa-question-circle tooltips" title="{{vin du véhicule}}"></i></sup>
@@ -291,6 +291,94 @@ $accounts = volvoAccount::all();
 								<div class="col-sm-6">
 									<a class="btn btn-sm btn-danger eqLogicAction pull-right" data-action="edit"><i class="fas fa-edit"></i> {{Editer}}</a>
 									<a class="btn btn-sm btn-success eqLogicAction pull-right" data-action="protect"><i class="fas fa-ban"></i> {{Protéger}}</a>
+								</div>
+							</div>
+
+							<legend><i class="fas fa-location-arrow"></i> {{Paramètres de localisation}}</legend>
+							<div class="form-group">
+								<div class="col-sm-offset-3 col-sm-2">
+									{{Site 1}}:
+								</div>
+								<div class="col-sm-2">
+									<label class="checkbox-inline pull-right"><input class="eqLogicAttr" type="checkbox" data-l1key="configuration" data-l2key="site1_active">{{Activer}}</label>
+								</div>
+								<div class="col-sm-2">
+									{{Site 2}}:
+								</div>
+								<div class="col-sm-2">
+									<label class="checkbox-inline pull-right"><input class="eqLogicAttr" type="checkbox" data-l1key="configuration" data-l2key="site2_active">{{Activer}}</label>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">{{Nom}}</label>
+								<div class="col-sm-4">
+									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="site1_name" placeholder="{{Domicile}}">
+								</div>
+								<div class="col-sm-4">
+									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="site2_name" placeholder="{{Autre}}">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">{{Méthode de configuration}}</label>
+								<div class="col-sm-4">
+									<select class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="site1_source">
+										<option value="" disabled selected hidden>{{Choisir dans la liste}}</options>
+										<?php
+										if ( (config::byKey('info::latitude','core','0') != '0') && (config::byKey('info::longitude','core','0') != '0') ) {
+											echo '<option value="jeedom">{{Configuration Jeedom}}</option>';
+										}
+										?>
+										<option value="vehicle">{{Position actuelle du véhicule}}</option>
+										<option value="manual">{{Saisie manuelle}}</option>
+									</select>
+								</div>
+								<div class="col-sm-4">
+									<select class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="site2_source">
+										<option value="" disabled selected hidden>{{Choisir dans la liste}}</options>
+										<?php
+										if ( (config::byKey('info::latitude','core','0') != '0') && (config::byKey('info::longitude','core','0') != '0') ) {
+											echo '<option value="jeedom">{{Configuration Jeedom}}</option>';
+										}
+										?>
+										<option value="vehicle">{{Position actuelle du véhicule}}</option>
+										<option value="manual">{{Saisie manuelle}}</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label help" data-help="{{Coordonnées GPS au format xx.xxxxxx  et pas xx°xx'xx.x''N}}">{{Coordonnées GPS}}</label>
+								<div class="col-sm-4" style="padding-left: 0px !important; padding-right: 0px !important">
+									<div class="col-sm-6" style="padding-right: 1px !important">
+										<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="site1_lat" placeholder="{{Lat. 1}}"/>
+									</div>
+									<div class="col-sm-6" style="padding-left: 1px !important">
+										<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="site1_long" placeholder="{{Long. 1}}"/>
+									</div>
+								</div>
+								<div class="col-sm-4" style="padding-left: 0px !important; padding-right: 0px !important">
+									<div class="col-sm-6" style="padding-right: 1px !important">
+										<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="site2_lat" placeholder="{{Lat. 2}}"/>
+									</div>
+									<div class="col-sm-6" style="padding-left: 1px !important">
+										<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="site2_long" placeholder="{{Long. 2}}"/>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">{{Distance max (en m)}}</label>
+								<div class="col-sm-4">
+									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="site1_distance">
+								</div>
+								<div class="col-sm-4">
+									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="site2_distance">
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-sm-offset-3 col-sm-4">
+									<a class="btn btn-sm btn-primary eqLogicAction pull-right" data-action="get_pos"><i class="fas fa-location-arrow"></i></a>
+								</div>
+								<div class="col-sm-4">
+									<a class="btn btn-sm btn-primary eqLogicAction pull-right" data-action="get_pos"><i class="fas fa-location-arrow"></i></a>
 								</div>
 							</div>
 						</div>

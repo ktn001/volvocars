@@ -363,12 +363,7 @@ class volvocars extends eqLogic {
 		}
 	}
 
-	public function retrieveInfos($createCmds=false) {
-		$this->getInfosFromApi('doors',$createCmds);
-		$this->getInfosFromApi('windows',$createCmds);
-	}
-
-	private function getInfosFromApi($endpoint, $createCmds){
+	private function getInfosFromApi($endpoint, $createCmds=false, $updateValues=true){
 		$account = $this->getAccount();
 		$infos = $account->getInfos($endpoint,$this->getVin());
 		foreach (array_keys($infos) as $key) {
@@ -484,42 +479,103 @@ class volvocars extends eqLogic {
 					$name['o'] = __('trappe ouverte',__FILE__);
 					$name['s'] = __('état trappe',__FILE__);
 					break;
+				case 'location':
+					$c = $this->getCmd('info','presence');
+					if (!is_object($c)) {
+						log::add("volvocars","info",sprintf(__("Création de la commande %s",__FILE__),'presence'));
+						$cmd = new volvocarsCmd();
+						$cmd->setEqLogic_id($this->getId());
+						$cmd->setLogicalId('presence');
+						$cmd->setName(__("présence domicile",__FILE__));
+						$cmd->setType('info');
+						$cmd->setSubType('binary');
+						$cmd->save();
+					}
+					$c = $this->getCmd('info','distance');
+					if (!is_object($c)) {
+						log::add("volvocars","info",sprintf(__("Création de la commande %s",__FILE__),'distance'));
+						$cmd = new volvocarsCmd();
+						$cmd->setEqLogic_id($this->getId());
+						$cmd->setLogicalId('distance');
+						$cmd->setName(__("distance domicile",__FILE__));
+						$cmd->setType('info');
+						$cmd->setSubType('numeric');
+						$cmd->save();
+					}
+					$logicalId = 'position';
+					$name = __('position',__FILE__);
+					$subType = 'string';
+					break;
 				default:
 					log::add('volvocars','error',sprintf(__("%s.%s inconnu",__FILE__),$category, $key));
 			}
 			if ($createCmds) {
-				foreach (array_keys($logicalId) as $i) {
-					if ($i == 'c' and config::byKey('create_cmd_closed','volvocars') == '0') {
-						continue;
+				if (is_array($logicalId)) {
+					foreach (array_keys($logicalId) as $i) {
+						if ($i == 'c' and config::byKey('create_cmd_closed','volvocars') == '0') {
+							continue;
+						}
+						if ($i == 'o' and config::byKey('create_cmd_open','volvocars') == '0') {
+							continue;
+						}
+						if ($i == 's' and config::byKey('create_cmd_state','volvocars') == '0') {
+							continue;
+						}
+						$cmd = $this->getCmd('info',$logicalId[$i]);
+						if (! is_object($cmd)) {
+							log::add("volvocars","info",sprintf(__("Création de la commande %s",__FILE__),$logicalId[$i]));
+							$cmd = new volvocarsCmd();
+							$cmd->setEqLogic_id($this->getId());
+							$cmd->setLogicalId($logicalId[$i]);
+							$cmd->setName($name[$i]);
+							$cmd->setType('info');
+							$cmd->setSubType($subType[$i]);
+							$cmd->save();
+						}
 					}
-					if ($i == 'o' and config::byKey('create_cmd_open','volvocars') == '0') {
-						continue;
-					}
-					if ($i == 's' and config::byKey('create_cmd_state','volvocars') == '0') {
-						continue;
-					}
-					$cmd = $this->getCmd('info',$logicalId[$i]);
+				} else {
+					$cmd = $this->getCmd('info',$logicalId);
 					if (! is_object($cmd)) {
-						log::add("volvocars","info",sprintf(__("Création de la commande %s",__FILE__),$logicalId[$i]));
+						log::add("volvocars","info",sprintf(__("Création de la commande %s",__FILE__),$logicalId));
 						$cmd = new volvocarsCmd();
 						$cmd->setEqLogic_id($this->getId());
-						$cmd->setLogicalId($logicalId[$i]);
-						$cmd->setName($name[$i]);
+						$cmd->setLogicalId($logicalId);
+						$cmd->setName($name);
 						$cmd->setType('info');
-						$cmd->setSubType($subType{$i});
+						$cmd->setSubType($subType);
 						$cmd->save();
 					}
 				}
 			}
-			$value = [];
-			$value = self::convertKeyword($infos[$key]['value']);
-			$time = date('Y-m-d H:i:s', strtotime($infos[$key]['timestamp']));
-			foreach (array_keys($logicalId) as $i) {
-				if (isset($value[$i]) and isset($logicalId[$i])) {
-					$this->checkAndUpdateCmd($logicalId[$i],$value[$i],$time);
+			if ($updateValues) {
+				$time = date('Y-m-d H:i:s', strtotime($infos[$key]['timestamp']));
+				if (is_array($logicalId)) {
+					$value = [];
+					$value = self::convertKeyword($infos[$key]['value']);
+	
+					foreach (array_keys($logicalId) as $i) {
+						if (isset($value[$i]) and isset($logicalId[$i])) {
+							$this->checkAndUpdateCmd($logicalId[$i],$value[$i],$time);
+						}
+					}
+				} else {
+					switch ($key) {
+						case 'location':
+							$value = $infos[$key]['coordinates'][0] . ',' . $infos[$key]['coordinates'][1];
+							break;
+						default:
+							$value = $infos[$key]['value'];
+					}
+					$this->checkAndUpdateCmd($logicalId,$value,$time);
 				}
 			}
 		}
+	}
+
+	public function retrieveInfos($createCmds=false) {
+		$this->getInfosFromApi('doors',$createCmds);
+		$this->getInfosFromApi('location',$createCmds);
+		$this->getInfosFromApi('windows',$createCmds);
 	}
 
 	/*
@@ -595,6 +651,31 @@ class volvocarsCmd extends cmd {
 		return true;
 	}
 	*/
+
+	public function preSave(){
+		switch ($this->getLogicalId()) {
+			case 'presence':
+			case 'distance':
+				$locationCmd = $this->getEqLogic()->getCmd('info','position');
+				if (is_object($locationCmd)) {
+					$this->setValue("#" . $locationCmd->getId() . '#');
+				}
+				break;
+		}
+	}
+
+	public function postInsert() {
+		switch ($this->getLogicalId()) {
+			case 'position':
+				foreach (['presence','distance'] as $logicalId) {
+					$cmd = $this->getEqLogic()->getCmd('info',$logicalId);
+					if (is_object($cmd)) {
+						$cmd->save();
+					}
+				}
+				break;
+		}
+	}
 
 	// Exécution d'une commande
 	public function execute($_options = array()) {

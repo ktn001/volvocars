@@ -27,6 +27,7 @@ class volvoAccount {
 	const VEHICLE_DETAILS_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s";
 	const DOORS_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/doors";
 	const WINDOWS_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/windows";
+	const LOCATION_STATE_URL = "https://api.volvocars.com/location/v1/vehicles/%s/location";
 
 	const CAR_LOCK_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands/lock";
 	const CAR_LOCK_REDUCED_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands/lock-reduced-guard";
@@ -36,7 +37,6 @@ class volvoAccount {
 
 	const RECHARGE_STATE_URL = "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status";
 	const ODOMETER_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/odometer";
-	const LOCATION_STATE_URL = "https://api.volvocars.com/location/v1/vehicles/%s/location";
 	const TYRE_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/tyres";
 	const ENGINE_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/engine-status";
 	const FUEL_BATTERY_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/fuel";
@@ -308,6 +308,9 @@ class volvoAccount {
 			case 'doors':
 				$url = sprintf(self::DOORS_STATE_URL,$vin);
 				break;
+			case 'location':
+				$url = sprintf(self::LOCATION_STATE_URL,$vin);
+				break;
 			case 'vehicles':
 				$url = sprintf(self::VEHICLES_URL,$vin);
 				break;
@@ -324,6 +327,18 @@ class volvoAccount {
 		$content = is_json($content,$content);
 		if (isset($content['data'])) {
 			$content = $content['data'];
+		}
+		if ($endpoint == 'location'){
+			if(isset($content['type'])){
+				unset ($content['type']);
+			}
+			if(isset($content['properties'])){
+				unset ($content['properties']);
+			}
+			if(isset($content['geometry'])){
+				$content['location'] = $content['geometry'];
+				unset ($content['geometry']);
+			}
 		}
 		return $content;
 	}
