@@ -296,32 +296,32 @@ $accounts = volvoAccount::all();
 
 							<legend><i class="fas fa-location-arrow"></i> {{Paramètres de localisation}}</legend>
 							<div class="form-group">
-								<div class="col-sm-offset-3 col-sm-2">
+								<div class="col-sm-offset-4 col-sm-2">
 									{{Site 1}}:
 								</div>
 								<div class="col-sm-2">
-									<label class="checkbox-inline pull-right"><input class="eqLogicAttr" type="checkbox" data-l1key="configuration" data-l2key="site1_active">{{Activer}}</label>
+									<label class="checkbox-inline pull-right"><input class="eqLogicAttr" type="checkbox" checked data-site="site1" data-l1key="configuration" data-l2key="site1_active">{{Activer}}</label>
 								</div>
 								<div class="col-sm-2">
 									{{Site 2}}:
 								</div>
 								<div class="col-sm-2">
-									<label class="checkbox-inline pull-right"><input class="eqLogicAttr" type="checkbox" data-l1key="configuration" data-l2key="site2_active">{{Activer}}</label>
+									<label class="checkbox-inline pull-right"><input class="eqLogicAttr" type="checkbox" checked data-site="site2" data-l1key="configuration" data-l2key="site2_active">{{Activer}}</label>
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label">{{Nom}}</label>
-								<div class="col-sm-4">
+								<label class="col-sm-4 control-label">{{Nom}}</label>
+								<div class="col-sm-4 site1">
 									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="site1_name" placeholder="{{Domicile}}">
 								</div>
-								<div class="col-sm-4">
+								<div class="col-sm-4 site2">
 									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="site2_name" placeholder="{{Autre}}">
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label">{{Méthode de configuration}}</label>
-								<div class="col-sm-4">
-									<select class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="site1_source">
+								<label class="col-sm-4 control-label">{{Méthode de configuration}}</label>
+								<div class="col-sm-4 site1">
+									<select class="eqLogicAttr form-control" data-site="site1" data-l1key="configuration" data-l2key="site1_source">
 										<option value="" disabled selected hidden>{{Choisir dans la liste}}</options>
 										<?php
 										if ( (config::byKey('info::latitude','core','0') != '0') && (config::byKey('info::longitude','core','0') != '0') ) {
@@ -332,8 +332,8 @@ $accounts = volvoAccount::all();
 										<option value="manual">{{Saisie manuelle}}</option>
 									</select>
 								</div>
-								<div class="col-sm-4">
-									<select class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="site2_source">
+								<div class="col-sm-4 site2">
+									<select class="eqLogicAttr form-control" data-site="site2" data-l1key="configuration" data-l2key="site2_source">
 										<option value="" disabled selected hidden>{{Choisir dans la liste}}</options>
 										<?php
 										if ( (config::byKey('info::latitude','core','0') != '0') && (config::byKey('info::longitude','core','0') != '0') ) {
@@ -346,8 +346,8 @@ $accounts = volvoAccount::all();
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label help" data-help="{{Coordonnées GPS au format xx.xxxxxx  et pas xx°xx'xx.x''N}}">{{Coordonnées GPS}}</label>
-								<div class="col-sm-4" style="padding-left: 0px !important; padding-right: 0px !important">
+								<label class="col-sm-4 control-label help" data-help="{{Coordonnées GPS au format xx.xxxxxx  et pas xx°xx'xx.x''N}}">{{Coordonnées GPS}}</label>
+								<div class="col-sm-4 site1" style="padding-left: 0px !important; padding-right: 0px !important">
 									<div class="col-sm-6" style="padding-right: 1px !important">
 										<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="site1_lat" placeholder="{{Lat. 1}}"/>
 									</div>
@@ -355,7 +355,7 @@ $accounts = volvoAccount::all();
 										<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="site1_long" placeholder="{{Long. 1}}"/>
 									</div>
 								</div>
-								<div class="col-sm-4" style="padding-left: 0px !important; padding-right: 0px !important">
+								<div class="col-sm-4 site2" style="padding-left: 0px !important; padding-right: 0px !important">
 									<div class="col-sm-6" style="padding-right: 1px !important">
 										<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="site2_lat" placeholder="{{Lat. 2}}"/>
 									</div>
@@ -365,19 +365,19 @@ $accounts = volvoAccount::all();
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label">{{Distance max (en m)}}</label>
-								<div class="col-sm-4">
+								<label class="col-sm-4 control-label">{{Distance max (en m)}}</label>
+								<div class="col-sm-4 site1">
 									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="site1_distance">
 								</div>
-								<div class="col-sm-4">
+								<div class="col-sm-4 site2">
 									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="site2_distance">
 								</div>
 							</div>
 							<div class="form-group">
-								<div class="col-sm-offset-3 col-sm-4">
+								<div class="col-sm-offset-4 col-sm-4 site1">
 									<a class="btn btn-sm btn-primary eqLogicAction pull-right" data-action="get_pos"><i class="fas fa-location-arrow"></i></a>
 								</div>
-								<div class="col-sm-4">
+								<div class="col-sm-4 site2">
 									<a class="btn btn-sm btn-primary eqLogicAction pull-right" data-action="get_pos"><i class="fas fa-location-arrow"></i></a>
 								</div>
 							</div>

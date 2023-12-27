@@ -267,8 +267,50 @@ function printEqLogic(data) {
 	console.log(data)
 	img = $('.eqLogicDisplayCard[data-eqLogic_id=' + data.id + '] img').attr('src')
 	$('#img_car').attr('src',img)
-	console.log(img)
 }
+
+/*
+ * Activation / désactivation d'un site
+ */
+$('[data-l1key=configuration][data-l2key$=_active]').off('change').on('change', function(){
+	site = $(this).data('site')
+	console.log(site)
+	if ($(this).value() == 1) {
+		$('div.'+site+' *').removeClass('hidden')
+		$('div.'+site+' select').trigger('change')
+	} else {
+		$('div.'+site+' *').addClass('hidden')
+	}
+
+})
+$('[data-l1key=configuration][data-l2key$=_active]').trigger('change')
+
+/*
+ * Changement de source d'un site
+ */
+$('.eqLogicAttr[data-l2key$=_source]').off('change').on('change', function() {
+	console.log($(this).value())
+	site = $(this).data('site')
+	switch ($(this).value()){
+		case 'jeedom':
+			$('input[data-l2key='+site+'_lat], input[data-l2key='+site+'_long]').addClass('hidden')
+			$('.'+site+' .btn[data-action=get_pos]').addClass('hidden')
+			break
+		case 'vehicle':
+			$('input[data-l2key='+site+'_lat], input[data-l2key='+site+'_long]').removeClass('hidden')
+			$('input[data-l2key='+site+'_lat], input[data-l2key='+site+'_long]').addClass('disabled')
+			$('.'+site+' .btn[data-action=get_pos]').removeClass('hidden')
+			break
+		case 'manual':
+			$('input[data-l2key='+site+'_lat], input[data-l2key='+site+'_long]').removeClass('hidden')
+			$('input[data-l2key='+site+'_lat], input[data-l2key='+site+'_long]').removeClass('disabled')
+			$('.'+site+' .btn[data-action=get_pos]').addClass('hidden')
+			break
+		default:
+			$('input[data-l2key='+site+'_lat], input[data-l2key='+site+'_long]').addClass('hidden')
+			$('.'+site+' .btn[data-action=get_pos]').addClass('hidden')
+	}
+})
 
 /* Fonction permettant l'affichage des commandes dans l'équipement */
 function addCmdToTable(_cmd) {
