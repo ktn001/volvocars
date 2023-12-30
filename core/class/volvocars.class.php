@@ -121,6 +121,64 @@ class volvocars extends eqLogic {
 		if (is_object($car) and ($car->getId() != $this->getId())){
 			throw new Exception (__("Il y a un autre véhicule avec ce vin!",__FILE__));
 		}
+		if ($this->getConfiguration('site1_active') == 1 && $this->getConfiguration('site1_name') == '') {
+			$this->setConfiguration('site1_name',__('Domicile',__FILE__));
+		}
+		if ($this->getConfiguration('site2_active') == 1 && $this->getConfiguration('site2_name') == '') {
+			$this->setConfiguration('site2_name',__('Autre',__FILE__));
+		}
+		$this->setConfiguration('old_site1_name',$car->getConfiguration('site1_name'));
+		$this->setConfiguration('old_site2_name',$car->getConfiguration('site2_name'));
+	}
+
+	public function postAjax() {
+		foreach (['distance_site1','distance_site2'] as $logicalId){
+			$cmd = $this->getCmd('info',$logicalId);
+			if (is_object($cmd)) {
+				$cmd->event($cmd->execute());
+				$cmdName = $cmd->getName();
+				switch ($logicalId) {
+					case 'distance_site1':
+						$siteName = $this->getConfiguration('site1_name');
+						$oldSiteName = $this->getConfiguration('old_site1_name');
+						$site = 'site1';
+						break;
+					case 'distance_site2':
+						$siteName = $this->getConfiguration('site2_name');
+						$oldSiteName = $this->getConfiguration('old_site2_name');
+						$site = 'site2';
+						break;
+				}
+				$distance = __('distance',__FILE__);
+				if (($cmdName != $oldSiteName) && (($cmdName == $distance . ' ' . $site) || $cmdName == ($distance . ' ' . $oldSiteName))) {
+					$cmd->setName($distance . ' ' . $siteName);
+					$cmd->save();
+				}
+			}
+		}
+		foreach (['presence_site1','presence_site2'] as $logicalId){
+			$cmd = $this->getCmd('info',$logicalId);
+			if (is_object($cmd)) {
+				$cmdName = $cmd->getName();
+				switch ($logicalId) {
+					case 'presence_site1':
+						$siteName = $this->getConfiguration('site1_name');
+						$oldSiteName = $this->getConfiguration('old_site1_name');
+						$site = 'site1';
+						break;
+					case 'presence_site2':
+						$siteName = $this->getConfiguration('site2_name');
+						$oldSiteName = $this->getConfiguration('old_site2_name');
+						$site = 'site2';
+						break;
+				}
+				$presence = __('présence',__FILE__);
+				if (($cmdName != $oldSiteName) && (($cmdName == $presence . ' ' . $site) || $cmdName == ($presence . ' ' . $oldSiteName))) {
+					$cmd->setName($presence . ' ' . $siteName);
+					$cmd->save();
+				}
+			}
+		}
 	}
 
 	public function getImage() {
@@ -279,7 +337,7 @@ class volvocars extends eqLogic {
 				$parsedURL = parse_url($url);
 				parse_str($parsedURL['query'],$params);
 				$params['bg'] = 'ffffff00';
-				$params['w'] = '384';
+				$params['w'] = '1200';
 				$parsedURL['query'] = http_build_query($params);
 				$url = ((isset($parsedURL['scheme'])) ? $parsedURL['scheme'] . '://' : '')
 					  .((isset($parsedURL['user'])) ? $parsedURL['user'] . ((isset($parsedURL['pass'])) ? ':' . $parsedURL['pass'] : '') .'@' : '')
@@ -369,12 +427,22 @@ class volvocars extends eqLogic {
 		foreach (array_keys($infos) as $key) {
 			$logicalId = [];
 			$name = [];
+			$unit = null;
 			$subType = array(
 				'c' => 'binary',
 				'o' => 'binary',
 				's' => 'numeric',
 			);
 			switch ($key) {
+				case 'externalTemp':
+					$logicalId = 'temp_external';
+					$name = __('temp. externe',__FILE__);
+					if ($infos[$kex]['unit'] == 'celsius') {
+						$unit = '°C';
+					} else {
+						$unit = $infos[$key]['unit'];
+					}
+					break;
 				case 'frontLeftWindow':
 					$logicalId['c'] = 'win_fl_closed';
 					$logicalId['o'] = 'win_fl_open';
@@ -480,27 +548,37 @@ class volvocars extends eqLogic {
 					$name['s'] = __('état trappe',__FILE__);
 					break;
 				case 'location':
-					$c = $this->getCmd('info','presence');
-					if (!is_object($c)) {
-						log::add("volvocars","info",sprintf(__("Création de la commande %s",__FILE__),'presence'));
-						$cmd = new volvocarsCmd();
-						$cmd->setEqLogic_id($this->getId());
-						$cmd->setLogicalId('presence');
-						$cmd->setName(__("présence domicile",__FILE__));
-						$cmd->setType('info');
-						$cmd->setSubType('binary');
-						$cmd->save();
-					}
-					$c = $this->getCmd('info','distance');
-					if (!is_object($c)) {
-						log::add("volvocars","info",sprintf(__("Création de la commande %s",__FILE__),'distance'));
-						$cmd = new volvocarsCmd();
-						$cmd->setEqLogic_id($this->getId());
-						$cmd->setLogicalId('distance');
-						$cmd->setName(__("distance domicile",__FILE__));
-						$cmd->setType('info');
-						$cmd->setSubType('numeric');
-						$cmd->save();
+					foreach (['site1', 'site2'] as $site) {
+						$siteName = $this->getConfiguration($site . '_name');
+						if ($siteName == '') {
+							if ($site == 'site1') {
+								$siteName = __('Domicile',__FILE__);
+							} else {
+								$siteName = __('Autre',__FILE__);
+							}
+						}
+						$cmd = $this->getCmd('info','presence_' . $site);
+						if (!is_object($cmd)) {
+							log::add("volvocars","info",sprintf(__("Création de la commande %s",__FILE__),'presence_' . $site));
+							$cmd = new volvocarsCmd();
+							$cmd->setEqLogic_id($this->getId());
+							$cmd->setLogicalId('presence_' . $site);
+							$cmd->setName(__("présence" ,__FILE__)." ".$siteName);
+							$cmd->setType('info');
+							$cmd->setSubType('binary');
+							$cmd->save();
+						}
+						$cmd = $this->getCmd('info','distance_' . $site);
+						if (!is_object($cmd)) {
+							log::add("volvocars","info",sprintf(__("Création de la commande %s",__FILE__),'distance_' . $site));
+							$cmd = new volvocarsCmd();
+							$cmd->setEqLogic_id($this->getId());
+							$cmd->setLogicalId('distance_' . $site);
+							$cmd->setName(__("distance",__FILE__)." ".$siteName);
+							$cmd->setType('info');
+							$cmd->setSubType('numeric');
+							$cmd->save();
+						}
 					}
 					$logicalId = 'position';
 					$name = __('position',__FILE__);
@@ -543,6 +621,9 @@ class volvocars extends eqLogic {
 						$cmd->setName($name);
 						$cmd->setType('info');
 						$cmd->setSubType($subType);
+						if ($unit !== null){
+							$cmd->setUnite($unit);
+						}
 						$cmd->save();
 					}
 				}
@@ -576,6 +657,7 @@ class volvocars extends eqLogic {
 		$this->getInfosFromApi('doors',$createCmds);
 		$this->getInfosFromApi('location',$createCmds);
 		$this->getInfosFromApi('windows',$createCmds);
+		$this->getInfosFromApi('external_temp',$createCmds);
 	}
 
 	/*
@@ -597,11 +679,54 @@ class volvocars extends eqLogic {
 			return $replace;
 		}
 
+		//---- IMAGE
 		$replace['#vehicle_img#'] = $this->getImage();
+
+		//---- SITES
+		$replace['#site1_name'.$this->getId().'#'] = ucfirst($this->getConfiguration('site1_name'));
+		$replace['#site2_name'.$this->getId().'#'] = ucfirst($this->getConfiguration('site2_name'));
+		$replace['#site1_active'.$this->getId().'#'] = $this->getConfiguration('site1_active');
+		$replace['#site2_active'.$this->getId().'#'] = $this->getConfiguration('site2_active');
+		$replace['#site1_limit'.$this->getId().'#'] = $this->getConfiguration('site1_limit');
+		$replace['#site2_limit'.$this->getId().'#'] = $this->getConfiguration('site2_limit');
+		$cmd = $this->getCmd('info','presence_site1');
+		if (is_object($cmd)) {
+			$replace['#presence_site1_id#'] = $cmd->getId();
+			$replace['#presence_site1#'] = $cmd->execCmd();
+		}
+		$cmd = $this->getCmd('info','presence_site2');
+		if (is_object($cmd)) {
+			$replace['#presence_site2_id#'] = $cmd->getId();
+			$replace['#presence_site2#'] = $cmd->execCmd();
+		}
+		$cmd = $this->getCmd('info','distance_site1');
+		if (is_object($cmd)) {
+			$replace['#distance_site1_id#'] = $cmd->getId();
+			$replace['#distance_site1#'] = $cmd->execCmd();
+		}
+		$cmd = $this->getCmd('info','distance_site2');
+		if (is_object($cmd)) {
+			$replace['#distance_site2_id#'] = $cmd->getId();
+			$replace['#distance_site2#'] = $cmd->execCmd();
+		}
+
+
+
 		if ($panel == true) {
 			$template = 'volvocars_panel';
 		}
 		return $this->postToHtml($_version, template_replace($replace, getTemplate('core',$_version,$template, 'volvocars')));
+	}
+
+	public function getPosition(){
+		$position = array('lat' => '0.000000', 'long' => '0.000000');
+		$cmd = $this->getCmd('info','position');
+		if ( is_object($cmd)) {
+			$coordinate = explode(',',$cmd->execCmd());
+			$position['lat'] = $coordinate[0];
+			$position['long'] = $coordinate[1];
+		}
+		return $position;
 	}
 
 	/*     * **********************Getteur Setteur*************************** */
@@ -654,11 +779,23 @@ class volvocarsCmd extends cmd {
 
 	public function preSave(){
 		switch ($this->getLogicalId()) {
-			case 'presence':
-			case 'distance':
+			case 'distance_site1':
+			case 'distance_site2':
 				$locationCmd = $this->getEqLogic()->getCmd('info','position');
 				if (is_object($locationCmd)) {
 					$this->setValue("#" . $locationCmd->getId() . '#');
+				}
+				break;
+			case 'presence_site1':
+				$distanceCmd = $this->getEqLogic()->getCmd('info','distance_site1');
+				if (is_object($distanceCmd)) {
+					$this->setValue("#" . $distanceCmd->getId() . '#');
+				}
+				break;
+			case 'presence_site2':
+				$distanceCmd = $this->getEqLogic()->getCmd('info','distance_site2');
+				if (is_object($distanceCmd)) {
+					$this->setValue("#" . $distanceCmd->getId() . '#');
 				}
 				break;
 		}
@@ -667,11 +804,23 @@ class volvocarsCmd extends cmd {
 	public function postInsert() {
 		switch ($this->getLogicalId()) {
 			case 'position':
-				foreach (['presence','distance'] as $logicalId) {
+				foreach (['distance_site1', 'distance_site2'] as $logicalId) {
 					$cmd = $this->getEqLogic()->getCmd('info',$logicalId);
 					if (is_object($cmd)) {
 						$cmd->save();
 					}
+				}
+				break;
+			case 'distance_site1':
+				$cmd = $this->getEqLogic()->getCmd('info','presence_site1');
+				if (is_object($cmd)) {
+					$cmd->save();
+				}
+				break;
+			case 'distance_site2':
+				$cmd = $this->getEqLogic()->getCmd('info','presence_site2');
+				if (is_object($cmd)) {
+					$cmd->save();
 				}
 				break;
 		}
@@ -680,12 +829,129 @@ class volvocarsCmd extends cmd {
 	// Exécution d'une commande
 	public function execute($_options = array()) {
 		$car = $this->getEqLogic();
-		switch ($this->getLogicalId()) {
-			case ('lock'):
-			case ('lock-reduced'):
-			case ('unlock'):
-			case ('clim_start'):
-			case ('clim_stop'):
+		$logicalId = $this->getLogicalId();
+		switch ($logicalId) {
+			case 'distance_site1':
+			case 'distance_site2':
+				switch($logicalId) {
+					case 'distance_site1':
+						if ($car->getConfiguration('site1_active') != 1) {
+							return '-1';
+						}
+						switch ($car->getConfiguration('site1_source')) {
+							case 'jeedom':
+								$siteLat = config::byKey('info::latitude','core',0);
+								$siteLat = config::byKey('info::longitude','core',0);
+								break;
+							case 'manual':
+							case 'vehicle':
+								$siteLat = $car->getConfiguration('site1_lat');
+								$siteLong = $car->getConfiguration('site1_long');
+								break;
+							default:
+								$siteLat = 0;
+								$siteLong = 0;
+						}
+						if ($siteLat == 0 && $siteLong == 0) {
+							log::add("volvocars","warning",__("Les coordonées GPS du site 1 ne sont pas définies",__FILE__));
+							return '-1';
+						}
+						break;
+					case 'distance_site2':
+						if ($car->getConfiguration('site2_active') != 1) {
+							return '-1';
+						}
+						switch ($car->getConfiguration('site2_source')) {
+							case 'jeedom':
+								$siteLat = config::byKey('info::latitude','core',0);
+								$siteLat = config::byKey('info::longitude','core',0);
+								break;
+							case 'manual':
+							case 'vehicle':
+								$siteLat = $car->getConfiguration('site2_lat');
+								$siteLong = $car->getConfiguration('site2_long');
+								break;
+							default:
+								$siteLat = 0;
+								$siteLong = 0;
+						}
+						if ($siteLat == 0 && $siteLong == 0) {
+							log::add("volvocars","warning",__("Les coordonées GPS du site 2 ne sont pas définies",__FILE__));
+							return '-1';
+						}
+						break;
+				}
+				$position = $car->getPosition();
+				if ($position['lat'] == 0 && $position['long'] == 0) {
+					log::add("volvocars","warning",__("Les coordonées GPS de la position du véhicule ne sont pas définies",__FILE__));
+					return '-1';
+				}
+				$earth_radius = 6371;
+				$rla1 = deg2rad( floatval($siteLat) );
+				$rlo1 = deg2rad( floatval($siteLong) );
+				$rla2 = deg2rad( floatval($position['lat']) );
+				$rlo2 = deg2rad( floatval($position['long']) );
+				$dlo = ($rlo2 - $rlo1) / 2;
+				$dla = ($rla2 - $rla1) / 2;
+				$a = (sin($dla) * sin($dla)) + cos($rla1) * cos($rla2) * (sin($dlo) * sin($dlo));
+				$d = 2 * atan2(sqrt($a), sqrt(1 - $a));
+				return round(($earth_radius * $d * 1000), 1);
+				break;
+			case 'presence_site1':
+				if ($car->getConfiguration('site1_active') != 1) {
+					return '';
+				}
+				$distanceCmd = $car->getCmd('info','distance_site1');
+				if (! is_object($distanceCmd)) {
+					log::add("volvocars","error",__("La commande de distance pour le site 1 est introuvable",__FILE__));
+					return '';
+				}
+				$distance = $distanceCmd->execCmd();
+				if ($distance < 0) {
+					log::add("volvovars","error",__("La distance du site 1 est indéterminée",__FILE___));
+					return '';
+				}
+				$limite = $car->getConfiguration('site1_limit', '');
+				if (! is_numeric($limite)) {
+					log::add("volvocars","error",__("La distance limite pour le site 1 est indéterminée",__FILE__));
+					return '';
+				}
+				if ($distance <= $limite) {
+					return 1;
+				} else {
+					return 0;
+				}
+				break;
+			case 'presence_site2':
+				if ($car->getConfiguration('site2_active') != 1) {
+					return '';
+				}
+				$distanceCmd = $car->getCmd('info','distance_site2');
+				if (! is_object($distanceCmd)) {
+					log::add("volvocars","error",__("La commande de distance pour le site 2 est introuvable",__FILE__));
+					return '';
+				}
+				$distance = $distanceCmd->execCmd();
+				if ($distance < 0) {
+					log::add("volvovars","error",__("La distance du site 2 est indéterminée",__FILE___));
+					return '';
+				}
+				$limite = $car->getConfiguration('site2_limit', '');
+				if (! is_numeric($limite)) {
+					log::add("volvocars","error",__("La distance limite pour le site 2 est indéterminée",__FILE__));
+					return '';
+				}
+				if ($distance <= $limite) {
+					return 1;
+				} else {
+					return 0;
+				}
+				break;
+			case 'lock':
+			case 'lock-reduced':
+			case 'unlock':
+			case 'clim_start':
+			case 'clim_stop':
 				$car->getAccount()->sendCommand($this->getLogicalId(),$car->getVin());
 				break;
 			default:

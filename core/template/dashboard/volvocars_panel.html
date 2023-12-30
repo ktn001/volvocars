@@ -14,16 +14,27 @@
 			<!-- Column N°1 -->
 			<div class="col-xs-4 column">
 
+				<!-- IMAGE -->
 				<div class="col-xs-12 tile"> 
 					<div id="picture">
-						<img id="img_car_#id#" src="#vehicle_img#" />
+						<img id="img_car_#id#" src="#vehicle_img#" style='width:100%' />
 					</div>
 				</div>
 
-				<div class="col-xs-2 tile">
-					<div id="picture" style="height:35px; width:75px; padding-top: 5px;"><i class="Cmd#presence_id#"></i></div>
-					<div id="distance" style="height:15px; width:75px;"><span class="Cmd#distance_id#"></span></div>
+				<!-- PRESENCES -->
+				<div class="col-xs-6 tile">
+					<div id="div_site1" class="col-xs-6" style='padding:0px !important'>
+						<div id='name_site1_#id#' class="tile_titel"><span>#site1_name#id##</span></div>
+						<div id='presence_site1_#id#'><i class='Cmd#presence_site1_id#'></i></div>
+						<div id='distance_site1_#id#'><span class='Cmd#distance_site1_id#'>span1</span></div>
+					</div>
+					<div id="div_site2" class="col-xs-6" style='padding:0px !important'>
+						<div id='name_site2_#id#' class="tile_titel"><span>#site2_name#id##</span></div>
+						<div id='presence_site2_#id#'><i class='Cmd#presence_site2_id#'></i></div>
+						<div id='distance_site2_#id#'><span class='Cmd#distance_site2_id#'>span2</span></div>
+					</div>
 				</div>
+
 				<div class="col-xs-10 tile">
 					text<br>
 					text<br>
@@ -98,3 +109,80 @@
 		</div>
 	</div>
 </div>
+
+<script>
+
+// SITES
+// =====
+
+//-- actif
+if (#site1_active#id## == 1) {
+	$('#div_site1').removeClass('hidden')
+} else {
+	$('#div_site1').addClass('hidden')
+	$('#div_site2').addClass('col-xs-offset-3')
+}
+
+if (#site2_active#id## == 1) {
+	$('#div_site2').removeClass('hidden')
+} else {
+	$('#div_site2').addClass('hidden')
+	$('#div_site1').addClass('col-xs-offset-3')
+}
+
+// PRESENCES
+// =========
+function updatePresence(presence_id, site_name, _options) {
+	if (_options.display_value == 1) {
+		$('.Cmd' + presence_id).empty().append('<i class="fas fa-house-user color_on" style="font-size:1.75em;" title="{{Présence}} '+site_name+':<br/>{{Oui}}"></i>');
+	} else if (_options.display_value == 0) {
+		$('.Cmd' + presence_id).empty().append('<i class="fas fa-home color_off" style="font-size:1.75em;" title="{{Présence}} '+site_name+':<br/>{{Non}}"></i>');
+	} else {
+		$('.Cmd' + presence_id).empty().append('<i class="fas fa-house-damage" style="font-size:1.75em;" title="{{Présence}} '+site_name+':<br/>{{Inconnue}}"></i>');
+	}
+}
+jeedom.cmd.update['#presence_site1_id#'] = function(_options) {
+	updatePresence('#presence_site1_id#', '#site1_name#id##', _options)
+}
+jeedom.cmd.update['#presence_site2_id#'] = function(_options) {
+	updatePresence('#presence_site2_id#', '#site2_name#id##', _options)
+}
+jeedom.cmd.update['#presence_site1_id#'] ({display_value: '#presence_site1#'});
+jeedom.cmd.update['#presence_site2_id#'] ({display_value: '#presence_site2#'});
+
+// DISTANCES
+// =========
+function updateDistance(distance_id, color_class, _options) {
+	value = parseFloat(_options.display_value)
+	if (value >= 100000) {
+		txt = (value/1000).toFixed(0) + ' Km'
+	} else if (value >= 10000) {
+		txt = (value/1000).toFixed(1) + ' Km'
+	} else if (value >= 1000) {
+		txt = (value/1000).toFixed(2) + ' Km'
+	} else {
+		txt = value.toFixed(0) + ' m'
+	}
+	$('.Cmd' + distance_id).empty().append('<span class="' + color_class + '">' + txt + '</span>')
+}
+jeedom.cmd.update['#distance_site1_id#'] = function(_options) {
+	if (_options.display_value <= #site1_limit#id##) {
+		color_class = 'color_on'
+	} else {
+		color_class = 'color_off'
+	}
+	updateDistance('#distance_site1_id#', color_class, _options)
+}
+jeedom.cmd.update['#distance_site2_id#'] = function(_options) {
+	if (_options.display_value <= #site2_limit#id##) {
+		color_class = 'color_on'
+	} else {
+		color_class = 'color_off'
+	}
+	updateDistance('#distance_site2_id#', color_class, _options)
+}
+jeedom.cmd.update['#distance_site1_id#'] ({display_value: '#distance_site1#'});
+jeedom.cmd.update['#distance_site2_id#'] ({display_value: '#distance_site2#'});
+
+
+</script>

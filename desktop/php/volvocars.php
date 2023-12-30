@@ -367,18 +367,18 @@ $accounts = volvoAccount::all();
 							<div class="form-group">
 								<label class="col-sm-4 control-label">{{Distance max (en m)}}</label>
 								<div class="col-sm-4 site1">
-									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="site1_distance">
+									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="site1_limit">
 								</div>
 								<div class="col-sm-4 site2">
-									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="site2_distance">
+									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="site2_limit">
 								</div>
 							</div>
 							<div class="form-group">
 								<div class="col-sm-offset-4 col-sm-4 site1">
-									<a class="btn btn-sm btn-primary eqLogicAction pull-right" data-action="get_pos"><i class="fas fa-location-arrow"></i></a>
+									<a class="btn btn-sm btn-primary eqLogicAction pull-right" data-site="site1" data-action="get_pos"><i class="fas fa-location-arrow"></i> {{Récupérer position véhicule}}</a>
 								</div>
 								<div class="col-sm-4 site2">
-									<a class="btn btn-sm btn-primary eqLogicAction pull-right" data-action="get_pos"><i class="fas fa-location-arrow"></i></a>
+									<a class="btn btn-sm btn-primary eqLogicAction pull-right" data-site="site2" data-action="get_pos"><i class="fas fa-location-arrow"></i> {{Récupérer position véhicule}}</a>
 								</div>
 							</div>
 						</div>
@@ -393,9 +393,7 @@ $accounts = volvoAccount::all();
 									<textarea class="form-control eqLogicAttr autogrow" data-l1key="comment"></textarea>
 								</div>
 							</div>
-							<div class='col-sm-4'>
-							</div>
-							<div clas='col-sm-6'>
+							<div class='col-sm-12'>
 								<img id="img_car" class="img-responsive">
 							</div>
 						</div>

@@ -81,7 +81,6 @@ function editAccount(id) {
 				text: "{{Supprimer}}",
 				class: "btn-delete",
 				click: function() {
-					console.log("Id to delete: " + id)
 					$.ajax({
 						type: 'POST',
 						url: 'plugins/volvocars/core/ajax/volvocars.ajax.php',
@@ -264,7 +263,6 @@ $('.eqLogicAction[data-action=protect]').trigger('click')
  * function appelée lors du chargement d'un eqLogic
  */
 function printEqLogic(data) {
-	console.log(data)
 	img = $('.eqLogicDisplayCard[data-eqLogic_id=' + data.id + '] img').attr('src')
 	$('#img_car').attr('src',img)
 }
@@ -274,7 +272,6 @@ function printEqLogic(data) {
  */
 $('[data-l1key=configuration][data-l2key$=_active]').off('change').on('change', function(){
 	site = $(this).data('site')
-	console.log(site)
 	if ($(this).value() == 1) {
 		$('div.'+site+' *').removeClass('hidden')
 		$('div.'+site+' select').trigger('change')
@@ -286,10 +283,50 @@ $('[data-l1key=configuration][data-l2key$=_active]').off('change').on('change', 
 $('[data-l1key=configuration][data-l2key$=_active]').trigger('change')
 
 /*
+ * Action bouton de récupération position véhicule
+ */
+$('.eqLogicAction[data-action=get_pos]').off('click').on('click', function() {
+	site = $(this).data('site')
+	id = $('.eqLogicAttr[data-l1key=id]').value()
+	$.ajax({
+		type: 'POST',
+		url: 'plugins/volvocars/core/ajax/volvocars.ajax.php',
+		data: {
+			action: 'getPosition',
+			id: id
+		},
+		dataType: 'json',
+		global: false,
+		error: function (request, status, error) {
+			handleAjaxError(request, status, error)
+		},
+		success: function (data) {
+			if (data.state != 'ok') {
+				$.fn.showAlert({message: data.result, level:'danger'})
+				return
+			}
+			$('[data-l2key='+site+'_lat').value(data.result.lat)
+			$('[data-l2key='+site+'_long').value(data.result.long)
+		}
+	})
+})
+
+/*
  * Changement de source d'un site
  */
-$('.eqLogicAttr[data-l2key$=_source]').off('change').on('change', function() {
-	console.log($(this).value())
+$('.eqLogicAttr[data-l2key$=_source]').off('change').on('focus', function() {
+	site = $(this).data('site')
+	switch ($(this).value()) {
+		case 'manual':
+			$(this).data('old_manual_lat', $('[data-l2key='+site+'_lat]').value())
+			$(this).data('old_manual_long', $('[data-l2key='+site+'_long]').value())
+			break
+		case 'manual':
+			$(this).data('old_vehicle_lat', $('[data-l2key='+site+'_lat]').value())
+			$(this).data('old_vehicle_long', $('[data-l2key='+site+'_long]').value())
+			break
+	}
+}).on( 'change', function() {
 	site = $(this).data('site')
 	switch ($(this).value()){
 		case 'jeedom':
@@ -297,11 +334,16 @@ $('.eqLogicAttr[data-l2key$=_source]').off('change').on('change', function() {
 			$('.'+site+' .btn[data-action=get_pos]').addClass('hidden')
 			break
 		case 'vehicle':
+			$('[data-l2key='+site+'_lat').value($(this).data('old_vehicle_lat'))
+			$('[data-l2key='+site+'_long').value($(this).data('old_vehicle_long'))
 			$('input[data-l2key='+site+'_lat], input[data-l2key='+site+'_long]').removeClass('hidden')
 			$('input[data-l2key='+site+'_lat], input[data-l2key='+site+'_long]').addClass('disabled')
 			$('.'+site+' .btn[data-action=get_pos]').removeClass('hidden')
+			// getPosition(site)
 			break
 		case 'manual':
+			$('[data-l2key='+site+'_lat').value($(this).data('old_manual_lat'))
+			$('[data-l2key='+site+'_long').value($(this).data('old_manual_long'))
 			$('input[data-l2key='+site+'_lat], input[data-l2key='+site+'_long]').removeClass('hidden')
 			$('input[data-l2key='+site+'_lat], input[data-l2key='+site+'_long]').removeClass('disabled')
 			$('.'+site+' .btn[data-action=get_pos]').addClass('hidden')

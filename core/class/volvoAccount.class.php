@@ -28,6 +28,7 @@ class volvoAccount {
 	const DOORS_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/doors";
 	const WINDOWS_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/windows";
 	const LOCATION_STATE_URL = "https://api.volvocars.com/location/v1/vehicles/%s/location";
+	const EXTERNAL_TEMPERATUR_URL = "https://api.volvocars.com/extended-vehicle/v1/vehicles/%s/resources/externalTemp";
 
 	const CAR_LOCK_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands/lock";
 	const CAR_LOCK_REDUCED_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands/lock-reduced-guard";
@@ -317,14 +318,39 @@ class volvoAccount {
 			case 'windows':
 				$url = sprintf(self::WINDOWS_STATE_URL,$vin);
 				break;
+			case 'external_temp':
+				$url = sprintf(self::EXTERNAL_TEMPERATUR_URL,$vin);
+				break;
 		}
 		$session = $this->session($url);
 		$content = curl_exec($session);
+		$content = is_json($content,$content);
 		$httpCode = curl_getinfo($session,CURLINFO_HTTP_CODE);
 		if ( $httpCode != 200) {
+			$lignes = array();
+			$lignes[] = 'Error getting infos "' . $endpoint . '" for vin: ' . $vin;
+			$lignes[] = "httpCode: " . $httpCode;
+			if (isset($content['error']['message'])) {
+				$lignes[] = $content['error']['message'];
+			}
+			if (isset($content['error']['description'])) {
+				$lignes[] =  $content['error']['description'];
+			}
+			if (isset($content['exveErrorMsg'])) {
+				$lignes[] = $content['exveErrorMsg'];
+			}
+			if (isset($content['exveNote'])) {
+				$lignes[] = $content['exveNote'];
+			}
+			$prefix = '┌';
+			for ($i = 0; $i < count($lignes)-1; $i++) {
+				log::add("volvocars","error",$prefix . $lignes[$i]);
+				$prefix = '│';
+			}
+			log::add("volvocars","error",'└' . end($lignes));
+			log::add("volvocars","error",print_r($content,true));
 			throw new Exception (sprintf(__("Erreur de la récupération d'infos pour le  véhicule '%s' (http_code: %s)",__FILE__), $vin, $httpCode));
 		}
-		$content = is_json($content,$content);
 		if (isset($content['data'])) {
 			$content = $content['data'];
 		}

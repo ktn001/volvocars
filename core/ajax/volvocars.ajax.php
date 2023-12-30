@@ -58,6 +58,46 @@ try {
 		ajax::success(json_encode(utils::o2a($account)));
 	}
 
+	if ($action == 'getPosition') {
+		$id = init('id');
+		if ($id == ''){
+			throw new Exception(__("l'id du véhicule n'est pas défini",__FILE__));
+		}
+		$car = volvocars::byid($id);
+		if (! is_object($car)){
+			throw new Exception (sprintf(__("Le véhicule %s est introuvable",__FILE__),$id));
+		}
+		ajax::success($car->getPosition());
+	}
+
+	if ($action == 'panelWidget'){
+		$id = init('id');
+		if ($id == ''){
+			throw new Exception(__("l'id du véhicule n'est pas défini",__FILE__));
+		}
+		$car = volvocars::byid($id);
+		if (! is_object($car)){
+			throw new Exception (sprintf(__("Le véhicule %s est introuvable",__FILE__),$id));
+		}
+		$widget = $car->toHtml('panel');
+		ajax::success($widget);
+	}
+
+	if ($action == 'removeAccount') {
+		$id = init('id');
+		if ($id == '') {
+			throw new Exception(__("l'id du compte à supprimer n'est pas défini",__FILE__));
+		}
+		$account = volvoAccount::byId($id);
+		if (!is_object($account)) {
+			throw new Exception(sprintf(__("Le compte %s est introuvable",__FILE__),$id));
+		}
+		if ($account->remove()) {
+			ajax::success();
+		}
+		ajax::error(sprintf(__("La suppression de compte %s n'a pas fonctionné correctement",__FILE__),$id));
+	}
+
 	if ($action == 'saveAccount') {
 		$data = init('account');
 		if ($data == ''){
@@ -76,21 +116,6 @@ try {
 		ajax::success();
 	}
 
-	if ($action == 'removeAccount') {
-		$id = init('id');
-		if ($id == '') {
-			throw new Exception(__("l'id du compte à supprimer n'est pas défini",__FILE__));
-		}
-		$account = volvoAccount::byId($id);
-		if (!is_object($account)) {
-			throw new Exception(sprintf(__("Le compte %s est introuvable",__FILE__),$id));
-		}
-		if ($account->remove()) {
-			ajax::success();
-		}
-		ajax::error(sprintf(__("La suppression de compte %s n'a pas fonctionné correctement",__FILE__),$id));
-	}
-
 	if ($action == 'synchronizeAccount'){
 		$accountId = init('accountId');
 		if ($accountId == '') {
@@ -104,18 +129,6 @@ try {
 		ajax::success();
 	}
 
-	if ($action == 'panelWidget'){
-		$id = init('id');
-		if ($id == ''){
-			throw new Exception(__("l'id du véhicule n'est pas défini",__FILE__));
-		}
-		$car = volvocars::byid($id);
-		if (! is_object($car)){
-			throw new Exception (sprintf(__("Le véhicule %s est introuvable",__FILE__),$id));
-		}
-		$widget = $car->toHtml('panel');
-		ajax::success($widget);
-	}
 
 	throw new Exception(__('Aucune méthode correspondante à', __FILE__) . ' : ' . init('action'));
 	/*     * *********Catch exeption*************** */

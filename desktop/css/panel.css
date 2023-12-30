@@ -2,6 +2,11 @@
  * vim: tabstop=4 autoindent
  */
 
+:root {
+	--vlv-color-off: var(--al-danger-color);
+	--vlv-color-on: var(--bt-success-color);
+}
+
 body[data-theme=core2019_Dark] {
 	--vlv-bg-color: black;
 	--vlv-display-light: none;
@@ -86,6 +91,18 @@ body[data-theme=core2019_Legacy] {
 	text-align:center;
 }
 
+#volvocars_panel_ID .color_on {
+	color: var(--vlv-color-on);
+}
+
+#volvocars_panel_ID .color_off{
+	color: var(--vlv-color-off);
+}
+
+#volvocars_panel_ID .tile_titel {
+	color: var(--link-color) !important;		
+}
+
 #volvocars_panel_ID .column {
 	padding : 0px !important;
 }
@@ -142,4 +159,3 @@ body[data-theme=core2019_Legacy] {
 #volvocars_panel_ID .tile.col-xs-1 {
 	width: calc( 8.33333333% - 10px );
 }
-
