@@ -95,6 +95,18 @@ class volvocars extends eqLogic {
 					's' => 2
 				);
 				break;
+			case 'HIGH_PRESSURE':
+				$value = 1;
+				break;
+			case 'LOW_PRESSURE':
+				$value = 2;
+				break;
+			case 'VERY_LOW_PRESSURE':
+				$value = 3;
+				break;
+			case 'FAILURE':
+				$value = 1;
+				break;
 			case 'NO_WARNING':
 				$value = 0;
 				break;
@@ -228,7 +240,7 @@ class volvocars extends eqLogic {
 			return '/plugins/volvocars/data/' . $img;
 		}
 		$plugin = plugin::byId($this->getEqType_name());
-        return $plugin->getPathImgIcon();
+		return $plugin->getPathImgIcon();
 	}
 
 	public function synchronize() {
@@ -479,13 +491,28 @@ class volvocars extends eqLogic {
 				'o' => 'numeric',
 				's' => 'numeric',
 			);
-			switch ($key) {
-				case 'brakeFluidLevelWarning':
+			switch ($endpoint.".".$key) {
+				case 'brake_fluid.brakeFluidLevelWarning':
 					$logicalId = 'al_brake_fluid';
 					$name = __("niveau liquide de frein",__FILE__);
 					$subType = "numeric";
 					break;
-				case 'centralLock':
+				case 'diagnostics.engineCoolantLevelWarning':
+					$logicalId = 'al_coolant';
+					$name = __("niveau du liquide de refroidissement",__FILE__);
+					$subType = "numeric";
+					break;
+				case 'diagnostics.oilLevelWarning':
+					$logicalId = 'al_oil';
+					$name = __("niveau d'huile",__FILE__);
+					$subType = "numeric";
+					break;
+				case 'diagnostics.washerFluidLevelWarning':
+					$logicalId = 'al_washer_fluid';
+					$name = __('Lave-vitre',__FILE__);
+					$subType = 'numeric';
+					break;
+				case 'doors.centralLock':
 					$logicalId['c'] = 'lock_locked';
 					$logicalId['o'] = 'lock_unlocked';
 					$logicalId['s'] = 'lock_state';
@@ -493,30 +520,7 @@ class volvocars extends eqLogic {
 					$name['o'] = __('dévérouillé',__FILE__);
 					$name['s'] = __('état verouillage',__FILE__);
 					break;
-				case 'distanceToEmptyBattery':
-					$logicalId['a'] = 'electricAutonomy';
-					$logicalId['b'] = 'al_electricAutonomy';
-					$name['a'] = __('Autonomie électrique',__FILE__);
-					$name['b'] = __('Autonomie électrique faible',__FILE__);
-					$subType['a'] = 'numeric';
-					$subType['b'] = 'numeric';
-					$updateValue['b'] = false;
-					break;
-				case 'distanceToEmptyTank':
-					$logicalId['a'] = 'heatAutonomy';
-					$logicalId['b'] = 'al_heatAutonomy';
-					$name['a'] = __('Autonomie thermique',__FILE__);
-					$name['b'] = __('Autonomie thermique faible',__FILE__);
-					$subType['a'] = 'numeric';
-					$subType['b'] = 'numeric';
-					$updateValue['b'] = false;
-					break;
-				case 'engineCoolantLevelWarning':
-					$logicalId = 'al_coolant';
-					$name = __("niveau du liquide de refroidissement",__FILE__);
-					$subType = "numeric";
-					break;
-				case 'frontLeftDoor':
+				case 'doors.frontLeftDoor':
 					$logicalId['c'] = 'door_fl_closed';
 					$logicalId['o'] = 'door_fl_open';
 					$logicalId['s'] = 'door_fl_state';
@@ -524,15 +528,7 @@ class volvocars extends eqLogic {
 					$name['o'] = __('porte avant gauche ouverte',__FILE__);
 					$name['s'] = __('état porte avant gauche',__FILE__);
 					break;
-				case 'frontLeftWindow':
-					$logicalId['c'] = 'win_fl_closed';
-					$logicalId['o'] = 'win_fl_open';
-					$logicalId['s'] = 'win_fl_state';
-					$name['c'] = __('fenêtre avant gauche fermée',__FILE__);
-					$name['o'] = __('fenêtre avant gauche ouverte',__FILE__);
-					$name['s'] = __('état fenêtre avant gauche',__FILE__);
-					break;
-				case 'frontRightDoor':
+				case 'doors.frontRightDoor':
 					$logicalId['c'] = 'door_fr_closed';
 					$logicalId['o'] = 'door_fr_open';
 					$logicalId['s'] = 'door_fr_state';
@@ -540,15 +536,7 @@ class volvocars extends eqLogic {
 					$name['o'] = __('porte avant droite ouverte',__FILE__);
 					$name['s'] = __('état porte avant droite',__FILE__);
 					break;
-				case 'frontRightWindow':
-					$logicalId['c'] = 'win_fr_closed';
-					$logicalId['o'] = 'win_fr_open';
-					$logicalId['s'] = 'win_fr_state';
-					$name['c'] = __('fenêtre avant droite fermée',__FILE__);
-					$name['o'] = __('fenêtre avant droite ouverte',__FILE__);
-					$name['s'] = __('état fenêtre avant droite',__FILE__);
-					break;
-				case 'hood':
+				case 'doors.hood':
 					$logicalId['c'] = 'hood_closed';
 					$logicalId['o'] = 'hood_open';
 					$logicalId['s'] = 'hood_state';
@@ -556,7 +544,158 @@ class volvocars extends eqLogic {
 					$name['o'] = __('capot ouvert',__FILE__);
 					$name['s'] = __('état capot',__FILE__);
 					break;
-				case 'location':
+				case 'doors.rearLeftDoor':
+					$logicalId['c'] = 'door_rl_closed';
+					$logicalId['o'] = 'door_rl_open';
+					$logicalId['s'] = 'door_rl_state';
+					$name['c'] = __('porte arrière gauche fermée',__FILE__);
+					$name['o'] = __('porte arrière gauche ouverte',__FILE__);
+					$name['s'] = __('état porte arrière gauche',__FILE__);
+					break;
+				case 'doors.rearRightDoor':
+					$logicalId['c'] = 'door_rr_closed';
+					$logicalId['o'] = 'door_rr_open';
+					$logicalId['s'] = 'door_rr_state';
+					$name['c'] = __('porte arrière droite fermée',__FILE__);
+					$name['o'] = __('porte arrière droite ouverte',__FILE__);
+					$name['s'] = __('état porte arrière droite',__FILE__);
+					break;
+				case 'doors.tailgate':
+					$logicalId['c'] = 'tail_closed';
+					$logicalId['o'] = 'tail_open';
+					$logicalId['s'] = 'tail_state';
+					$name['c'] = __('hayon fermé',__FILE__);
+					$name['o'] = __('hayon ouvert',__FILE__);
+					$name['s'] = __('état hayon',__FILE__);
+					break;
+				case 'doors.tankLid':
+					$logicalId['c'] = 'tank_closed';
+					$logicalId['o'] = 'tank_open';
+					$logicalId['s'] = 'tank_state';
+					$name['c'] = __('trappe fermée',__FILE__);
+					$name['o'] = __('trappe ouverte',__FILE__);
+					$name['s'] = __('état trappe',__FILE__);
+					break;
+				case 'warnings.brakeLightCenterWarning':
+					$logicalId['a'] = 'al_brakeLight_c';
+					$logicalId['b'] = 'al_light';
+					$name['a'] = __('feu frein centrale',__FILE);
+					$name['b'] = __('alert lampes',__FILE);
+					$subType['a'] = 'numeric';
+					$subType['b'] = 'numeric';
+					$updateValue['b'] = false;
+					break;
+				case 'warnings.brakeLightLeftWarning':
+					$logicalId = 'al_brakeLight_l';
+					$name = __('feu frein gauche',__FILE);
+					$subType = 'numeric';
+					break;
+				case 'warnings.brakeLightRightWarning':
+					$logicalId = 'al_brakeLight_r';
+					$name = __('feu frein droite',__FILE);
+					$subType = 'numeric';
+					break;
+				case 'warnings.daytimeRunningLightLeftWarning':
+					$logicalId = 'al_daytimeRunningLight_l';
+					$name = __('feu jour gauche',__FILE);
+					$subType = 'numeric';
+					break;
+				case 'warnings.daytimeRunningLightRightWarning':
+					$logicalId = 'al_daytimeRunningLight_r';
+					$name = __('feu jour droite',__FILE);
+					$subType = 'numeric';
+					break;
+				case 'warnings.fogLightFrontWarning':
+					$logicalId = 'al_fogLight_f';
+					$name = __('feux brouillard avant',__FILE);
+					$subType = 'numeric';
+					break;
+				case 'warnings.fogLightRearWarning':
+					$logicalId = 'al_fogLight_r';
+					$name = __('feux brouillard arrière',__FILE);
+					$subType = 'numeric';
+					break;
+				case 'warnings.hazardLightsWarning':
+					$logicalId = 'al_hazardLights';
+					$name = __('feux détresse',__FILE);
+					$subType = 'numeric';
+					break;
+				case 'warnings.highBeamLeftWarning':
+					$logicalId = 'al_highBeam_l';
+					$name = __('feu route gauche',__FILE);
+					$subType = 'numeric';
+					break;
+				case 'warnings.highBeamRightWarning':
+					$logicalId = 'al_highBeam_r';
+					$name = __('feu route droite',__FILE);
+					$subType = 'numeric';
+					break;
+				case 'warnings.lowBeamLeftWarning':
+					$logicalId = 'al_lowBeam_l';
+					$name = __('feu croisement gauche',__FILE);
+					$subType = 'numeric';
+					break;
+				case 'warnings.lowBeamRightWarning':
+					$logicalId = 'al_lowBeam_r';
+					$name = __('feu croisement droite',__FILE);
+					$subType = 'numeric';
+					break;
+				case 'warnings.positionLightFrontLeftWarning':
+					$logicalId = 'al_positionLight_fl';
+					$name = __('feu position avant gauche',__FILE);
+					$subType = 'numeric';
+					break;
+				case 'warnings.positionLightFrontRightWarning':
+					$logicalId = 'al_positionLight_fr';
+					$name = __('feu position avant droite',__FILE);
+					$subType = 'numeric';
+					break;
+				case 'warnings.positionLightRearLeftWarning':
+					$logicalId = 'al_positionLight_rl';
+					$name = __('feu position arrière gauche',__FILE);
+					$subType = 'numeric';
+					break;
+				case 'warnings.positionLightRearRightWarning':
+					$logicalId = 'al_positionLight_rr';
+					$name = __('feu position arrière droite',__FILE);
+					$subType = 'numeric';
+					break;
+				case 'warnings.registrationPlateLightWarning':
+					$logicalId = 'al_registrationPlateLight';
+					$name = __('feu plaque',__FILE);
+					$subType = 'numeric';
+					break;
+				case 'warnings.reverseLightsWarning':
+					$logicalId = 'al_reverseLights';
+					$name = __('ifeu recule',__FILE);
+					$subType = 'numeric';
+					break;
+				case 'warnings.sideMarkLightsWarning':
+					$logicalId = 'al_sideMarkLights';
+					$name = __('feux latéraux',__FILE);
+					$subType = 'numeric';
+					break;
+				case 'warnings.turnIndicationFrontLeftWarning':
+					$logicalId = 'al_turnIndication_fl';
+					$name = __('clignotant avant gauche',__FILE);
+					$subType = 'numeric';
+					break;
+				case 'warnings.turnIndicationFrontRightWarning':
+					$logicalId = 'al_turnIndication_fr';
+					$name = __('clignotant avant droit',__FILE);
+					$subType = 'numeric';
+					break;
+				case 'warnings.turnIndicationRearLeftWarning':
+					$logicalId = 'al_turnIndication_rl';
+					$name = __('clignotant arrière gauche',__FILE);
+					$subType = 'numeric';
+					break;
+				case 'warnings.turnIndicationRearRightWarning':
+					$logicalId = 'al_turnIndication_rr';
+					$name = __('clignotant arrière droit',__FILE);
+					$subType = 'numeric';
+					break;
+				case 'location.location':
 					foreach (['site1', 'site2'] as $site) {
 						$siteName = $this->getConfiguration($site . '_name');
 						if ($siteName == '') {
@@ -593,20 +732,65 @@ class volvocars extends eqLogic {
 					$name = __('position',__FILE__);
 					$subType = 'string';
 					break;
-				case 'oilLevelWarning':
-					$logicalId = 'al_oil';
-					$name = __("niveau d'huile",__FILE__);
-					$subType = "numeric";
+				case 'statistics.distanceToEmptyBattery':
+					$logicalId['a'] = 'electricAutonomy';
+					$logicalId['b'] = 'al_electricAutonomy';
+					$name['a'] = __('Autonomie électrique',__FILE__);
+					$name['b'] = __('Autonomie électrique faible',__FILE__);
+					$subType['a'] = 'numeric';
+					$subType['b'] = 'numeric';
+					$updateValue['b'] = false;
 					break;
-				case 'rearLeftDoor':
-					$logicalId['c'] = 'door_rl_closed';
-					$logicalId['o'] = 'door_rl_open';
-					$logicalId['s'] = 'door_rl_state';
-					$name['c'] = __('porte arrière gauche fermée',__FILE__);
-					$name['o'] = __('porte arrière gauche ouverte',__FILE__);
-					$name['s'] = __('état porte arrière gauche',__FILE__);
+				case 'statistics.distanceToEmptyTank':
+					$logicalId['a'] = 'heatAutonomy';
+					$logicalId['b'] = 'al_heatAutonomy';
+					$name['a'] = __('Autonomie thermique',__FILE__);
+					$name['b'] = __('Autonomie thermique faible',__FILE__);
+					$subType['a'] = 'numeric';
+					$subType['b'] = 'numeric';
+					$updateValue['b'] = false;
 					break;
-				case 'rearLeftWindow':
+				case 'tyre.frontLeft':
+					$logicalId = 'tyre_fl';
+					$name = __('pneu avant gauche',__FILE__);
+					$subType = 'numeric';
+					break;
+				case 'tyre.frontRight':
+					$logicalId['a'] = 'tyre_fr';
+					$logicalId['b'] = 'al_tyre';
+					$name['a'] = __('pneu avant droit',__FILE__);
+					$name['b'] = __('alerte pneus',__FILE__);
+					$subType['a'] = 'numeric';
+					$subType['b'] = 'numeric';
+					$updateValue['b'] = false;
+					break;
+				case 'tyre.rearLeft':
+					$logicalId = 'tyre_rl';
+					$name = __('pneu arrière gauche',__FILE__);
+					$subType = 'numeric';
+					break;
+				case 'tyre.rearRight':
+					$logicalId = 'tyre_rr';
+					$name = __('pneu arrière droit',__FILE__);
+					$subType = 'numeric';
+					break;
+				case 'windows.frontLeftWindow':
+					$logicalId['c'] = 'win_fl_closed';
+					$logicalId['o'] = 'win_fl_open';
+					$logicalId['s'] = 'win_fl_state';
+					$name['c'] = __('fenêtre avant gauche fermée',__FILE__);
+					$name['o'] = __('fenêtre avant gauche ouverte',__FILE__);
+					$name['s'] = __('état fenêtre avant gauche',__FILE__);
+					break;
+				case 'windows.frontRightWindow':
+					$logicalId['c'] = 'win_fr_closed';
+					$logicalId['o'] = 'win_fr_open';
+					$logicalId['s'] = 'win_fr_state';
+					$name['c'] = __('fenêtre avant droite fermée',__FILE__);
+					$name['o'] = __('fenêtre avant droite ouverte',__FILE__);
+					$name['s'] = __('état fenêtre avant droite',__FILE__);
+					break;
+				case 'windows.rearLeftWindow':
 					$logicalId['c'] = 'win_rl_closed';
 					$logicalId['o'] = 'win_rl_open';
 					$logicalId['s'] = 'win_rl_state';
@@ -614,15 +798,7 @@ class volvocars extends eqLogic {
 					$name['o'] = __('fenêtre arrière gauche ouverte',__FILE__);
 					$name['s'] = __('état fenêtre arrière gauche',__FILE__);
 					break;
-				case 'rearRightDoor':
-					$logicalId['c'] = 'door_rr_closed';
-					$logicalId['o'] = 'door_rr_open';
-					$logicalId['s'] = 'door_rr_state';
-					$name['c'] = __('porte arrière droite fermée',__FILE__);
-					$name['o'] = __('porte arrière droite ouverte',__FILE__);
-					$name['s'] = __('état porte arrière droite',__FILE__);
-					break;
-				case 'rearRightWindow':
+				case 'windows.rearRightWindow':
 					$logicalId['c'] = 'win_rr_closed';
 					$logicalId['o'] = 'win_rr_open';
 					$logicalId['s'] = 'win_rr_state';
@@ -630,34 +806,13 @@ class volvocars extends eqLogic {
 					$name['o'] = __('fenêtre arrière droite ouverte',__FILE__);
 					$name['s'] = __('état fenêtre arrière droite',__FILE__);
 					break;
-				case 'sunroof':
+				case 'windows.sunroof':
 					$logicalId['c'] = 'roof_closed';
 					$logicalId['o'] = 'roof_open';
 					$logicalId['s'] = 'roof_state';
 					$name['c'] = __('toit fermé',__FILE__);
 					$name['o'] = __('toit ouvert',__FILE__);
 					$name['s'] = __('état toit',__FILE__);
-					break;
-				case 'tailgate':
-					$logicalId['c'] = 'tail_closed';
-					$logicalId['o'] = 'tail_open';
-					$logicalId['s'] = 'tail_state';
-					$name['c'] = __('hayon fermé',__FILE__);
-					$name['o'] = __('hayon ouvert',__FILE__);
-					$name['s'] = __('état hayon',__FILE__);
-					break;
-				case 'tankLid':
-					$logicalId['c'] = 'tank_closed';
-					$logicalId['o'] = 'tank_open';
-					$logicalId['s'] = 'tank_state';
-					$name['c'] = __('trappe fermée',__FILE__);
-					$name['o'] = __('trappe ouverte',__FILE__);
-					$name['s'] = __('état trappe',__FILE__);
-					break;
-				case 'washerFluidLevelWarning':
-					$logicalId = 'al_washer_fluid';
-					$name = __('Lave-vitre',__FILE__);
-					$subType = 'numeric';
 					break;
 				default:
 					log::add('volvocars','warning',sprintf(__("%s.%s inconnu",__FILE__),$endpoint, $key));
@@ -741,6 +896,8 @@ class volvocars extends eqLogic {
 		$this->getInfosFromApi('brake_fluid',$createCmds);
 		$this->getInfosFromApi('diagnostics',$createCmds);
 		$this->getInfosFromApi('statistics',$createCmds);
+		$this->getInfosFromApi('tyre',$createCmds);
+		$this->getInfosFromApi('warnings',$createCmds);
 	}
 
 	/*
@@ -893,6 +1050,50 @@ class volvocarsCmd extends cmd {
 					$this->setValue("#" . $autonomyCmd->getId() . '#');
 				}
 				break;
+			case 'al_tyre':
+				$values = '';
+				foreach (['tyre_fl', 'tyre_fr', 'tyre_rl', 'tyre_rr'] as $tyre) {
+					$tyreCmd = $this->getEqLogic()->getCmd('info', $tyre);
+					if (is_object($tyreCmd)) {
+						$values .= "#".$tyreCmd->getId()."#";
+					}
+				}
+				$this->setValue($values);
+				break;
+			case 'al_light':
+				$values = '';
+				foreach ([
+					'al_brakeLight_c',
+					'al_brakeLight_l',
+					'al_brakeLight_r',
+					'al_daytimeRunningLight_l',
+					'al_daytimeRunningLight_r',
+					'al_fogLight_f',
+					'al_fogLight_r',
+					'al_hazardLights',
+					'al_highBeam_l',
+					'al_highBeam_r',
+					'al_lowBeam_l',
+					'al_lowBeam_r',
+					'al_positionLight_fl',
+					'al_positionLight_fr',
+					'al_positionLight_rl',
+					'al_positionLight_rr',
+					'al_registrationPlateLight',
+					'al_reverseLights',
+					'al_sideMarkLights',
+					'al_turnIndication_fl',
+					'al_turnIndication_fr',
+					'al_turnIndication_rl',
+					'al_turnIndication_rr'
+				] as $light) {
+					$lightCmd = $this->getEqLogic()->getCmd('info', $light);
+					if (is_object($lightCmd)) {
+						$values .= "#".$lightCmd->getId()."#";
+					}
+				}
+				$this->setValue($values);
+				break;
 		}
 	}
 
@@ -926,6 +1127,43 @@ class volvocarsCmd extends cmd {
 				break;
 			case 'heatAutonomy':
 				$cmd = $this->getEqLogic()->getCmd('info','al_heatAutonomy');
+				if (is_object($cmd)) {
+					$cmd->save();
+				}
+				break;
+			case 'tyre_fl':
+			case 'tyre_fr':
+			case 'tyre_rl':
+			case 'tyre_rr':
+				$cmd = $this->getEqLogic()->getCmd('info','al_tyre');
+				if (is_object($cmd)) {
+					$cmd->save();
+				}
+				break;
+			case 'al_brakeLight_c':
+			case 'al_brakeLight_l':
+			case 'al_brakeLight_r':
+			case 'al_daytimeRunningLight_l':
+			case 'al_daytimeRunningLight_r':
+			case 'al_fogLight_f':
+			case 'al_fogLight_r':
+			case 'al_hazardLights':
+			case 'al_highBeam_l':
+			case 'al_highBeam_r':
+			case 'al_lowBeam_l':
+			case 'al_lowBeam_r':
+			case 'al_positionLight_fl':
+			case 'al_positionLight_fr':
+			case 'al_positionLight_rl':
+			case 'al_positionLight_rr':
+			case 'al_registrationPlateLight':
+			case 'al_reverseLights':
+			case 'al_sideMarkLights':
+			case 'al_turnIndication_fl':
+			case 'al_turnIndication_fr':
+			case 'al_turnIndication_rl':
+			case 'al_turnIndication_rr':
+				$cmd = $this->getEqLogic()->getCmd('info','al_light');
 				if (is_object($cmd)) {
 					$cmd->save();
 				}
@@ -1086,6 +1324,54 @@ class volvocarsCmd extends cmd {
 					return 1;
 				}
 				return 0;
+				break;
+			case 'al_tyre':
+				$value = 0;
+				foreach (['tyre_fl', 'tyre_fr', 'tyre_rl', 'tyre_rr'] as $tyre) {
+					$tyreCmd = $this->getEqLogic()->getCmd('info', $tyre);
+					if (is_object($tyreCmd)) {
+						$tyreValue = $tyreCmd->execCmd();
+						$value = $tyreValue > $value ? $tyreValue : $value;
+					}
+				}
+				return $value;
+				break;
+			case 'al_light':
+				$value = 0;
+				foreach ([
+					'al_brakeLight_c',
+					'al_brakeLight_l',
+					'al_brakeLight_r',
+					'al_daytimeRunningLight_l',
+					'al_daytimeRunningLight_r',
+					'al_fogLight_f',
+					'al_fogLight_r',
+					'al_hazardLights',
+					'al_highBeam_l',
+					'al_highBeam_r',
+					'al_lowBeam_l',
+					'al_lowBeam_r',
+					'al_positionLight_fl',
+					'al_positionLight_fr',
+					'al_positionLight_rl',
+					'al_positionLight_rr',
+					'al_registrationPlateLight',
+					'al_reverseLights',
+					'al_sideMarkLights',
+					'al_turnIndication_fl',
+					'al_turnIndication_fr',
+					'al_turnIndication_rl',
+					'al_turnIndication_rr'
+				] as $light) {
+					$lightCmd = $this->getEqLogic()->getCmd('info', $light);
+					if (is_object($lightCmd)) {
+						if ($lightCmd->execCmd() == 1) {
+							$value = 1;
+							break;
+						}
+					}
+				}
+				return $value;
 				break;
 			case 'lock':
 			case 'lock-reduced':

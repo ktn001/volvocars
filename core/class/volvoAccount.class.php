@@ -32,6 +32,8 @@ class volvoAccount {
 	const BRAKE_FLUID_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/brakes";
 	const DIAGNOSTICS_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/diagnostics";
 	const STATISTICS_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/statistics";
+	const TYRE_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/tyres";
+	const WARNINGS_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/warnings";
 
 	const CAR_LOCK_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands/lock";
 	const CAR_LOCK_REDUCED_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands/lock-reduced-guard";
@@ -41,7 +43,6 @@ class volvoAccount {
 
 	const RECHARGE_STATE_URL = "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status";
 	const ODOMETER_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/odometer";
-	const TYRE_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/tyres";
 	const ENGINE_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/engine-status";
 	const FUEL_BATTERY_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/fuel";
 	const API_BACKEND_STATUS = "https://oip-dev-bff.euwest1.production.volvo.care/api/v1/backend-status";
@@ -324,11 +325,17 @@ class volvoAccount {
 			case 'statistics':
 				$url = sprintf(self::STATISTICS_URL,$vin);
 				break;
+			case 'tyre':
+				$url = sprintf(self::TYRE_STATE_URL,$vin);
+				break;
 			case 'vehicles':
 				$url = sprintf(self::VEHICLES_URL,$vin);
 				break;
 			case 'windows':
 				$url = sprintf(self::WINDOWS_STATE_URL,$vin);
+				break;
+			case 'warnings':
+				$url = sprintf(self::WARNINGS_URL,$vin);
 				break;
 		}
 		log::add("volvocars","info","┌Getting infos '".$endpoint."'...");
