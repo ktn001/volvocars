@@ -28,7 +28,10 @@ class volvoAccount {
 	const DOORS_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/doors";
 	const WINDOWS_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/windows";
 	const LOCATION_STATE_URL = "https://api.volvocars.com/location/v1/vehicles/%s/location";
-	const EXTERNAL_TEMPERATUR_URL = "https://api.volvocars.com/extended-vehicle/v1/vehicles/%s/resources/externalTemp";
+	const ENGINE_DIAGNOSTICS_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/engine";
+	const BRAKE_FLUID_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/brakes";
+	const DIAGNOSTICS_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/diagnostics";
+	const STATISTICS_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/statistics";
 
 	const CAR_LOCK_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands/lock";
 	const CAR_LOCK_REDUCED_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands/lock-reduced-guard";
@@ -41,9 +44,6 @@ class volvoAccount {
 	const TYRE_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/tyres";
 	const ENGINE_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/engine-status";
 	const FUEL_BATTERY_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/fuel";
-	const STATISTICS_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/statistics";
-	const ENGINE_DIAGNOSTICS_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/engine";
-	const VEHICLE_DIAGNOSTICS_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/diagnostics";
 	const API_BACKEND_STATUS = "https://oip-dev-bff.euwest1.production.volvo.care/api/v1/backend-status";
 
 	private $id = -1;
@@ -300,8 +300,14 @@ class volvoAccount {
 
 	public function getInfos($endpoint, $vin=null) {
 		switch ($endpoint) {
+			case 'brake_fluid':
+				$url = sprintf(self::BRAKE_FLUID_URL,$vin);
+				break;
 			case 'commands':
 				$url = sprintf(self::COMMANDS_URL,$vin);
+				break;
+			case 'diagnostics':
+				$url = sprintf(self::DIAGNOSTICS_URL,$vin);
 				break;
 			case 'details':
 				$url = sprintf(self::VEHICLE_DETAILS_URL,$vin);
@@ -309,8 +315,14 @@ class volvoAccount {
 			case 'doors':
 				$url = sprintf(self::DOORS_STATE_URL,$vin);
 				break;
+			case 'engine_diagnostics':
+				$url = sprintf(self::ENGINE_DIAGNOSTICS_URL,$vin);
+				break;
 			case 'location':
 				$url = sprintf(self::LOCATION_STATE_URL,$vin);
+				break;
+			case 'statistics':
+				$url = sprintf(self::STATISTICS_URL,$vin);
 				break;
 			case 'vehicles':
 				$url = sprintf(self::VEHICLES_URL,$vin);
@@ -318,18 +330,21 @@ class volvoAccount {
 			case 'windows':
 				$url = sprintf(self::WINDOWS_STATE_URL,$vin);
 				break;
-			case 'external_temp':
-				$url = sprintf(self::EXTERNAL_TEMPERATUR_URL,$vin);
-				break;
 		}
+		log::add("volvocars","info","┌Getting infos '".$endpoint."'...");
+		log::add("volvocars","debug","│ URL: " .$url);
 		$session = $this->session($url);
 		$content = curl_exec($session);
+		log::add("volvocars","info","└ ".$content);
 		$content = is_json($content,$content);
 		$httpCode = curl_getinfo($session,CURLINFO_HTTP_CODE);
 		if ( $httpCode != 200) {
 			$lignes = array();
 			$lignes[] = 'Error getting infos "' . $endpoint . '" for vin: ' . $vin;
 			$lignes[] = "httpCode: " . $httpCode;
+			if (isset($content['message'])) {
+				$lignes[] = $content['message'];
+			}
 			if (isset($content['error']['message'])) {
 				$lignes[] = $content['error']['message'];
 			}
@@ -348,7 +363,6 @@ class volvoAccount {
 				$prefix = '│';
 			}
 			log::add("volvocars","error",'└' . end($lignes));
-			log::add("volvocars","error",print_r($content,true));
 			throw new Exception (sprintf(__("Erreur de la récupération d'infos pour le  véhicule '%s' (http_code: %s)",__FILE__), $vin, $httpCode));
 		}
 		if (isset($content['data'])) {
@@ -372,19 +386,19 @@ class volvoAccount {
 	public function sendCommand($command, $vin) {
 		switch ($command) {
 			case 'lock':
-				$url =  sprintf(self::CAR_LOCK_URL,$vin);
+				$url = sprintf(self::CAR_LOCK_URL,$vin);
 				break;
 			case 'lock-reduced':
-				$url =  sprintf(self::CAR_LOCK_REDUCED_URL,$vin);
+				$url = sprintf(self::CAR_LOCK_REDUCED_URL,$vin);
 				break;
 			case 'unlock':
-				$url =  sprintf(self::CAR_UNLOCK_URL,$vin);
+				$url = sprintf(self::CAR_UNLOCK_URL,$vin);
 				break;
 			case 'clim_start':
-				$url =  sprintf(self::CLIMATE_START_URL,$vin);
+				$url = sprintf(self::CLIMATE_START_URL,$vin);
 				break;
 			case 'clim_stop':
-				$url =  sprintf(self::CLIMATE_STOP_URL,$vin);
+				$url = sprintf(self::CLIMATE_STOP_URL,$vin);
 				break;
 		}
 		log::add("volvocars","debug",sprintf(__('Envoi de la commande %s (%s)',__FILE__),$command,$url));

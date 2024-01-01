@@ -172,6 +172,9 @@ $accounts = volvoAccount::all();
 				<form class="form-horizontal">
 					<fieldset>
 						<div class="col-lg-6">
+
+							<!-- PARAMETRES GENERAUX -->
+
 							<legend><i class="fas fa-wrench"></i> {{Paramètres généraux}}</legend>
 							<div class="form-group">
 								<label class="col-sm-4 control-label">{{Nom du véhicule}}</label>
@@ -214,6 +217,8 @@ $accounts = volvoAccount::all();
 									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isVisible" checked>{{Visible}}</label>
 								</div>
 							</div>
+
+							<!-- PARAMETRES VEHICULE -->
 
 							<legend><i class="fas fa-cogs"></i> {{Paramètres du véhicule}}</legend>
 							<div class="form-group">
@@ -293,6 +298,24 @@ $accounts = volvoAccount::all();
 									<a class="btn btn-sm btn-success eqLogicAction pull-right" data-action="protect"><i class="fas fa-ban"></i> {{Protéger}}</a>
 								</div>
 							</div>
+
+							<!-- PARAMETRES ALERTES -->
+
+							<legend><i class="fas fa-exclamation-triangle"></i> {{Paramètres d'alertes)}}</legend>
+							<div id="electricAutonomy" class="form-group">
+								<label class="col-sm-4 control-label">{{Autonomie électrique (Km)}}</label>
+								<div class="col-sm-6">
+									<input class="eqLogicAttr form-control" type="text" data-l1key="configuration" data-l2key="electricAutonomyLimit"></input>
+								</div>
+							</div>
+							<div id="heatAutonomy" class="form-group">
+								<label class="col-sm-4 control-label">{{Autonomie thermique (Km)}}</label>
+								<div class="col-sm-6">
+									<input class="eqLogicAttr form-control" type="text" checked data-l1key="configuration" data-l2key="heatAutonomyLimit">
+								</div>
+							</div>
+
+							<!-- PARAMETRES LOCALISATION -->
 
 							<legend><i class="fas fa-location-arrow"></i> {{Paramètres de localisation}}</legend>
 							<div class="form-group">

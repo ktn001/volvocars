@@ -69,32 +69,40 @@ class volvocars extends eqLogic {
 		return $cars;
 	}
 
-	private static function convertKeyword($keyword, $ignoreUnspecified = true) {
-		$value = [];
+	private static function convertKeyword($keyword) {
+		$value = $keyword;
 		switch ($keyword){
 			case 'CLOSED':
 			case 'LOCKED':
-				$value['c'] = 1;
-				$value['o'] = 0;
-				$value['s'] = 0;
+				$value = array (
+					'c' => 1,
+					'o' => 0,
+					's' => 0
+				);
 				break;
 			case 'AJAR':
-				$value['c'] = 0;
-				$value['o'] = 0;
-				$value['s'] = 1;
+				$value = array (
+					'c' => 0,
+					'o' => 0,
+					's' => 1
+				);
 				break;
 			case 'OPEN':
 			case 'UNLOCKED':
-				$value['c'] = 0;
-				$value['o'] = 1;
-				$value['s'] = 2;
+				$value = array (
+					'c' => 0,
+					'o' => 1,
+					's' => 2
+				);
+				break;
+			case 'NO_WARNING':
+				$value = 0;
+				break;
+			case 'TOO_LOW':
+				$value = 1;
 				break;
 			case 'UNSPECIFIED':
-				if (! $ignoreUnspecified) {
-					$value['c'] = 0;
-					$value['o'] = 0;
-					$value['s'] = -1;
-				}
+				$value = -1;
 				break;
 		}
 		return $value;
@@ -117,6 +125,29 @@ class volvocars extends eqLogic {
 		if ($this->getVin() == '') {
 			throw new Exception (__("Le vin n'est pas défini",__FILE__));
 		}
+
+		if ($this->getConfiguration('electricEngine')){
+			$limit = trim($this->getConfiguration('electricAutonomyLimit'));
+			if ($limit == '') {
+				$limit = 0;
+			}
+			if (! is_numeric($limit)) {
+				throw new Exception (__("La limite d'autonomie doit être une valeur numérique",__FILE__));
+			}
+			$this->setConfiguration('electricAutonomyLimit', $limit);
+		}
+
+		if ($this->getConfiguration('heatEngine')){
+			$limit = trim($this->getConfiguration('heatAautonomyLimit'));
+			if ($limit == '') {
+				$limit = 0;
+			}
+			if (! is_numeric($limit)) {
+				throw new Exception (__("La limite d'autonomie doit être une valeur numérique",__FILE__));
+			}
+			$this->setConfiguration('heatAutonomyLimit', $limit);
+		}
+
 		$car = self::byVin($this->getVin());
 		if (is_object($car) and ($car->getId() != $this->getId())){
 			throw new Exception (__("Il y a un autre véhicule avec ce vin!",__FILE__));
@@ -177,6 +208,15 @@ class volvocars extends eqLogic {
 					$cmd->setName($presence . ' ' . $siteName);
 					$cmd->save();
 				}
+			}
+		}
+		foreach ([
+			'al_electricAutonomy',
+			'al_heatAutonomy'
+		] as $logicalId) {
+			$cmd = $this->getCmd('info',$logicalId);
+			if (is_object($cmd)){
+				$cmd->event($cmd->execute());
 			}
 		}
 	}
@@ -422,66 +462,28 @@ class volvocars extends eqLogic {
 	}
 
 	private function getInfosFromApi($endpoint, $createCmds=false, $updateValues=true){
+		if ($this->getConfiguration('heatEngine') == 0){
+			if ($endpoint == 'engine_diagnostics'){
+				return;
+			}
+		}
 		$account = $this->getAccount();
 		$infos = $account->getInfos($endpoint,$this->getVin());
 		foreach (array_keys($infos) as $key) {
 			$logicalId = [];
+			$updateValue = [];
 			$name = [];
 			$unit = null;
 			$subType = array(
-				'c' => 'binary',
-				'o' => 'binary',
+				'c' => 'numeric',
+				'o' => 'numeric',
 				's' => 'numeric',
 			);
 			switch ($key) {
-				case 'externalTemp':
-					$logicalId = 'temp_external';
-					$name = __('temp. externe',__FILE__);
-					if ($infos[$kex]['unit'] == 'celsius') {
-						$unit = '°C';
-					} else {
-						$unit = $infos[$key]['unit'];
-					}
-					break;
-				case 'frontLeftWindow':
-					$logicalId['c'] = 'win_fl_closed';
-					$logicalId['o'] = 'win_fl_open';
-					$logicalId['s'] = 'win_fl_state';
-					$name['c'] = __('fenêtre avant gauche fermée',__FILE__);
-					$name['o'] = __('fenêtre avant gauche ouverte',__FILE__);
-					$name['s'] = __('état fenêtre avant gauche',__FILE__);
-					break;
-				case 'frontRightWindow':
-					$logicalId['c'] = 'win_fr_closed';
-					$logicalId['o'] = 'win_fr_open';
-					$logicalId['s'] = 'win_fr_state';
-					$name['c'] = __('fenêtre avant droite fermée',__FILE__);
-					$name['o'] = __('fenêtre avant droite ouverte',__FILE__);
-					$name['s'] = __('état fenêtre avant droite',__FILE__);
-					break;
-				case 'rearLeftWindow':
-					$logicalId['c'] = 'win_rl_closed';
-					$logicalId['o'] = 'win_rl_open';
-					$logicalId['s'] = 'win_rl_state';
-					$name['c'] = __('fenêtre arrière gauche fermée',__FILE__);
-					$name['o'] = __('fenêtre arrière gauche ouverte',__FILE__);
-					$name['s'] = __('état fenêtre arrière gauche',__FILE__);
-					break;
-				case 'rearRightWindow':
-					$logicalId['c'] = 'win_rr_closed';
-					$logicalId['o'] = 'win_rr_open';
-					$logicalId['s'] = 'win_rr_state';
-					$name['c'] = __('fenêtre arrière droite fermée',__FILE__);
-					$name['o'] = __('fenêtre arrière droite ouverte',__FILE__);
-					$name['s'] = __('état fenêtre arrière droite',__FILE__);
-					break;
-				case 'sunroof':
-					$logicalId['c'] = 'roof_closed';
-					$logicalId['o'] = 'roof_open';
-					$logicalId['s'] = 'roof_state';
-					$name['c'] = __('toit fermé',__FILE__);
-					$name['o'] = __('toit ouvert',__FILE__);
-					$name['s'] = __('état toit',__FILE__);
+				case 'brakeFluidLevelWarning':
+					$logicalId = 'al_brake_fluid';
+					$name = __("niveau liquide de frein",__FILE__);
+					$subType = "numeric";
 					break;
 				case 'centralLock':
 					$logicalId['c'] = 'lock_locked';
@@ -491,6 +493,29 @@ class volvocars extends eqLogic {
 					$name['o'] = __('dévérouillé',__FILE__);
 					$name['s'] = __('état verouillage',__FILE__);
 					break;
+				case 'distanceToEmptyBattery':
+					$logicalId['a'] = 'electricAutonomy';
+					$logicalId['b'] = 'al_electricAutonomy';
+					$name['a'] = __('Autonomie électrique',__FILE__);
+					$name['b'] = __('Autonomie électrique faible',__FILE__);
+					$subType['a'] = 'numeric';
+					$subType['b'] = 'numeric';
+					$updateValue['b'] = false;
+					break;
+				case 'distanceToEmptyTank':
+					$logicalId['a'] = 'heatAutonomy';
+					$logicalId['b'] = 'al_heatAutonomy';
+					$name['a'] = __('Autonomie thermique',__FILE__);
+					$name['b'] = __('Autonomie thermique faible',__FILE__);
+					$subType['a'] = 'numeric';
+					$subType['b'] = 'numeric';
+					$updateValue['b'] = false;
+					break;
+				case 'engineCoolantLevelWarning':
+					$logicalId = 'al_coolant';
+					$name = __("niveau du liquide de refroidissement",__FILE__);
+					$subType = "numeric";
+					break;
 				case 'frontLeftDoor':
 					$logicalId['c'] = 'door_fl_closed';
 					$logicalId['o'] = 'door_fl_open';
@@ -498,6 +523,14 @@ class volvocars extends eqLogic {
 					$name['c'] = __('porte avant gauche fermée',__FILE__);
 					$name['o'] = __('porte avant gauche ouverte',__FILE__);
 					$name['s'] = __('état porte avant gauche',__FILE__);
+					break;
+				case 'frontLeftWindow':
+					$logicalId['c'] = 'win_fl_closed';
+					$logicalId['o'] = 'win_fl_open';
+					$logicalId['s'] = 'win_fl_state';
+					$name['c'] = __('fenêtre avant gauche fermée',__FILE__);
+					$name['o'] = __('fenêtre avant gauche ouverte',__FILE__);
+					$name['s'] = __('état fenêtre avant gauche',__FILE__);
 					break;
 				case 'frontRightDoor':
 					$logicalId['c'] = 'door_fr_closed';
@@ -507,29 +540,13 @@ class volvocars extends eqLogic {
 					$name['o'] = __('porte avant droite ouverte',__FILE__);
 					$name['s'] = __('état porte avant droite',__FILE__);
 					break;
-				case 'rearLeftDoor':
-					$logicalId['c'] = 'door_rl_closed';
-					$logicalId['o'] = 'door_rl_open';
-					$logicalId['s'] = 'door_rl_state';
-					$name['c'] = __('porte arrière gauche fermée',__FILE__);
-					$name['o'] = __('porte arrière gauche ouverte',__FILE__);
-					$name['s'] = __('état porte arrière gauche',__FILE__);
-					break;
-				case 'rearRightDoor':
-					$logicalId['c'] = 'door_rr_closed';
-					$logicalId['o'] = 'door_rr_open';
-					$logicalId['s'] = 'door_rr_state';
-					$name['c'] = __('porte arrière droite fermée',__FILE__);
-					$name['o'] = __('porte arrière droite ouverte',__FILE__);
-					$name['s'] = __('état porte arrière droite',__FILE__);
-					break;
-				case 'tailgate':
-					$logicalId['c'] = 'tail_closed';
-					$logicalId['o'] = 'tail_open';
-					$logicalId['s'] = 'tail_state';
-					$name['c'] = __('hayon fermé',__FILE__);
-					$name['o'] = __('hayon ouvert',__FILE__);
-					$name['s'] = __('état hayon',__FILE__);
+				case 'frontRightWindow':
+					$logicalId['c'] = 'win_fr_closed';
+					$logicalId['o'] = 'win_fr_open';
+					$logicalId['s'] = 'win_fr_state';
+					$name['c'] = __('fenêtre avant droite fermée',__FILE__);
+					$name['o'] = __('fenêtre avant droite ouverte',__FILE__);
+					$name['s'] = __('état fenêtre avant droite',__FILE__);
 					break;
 				case 'hood':
 					$logicalId['c'] = 'hood_closed';
@@ -538,14 +555,6 @@ class volvocars extends eqLogic {
 					$name['c'] = __('capot fermé',__FILE__);
 					$name['o'] = __('capot ouvert',__FILE__);
 					$name['s'] = __('état capot',__FILE__);
-					break;
-				case 'tankLid':
-					$logicalId['c'] = 'tank_closed';
-					$logicalId['o'] = 'tank_open';
-					$logicalId['s'] = 'tank_state';
-					$name['c'] = __('trappe fermée',__FILE__);
-					$name['o'] = __('trappe ouverte',__FILE__);
-					$name['s'] = __('état trappe',__FILE__);
 					break;
 				case 'location':
 					foreach (['site1', 'site2'] as $site) {
@@ -584,8 +593,74 @@ class volvocars extends eqLogic {
 					$name = __('position',__FILE__);
 					$subType = 'string';
 					break;
+				case 'oilLevelWarning':
+					$logicalId = 'al_oil';
+					$name = __("niveau d'huile",__FILE__);
+					$subType = "numeric";
+					break;
+				case 'rearLeftDoor':
+					$logicalId['c'] = 'door_rl_closed';
+					$logicalId['o'] = 'door_rl_open';
+					$logicalId['s'] = 'door_rl_state';
+					$name['c'] = __('porte arrière gauche fermée',__FILE__);
+					$name['o'] = __('porte arrière gauche ouverte',__FILE__);
+					$name['s'] = __('état porte arrière gauche',__FILE__);
+					break;
+				case 'rearLeftWindow':
+					$logicalId['c'] = 'win_rl_closed';
+					$logicalId['o'] = 'win_rl_open';
+					$logicalId['s'] = 'win_rl_state';
+					$name['c'] = __('fenêtre arrière gauche fermée',__FILE__);
+					$name['o'] = __('fenêtre arrière gauche ouverte',__FILE__);
+					$name['s'] = __('état fenêtre arrière gauche',__FILE__);
+					break;
+				case 'rearRightDoor':
+					$logicalId['c'] = 'door_rr_closed';
+					$logicalId['o'] = 'door_rr_open';
+					$logicalId['s'] = 'door_rr_state';
+					$name['c'] = __('porte arrière droite fermée',__FILE__);
+					$name['o'] = __('porte arrière droite ouverte',__FILE__);
+					$name['s'] = __('état porte arrière droite',__FILE__);
+					break;
+				case 'rearRightWindow':
+					$logicalId['c'] = 'win_rr_closed';
+					$logicalId['o'] = 'win_rr_open';
+					$logicalId['s'] = 'win_rr_state';
+					$name['c'] = __('fenêtre arrière droite fermée',__FILE__);
+					$name['o'] = __('fenêtre arrière droite ouverte',__FILE__);
+					$name['s'] = __('état fenêtre arrière droite',__FILE__);
+					break;
+				case 'sunroof':
+					$logicalId['c'] = 'roof_closed';
+					$logicalId['o'] = 'roof_open';
+					$logicalId['s'] = 'roof_state';
+					$name['c'] = __('toit fermé',__FILE__);
+					$name['o'] = __('toit ouvert',__FILE__);
+					$name['s'] = __('état toit',__FILE__);
+					break;
+				case 'tailgate':
+					$logicalId['c'] = 'tail_closed';
+					$logicalId['o'] = 'tail_open';
+					$logicalId['s'] = 'tail_state';
+					$name['c'] = __('hayon fermé',__FILE__);
+					$name['o'] = __('hayon ouvert',__FILE__);
+					$name['s'] = __('état hayon',__FILE__);
+					break;
+				case 'tankLid':
+					$logicalId['c'] = 'tank_closed';
+					$logicalId['o'] = 'tank_open';
+					$logicalId['s'] = 'tank_state';
+					$name['c'] = __('trappe fermée',__FILE__);
+					$name['o'] = __('trappe ouverte',__FILE__);
+					$name['s'] = __('état trappe',__FILE__);
+					break;
+				case 'washerFluidLevelWarning':
+					$logicalId = 'al_washer_fluid';
+					$name = __('Lave-vitre',__FILE__);
+					$subType = 'numeric';
+					break;
 				default:
-					log::add('volvocars','error',sprintf(__("%s.%s inconnu",__FILE__),$category, $key));
+					log::add('volvocars','warning',sprintf(__("%s.%s inconnu",__FILE__),$endpoint, $key));
 			}
 			if ($createCmds) {
 				if (is_array($logicalId)) {
@@ -630,19 +705,24 @@ class volvocars extends eqLogic {
 			}
 			if ($updateValues) {
 				$time = date('Y-m-d H:i:s', strtotime($infos[$key]['timestamp']));
+				$value = self::convertKeyword($infos[$key]['value']);
 				if (is_array($logicalId)) {
-					$value = [];
-					$value = self::convertKeyword($infos[$key]['value']);
-	
 					foreach (array_keys($logicalId) as $i) {
-						if (isset($value[$i]) and isset($logicalId[$i])) {
-							$this->checkAndUpdateCmd($logicalId[$i],$value[$i],$time);
+						if (isset($updateValue[$i]) && $updateValue[$i] == false){
+							continue;
+						}
+						if (is_array($value)) {
+							if (isset($value[$i])) {
+								$this->checkAndUpdateCmd($logicalId[$i],$value[$i],$time);
+							}
+						} elseif ($value !== null) {
+							$this->checkAndUpdateCmd($logicalId[$i],$value,$time);
 						}
 					}
 				} else {
 					switch ($key) {
 						case 'location':
-							$value = $infos[$key]['coordinates'][0] . ',' . $infos[$key]['coordinates'][1];
+							$value = $infos[$key]['coordinates'][1] . ',' . $infos[$key]['coordinates'][0];
 							break;
 						default:
 							$value = $infos[$key]['value'];
@@ -657,7 +737,10 @@ class volvocars extends eqLogic {
 		$this->getInfosFromApi('doors',$createCmds);
 		$this->getInfosFromApi('location',$createCmds);
 		$this->getInfosFromApi('windows',$createCmds);
-		$this->getInfosFromApi('external_temp',$createCmds);
+		$this->getInfosFromApi('engine_diagnostics',$createCmds);
+		$this->getInfosFromApi('brake_fluid',$createCmds);
+		$this->getInfosFromApi('diagnostics',$createCmds);
+		$this->getInfosFromApi('statistics',$createCmds);
 	}
 
 	/*
@@ -798,6 +881,18 @@ class volvocarsCmd extends cmd {
 					$this->setValue("#" . $distanceCmd->getId() . '#');
 				}
 				break;
+			case 'al_electricAutonomy':
+				$autonomyCmd = $this->getEqLogic()->getCmd('info','electricAutonomy');
+				if (is_object($autonomyCmd)) {
+					$this->setValue("#" . $autonomyCmd->getId() . '#');
+				}
+				break;
+			case 'al_heatAutonomy':
+				$autonomyCmd = $this->getEqLogic()->getCmd('info','heatAutonomy');
+				if (is_object($autonomyCmd)) {
+					$this->setValue("#" . $autonomyCmd->getId() . '#');
+				}
+				break;
 		}
 	}
 
@@ -823,6 +918,18 @@ class volvocarsCmd extends cmd {
 					$cmd->save();
 				}
 				break;
+			case 'electricAutonomy':
+				$cmd = $this->getEqLogic()->getCmd('info','al_electricAutonomy');
+				if (is_object($cmd)) {
+					$cmd->save();
+				}
+				break;
+			case 'heatAutonomy':
+				$cmd = $this->getEqLogic()->getCmd('info','al_heatAutonomy');
+				if (is_object($cmd)) {
+					$cmd->save();
+				}
+				break;
 		}
 	}
 
@@ -841,7 +948,7 @@ class volvocarsCmd extends cmd {
 						switch ($car->getConfiguration('site1_source')) {
 							case 'jeedom':
 								$siteLat = config::byKey('info::latitude','core',0);
-								$siteLat = config::byKey('info::longitude','core',0);
+								$siteLong = config::byKey('info::longitude','core',0);
 								break;
 							case 'manual':
 							case 'vehicle':
@@ -864,7 +971,7 @@ class volvocarsCmd extends cmd {
 						switch ($car->getConfiguration('site2_source')) {
 							case 'jeedom':
 								$siteLat = config::byKey('info::latitude','core',0);
-								$siteLat = config::byKey('info::longitude','core',0);
+								$siteLong = config::byKey('info::longitude','core',0);
 								break;
 							case 'manual':
 							case 'vehicle':
@@ -887,6 +994,11 @@ class volvocarsCmd extends cmd {
 					return '-1';
 				}
 				$earth_radius = 6371;
+				log::add("volvocars","info","siteLat:  ". $siteLat);
+				log::add("volvocars","info","siteLong: ". $siteLong);
+				log::add("volvocars","info","PosLat:   ". $position['lat']);
+				log::add("volvocars","info","PosLong:  ". $position['long']);
+
 				$rla1 = deg2rad( floatval($siteLat) );
 				$rlo1 = deg2rad( floatval($siteLong) );
 				$rla2 = deg2rad( floatval($position['lat']) );
@@ -946,6 +1058,34 @@ class volvocarsCmd extends cmd {
 				} else {
 					return 0;
 				}
+				break;
+			case 'al_electricAutonomy':
+				if ($car->getConfiguration('electricEngine') != 1) {
+					return 0;
+				}
+				$limit = $car->getConfiguration('electricAutonomyLimit');
+				$autonomyCmd = $car->getCmd('info','electricAutonomy');
+				if (! is_object($autonomyCmd)) {
+					return 0;
+				}
+				if ($autonomyCmd->execCmd() < $limit) {
+					return 1;
+				}
+				return 0;
+				break;
+			case 'al_heatAutonomy':
+				if ($car->getConfiguration('heatEngine') != 1) {
+					return 0;
+				}
+				$limit = $car->getConfiguration('heatAutonomyLimit');
+				$autonomyCmd = $car->getCmd('info','heatAutonomy');
+				if (! is_object($autonomyCmd)) {
+					return 0;
+				}
+				if ($autonomyCmd->execCmd() < $limit) {
+					return 1;
+				}
+				return 0;
 				break;
 			case 'lock':
 			case 'lock-reduced':

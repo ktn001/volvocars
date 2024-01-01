@@ -260,6 +260,28 @@ $('.eqLogicAction[data-action=protect]').off('click').on('click',function() {
 $('.eqLogicAction[data-action=protect]').trigger('click')
 
 /*
+ * Action suri changement moteur électrique
+ */
+$('[data-l2key=electricEngine]').off('change').on('change', function() {
+	if ($(this).value() == 1) {
+		$('#electricAutonomy').removeClass('hidden')
+	} else {
+		$('#electricAutonomy').addClass('hidden')
+	}
+})
+
+/*
+ * Action suri changement moteur thermique
+ */
+$('[data-l2key=heatEngine]').off('change').on('change', function() {
+	if ($(this).value() == 1) {
+		$('#heatAutonomy').removeClass('hidden')
+	} else {
+		$('#heatAutonomy').addClass('hidden')
+	}
+})
+
+/*
  * function appelée lors du chargement d'un eqLogic
  */
 function printEqLogic(data) {
