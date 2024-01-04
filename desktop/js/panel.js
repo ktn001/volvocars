@@ -5,7 +5,7 @@ if(jeedomUtils){jeedomUtils.positionEqLogic();}else{positionEqLogic();}
 //----- Theme colors
 
 //$('body').on('changeThemeEvent', function (event,theme) {
-//	console.log("Changement de theme")
+	console.log("Changement de theme")
 //	timedSetTheme(0);
 //});
 
@@ -64,7 +64,7 @@ function displaySelectedEqLogic () {
 				$.hideLoading()
                 return
             }
-			console.log(data.result)
+			console.debug(data.result)
 			//$('#div_display_eqLogic').empty().html(data.result)
 			$('#eqLogic_widget_container').empty().html(data.result)
 			$.hideLoading()

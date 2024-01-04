@@ -14,7 +14,7 @@ body[data-theme=core2019_Dark] {
 }
 	
 body[data-theme=core2019_Light] {
-	--vlv-bg-color: inherit;
+	--vlv-bg-color: white;
 	--vlv-display-light: inherit;
 	--vlv-display-dark: none;
 }
@@ -53,14 +53,14 @@ body[data-theme=core2019_Legacy] {
 }
 
 .bs-sidebar {
-	background-color: rgba(var(--eq-bg-color)) !important;
+	background-color: rgba(var(--bg-color)) !important;
 }
 
 .nav-list .li_object a {
 	padding: 5px 0px;
 	margin-left: -10px;
 	padding: 0px 2px !important;
-	background-color: rgba(var(--eq-bg-color)) !important;
+	background-color: rgba(var(--bg-color)) !important;
 }
 
 #ul_object .img-container {
@@ -108,8 +108,19 @@ body[data-theme=core2019_Legacy] {
 }
 
 #volvocars_panel_ID .tile {
-	background-color: rgba(var(--eq-bg-color));
+	background-color: rgba(var(--bg-color));
 	margin: 5px;
+	filter: contrast(105%);
+}
+
+#volvocars_panel_ID #div_alertes {
+	height: 50px;
+	cursor:default !important;
+}
+
+#volvocars_panel_ID #div_alertes img {
+	height: 32px;
+	margin: 9px 5px;
 }
 
 #volvocars_panel_ID .tile.col-xs-12 {
@@ -159,3 +170,4 @@ body[data-theme=core2019_Legacy] {
 #volvocars_panel_ID .tile.col-xs-1 {
 	width: calc( 8.33333333% - 10px );
 }
+

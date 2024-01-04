@@ -1,0 +1,461 @@
+[
+	{
+		"logicalId": "refresh",
+		"name": "refresh",
+		"type": "action",
+		"subType": "other"
+	},{
+		"logicalId": "lock_reduced",
+		"name": "{{Vérouiller avec protection réduite}}",
+		"type": "action",
+		"subType": "other"
+	},{
+		"logicalId": "lock",
+		"name": "{{Vérouiller}}",
+		"type": "action",
+		"subType": "other"
+	},{
+		"logicalId": "unlock",
+		"name": "{{Dévérouiller}}",
+		"type": "action",
+		"subType": "other"
+	},{
+		"logicalId": "clim_start",
+		"name": "{{Climatisation EN}}",
+		"type": "action",
+		"subType": "other"
+	},{
+		"logicalId": "clim_stop",
+		"name": "{{Climatisation HORS}}",
+		"type": "action",
+		"subType": "other"
+	},{
+		"logicalId": "al_brake_fluid",
+		"name": "{{niveau liquide de frein}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "al_coolant",
+		"name": "{{niveau du liquide de refroidissement}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "al_oil",
+		"name": "{{niveau d'huile}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "al_washer_fluid",
+		"name": "{{lave-vitre}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "locked",
+		"name": "{{Vérouillé}}",
+		"type": "info",
+		"subType": "binary"
+	},{
+		"logicalId": "door_fl_closed",
+		"name": "{{porte avant gauche fermée}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "door_fl_open",
+		"name": "{{porte avant gauche ouverte}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "door_fl_state",
+		"name": "{{état porte avant gauche}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "door_fr_closed",
+		"name": "{{porte avant droite fermée}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "door_fr_open",
+		"name": "{{porte avant droite ouverte}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "door_fr_state",
+		"name": "{{état porte avant droite}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "door_rl_closed",
+		"name": "{{porte arrière gauche fermée}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "door_rl_open",
+		"name": "{{porte arrière gauche ouverte}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "door_rl_state",
+		"name": "{{état arrière avant gauche}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "door_rr_closed",
+		"name": "{{porte arrière droite fermée}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "door_rr_open",
+		"name": "{{porte arrière droite ouverte}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "door_rr_state",
+		"name": "{{état arrière avant droite}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "hood_closed",
+		"name": "{{capot fermé}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "hood_open",
+		"name": "{{capot ouvert}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "hood_state",
+		"name": "{{état capot}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "tail_closed",
+		"name": "{{hayon fermé}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "tail_open",
+		"name": "{{hayon ouvert}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "tail_state",
+		"name": "{{état hayon}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "tank_closed",
+		"name": "{{trappe fermée}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "tank_open",
+		"name": "{{trappe ouverte}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "tank_state",
+		"name": "{{état trappe}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "al_light",
+		"name": "{{alerte lampe}}",
+		"type": "info",
+		"subType": "binary"
+	},{
+		"logicalId": "al_brakeLight_l",
+		"name": "{{feu frein gauche}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "al_brakeLight_r",
+		"name": "{{feu frein droite}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "al_brakeLight_c",
+		"name": "{{feu frein central}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "al_daytimeRunningLight_l",
+		"name": "{{feu jour gauche}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "al_daytimeRunningLight_r",
+		"name": "{{feu jour droit}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "al_fogLight_f",
+		"name": "{{feux brouillard avant}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "al_fogLight_r",
+		"name": "{{feux brouillard arrière}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "al_hazardLights",
+		"name": "{{feux détresse}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "al_highBeam_l",
+		"name": "{{feu route gauche}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "al_highBeam_r",
+		"name": "{{feu route droite}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "al_lowBeam_l",
+		"name": "{{feu croisement gauche}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "al_lowBeam_r",
+		"name": "{{feu croisement droite}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "al_positionLight_fl",
+		"name": "{{feu position avant gauche}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "al_positionLight_fr",
+		"name": "{{feu position avant droite}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "al_positionLight_rl",
+		"name": "{{feu position arrière gauche}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "al_positionLight_rr",
+		"name": "{{feu position arrière droit}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "al_registrationPlateLight",
+		"name": "{{feu plaque}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "al_reverseLights",
+		"name": "{{feu recule}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "al_sideMarkLights",
+		"name": "{{feux latéraux}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "al_turnIndication_fl",
+		"name": "{{clignotant avant gauche}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "al_turnIndication_fr",
+		"name": "{{clignotant avant droit}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "al_turnIndication_rl",
+		"name": "{{clignotant arrière gauche}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "al_turnIndication_rr",
+		"name": "{{clignotant arrière droit}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "position",
+		"name": "{{position}}",
+		"type": "info",
+		"subType": "string"
+	},{
+		"logicalId": "presence_site1",
+		"name": "{{présence site1}}",
+		"type": "info",
+		"subType": "binary"
+	},{
+		"logicalId": "distance_site1",
+		"name": "{{distance site1}}",
+		"unite": "m",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "presence_site2",
+		"name": "{{présence site2}}",
+		"type": "info",
+		"subType": "binary"
+	},{
+		"logicalId": "distance_site2",
+		"name": "{{distance site2}}",
+		"unite": "m",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "electricAutonomy",
+		"name": "{{Autonomie électrique}}",
+		"unite": "Km",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "al_electricAutonomy",
+		"name": "{{Autonomie électrique faible}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "heatAutonomy",
+		"name": "{{Autonomie thermique}}",
+		"unite": "Km",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "al_heatAutonomy",
+		"name": "{{Autonomie thermique faible}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "al_tyre",
+		"name": "{{alerte pneus}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "tyre_fl",
+		"name": "{{pneu avant gauche}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "tyre_fr",
+		"name": "{{pneu avant droit}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "tyre_rl",
+		"name": "{{pneu arrière gauche}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "tyre_rr",
+		"name": "{{pneu arrière droit}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "win_fl_closed",
+		"name": "{{fenêtre avant gauche fermée}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "win_fl_open",
+		"name": "{{fenêtre avant gauche ouverte}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "win_fl_state",
+		"name": "{{état fenêtre avant gauche}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "win_fr_closed",
+		"name": "{{fenêtre avant droite fermée}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "win_fr_open",
+		"name": "{{fenêtre avant droite ouverte}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "win_fr_state",
+		"name": "{{état fenêtre avant droite}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "win_rl_closed",
+		"name": "{{fenêtre arrière gauche fermée}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "win_rl_open",
+		"name": "{{fenêtre arrière gauche ouverte}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "win_rl_state",
+		"name": "{{état fenêtre arrière gauche}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "win_rr_closed",
+		"name": "{{fenêtre arrière droite fermée}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "win_rr_open",
+		"name": "{{fenêtre arrière droite ouverte}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "win_rr_state",
+		"name": "{{état fenêtre arrière droite}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "roof_closed",
+		"name": "{{toit fermé}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "roof_open",
+		"name": "{{toit ouvert}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "roof_state",
+		"name": "{{état toit}}",
+		"type": "info",
+		"subType": "numeric"
+	},{
+		"logicalId": "msg2widget",
+		"name": "{{messages pour widget}}",
+		"type": "info",
+		"subType" : "string",
+		"isVisible" : 0
+	}
+]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

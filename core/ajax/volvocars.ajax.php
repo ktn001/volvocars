@@ -129,6 +129,18 @@ try {
 		ajax::success();
 	}
 
+	if ($action == 'recreateCmds'){
+		$car_id = init('id');
+		if ($car_id == '') {
+			throw new Exception(__("L'id du véhicule n'est pas défini",__FILE__));
+		}
+		$car = volvocars::byId($car_id);
+		if (!is_object($car)){
+			throw new Exception(sprintf(__("Le véhicule %s est introuvable",__FILE__),$car_id));
+		}
+		$car->createOrUpdateCmds(true);
+		ajax::success();
+	}
 
 	throw new Exception(__('Aucune méthode correspondante à', __FILE__) . ' : ' . init('action'));
 	/*     * *********Catch exeption*************** */

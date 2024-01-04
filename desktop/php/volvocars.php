@@ -33,14 +33,9 @@ $accounts = volvoAccount::all();
 					if (count($accounts) > 0) {
 						?>
 						<div class="cursor accountAction" data-action="sync">
-							<i class="fas fa-sync-alt"></i>
+							<i class="fas fa-sync-alt logoPrimary"></i>
 							<br>
 							<span>{{Synchronisation}}</span>
-						</div>
-						<div class="cursor eqLogicAction logoPrimary" data-action="add">
-							<i class="fas fa-plus-circle"></i>
-							<br>
-							<span>{{Ajouter}}</span>
 						</div>
 						<?php
 					}
@@ -426,7 +421,7 @@ $accounts = volvoAccount::all();
 
 			<!-- Onglet des commandes de l'équipement -->
 			<div role="tabpanel" class="tab-pane" id="commandtab">
-				<a class="btn btn-default btn-sm pull-right cmdAction" data-action="add" style="margin-top:5px;"><i class="fas fa-plus-circle"></i> {{Ajouter une commande}}</a>
+				<a class="btn btn-default btn-sm pull-right cmdAction" data-action="recreate" style="margin-top:5px;"><i class="fas fa-plus-circle"></i> {{Recréer commandes manquantes}}</a>
 				<br><br>
 				<div class="table-responsive">
 					<table id="table_cmd" class="table table-bordered table-condensed">

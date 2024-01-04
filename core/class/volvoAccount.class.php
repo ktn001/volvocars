@@ -338,11 +338,10 @@ class volvoAccount {
 				$url = sprintf(self::WARNINGS_URL,$vin);
 				break;
 		}
-		log::add("volvocars","info","┌Getting infos '".$endpoint."'...");
 		log::add("volvocars","debug","│ URL: " .$url);
 		$session = $this->session($url);
 		$content = curl_exec($session);
-		log::add("volvocars","info","└ ".$content);
+		log::add("volvocars","debug","│ ".$content);
 		$content = is_json($content,$content);
 		$httpCode = curl_getinfo($session,CURLINFO_HTTP_CODE);
 		if ( $httpCode != 200) {

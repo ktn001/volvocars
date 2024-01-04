@@ -72,8 +72,13 @@ class volvocars extends eqLogic {
 	private static function convertKeyword($keyword) {
 		$value = $keyword;
 		switch ($keyword){
-			case 'CLOSED':
 			case 'LOCKED':
+				$value = 1;
+				break;
+			case 'UNLCKED':
+				$value = 0;
+				break;
+			case 'CLOSED':
 				$value = array (
 					'c' => 1,
 					'o' => 0,
@@ -88,7 +93,6 @@ class volvocars extends eqLogic {
 				);
 				break;
 			case 'OPEN':
-			case 'UNLOCKED':
 				$value = array (
 					'c' => 0,
 					'o' => 1,
@@ -170,8 +174,14 @@ class volvocars extends eqLogic {
 		if ($this->getConfiguration('site2_active') == 1 && $this->getConfiguration('site2_name') == '') {
 			$this->setConfiguration('site2_name',__('Autre',__FILE__));
 		}
-		$this->setConfiguration('old_site1_name',$car->getConfiguration('site1_name'));
-		$this->setConfiguration('old_site2_name',$car->getConfiguration('site2_name'));
+		if (is_object($car)) {
+			$this->setConfiguration('old_site1_name',$car->getConfiguration('site1_name'));
+			$this->setConfiguration('old_site2_name',$car->getConfiguration('site2_name'));
+		}
+	}
+
+	public function postInsert() {
+		$this->createOrUpdateCmds();
 	}
 
 	public function postAjax() {
@@ -246,7 +256,6 @@ class volvocars extends eqLogic {
 	public function synchronize() {
 		$this->updateDetails();
 		$this->retrieveInfos(true);
-		$this->createActionCmds();
 	}
 
 	public function updateDetails() {
@@ -427,53 +436,45 @@ class volvocars extends eqLogic {
 		}
 	}
 
-	public function createActionCmds() {
-		$account = $this->getAccount();
-		$commands = $account->getInfos('commands',$this->getVin());
+	public function createOrUpdateCmds($createOnly = false) {
+		$cmdsFile = __DIR__ . '/../config/cmds.json';
+		$cmdsFile2Translate = str_replace('/var/www/html','',realpath($cmdsFile));
+		$commands = json_decode(file_get_contents($cmdsFile),true);
 		foreach ($commands as $command) {
-			log::add("volvocars","debug",print_r($command,true));
-			$logicalId = '';
-			$name = '';
-			switch($command['command']) {
-				case 'LOCK_REDUCED_GUARD':
-					$logicalId = 'lock_reduced';
-					$name = __('Vérrouillage réduit',__FILE__);
-					break;
-				case 'LOCK':
-					$logicalId = 'lock';
-					$name = __('Vérrouillage',__FILE__);
-					break;
-				case 'UNLOCK':
-					$logicalId = 'unlock';
-					$name = __('Dévérrouillage',__FILE__);
-					break;
-				case 'CLIMATIZATION_START':
-					$logicalId = 'clim_start';
-					$name = __('Climatisation EN',__FILE__);
-					break;
-				case 'CLIMATIZATION_STOP':
-					$logicalId = 'clim_stop';
-					$name = __('Climatisation HORS',__FILE__);
-					break;
-				default:
-					log::add("volvocars","warning",sprintf(__("Command %s inconnue! pas de créaction de command action",__FILE__),$command['command']));
-					continue 2;
+			if (!is_array($command)) {
+			 	log::add("volvocars","erro","createCmd called with wrong argument");
+				return false;
 			}
-			$cmd = $this->getCmd('action',$logicalId);
+			if (! isset($command['logicalId'])) {
+				log::add("volvocars","error","createCmd called with no logicalId");
+				return false;
+			}
+			if (! isset($command['type'])) {
+				log::add("volvocars","error","createCmd called with no type");
+				return false;
+			}
+			if (! isset($command['subType'])) {
+				log::add("volvocars","error","createCmd called with no subType");
+				return false;
+			}
+			if (! isset($command['name']) || trim($command['name']) == '') {
+				$command['name'] = $command['logicalId'];
+			}
+			$command['name'] = translate::exec($command['name'],$cmdsFile2Translate);
+			$cmd = $this->getCmd($command['type'],$command['logicalId']);
 			if (!is_object($cmd)) {
-				log::add("volvocars","debug",sprintf(__("Création de la commande %s",__FILE__),$logicalId));
 				$cmd = new volvocarsCmd();
 				$cmd->setEqLogic_id($this->getId());
-				$cmd->setType('action');
-				$cmd->setSubtype('other');
-				$cmd->setName($name);
-				$cmd->setLogicalid($logicalId);
-				$cmd->save();
+			} elseif ($createOnly) {
+				continue;
 			}
+			utils::a2o($cmd,$command);
+			$cmd->save();
 		}
 	}
 
-	private function getInfosFromApi($endpoint, $createCmds=false, $updateValues=true){
+	private function getInfosFromApi($endpoint){
+		log::add("volvocars","info",sprintf("┌Getting infos '%s'...",$endpoint));
 		if ($this->getConfiguration('heatEngine') == 0){
 			if ($endpoint == 'engine_diagnostics'){
 				return;
@@ -482,410 +483,210 @@ class volvocars extends eqLogic {
 		$account = $this->getAccount();
 		$infos = $account->getInfos($endpoint,$this->getVin());
 		foreach (array_keys($infos) as $key) {
-			$logicalId = [];
-			$updateValue = [];
-			$name = [];
-			$unit = null;
-			$subType = array(
-				'c' => 'numeric',
-				'o' => 'numeric',
-				's' => 'numeric',
-			);
+			log::add("volvocars","debug",sprintf("├─key: %s",$key)); 
+			$logicalId = array();
 			switch ($endpoint.".".$key) {
 				case 'brake_fluid.brakeFluidLevelWarning':
 					$logicalId = 'al_brake_fluid';
-					$name = __("niveau liquide de frein",__FILE__);
-					$subType = "numeric";
 					break;
 				case 'diagnostics.engineCoolantLevelWarning':
 					$logicalId = 'al_coolant';
-					$name = __("niveau du liquide de refroidissement",__FILE__);
-					$subType = "numeric";
 					break;
 				case 'diagnostics.oilLevelWarning':
 					$logicalId = 'al_oil';
-					$name = __("niveau d'huile",__FILE__);
-					$subType = "numeric";
 					break;
 				case 'diagnostics.washerFluidLevelWarning':
 					$logicalId = 'al_washer_fluid';
-					$name = __('Lave-vitre',__FILE__);
-					$subType = 'numeric';
 					break;
 				case 'doors.centralLock':
-					$logicalId['c'] = 'lock_locked';
-					$logicalId['o'] = 'lock_unlocked';
-					$logicalId['s'] = 'lock_state';
-					$name['c'] = __('vérouillé',__FILE__);
-					$name['o'] = __('dévérouillé',__FILE__);
-					$name['s'] = __('état verouillage',__FILE__);
+					$logicalId = 'locked';
 					break;
 				case 'doors.frontLeftDoor':
 					$logicalId['c'] = 'door_fl_closed';
 					$logicalId['o'] = 'door_fl_open';
 					$logicalId['s'] = 'door_fl_state';
-					$name['c'] = __('porte avant gauche fermée',__FILE__);
-					$name['o'] = __('porte avant gauche ouverte',__FILE__);
-					$name['s'] = __('état porte avant gauche',__FILE__);
 					break;
 				case 'doors.frontRightDoor':
 					$logicalId['c'] = 'door_fr_closed';
 					$logicalId['o'] = 'door_fr_open';
 					$logicalId['s'] = 'door_fr_state';
-					$name['c'] = __('porte avant droite fermée',__FILE__);
-					$name['o'] = __('porte avant droite ouverte',__FILE__);
-					$name['s'] = __('état porte avant droite',__FILE__);
-					break;
-				case 'doors.hood':
-					$logicalId['c'] = 'hood_closed';
-					$logicalId['o'] = 'hood_open';
-					$logicalId['s'] = 'hood_state';
-					$name['c'] = __('capot fermé',__FILE__);
-					$name['o'] = __('capot ouvert',__FILE__);
-					$name['s'] = __('état capot',__FILE__);
 					break;
 				case 'doors.rearLeftDoor':
 					$logicalId['c'] = 'door_rl_closed';
 					$logicalId['o'] = 'door_rl_open';
 					$logicalId['s'] = 'door_rl_state';
-					$name['c'] = __('porte arrière gauche fermée',__FILE__);
-					$name['o'] = __('porte arrière gauche ouverte',__FILE__);
-					$name['s'] = __('état porte arrière gauche',__FILE__);
 					break;
 				case 'doors.rearRightDoor':
 					$logicalId['c'] = 'door_rr_closed';
 					$logicalId['o'] = 'door_rr_open';
 					$logicalId['s'] = 'door_rr_state';
-					$name['c'] = __('porte arrière droite fermée',__FILE__);
-					$name['o'] = __('porte arrière droite ouverte',__FILE__);
-					$name['s'] = __('état porte arrière droite',__FILE__);
+					break;
+				case 'doors.hood':
+					$logicalId['c'] = 'hood_closed';
+					$logicalId['o'] = 'hood_open';
+					$logicalId['s'] = 'hood_state';
 					break;
 				case 'doors.tailgate':
 					$logicalId['c'] = 'tail_closed';
 					$logicalId['o'] = 'tail_open';
 					$logicalId['s'] = 'tail_state';
-					$name['c'] = __('hayon fermé',__FILE__);
-					$name['o'] = __('hayon ouvert',__FILE__);
-					$name['s'] = __('état hayon',__FILE__);
 					break;
 				case 'doors.tankLid':
 					$logicalId['c'] = 'tank_closed';
 					$logicalId['o'] = 'tank_open';
 					$logicalId['s'] = 'tank_state';
-					$name['c'] = __('trappe fermée',__FILE__);
-					$name['o'] = __('trappe ouverte',__FILE__);
-					$name['s'] = __('état trappe',__FILE__);
 					break;
 				case 'warnings.brakeLightCenterWarning':
-					$logicalId['a'] = 'al_brakeLight_c';
-					$logicalId['b'] = 'al_light';
-					$name['a'] = __('feu frein centrale',__FILE);
-					$name['b'] = __('alert lampes',__FILE);
-					$subType['a'] = 'numeric';
-					$subType['b'] = 'numeric';
-					$updateValue['b'] = false;
+					$logicalId = 'al_brakeLight_c';
 					break;
 				case 'warnings.brakeLightLeftWarning':
 					$logicalId = 'al_brakeLight_l';
-					$name = __('feu frein gauche',__FILE);
-					$subType = 'numeric';
 					break;
 				case 'warnings.brakeLightRightWarning':
 					$logicalId = 'al_brakeLight_r';
-					$name = __('feu frein droite',__FILE);
-					$subType = 'numeric';
 					break;
 				case 'warnings.daytimeRunningLightLeftWarning':
 					$logicalId = 'al_daytimeRunningLight_l';
-					$name = __('feu jour gauche',__FILE);
-					$subType = 'numeric';
 					break;
 				case 'warnings.daytimeRunningLightRightWarning':
 					$logicalId = 'al_daytimeRunningLight_r';
-					$name = __('feu jour droite',__FILE);
-					$subType = 'numeric';
 					break;
 				case 'warnings.fogLightFrontWarning':
 					$logicalId = 'al_fogLight_f';
-					$name = __('feux brouillard avant',__FILE);
-					$subType = 'numeric';
 					break;
 				case 'warnings.fogLightRearWarning':
 					$logicalId = 'al_fogLight_r';
-					$name = __('feux brouillard arrière',__FILE);
-					$subType = 'numeric';
 					break;
 				case 'warnings.hazardLightsWarning':
 					$logicalId = 'al_hazardLights';
-					$name = __('feux détresse',__FILE);
-					$subType = 'numeric';
 					break;
 				case 'warnings.highBeamLeftWarning':
 					$logicalId = 'al_highBeam_l';
-					$name = __('feu route gauche',__FILE);
-					$subType = 'numeric';
 					break;
 				case 'warnings.highBeamRightWarning':
 					$logicalId = 'al_highBeam_r';
-					$name = __('feu route droite',__FILE);
-					$subType = 'numeric';
 					break;
 				case 'warnings.lowBeamLeftWarning':
 					$logicalId = 'al_lowBeam_l';
-					$name = __('feu croisement gauche',__FILE);
-					$subType = 'numeric';
 					break;
 				case 'warnings.lowBeamRightWarning':
 					$logicalId = 'al_lowBeam_r';
-					$name = __('feu croisement droite',__FILE);
-					$subType = 'numeric';
 					break;
 				case 'warnings.positionLightFrontLeftWarning':
 					$logicalId = 'al_positionLight_fl';
-					$name = __('feu position avant gauche',__FILE);
-					$subType = 'numeric';
 					break;
 				case 'warnings.positionLightFrontRightWarning':
 					$logicalId = 'al_positionLight_fr';
-					$name = __('feu position avant droite',__FILE);
-					$subType = 'numeric';
 					break;
 				case 'warnings.positionLightRearLeftWarning':
 					$logicalId = 'al_positionLight_rl';
-					$name = __('feu position arrière gauche',__FILE);
-					$subType = 'numeric';
 					break;
 				case 'warnings.positionLightRearRightWarning':
 					$logicalId = 'al_positionLight_rr';
-					$name = __('feu position arrière droite',__FILE);
-					$subType = 'numeric';
 					break;
 				case 'warnings.registrationPlateLightWarning':
 					$logicalId = 'al_registrationPlateLight';
-					$name = __('feu plaque',__FILE);
-					$subType = 'numeric';
 					break;
 				case 'warnings.reverseLightsWarning':
 					$logicalId = 'al_reverseLights';
-					$name = __('ifeu recule',__FILE);
-					$subType = 'numeric';
 					break;
 				case 'warnings.sideMarkLightsWarning':
 					$logicalId = 'al_sideMarkLights';
-					$name = __('feux latéraux',__FILE);
-					$subType = 'numeric';
 					break;
 				case 'warnings.turnIndicationFrontLeftWarning':
 					$logicalId = 'al_turnIndication_fl';
-					$name = __('clignotant avant gauche',__FILE);
-					$subType = 'numeric';
 					break;
 				case 'warnings.turnIndicationFrontRightWarning':
 					$logicalId = 'al_turnIndication_fr';
-					$name = __('clignotant avant droit',__FILE);
-					$subType = 'numeric';
 					break;
 				case 'warnings.turnIndicationRearLeftWarning':
 					$logicalId = 'al_turnIndication_rl';
-					$name = __('clignotant arrière gauche',__FILE);
-					$subType = 'numeric';
 					break;
 				case 'warnings.turnIndicationRearRightWarning':
 					$logicalId = 'al_turnIndication_rr';
-					$name = __('clignotant arrière droit',__FILE);
-					$subType = 'numeric';
 					break;
 				case 'location.location':
-					foreach (['site1', 'site2'] as $site) {
-						$siteName = $this->getConfiguration($site . '_name');
-						if ($siteName == '') {
-							if ($site == 'site1') {
-								$siteName = __('Domicile',__FILE__);
-							} else {
-								$siteName = __('Autre',__FILE__);
-							}
-						}
-						$cmd = $this->getCmd('info','presence_' . $site);
-						if (!is_object($cmd)) {
-							log::add("volvocars","info",sprintf(__("Création de la commande %s",__FILE__),'presence_' . $site));
-							$cmd = new volvocarsCmd();
-							$cmd->setEqLogic_id($this->getId());
-							$cmd->setLogicalId('presence_' . $site);
-							$cmd->setName(__("présence" ,__FILE__)." ".$siteName);
-							$cmd->setType('info');
-							$cmd->setSubType('binary');
-							$cmd->save();
-						}
-						$cmd = $this->getCmd('info','distance_' . $site);
-						if (!is_object($cmd)) {
-							log::add("volvocars","info",sprintf(__("Création de la commande %s",__FILE__),'distance_' . $site));
-							$cmd = new volvocarsCmd();
-							$cmd->setEqLogic_id($this->getId());
-							$cmd->setLogicalId('distance_' . $site);
-							$cmd->setName(__("distance",__FILE__)." ".$siteName);
-							$cmd->setType('info');
-							$cmd->setSubType('numeric');
-							$cmd->save();
-						}
-					}
 					$logicalId = 'position';
-					$name = __('position',__FILE__);
-					$subType = 'string';
 					break;
 				case 'statistics.distanceToEmptyBattery':
-					$logicalId['a'] = 'electricAutonomy';
-					$logicalId['b'] = 'al_electricAutonomy';
-					$name['a'] = __('Autonomie électrique',__FILE__);
-					$name['b'] = __('Autonomie électrique faible',__FILE__);
-					$subType['a'] = 'numeric';
-					$subType['b'] = 'numeric';
-					$updateValue['b'] = false;
+					$logicalId = 'electricAutonomy';
 					break;
 				case 'statistics.distanceToEmptyTank':
-					$logicalId['a'] = 'heatAutonomy';
-					$logicalId['b'] = 'al_heatAutonomy';
-					$name['a'] = __('Autonomie thermique',__FILE__);
-					$name['b'] = __('Autonomie thermique faible',__FILE__);
-					$subType['a'] = 'numeric';
-					$subType['b'] = 'numeric';
-					$updateValue['b'] = false;
+					$logicalId = 'heatAutonomy';
 					break;
 				case 'tyre.frontLeft':
 					$logicalId = 'tyre_fl';
-					$name = __('pneu avant gauche',__FILE__);
-					$subType = 'numeric';
 					break;
 				case 'tyre.frontRight':
-					$logicalId['a'] = 'tyre_fr';
-					$logicalId['b'] = 'al_tyre';
-					$name['a'] = __('pneu avant droit',__FILE__);
-					$name['b'] = __('alerte pneus',__FILE__);
-					$subType['a'] = 'numeric';
-					$subType['b'] = 'numeric';
-					$updateValue['b'] = false;
+					$logicalId = 'tyre_fr';
 					break;
 				case 'tyre.rearLeft':
 					$logicalId = 'tyre_rl';
-					$name = __('pneu arrière gauche',__FILE__);
-					$subType = 'numeric';
 					break;
 				case 'tyre.rearRight':
 					$logicalId = 'tyre_rr';
-					$name = __('pneu arrière droit',__FILE__);
-					$subType = 'numeric';
 					break;
 				case 'windows.frontLeftWindow':
 					$logicalId['c'] = 'win_fl_closed';
 					$logicalId['o'] = 'win_fl_open';
 					$logicalId['s'] = 'win_fl_state';
-					$name['c'] = __('fenêtre avant gauche fermée',__FILE__);
-					$name['o'] = __('fenêtre avant gauche ouverte',__FILE__);
-					$name['s'] = __('état fenêtre avant gauche',__FILE__);
 					break;
 				case 'windows.frontRightWindow':
 					$logicalId['c'] = 'win_fr_closed';
 					$logicalId['o'] = 'win_fr_open';
 					$logicalId['s'] = 'win_fr_state';
-					$name['c'] = __('fenêtre avant droite fermée',__FILE__);
-					$name['o'] = __('fenêtre avant droite ouverte',__FILE__);
-					$name['s'] = __('état fenêtre avant droite',__FILE__);
 					break;
 				case 'windows.rearLeftWindow':
 					$logicalId['c'] = 'win_rl_closed';
 					$logicalId['o'] = 'win_rl_open';
 					$logicalId['s'] = 'win_rl_state';
-					$name['c'] = __('fenêtre arrière gauche fermée',__FILE__);
-					$name['o'] = __('fenêtre arrière gauche ouverte',__FILE__);
-					$name['s'] = __('état fenêtre arrière gauche',__FILE__);
 					break;
 				case 'windows.rearRightWindow':
 					$logicalId['c'] = 'win_rr_closed';
 					$logicalId['o'] = 'win_rr_open';
 					$logicalId['s'] = 'win_rr_state';
-					$name['c'] = __('fenêtre arrière droite fermée',__FILE__);
-					$name['o'] = __('fenêtre arrière droite ouverte',__FILE__);
-					$name['s'] = __('état fenêtre arrière droite',__FILE__);
 					break;
 				case 'windows.sunroof':
 					$logicalId['c'] = 'roof_closed';
 					$logicalId['o'] = 'roof_open';
 					$logicalId['s'] = 'roof_state';
-					$name['c'] = __('toit fermé',__FILE__);
-					$name['o'] = __('toit ouvert',__FILE__);
-					$name['s'] = __('état toit',__FILE__);
 					break;
 				default:
-					log::add('volvocars','warning',sprintf(__("%s.%s inconnu",__FILE__),$endpoint, $key));
+					$logicalId = '';
+					log::add('volvocars','debug',"│ " . sprintf(__("%s.%s inconnu",__FILE__),$endpoint, $key));
 			}
-			if ($createCmds) {
-				if (is_array($logicalId)) {
-					foreach (array_keys($logicalId) as $i) {
-						if ($i == 'c' and config::byKey('create_cmd_closed','volvocars') == '0') {
-							continue;
-						}
-						if ($i == 'o' and config::byKey('create_cmd_open','volvocars') == '0') {
-							continue;
-						}
-						if ($i == 's' and config::byKey('create_cmd_state','volvocars') == '0') {
-							continue;
-						}
-						$cmd = $this->getCmd('info',$logicalId[$i]);
-						if (! is_object($cmd)) {
-							log::add("volvocars","info",sprintf(__("Création de la commande %s",__FILE__),$logicalId[$i]));
-							$cmd = new volvocarsCmd();
-							$cmd->setEqLogic_id($this->getId());
-							$cmd->setLogicalId($logicalId[$i]);
-							$cmd->setName($name[$i]);
-							$cmd->setType('info');
-							$cmd->setSubType($subType[$i]);
-							$cmd->save();
-						}
-					}
-				} else {
-					$cmd = $this->getCmd('info',$logicalId);
-					if (! is_object($cmd)) {
-						log::add("volvocars","info",sprintf(__("Création de la commande %s",__FILE__),$logicalId));
-						$cmd = new volvocarsCmd();
-						$cmd->setEqLogic_id($this->getId());
-						$cmd->setLogicalId($logicalId);
-						$cmd->setName($name);
-						$cmd->setType('info');
-						$cmd->setSubType($subType);
-						if ($unit !== null){
-							$cmd->setUnite($unit);
-						}
-						$cmd->save();
-					}
-				}
-			}
-			if ($updateValues) {
+			if (is_array($logicalId)){
 				$time = date('Y-m-d H:i:s', strtotime($infos[$key]['timestamp']));
 				$value = self::convertKeyword($infos[$key]['value']);
-				if (is_array($logicalId)) {
-					foreach (array_keys($logicalId) as $i) {
-						if (isset($updateValue[$i]) && $updateValue[$i] == false){
-							continue;
-						}
-						if (is_array($value)) {
-							if (isset($value[$i])) {
-								$this->checkAndUpdateCmd($logicalId[$i],$value[$i],$time);
-							}
-						} elseif ($value !== null) {
-							$this->checkAndUpdateCmd($logicalId[$i],$value,$time);
-						}
+				foreach(['c','o','s'] as $i) {
+					$cmd = $this->getCmd('info',$logicalId[$i]);
+					if (is_object($cmd)){
+						log::add("volvocars","info",sprintf("│ %s: %s",$logicalId[$i],$value[$i]));
+						$this->checkAndUpdateCmd($logicalId[$i],$value[$i],$time);
+					} else {
+						log::add("volvocars","warning","│ " . sprintf(__("Commande '%s' introuvable",__FILE__),$logicalId[i]));
 					}
-				} else {
-					switch ($key) {
-						case 'location':
+				}
+			} else {
+				if ($logicalId != '') {
+					$cmd = $this->getCmd('info',$logicalId);
+					if (is_object($cmd)){
+						if ($key == 'location') {
 							$value = $infos[$key]['coordinates'][1] . ',' . $infos[$key]['coordinates'][0];
-							break;
-						default:
-							$value = $infos[$key]['value'];
+							$time = null;
+						} else {
+							$time = date('Y-m-d H:i:s', strtotime($infos[$key]['timestamp']));
+							$value = self::convertKeyword($infos[$key]['value']);
+						}
+						log::add("volvocars","info",sprintf("│ %s: %s",$logicalId,$value));
+						$this->checkAndUpdateCmd($logicalId,$value,$time);
+					} else {
+						log::add("volvocars","warning","│ " . sprintf(__("Commande '%s' introuvable",__FILE__),$logicalId));
 					}
-					$this->checkAndUpdateCmd($logicalId,$value,$time);
 				}
 			}
 		}
+		log::add("volvocars","info","└OK");
 	}
 
 	public function retrieveInfos($createCmds=false) {
@@ -911,6 +712,8 @@ class volvocars extends eqLogic {
 		if ($_version == 'panel') {
 			$panel = true;
 			$_version = 'dashboard';
+		} else {
+			return parent::toHtml($_version);
 		}
 
 		$replace = $this->preToHtml($_version);
@@ -925,32 +728,86 @@ class volvocars extends eqLogic {
 		//---- SITES
 		$replace['#site1_name'.$this->getId().'#'] = ucfirst($this->getConfiguration('site1_name'));
 		$replace['#site2_name'.$this->getId().'#'] = ucfirst($this->getConfiguration('site2_name'));
-		$replace['#site1_active'.$this->getId().'#'] = $this->getConfiguration('site1_active');
-		$replace['#site2_active'.$this->getId().'#'] = $this->getConfiguration('site2_active');
-		$replace['#site1_limit'.$this->getId().'#'] = $this->getConfiguration('site1_limit');
-		$replace['#site2_limit'.$this->getId().'#'] = $this->getConfiguration('site2_limit');
+		$replace['#site1_active'.$this->getId().'#'] = $this->getConfiguration('site1_active',0);
+		$replace['#site2_active'.$this->getId().'#'] = $this->getConfiguration('site2_active',0);
+		$replace['#site1_limit'.$this->getId().'#'] = $this->getConfiguration('site1_limit',0);
+		$replace['#site2_limit'.$this->getId().'#'] = $this->getConfiguration('site2_limit',0);
+
 		$cmd = $this->getCmd('info','presence_site1');
 		if (is_object($cmd)) {
 			$replace['#presence_site1_id#'] = $cmd->getId();
 			$replace['#presence_site1#'] = $cmd->execCmd();
 		}
+
 		$cmd = $this->getCmd('info','presence_site2');
 		if (is_object($cmd)) {
 			$replace['#presence_site2_id#'] = $cmd->getId();
 			$replace['#presence_site2#'] = $cmd->execCmd();
 		}
+
 		$cmd = $this->getCmd('info','distance_site1');
 		if (is_object($cmd)) {
 			$replace['#distance_site1_id#'] = $cmd->getId();
 			$replace['#distance_site1#'] = $cmd->execCmd();
 		}
+
 		$cmd = $this->getCmd('info','distance_site2');
 		if (is_object($cmd)) {
 			$replace['#distance_site2_id#'] = $cmd->getId();
 			$replace['#distance_site2#'] = $cmd->execCmd();
 		}
 
+		$cmd = $this->getCmd('info','al_oil');
+		if (is_object($cmd)) {
+			$replace['#oil_id#'] = $cmd->getId();
+			$replace['#oil#'] = $cmd->execCmd();
+		}
+		$replace['#oil_id#'] = 2345;
+		$replace['#oil#'] = 0;
 
+		$cmd = $this->getCmd('info','al_coolant');
+		if (is_object($cmd)) {
+			$replace['#coolant_id#'] = $cmd->getId();
+			$replace['#coolant#'] = $cmd->execCmd();
+		}
+		$replace['#coolant_id#'] = 2345;
+		$replace['#coolant#'] = 0;
+
+		$cmd = $this->getCmd('info','al_brake_fluid');
+		if (is_object($cmd)) {
+			$replace['#brake_id#'] = $cmd->getId();
+			$replace['#brake#'] = $cmd->execCmd() | 0;
+		}
+
+		$cmd = $this->getCmd('info','al_washer_fluid');
+		if (is_object($cmd)) {
+			$replace['#wash_id#'] = $cmd->getId();
+			$replace['#wash#'] = $cmd->execCmd() | 0;
+		}
+
+		$cmd = $this->getCmd('info','al_heatautonomy');
+		if (is_object($cmd)) {
+			$replace['#heatautonomy_id#'] = $cmd->getId();
+			$replace['#heatautonomy#'] = $cmd->execCmd();
+		}
+
+		$cmd = $this->getCmd('info','al_electricautonomy');
+		if (is_object($cmd)) {
+			$replace['#electricautonomy_id#'] = $cmd->getId();
+			$replace['#electricautonomy#'] = $cmd->execCmd();
+		}
+
+		$cmd = $this->getCmd('info','al_tyre');
+		if (is_object($cmd)) {
+			$replace['#tyre_id#'] = $cmd->getId();
+			$replace['#tyre#'] = $cmd->execCmd() | 0;
+		}
+
+		$cmd = $this->getCmd('info','al_light');
+		if (is_object($cmd)) {
+			$replace['#light_id#'] = $cmd->getId();
+			$replace['#light#'] = $cmd->execCmd() | 0;
+		}
 
 		if ($panel == true) {
 			$template = 'volvocars_panel';
@@ -963,8 +820,10 @@ class volvocars extends eqLogic {
 		$cmd = $this->getCmd('info','position');
 		if ( is_object($cmd)) {
 			$coordinate = explode(',',$cmd->execCmd());
-			$position['lat'] = $coordinate[0];
-			$position['long'] = $coordinate[1];
+			if (count($coordinate) == 2) {
+				$position['lat'] = $coordinate[0];
+				$position['long'] = $coordinate[1];
+			}
 		}
 		return $position;
 	}
@@ -1258,7 +1117,7 @@ class volvocarsCmd extends cmd {
 				}
 				$distance = $distanceCmd->execCmd();
 				if ($distance < 0) {
-					log::add("volvovars","error",__("La distance du site 1 est indéterminée",__FILE___));
+					log::add("volvovars","error",__("La distance du site 1 est indéterminée",__FILE__));
 					return '';
 				}
 				$limite = $car->getConfiguration('site1_limit', '');
@@ -1283,7 +1142,7 @@ class volvocarsCmd extends cmd {
 				}
 				$distance = $distanceCmd->execCmd();
 				if ($distance < 0) {
-					log::add("volvovars","error",__("La distance du site 2 est indéterminée",__FILE___));
+					log::add("volvovars","error",__("La distance du site 2 est indéterminée",__FILE__));
 					return '';
 				}
 				$limite = $car->getConfiguration('site2_limit', '');

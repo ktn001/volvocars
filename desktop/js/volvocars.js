@@ -260,7 +260,7 @@ $('.eqLogicAction[data-action=protect]').off('click').on('click',function() {
 $('.eqLogicAction[data-action=protect]').trigger('click')
 
 /*
- * Action suri changement moteur électrique
+ * Action sur changement moteur électrique
  */
 $('[data-l2key=electricEngine]').off('change').on('change', function() {
 	if ($(this).value() == 1) {
@@ -271,7 +271,7 @@ $('[data-l2key=electricEngine]').off('change').on('change', function() {
 })
 
 /*
- * Action suri changement moteur thermique
+ * Action sur changement moteur thermique
  */
 $('[data-l2key=heatEngine]').off('change').on('change', function() {
 	if ($(this).value() == 1) {
@@ -374,6 +374,40 @@ $('.eqLogicAttr[data-l2key$=_source]').off('change').on('focus', function() {
 			$('input[data-l2key='+site+'_lat], input[data-l2key='+site+'_long]').addClass('hidden')
 			$('.'+site+' .btn[data-action=get_pos]').addClass('hidden')
 	}
+})
+
+/*
+ * Action sur bouton de recréation des commandes manquantes
+ */
+$('.cmdAction[data-action=recreate]').off('click').on('click',function() {
+	if (modifyWithoutSave) {
+		bootbox.alert("{{Vous devez sauvegarder vos modifications en cours avant de lancer cette opération!}}")
+		return
+	}
+	id = $('.eqLogicAttr[data-l1key=id]').value()
+	$.showLoading()
+	$.ajax({
+		type: 'POST',
+		url: 'plugins/volvocars/core/ajax/volvocars.ajax.php',
+		data: {
+			action: 'recreateCmds',
+			id: id
+		},
+		dataType: 'json',
+		global: false,
+		error: function (request, status, error) {
+			$.hideLoading()
+			handleAjaxError(request, status, error)
+		},
+		success: function (data) {
+			if (data.state != 'ok') {
+				$.hideLoading()
+				$.fn.showAlert({message: data.result, level:'danger'})
+				return
+			}
+			location.reload()
+		}
+	})
 })
 
 /* Fonction permettant l'affichage des commandes dans l'équipement */
