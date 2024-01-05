@@ -32,131 +32,209 @@
 	},{
 		"logicalId": "al_brake_fluid",
 		"name": "{{niveau liquide de frein}}",
+		"configuration": {
+			"endpoint": "brakes"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "al_coolant",
 		"name": "{{niveau du liquide de refroidissement}}",
+		"configuration": {
+			"endpoint": "diagnostics"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "al_oil",
 		"name": "{{niveau d'huile}}",
+		"configuration": {
+			"endpoint": "diagnostics"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "al_washer_fluid",
 		"name": "{{lave-vitre}}",
+		"configuration": {
+			"endpoint": "diagnostics"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "locked",
 		"name": "{{Vérouillé}}",
+		"configuration": {
+			"endpoint": "doors"
+		},
 		"type": "info",
 		"subType": "binary"
 	},{
 		"logicalId": "door_fl_closed",
 		"name": "{{porte avant gauche fermée}}",
+		"configuration": {
+			"endpoint": "doors"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "door_fl_open",
 		"name": "{{porte avant gauche ouverte}}",
+		"configuration": {
+			"endpoint": "doors"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "door_fl_state",
 		"name": "{{état porte avant gauche}}",
+		"configuration": {
+			"endpoint": "doors"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "door_fr_closed",
 		"name": "{{porte avant droite fermée}}",
+		"configuration": {
+			"endpoint": "doors"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "door_fr_open",
 		"name": "{{porte avant droite ouverte}}",
+		"configuration": {
+			"endpoint": "doors"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "door_fr_state",
 		"name": "{{état porte avant droite}}",
+		"configuration": {
+			"endpoint": "doors"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "door_rl_closed",
 		"name": "{{porte arrière gauche fermée}}",
+		"configuration": {
+			"endpoint": "doors"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "door_rl_open",
 		"name": "{{porte arrière gauche ouverte}}",
+		"configuration": {
+			"endpoint": "doors"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "door_rl_state",
 		"name": "{{état arrière avant gauche}}",
+		"configuration": {
+			"endpoint": "doors"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "door_rr_closed",
 		"name": "{{porte arrière droite fermée}}",
+		"configuration": {
+			"endpoint": "doors"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "door_rr_open",
 		"name": "{{porte arrière droite ouverte}}",
+		"configuration": {
+			"endpoint": "doors"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "door_rr_state",
 		"name": "{{état arrière avant droite}}",
+		"configuration": {
+			"endpoint": "doors"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "hood_closed",
 		"name": "{{capot fermé}}",
+		"configuration": {
+			"endpoint": "doors"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "hood_open",
 		"name": "{{capot ouvert}}",
+		"configuration": {
+			"endpoint": "doors"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "hood_state",
 		"name": "{{état capot}}",
+		"configuration": {
+			"endpoint": "doors"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "tail_closed",
 		"name": "{{hayon fermé}}",
+		"configuration": {
+			"endpoint": "doors"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "tail_open",
 		"name": "{{hayon ouvert}}",
+		"configuration": {
+			"endpoint": "doors"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "tail_state",
 		"name": "{{état hayon}}",
+		"configuration": {
+			"endpoint": "doors"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "tank_closed",
 		"name": "{{trappe fermée}}",
+		"configuration": {
+			"endpoint": "doors"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "tank_open",
 		"name": "{{trappe ouverte}}",
+		"configuration": {
+			"endpoint": "doors"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "tank_state",
 		"name": "{{état trappe}}",
+		"configuration": {
+			"endpoint": "doors"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
@@ -167,121 +245,193 @@
 	},{
 		"logicalId": "al_brakeLight_l",
 		"name": "{{feu frein gauche}}",
+		"configuration": {
+			"endpoint": "warnings"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "al_brakeLight_r",
 		"name": "{{feu frein droite}}",
+		"configuration": {
+			"endpoint": "warnings"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "al_brakeLight_c",
 		"name": "{{feu frein central}}",
+		"configuration": {
+			"endpoint": "warnings"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "al_daytimeRunningLight_l",
 		"name": "{{feu jour gauche}}",
+		"configuration": {
+			"endpoint": "warnings"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "al_daytimeRunningLight_r",
 		"name": "{{feu jour droit}}",
+		"configuration": {
+			"endpoint": "warnings"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "al_fogLight_f",
 		"name": "{{feux brouillard avant}}",
+		"configuration": {
+			"endpoint": "warnings"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "al_fogLight_r",
 		"name": "{{feux brouillard arrière}}",
+		"configuration": {
+			"endpoint": "warnings"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "al_hazardLights",
 		"name": "{{feux détresse}}",
+		"configuration": {
+			"endpoint": "warnings"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "al_highBeam_l",
 		"name": "{{feu route gauche}}",
+		"configuration": {
+			"endpoint": "warnings"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "al_highBeam_r",
 		"name": "{{feu route droite}}",
+		"configuration": {
+			"endpoint": "warnings"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "al_lowBeam_l",
 		"name": "{{feu croisement gauche}}",
+		"configuration": {
+			"endpoint": "warnings"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "al_lowBeam_r",
 		"name": "{{feu croisement droite}}",
+		"configuration": {
+			"endpoint": "warnings"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "al_positionLight_fl",
 		"name": "{{feu position avant gauche}}",
+		"configuration": {
+			"endpoint": "warnings"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "al_positionLight_fr",
 		"name": "{{feu position avant droite}}",
+		"configuration": {
+			"endpoint": "warnings"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "al_positionLight_rl",
 		"name": "{{feu position arrière gauche}}",
+		"configuration": {
+			"endpoint": "warnings"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "al_positionLight_rr",
 		"name": "{{feu position arrière droit}}",
+		"configuration": {
+			"endpoint": "warnings"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "al_registrationPlateLight",
 		"name": "{{feu plaque}}",
+		"configuration": {
+			"endpoint": "warnings"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "al_reverseLights",
 		"name": "{{feu recule}}",
+		"configuration": {
+			"endpoint": "warnings"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "al_sideMarkLights",
 		"name": "{{feux latéraux}}",
+		"configuration": {
+			"endpoint": "warnings"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "al_turnIndication_fl",
 		"name": "{{clignotant avant gauche}}",
+		"configuration": {
+			"endpoint": "warnings"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "al_turnIndication_fr",
 		"name": "{{clignotant avant droit}}",
+		"configuration": {
+			"endpoint": "warnings"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "al_turnIndication_rl",
 		"name": "{{clignotant arrière gauche}}",
+		"configuration": {
+			"endpoint": "warnings"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "al_turnIndication_rr",
 		"name": "{{clignotant arrière droit}}",
+		"configuration": {
+			"endpoint": "warnings"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "position",
 		"name": "{{position}}",
+		"configuration": {
+			"endpoint": "location"
+		},
 		"type": "info",
 		"subType": "string"
 	},{
@@ -310,6 +460,9 @@
 		"logicalId": "electricAutonomy",
 		"name": "{{Autonomie électrique}}",
 		"unite": "Km",
+		"configuration": {
+			"endpoint": "statistics"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
@@ -321,6 +474,9 @@
 		"logicalId": "heatAutonomy",
 		"name": "{{Autonomie thermique}}",
 		"unite": "Km",
+		"configuration": {
+			"endpoint": "statistics"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
@@ -336,96 +492,153 @@
 	},{
 		"logicalId": "tyre_fl",
 		"name": "{{pneu avant gauche}}",
+		"configuration": {
+			"endpoint": "tyre"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "tyre_fr",
 		"name": "{{pneu avant droit}}",
+		"configuration": {
+			"endpoint": "tyre"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "tyre_rl",
 		"name": "{{pneu arrière gauche}}",
+		"configuration": {
+			"endpoint": "tyre"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "tyre_rr",
 		"name": "{{pneu arrière droit}}",
+		"configuration": {
+			"endpoint": "tyre"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "win_fl_closed",
 		"name": "{{fenêtre avant gauche fermée}}",
+		"configuration": {
+			"endpoint": "windows"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "win_fl_open",
 		"name": "{{fenêtre avant gauche ouverte}}",
+		"configuration": {
+			"endpoint": "windows"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "win_fl_state",
 		"name": "{{état fenêtre avant gauche}}",
+		"configuration": {
+			"endpoint": "windows"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "win_fr_closed",
 		"name": "{{fenêtre avant droite fermée}}",
+		"configuration": {
+			"endpoint": "windows"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "win_fr_open",
 		"name": "{{fenêtre avant droite ouverte}}",
+		"configuration": {
+			"endpoint": "windows"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "win_fr_state",
 		"name": "{{état fenêtre avant droite}}",
+		"configuration": {
+			"endpoint": "windows"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "win_rl_closed",
 		"name": "{{fenêtre arrière gauche fermée}}",
+		"configuration": {
+			"endpoint": "windows"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "win_rl_open",
 		"name": "{{fenêtre arrière gauche ouverte}}",
+		"configuration": {
+			"endpoint": "windows"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "win_rl_state",
 		"name": "{{état fenêtre arrière gauche}}",
+		"configuration": {
+			"endpoint": "windows"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "win_rr_closed",
 		"name": "{{fenêtre arrière droite fermée}}",
+		"configuration": {
+			"endpoint": "windows"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "win_rr_open",
 		"name": "{{fenêtre arrière droite ouverte}}",
+		"configuration": {
+			"endpoint": "windows"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "win_rr_state",
 		"name": "{{état fenêtre arrière droite}}",
+		"configuration": {
+			"endpoint": "windows"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "roof_closed",
 		"name": "{{toit fermé}}",
+		"configuration": {
+			"endpoint": "windows"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "roof_open",
 		"name": "{{toit ouvert}}",
+		"configuration": {
+			"endpoint": "windows"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{
 		"logicalId": "roof_state",
 		"name": "{{état toit}}",
+		"configuration": {
+			"endpoint": "windows"
+		},
 		"type": "info",
 		"subType": "numeric"
 	},{

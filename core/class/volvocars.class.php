@@ -23,6 +23,17 @@ require_once __DIR__  . '/volvoAccount.class.php';
 class volvocars extends eqLogic {
 	/*     * *************************Attributs****************************** */
 
+	static $endpoints = [
+		"brakes",
+		"diagnostics",
+		"doors",
+		"warnings",
+		"location",
+		"statistics",
+		"tyre",
+		"windows",
+	];
+
 	/*
 	 * Permet de définir les possibilités de personnalisation du widget (en cas d'utilisation de la fonction 'toHtml' par exemple)
 	 * Tableau multidimensionnel - exemple: array('custom' => true, 'custom::layout' => false)
@@ -67,6 +78,60 @@ class volvocars extends eqLogic {
 			}
 		}
 		return $cars;
+	}
+
+	/*
+	 * Mise à jour des listener
+	 */
+	public static function setListeners() {
+	log::add("volvocars","debug","setListeners");
+		foreach (volvocars::byType('volvocars') as $car) {
+			$car->setCarListeners();
+		}
+    }
+
+	/*
+	 * Fonctions appelée par le listener en cas de changement de valeur d'une commande de type 'info'
+	 */
+	public static function updateMessages($_option) {
+		log::add ("volvocars","info","updateMessages called: " . print_r($_option,true));
+	}
+
+	/*
+	 * Les listerner handlers
+	 *   un handler par endpoin car il y a tropr de commandes pour l'enregistrement d'un seul
+	 *   handle pour toutes les commandes (contrainte de la DB)
+	 */
+	public static function lh_brakes($_options) {
+		self::updateMessages($_options);
+	}
+
+	public static function lh_diagnostics($_options) {
+		self::updateMessages($_options);
+	}
+
+	public static function lh_doors($_options) {
+		self::updateMessages($_options);
+	}
+
+	public static function lh_warnings($_options) {
+		self::updateMessages($_options);
+	}
+
+	public static function lh_location($_options) {
+		self::updateMessages($_options);
+	}
+
+	public static function lh_statistics($_options) {
+		self::updateMessages($_options);
+	}
+
+	public static function lh_tyre($_options) {
+		self::updateMessages($_options);
+	}
+
+	public static function lh_windows($_options) {
+		self::updateMessages($_options);
 	}
 
 	private static function convertKeyword($keyword) {
@@ -240,6 +305,66 @@ class volvocars extends eqLogic {
 			if (is_object($cmd)){
 				$cmd->event($cmd->execute());
 			}
+		}
+		$this->setCarListeners();
+	}
+
+	/*
+	 * Fonctions pour la gestion du listener
+	 */
+	private function getCarListeners() {
+		$listeners = array();
+		foreach(listener::byClass(__CLASS__) as $listener) {
+			if ($listener->getOption('carId') == $this->getid()) {
+				$listeners[$listener->getFunction()] = $listener;
+			}
+		}
+		return ($listeners);
+	}
+
+	private function removeCarListeners() {
+		log::add("volvocars","info",$this->getname() . ": " . __("Suppression des listeners",__FILE__));
+		foreach ($this->getCarListeners() as $listener) {
+			$listener->remove();
+		}
+	}
+
+	private function setCarListeners() {
+		if ($this->getIsEnable() == 0) {
+			$this->removeCarListeners();
+			return;
+		}
+
+		log::add("volvocars","info",$this->getName() . ": " . __("mise à jour des listeners",__FILE__));
+		$listeners = $this->getCarListeners();
+		foreach (self::$endpoints as $endpoint) {
+			$function = "lh_" . $endpoint;
+			if (! isset($listeners[$function])) {
+				$listener = new listener();
+				$listener->setClass(__CLASS__);
+				$listener->setFunction($function);
+				$listener->setOption('carId',$this->getId());
+				$listeners[$function] = $listener;
+			}
+			if (! method_exists($this, $function)) {
+				log::add("volvocars","error",sprintf(__("handler pour le listener du endpoint %s introuvable",__FILE__),$endpoint));
+			}
+			$listeners[$function]->emptyEvent();
+		}
+		foreach($this->getCmd('info', null, null, true) as $cmd) {
+			$endpoint = $cmd->getConfiguration('endpoint');
+			if ($endpoint != '') {
+				log::add("volvocars","debug", sprintf(__("Ajout de la commande '%s' au listener",__FILE__),$cmd->getLogicalId()));
+				$function = 'lh_' . $endpoint;
+				if (!isset($listeners[$function])) {
+					log::add("volvocars","error",sprintf(__("listener pour le endpoint %s introuvable",__FILE__),$endpoint));
+					continue;
+				}
+				$listeners[$function]->addEvent($cmd->getId());
+			}
+		}
+		foreach ($listeners as $listener) {
+			$listener->save();
 		}
 	}
 
@@ -437,8 +562,11 @@ class volvocars extends eqLogic {
 	}
 
 	public function createOrUpdateCmds($createOnly = false) {
-		$cmdsFile = __DIR__ . '/../config/cmds.json';
-		$cmdsFile2Translate = str_replace('/var/www/html','',realpath($cmdsFile));
+		$createCmdOpen = config::byKey("create_cmd_open","volvocars", '0');
+		$createCmdState = config::byKey("create_cmd_state","volvocars", '0');
+		log::add("volvocars","debug","1111" . print_r($createCmdOpen,true));
+		log::add("volvocars","debug","2222" . print_r($createCmdState,true));
+		$cmdsFile = realpath(__DIR__ . '/../config/cmds.json');
 		$commands = json_decode(file_get_contents($cmdsFile),true);
 		foreach ($commands as $command) {
 			if (!is_array($command)) {
@@ -448,6 +576,19 @@ class volvocars extends eqLogic {
 			if (! isset($command['logicalId'])) {
 				log::add("volvocars","error","createCmd called with no logicalId");
 				return false;
+			}
+			if (isset($command['configuration']['endpoint'])) {
+				$endpoint = $command['configuration']['endpoint'];
+			} else {
+				$endpoint = '';
+			}
+			if ($endpoint == 'windows' || $endpoint == 'doors') {
+				if (! $createCmdOpen == 1 && substr_compare($command['logicalId'], '_open',-5) == 0) {
+					continue;
+				}
+				if (! $createCmdState == 1 && substr_compare($command['logicalId'], '_state',-6) == 0) {
+					continue;
+				}
 			}
 			if (! isset($command['type'])) {
 				log::add("volvocars","error","createCmd called with no type");
@@ -460,7 +601,7 @@ class volvocars extends eqLogic {
 			if (! isset($command['name']) || trim($command['name']) == '') {
 				$command['name'] = $command['logicalId'];
 			}
-			$command['name'] = translate::exec($command['name'],$cmdsFile2Translate);
+			$command['name'] = translate::exec($command['name'],$cmdsFile);
 			$cmd = $this->getCmd($command['type'],$command['logicalId']);
 			if (!is_object($cmd)) {
 				$cmd = new volvocarsCmd();
@@ -486,7 +627,7 @@ class volvocars extends eqLogic {
 			log::add("volvocars","debug",sprintf("├─key: %s",$key)); 
 			$logicalId = array();
 			switch ($endpoint.".".$key) {
-				case 'brake_fluid.brakeFluidLevelWarning':
+				case 'brakes.brakeFluidLevelWarning':
 					$logicalId = 'al_brake_fluid';
 					break;
 				case 'diagnostics.engineCoolantLevelWarning':
@@ -694,15 +835,72 @@ class volvocars extends eqLogic {
 		$this->getInfosFromApi('location',$createCmds);
 		$this->getInfosFromApi('windows',$createCmds);
 		$this->getInfosFromApi('engine_diagnostics',$createCmds);
-		$this->getInfosFromApi('brake_fluid',$createCmds);
+		$this->getInfosFromApi('brakes',$createCmds);
 		$this->getInfosFromApi('diagnostics',$createCmds);
 		$this->getInfosFromApi('statistics',$createCmds);
 		$this->getInfosFromApi('tyre',$createCmds);
 		$this->getInfosFromApi('warnings',$createCmds);
 	}
 
+	public function addWidgetMessage ($cible, $id, $message) {
+		$cmd = $this->getCmd("info","msg2widget");
+		if (! is_object($cmd)) {
+			log::add("volvocars","warning",sprintf(__("la commande %s est introuvable",__FILE__),'msg2widget'));
+			return;
+		}
+		$messages = json_decode($cmd->execCmd(),true);
+		if (!is_array($messages)) {
+			$messages = array();
+		}
+		if (!isset($messages[$cible])){
+			$messages[$cible] = array();
+		}
+		if (!isset($messages[$cible][$id]) || $messages[$cible][$id] != $message) {
+			$messages[$cible][$id] = $message;
+			$this->checkAndUpdateCmd('msg2widget',json_encode($messages));
+		}
+	}
+
+	public function rmWidgetMessage ($id, $cible=null) {
+		$cmd = $this->getCmd("info","msg2widget");
+		if (! is_object($cmd)) {
+			log::add("volvocars","warning",sprintf(__("la commande %s est introuvable",__FILE__),'msg2widget'));
+			return;
+		}
+		$messages = json_decode($cmd->execCmd(),true);
+		if (!is_array($messages)) {
+			return;
+		}
+		if ($cible != null) {
+			if (!isset($message[$cible])) {
+				return;
+			}
+			if (isset($messages[$cible][$id])) {
+				unset($messages[$cible][$id]);
+				if (count($message[$cible]) == 0) {
+					unset($messages[$cible]);
+				}
+				$this->checkAndUpdateCmd('msg2widget',json_encode($messages));
+			}
+		} else {
+			$updated = false;
+			foreach (array_keys($messages) as $key) {
+				if (isset($messages[$key][$id])) {
+					unset($messages[$key][$id]);
+					if (count($message[$cible]) == 0) {
+						unset($messages[$cible]);
+					}
+					$updated = true;
+				}
+			}
+			if ($updated) {
+				$this->checkAndUpdateCmd('msg2widget',json_encode($messages));
+			}
+		}
+		return;
+	}
 	/*
-	* Permet de modifier l'affichage du widget (également utilisable par les commandes)
+	* Widget pour le panel
 	*/
 	public function toHtml($_version = 'dashboard') {
 
@@ -829,6 +1027,11 @@ class volvocars extends eqLogic {
 	}
 
 	/*     * **********************Getteur Setteur*************************** */
+
+	public function setIsEnable($_isEnable) {
+		parent::setIsEnable($_isEnable);
+	}
+
 	public function setVin($_vin){
 		$this->setLogicalId($_vin);
 		return $this;
@@ -1117,7 +1320,7 @@ class volvocarsCmd extends cmd {
 				}
 				$distance = $distanceCmd->execCmd();
 				if ($distance < 0) {
-					log::add("volvovars","error",__("La distance du site 1 est indéterminée",__FILE__));
+					log::add("volvocars","error",__("La distance du site 1 est indéterminée",__FILE__));
 					return '';
 				}
 				$limite = $car->getConfiguration('site1_limit', '');
@@ -1142,7 +1345,7 @@ class volvocarsCmd extends cmd {
 				}
 				$distance = $distanceCmd->execCmd();
 				if ($distance < 0) {
-					log::add("volvovars","error",__("La distance du site 2 est indéterminée",__FILE__));
+					log::add("volvocars","error",__("La distance du site 2 est indéterminée",__FILE__));
 					return '';
 				}
 				$limite = $car->getConfiguration('site2_limit', '');

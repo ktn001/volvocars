@@ -29,7 +29,7 @@ class volvoAccount {
 	const WINDOWS_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/windows";
 	const LOCATION_STATE_URL = "https://api.volvocars.com/location/v1/vehicles/%s/location";
 	const ENGINE_DIAGNOSTICS_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/engine";
-	const BRAKE_FLUID_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/brakes";
+	const BRAKES_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/brakes";
 	const DIAGNOSTICS_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/diagnostics";
 	const STATISTICS_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/statistics";
 	const TYRE_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/tyres";
@@ -301,8 +301,8 @@ class volvoAccount {
 
 	public function getInfos($endpoint, $vin=null) {
 		switch ($endpoint) {
-			case 'brake_fluid':
-				$url = sprintf(self::BRAKE_FLUID_URL,$vin);
+			case 'brakes':
+				$url = sprintf(self::BRAKES_URL,$vin);
 				break;
 			case 'commands':
 				$url = sprintf(self::COMMANDS_URL,$vin);
