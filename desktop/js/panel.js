@@ -5,7 +5,6 @@ if(jeedomUtils){jeedomUtils.positionEqLogic();}else{positionEqLogic();}
 //----- Theme colors
 
 //$('body').on('changeThemeEvent', function (event,theme) {
-	console.log("Changement de theme")
 //	timedSetTheme(0);
 //});
 
@@ -44,7 +43,6 @@ if(jeedomUtils){jeedomUtils.positionEqLogic();}else{positionEqLogic();}
 function displaySelectedEqLogic () {
 	$.showLoading()
 	id = $('#div_display_eqLogicList .active[data-eqLogic_id]').attr('data-eqLogic_id')
-	console.log("ID: " + id)
 	$.ajax({
 		type: 'POST',
 		url: 'plugins/volvocars/core/ajax/volvocars.ajax.php',

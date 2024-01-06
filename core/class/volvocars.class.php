@@ -93,20 +93,75 @@ class volvocars extends eqLogic {
 	/*
 	 * Fonctions appelée par le listener en cas de changement de valeur d'une commande de type 'info'
 	 */
-	public static function updateMessages($_option) {
-		log::add ("volvocars","info","updateMessages called: " . print_r($_option,true));
+	public static function updateMessages($_options) {
+		log::add ("volvocars","info","updateMessages called: " . print_r($_options,true));
 	}
 
 	/*
-	 * Les listerner handlers
-	 *   un handler par endpoin car il y a tropr de commandes pour l'enregistrement d'un seul
-	 *   handle pour toutes les commandes (contrainte de la DB)
+	 * Les handlers des listener
+	 *   un handler par endpoinit car il y a trop de commandes pour l'enregistrement d'un seul
+	 *   handles pour toutes les commandes (contrainte de la DB)
 	 */
 	public static function lh_brakes($_options) {
 		self::updateMessages($_options);
+		log::add("volvocars","debug","lh_brakes: " . print_r($_options,true));
+		$car = volvocars::byId($_options['carId']);
+		if (!is_object($car)){
+			log::add("volvocars","error","lh_brakes: " . sprintf(__("Véhicule %s introuvable",__FILE__),$_options['event_id']));
+			return;
+		}
+		$cmd = volvocarsCmd::byId($_options['event_id']);
+		if (!is_object($cmd)){
+			log::add("volvocars","error","lh_brakes: " . sprintf(__("Commande %s introuvable",__FILE__),$_options['event_id']));
+			return;
+		}
+		$cible = null;
+		switch ($cmd->getLogicalId()) {
+			case 'al_brake_fluid':
+					$cible = 'div_al_brake';
+					if ($cmd->execCmd() == 1) {
+						$car->addWidgetMessage($cible,$_options['event_id'],__("Niveau liquide de freins bas",__FILE__));
+					} else {
+						$car->rmWidgetMessage($cible,$_options['event_id']);
+					}
+				break;
+		}
 	}
 
 	public static function lh_diagnostics($_options) {
+		log::add("volvocars","debug","lh_diagnostics: " . print_r($_options,true));
+		$car = volvocars::byId($_options['carId']);
+		if (!is_object($car)){
+			log::add("volvocars","error","lh_diagnostics: " . sprintf(__("Véhicule %s introuvable",__FILE__),$_options['event_id']));
+			return;
+		}
+		$cmd = volvocarsCmd::byId($_options['event_id']);
+		if (!is_object($cmd)){
+			log::add("volvocars","error","lh_diagnostics: " . sprintf(__("Commande %s introuvable",__FILE__),$_options['event_id']));
+			return;
+		}
+		$cible = null;
+		switch ($cmd->getLogicalId()) {
+			case 'al_coolant':
+					$cible = 'div_al_coolant';
+					if ($cmd->execCmd() == 1) {
+						$car->addWidgetMessage($cible,$_options['event_id'],__("Niveau liquide refroidissement bas",__FILE__));
+					} else {
+						$car->rmWidgetMessage($cible,$_options['event_id']);
+					}
+				break;
+			case 'al_oil':
+					$cible = 'div_al_oil';
+					if ($cmd->execCmd() == 2) {
+						$car->addWidgetMessage($cible,$_options['event_id'],__("Niveau d'huile haut",__FILE__));
+					} elseif ($cmd->execCmd() == 1) {
+						$car->addWidgetMessage($cible,$_options['event_id'],__("Niveau d'huile bas",__FILE__));
+					} else {
+						$car->rmWidgetMessage($cible,$_options['event_id']);
+					}
+				break;
+		}
+
 		self::updateMessages($_options);
 	}
 
@@ -181,6 +236,9 @@ class volvocars extends eqLogic {
 				break;
 			case 'TOO_LOW':
 				$value = 1;
+				break;
+			case 'TOO_HIGH':
+				$value = 2;
 				break;
 			case 'UNSPECIFIED':
 				$value = -1;
@@ -855,13 +913,11 @@ class volvocars extends eqLogic {
 		if (!isset($messages[$cible])){
 			$messages[$cible] = array();
 		}
-		if (!isset($messages[$cible][$id]) || $messages[$cible][$id] != $message) {
-			$messages[$cible][$id] = $message;
-			$this->checkAndUpdateCmd('msg2widget',json_encode($messages));
-		}
+		$messages[$cible][$id] = $message;
+		$this->checkAndUpdateCmd('msg2widget',json_encode($messages));
 	}
 
-	public function rmWidgetMessage ($id, $cible=null) {
+	public function rmWidgetMessage ($cible, $id) {
 		$cmd = $this->getCmd("info","msg2widget");
 		if (! is_object($cmd)) {
 			log::add("volvocars","warning",sprintf(__("la commande %s est introuvable",__FILE__),'msg2widget'));
@@ -871,31 +927,12 @@ class volvocars extends eqLogic {
 		if (!is_array($messages)) {
 			return;
 		}
-		if ($cible != null) {
-			if (!isset($message[$cible])) {
-				return;
-			}
-			if (isset($messages[$cible][$id])) {
-				unset($messages[$cible][$id]);
-				if (count($message[$cible]) == 0) {
-					unset($messages[$cible]);
-				}
-				$this->checkAndUpdateCmd('msg2widget',json_encode($messages));
-			}
-		} else {
-			$updated = false;
-			foreach (array_keys($messages) as $key) {
-				if (isset($messages[$key][$id])) {
-					unset($messages[$key][$id]);
-					if (count($message[$cible]) == 0) {
-						unset($messages[$cible]);
-					}
-					$updated = true;
-				}
-			}
-			if ($updated) {
-				$this->checkAndUpdateCmd('msg2widget',json_encode($messages));
-			}
+		if (!isset($messages[$cible])) {
+			return;
+		}
+		if (isset($messages[$cible][$id])) {
+			unset($messages[$cible][$id]);
+			$this->checkAndUpdateCmd('msg2widget',json_encode($messages));
 		}
 		return;
 	}
@@ -955,26 +992,35 @@ class volvocars extends eqLogic {
 			$replace['#distance_site2#'] = $cmd->execCmd();
 		}
 
+		if ($this->getConfiguration('heatEngine') == 0) {
+			$replace['#div_al_oil_hidden#'] = 'hidden';
+		} else {
+			$replace['#div_al_oil_hidden#'] = '';
+		}
 		$cmd = $this->getCmd('info','al_oil');
 		if (is_object($cmd)) {
 			$replace['#oil_id#'] = $cmd->getId();
 			$replace['#oil#'] = $cmd->execCmd();
+			$replace['#div_al_oil_defaultMsg#'] = __("Niveau d'huile OK",__FILE__);
 		}
-		$replace['#oil_id#'] = 2345;
-		$replace['#oil#'] = 0;
 
+		if ($this->getConfiguration('heatEngine') == 0) {
+			$replace['#div_al_coolant_hidden#'] = 'hidden';
+		} else {
+			$replace['#div_al_coolant_hidden#'] = '';
+		}
 		$cmd = $this->getCmd('info','al_coolant');
 		if (is_object($cmd)) {
 			$replace['#coolant_id#'] = $cmd->getId();
 			$replace['#coolant#'] = $cmd->execCmd();
+			$replace['#div_al_coolant_defaultMsg#'] = __("Liquide de refroidissement OK",__FILE__);
 		}
-		$replace['#coolant_id#'] = 2345;
-		$replace['#coolant#'] = 0;
 
 		$cmd = $this->getCmd('info','al_brake_fluid');
 		if (is_object($cmd)) {
 			$replace['#brake_id#'] = $cmd->getId();
 			$replace['#brake#'] = $cmd->execCmd() | 0;
+			$replace['#div_al_brake_defaultMsg#'] = __("Liquide freins OK",__FILE__);
 		}
 
 		$cmd = $this->getCmd('info','al_washer_fluid');
@@ -1005,6 +1051,12 @@ class volvocars extends eqLogic {
 		if (is_object($cmd)) {
 			$replace['#light_id#'] = $cmd->getId();
 			$replace['#light#'] = $cmd->execCmd() | 0;
+		}
+
+		$cmd = $this->getCmd('info','msg2widget');
+		if (is_object($cmd)) {
+			$replace['#msg2widget_id#'] = $cmd->getId();
+			$replace['#msg2widget#'] = addslashes($cmd->execCmd());
 		}
 
 		if ($panel == true) {

@@ -23,9 +23,9 @@
 
 				<!-- ALERTES -->
 				<div id='div_alertes' class="col-xs-12 tile ">
-					<span id=div_al_oil title="al_oil_txt"><img></img></span>
-					<span id=div_al_coolant><img></img></span>
-					<span id=div_al_brake><img></img></span>
+					<span id=div_al_oil class="#div_al_oil_hidden#" title="#div_al_oil_defaultMsg#"><img></img></span>
+					<span id=div_al_coolant class="#div_al_coolant_hidden#" title="#div_al_coolant_defaultMsg#"><img></img></span>
+					<span id=div_al_brake title="#div_al_brake_defaultMsg#"><img></img></span>
 					<span id=div_al_wash><img></img></span>
 					<span id=div_al_heatautonomy><img></img></span>
 					<span id=div_al_electricautonomy><img></img></span>
@@ -195,7 +195,7 @@ jeedom.cmd.update['#distance_site2_id#'] ({display_value: '#distance_site2#'});
 
 // OIL
 jeedom.cmd.update['#oil_id#'] = function(_options) {
-	if (_options.display_value == 1) {
+	if (_options.display_value != 0) {
 		img = 'oil_red.svg'
 	} else {
 		if ($('body').data('theme').endsWith('Dark')) {
@@ -313,4 +313,27 @@ jeedom.cmd.update['#light_id#'] = function(_options) {
 }
 jeedom.cmd.update['#light_id#'] ({display_value: #light#})
 
+
+// MISE A JOUR DES TEXTES INFO
+jeedom.cmd.update['#msg2widget_id#'] = function(_options) {
+	msg_default = {}
+	msg_default['div_al_oil'] = "#div_al_oil_defaultMsg#"
+	msg_default['div_al_coolant'] = "#div_al_coolant_defaultMsg#"
+	msg_default['div_al_brake'] = "#div_al_brake_defaultMsg#"
+	console.log(_options.display_value)
+	messages = json_decode(_options.display_value)
+	for (cible in messages) {
+		msg = ''
+		sep = ''
+		for (id in messages[cible]) {
+			msg += sep + messages[cible][id]
+			sep = '<br>'
+		}
+		if (msg == '') {
+			msg = msg_default[cible]
+		}
+		$('#'+cible).attr('title',msg)
+	}
+}
+jeedom.cmd.update['#msg2widget_id#'] ({display_value: "#msg2widget#"})
 </script>
