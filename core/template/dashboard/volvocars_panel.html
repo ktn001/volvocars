@@ -17,33 +17,33 @@
 				<!-- IMAGE -->
 				<div class="col-xs-12 tile"> 
 					<div id="picture">
-						<img id="img_car_#id#" src="#vehicle_img#" style='width:100%' />
+						<img id="img_car_#id#" src="#vehicle_img#id##" style='width:100%' />
 					</div>
 				</div>
 
 				<!-- ALERTES -->
 				<div id='div_alertes' class="col-xs-12 tile ">
-					<span id=div_al_oil class="#div_al_oil_hidden#" title="#div_al_oil_defaultMsg#"><img></img></span>
-					<span id=div_al_coolant class="#div_al_coolant_hidden#" title="#div_al_coolant_defaultMsg#"><img></img></span>
-					<span id=div_al_brake title="#div_al_brake_defaultMsg#"><img></img></span>
-					<span id=div_al_wash><img></img></span>
-					<span id=div_al_heatautonomy><img></img></span>
-					<span id=div_al_electricautonomy><img></img></span>
-					<span id=div_al_tyre><img></img></span>
-					<span id=div_al_light><img></img></span>
+					<span id='div_al_oil#id#' class="#heatEngineOnly#id##"><img></img></span>
+					<span id='div_al_coolant#id#' class="#heatEngineOnly#id##"><img></img></span>
+					<span id='div_al_brake#id#'><img></img></span>
+					<span id='div_al_wash#id#'><img></img></span>
+					<span id='div_al_heatautonomy#id#' class='#heatEngineOnly#id##'><img></img></span>
+					<span id='div_al_electricautonomy#id#' class='#electricEngineOnly#id##'><img></img></span>
+					<span id='div_al_tyre#id#'><img></img></span>
+					<span id='div_al_light#id#'><img></img></span>
 				</div>
 
 				<!-- PRESENCES -->
 				<div class="col-xs-12 tile">
-					<div id="div_site1" class="col-xs-6" style='padding:0px !important'>
+					<div id="div_site1#id#" class="col-xs-6" style='padding:0px !important'>
 						<div id='name_site1_#id#' class="tile_titel"><span>#site1_name#id##</span></div>
-						<div id='presence_site1_#id#'><i class='Cmd#presence_site1_id#'></i></div>
-						<div id='distance_site1_#id#'><span class='Cmd#distance_site1_id#'>span1</span></div>
+						<div id='presence_site1_#id#'><i class='Cmd#presence_site1_id#id##'></i></div>
+						<div id='distance_site1_#id#'><span class='Cmd#distance_site1_id#id##'>span1</span></div>
 					</div>
-					<div id="div_site2" class="col-xs-6" style='padding:0px !important'>
+					<div id="div_site2#id#" class="col-xs-6" style='padding:0px !important'>
 						<div id='name_site2_#id#' class="tile_titel"><span>#site2_name#id##</span></div>
-						<div id='presence_site2_#id#'><i class='Cmd#presence_site2_id#'></i></div>
-						<div id='distance_site2_#id#'><span class='Cmd#distance_site2_id#'>span2</span></div>
+						<div id='presence_site2_#id#'><i class='Cmd#presence_site2_id#id##'></i></div>
+						<div id='distance_site2_#id#'><span class='Cmd#distance_site2_id#id##'>span2</span></div>
 					</div>
 				</div>
 
@@ -147,14 +147,14 @@ function updatePresence(presence_id, site_name, _options) {
 		$('.Cmd' + presence_id).empty().append('<i class="fas fa-house-damage" style="font-size:1.75em;" title="{{Présence}} '+site_name+':<br/>{{Inconnue}}"></i>');
 	}
 }
-jeedom.cmd.update['#presence_site1_id#'] = function(_options) {
-	updatePresence('#presence_site1_id#', '#site1_name#id##', _options)
+jeedom.cmd.update['#presence_site1_id#id##'] = function(_options) {
+	updatePresence('#presence_site1_id#id##', '#site1_name#id##', _options)
 }
-jeedom.cmd.update['#presence_site2_id#'] = function(_options) {
-	updatePresence('#presence_site2_id#', '#site2_name#id##', _options)
+jeedom.cmd.update['#presence_site2_id#id##'] = function(_options) {
+	updatePresence('#presence_site2_id#id##', '#site2_name#id##', _options)
 }
-jeedom.cmd.update['#presence_site1_id#'] ({display_value: '#presence_site1#'});
-jeedom.cmd.update['#presence_site2_id#'] ({display_value: '#presence_site2#'});
+jeedom.cmd.update['#presence_site1_id#id##'] ({display_value: '#presence_site1#id##'});
+jeedom.cmd.update['#presence_site2_id#id##'] ({display_value: '#presence_site2#id##'});
 
 // DISTANCES
 // =========
@@ -171,30 +171,30 @@ function updateDistance(distance_id, color_class, _options) {
 	}
 	$('.Cmd' + distance_id).empty().append('<span class="' + color_class + '">' + txt + '</span>')
 }
-jeedom.cmd.update['#distance_site1_id#'] = function(_options) {
+jeedom.cmd.update['#distance_site1_id#id##'] = function(_options) {
 	if (_options.display_value <= #site1_limit#id##) {
 		color_class = 'color_on'
 	} else {
 		color_class = 'color_off'
 	}
-	updateDistance('#distance_site1_id#', color_class, _options)
+	updateDistance('#distance_site1_id#id##', color_class, _options)
 }
-jeedom.cmd.update['#distance_site2_id#'] = function(_options) {
+jeedom.cmd.update['#distance_site2_id#id##'] = function(_options) {
 	if (_options.display_value <= #site2_limit#id##) {
 		color_class = 'color_on'
 	} else {
 		color_class = 'color_off'
 	}
-	updateDistance('#distance_site2_id#', color_class, _options)
+	updateDistance('#distance_site2_id#id##', color_class, _options)
 }
-jeedom.cmd.update['#distance_site1_id#'] ({display_value: '#distance_site1#'});
-jeedom.cmd.update['#distance_site2_id#'] ({display_value: '#distance_site2#'});
+jeedom.cmd.update['#distance_site1_id#id##'] ({display_value: '#distance_site1#id##'});
+jeedom.cmd.update['#distance_site2_id#id##'] ({display_value: '#distance_site2#id##'});
 
 // TEMOINS ALERTES
 // ===============
 
 // OIL
-jeedom.cmd.update['#oil_id#'] = function(_options) {
+jeedom.cmd.update['#oil_id#id##'] = function(_options) {
 	if (_options.display_value != 0) {
 		img = 'oil_red.svg'
 	} else {
@@ -204,12 +204,12 @@ jeedom.cmd.update['#oil_id#'] = function(_options) {
 			img = 'oil_grey_light.svg'
 		}
 	}
-	$('#div_al_oil img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.display_value)
+	$('#div_al_oil#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.display_value)
 }
-jeedom.cmd.update['#oil_id#'] ({display_value: #oil#})
+jeedom.cmd.update['#oil_id#id##'] ({display_value: #oil#id##})
 
 // COOLANT
-jeedom.cmd.update['#coolant_id#'] = function(_options) {
+jeedom.cmd.update['#coolant_id#id##'] = function(_options) {
 	if (_options.display_value == 1) {
 		img = 'coolant_red.svg'
 	} else {
@@ -219,12 +219,12 @@ jeedom.cmd.update['#coolant_id#'] = function(_options) {
 			img = 'coolant_grey_light.svg'
 		}
 	}
-	$('#div_al_coolant img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.display_value)
+	$('#div_al_coolant#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.display_value)
 }
-jeedom.cmd.update['#coolant_id#'] ({display_value: #coolant#})
+jeedom.cmd.update['#coolant_id#id##'] ({display_value: #coolant#id##})
 
 // BRAKE
-jeedom.cmd.update['#brake_id#'] = function(_options) {
+jeedom.cmd.update['#brake_id#id##'] = function(_options) {
 	if (_options.display_value == 1) {
 		img = 'brake_red.svg'
 	} else {
@@ -234,12 +234,12 @@ jeedom.cmd.update['#brake_id#'] = function(_options) {
 			img = 'brake_grey_light.svg'
 		}
 	}
-	$('#div_al_brake img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.display_value)
+	$('#div_al_brake#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.display_value)
 }
-jeedom.cmd.update['#brake_id#'] ({display_value: #brake#})
+jeedom.cmd.update['#brake_id#id##'] ({display_value: #brake#id##})
 
 // WASH
-jeedom.cmd.update['#wash_id#'] = function(_options) {
+jeedom.cmd.update['#wash_id#id##'] = function(_options) {
 	if (_options.display_value == 1) {
 		img = 'wash_red.svg'
 	} else {
@@ -249,12 +249,12 @@ jeedom.cmd.update['#wash_id#'] = function(_options) {
 			img = 'wash_grey_light.svg'
 		}
 	}
-	$('#div_al_wash img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.display_value)
+	$('#div_al_wash#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.display_value)
 }
-jeedom.cmd.update['#wash_id#'] ({display_value: #wash#})
+jeedom.cmd.update['#wash_id#id##'] ({display_value: #wash#id##})
 
 // HEAT AUTONOMY
-jeedom.cmd.update['#heatautonomy_id#'] = function(_options) {
+jeedom.cmd.update['#heatautonomy_id#id##'] = function(_options) {
 	if (_options.display_value == 1) {
 		img = 'station_gas_red.svg'
 	} else {
@@ -264,12 +264,12 @@ jeedom.cmd.update['#heatautonomy_id#'] = function(_options) {
 			img = 'station_gas_grey_light.svg'
 		}
 	}
-	$('#div_al_heatautonomy img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.display_value)
+	$('#div_al_heatautonomy#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.display_value)
 }
-jeedom.cmd.update['#heatautonomy_id#'] ({display_value: #heatautonomy#})
+jeedom.cmd.update['#heatautonomy_id#id##'] ({display_value: #heatautonomy#id##})
 
 // ELECTRIC AUTONOMY
-jeedom.cmd.update['#electricautonomy_id#'] = function(_options) {
+jeedom.cmd.update['#electricautonomy_id#id##'] = function(_options) {
 	if (_options.display_value == 1) {
 		img = 'station_recharge_red.svg'
 	} else {
@@ -279,13 +279,13 @@ jeedom.cmd.update['#electricautonomy_id#'] = function(_options) {
 			img = 'station_recharge_grey_light.svg'
 		}
 	}
-	$('#div_al_electricautonomy img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.display_value)
+	$('#div_al_electricautonomy#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.display_value)
 }
-jeedom.cmd.update['#electricautonomy_id#'] ({display_value: #electricautonomy#})
+jeedom.cmd.update['#electricautonomy_id#id##'] ({display_value: #electricautonomy#id##})
 
 // TYRE
-jeedom.cmd.update['#tyre_id#'] = function(_options) {
-	if (_options.display_value == 1) {
+jeedom.cmd.update['#tyre_id#id##'] = function(_options) {
+	if (_options.display_value >= 1) {
 		img = 'tyre_red.svg'
 	} else {
 		if ($('body').data('theme').endsWith('Dark')) {
@@ -294,12 +294,12 @@ jeedom.cmd.update['#tyre_id#'] = function(_options) {
 			img = 'tyre_grey_light.svg'
 		}
 	}
-	$('#div_al_tyre img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.display_value)
+	$('#div_al_tyre#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.display_value)
 }
-jeedom.cmd.update['#tyre_id#'] ({display_value: #tyre#})
+jeedom.cmd.update['#tyre_id#id##'] ({display_value: #tyre#id##})
 
 // LIGHT
-jeedom.cmd.update['#light_id#'] = function(_options) {
+jeedom.cmd.update['#light_id#id##'] = function(_options) {
 	if (_options.display_value == 1) {
 		img = 'light_red.svg'
 	} else {
@@ -309,17 +309,14 @@ jeedom.cmd.update['#light_id#'] = function(_options) {
 			img = 'light_grey_light.svg'
 		}
 	}
-	$('#div_al_light img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.display_value)
+	$('#div_al_light#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.display_value)
 }
-jeedom.cmd.update['#light_id#'] ({display_value: #light#})
+jeedom.cmd.update['#light_id#id##'] ({display_value: #light#id##})
 
 
 // MISE A JOUR DES TEXTES INFO
-jeedom.cmd.update['#msg2widget_id#'] = function(_options) {
+jeedom.cmd.update['#msg2widget_id#id##'] = function(_options) {
 	msg_default = {}
-	msg_default['div_al_oil'] = "#div_al_oil_defaultMsg#"
-	msg_default['div_al_coolant'] = "#div_al_coolant_defaultMsg#"
-	msg_default['div_al_brake'] = "#div_al_brake_defaultMsg#"
 	console.log(_options.display_value)
 	messages = json_decode(_options.display_value)
 	for (cible in messages) {
@@ -329,11 +326,8 @@ jeedom.cmd.update['#msg2widget_id#'] = function(_options) {
 			msg += sep + messages[cible][id]
 			sep = '<br>'
 		}
-		if (msg == '') {
-			msg = msg_default[cible]
-		}
-		$('#'+cible).attr('title',msg)
+		$('#'+cible + '#id#').attr('title',msg)
 	}
 }
-jeedom.cmd.update['#msg2widget_id#'] ({display_value: "#msg2widget#"})
+jeedom.cmd.update['#msg2widget_id#id##'] ({display_value: "#msg2widget#id##"})
 </script>
