@@ -5,8 +5,23 @@
 		"type": "action",
 		"subType": "other"
 	},{
-		"logicalId": "lock_reduced",
-		"name": "{{Vérouiller avec protection réduite}}",
+		"logicalId": "locked",
+		"name": "{{Vérouillé}}",
+		"configuration": {
+			"endpoint": "doors"
+		},
+		"type": "info",
+		"subType": "binary",
+		"display": {
+			"forceReturnLineAfter" : "1"
+		},
+		"template": {
+			"dashboard": "core::lock",
+			"mobile": "core::lock"
+		}
+	},{
+		"logicalId": "unlock",
+		"name": "{{Dévérouiller}}",
 		"type": "action",
 		"subType": "other"
 	},{
@@ -15,10 +30,13 @@
 		"type": "action",
 		"subType": "other"
 	},{
-		"logicalId": "unlock",
-		"name": "{{Dévérouiller}}",
+		"logicalId": "lock_reduced",
+		"name": "{{Vérouiller avec protection réduite}}",
 		"type": "action",
-		"subType": "other"
+		"subType": "other",
+		"display": {
+			"forceReturnLineAfter" : "1"
+		}
 	},{
 		"logicalId": "clim_start",
 		"name": "{{Climatisation EN}}",
@@ -28,8 +46,409 @@
 		"logicalId": "clim_stop",
 		"name": "{{Climatisation HORS}}",
 		"type": "action",
-		"subType": "other"
+		"subType": "other",
+		"display": {
+			"forceReturnLineAfter" : "1"
+		}
 	},{
+		"logicalId": "door_fl_closed",
+		"name": "{{porte avant gauche fermée}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"endpoint": "doors"
+		},
+		"template": {
+			"dashboard":"volvocars::DoorClosed",
+			"mobile":"volvocars::DoorClosed"
+		}
+	},{
+		"logicalId": "door_fr_closed",
+		"name": "{{porte avant droite fermée}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"endpoint": "doors"
+		},
+		"template": {
+			"dashboard":"volvocars::DoorClosed",
+			"mobile":"volvocars::DoorClosed"
+		}
+	},{
+		"logicalId": "door_rl_closed",
+		"name": "{{porte arrière gauche fermée}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"endpoint": "doors"
+		},
+		"template": {
+			"dashboard":"volvocars::DoorClosed",
+			"mobile":"volvocars::DoorClosed"
+		}
+	},{
+		"logicalId": "door_rr_closed",
+		"name": "{{porte arrière droite fermée}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"endpoint": "doors"
+		},
+		"template": {
+			"dashboard":"volvocars::DoorClosed",
+			"mobile":"volvocars::DoorClosed"
+		},
+		"display": {
+			"forceReturnLineAfter" : "1"
+		}
+	},{
+		"logicalId": "door_fl_open",
+		"name": "{{porte avant gauche ouverte}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"endpoint": "doors"
+		},
+		"template": {
+			"dashboard":"volvocars::DoorOpen",
+			"mobile":"volvocars::DoorOpen"
+		}
+	},{
+		"logicalId": "door_fr_open",
+		"name": "{{porte avant droite ouverte}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"endpoint": "doors"
+		},
+		"template": {
+			"dashboard":"volvocars::DoorOpen",
+			"mobile":"volvocars::DoorOpen"
+		}
+	},{
+		"logicalId": "door_rl_open",
+		"name": "{{porte arrière gauche ouverte}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"endpoint": "doors"
+		},
+		"template": {
+			"dashboard":"volvocars::DoorOpen",
+			"mobile":"volvocars::DoorOpen"
+		}
+	},{
+		"logicalId": "door_rr_open",
+		"name": "{{porte arrière droite ouverte}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"endpoint": "doors"
+		},
+		"template": {
+			"dashboard":"volvocars::DoorOpen",
+			"mobile":"volvocars::DoorOpen"
+		},
+		"display": {
+			"forceReturnLineAfter" : "1"
+		}
+	},{
+		"logicalId": "door_fl_state",
+		"name": "{{Etat porte avant gauche}}",
+		"type": "info",
+		"subType": "string",
+		"configuration": {
+			"endpoint": "doors"
+		},
+		"template": {
+			"dashboard": "core::badge",
+			"mobile": "core::badge"
+		}
+	},{
+		"logicalId": "door_fr_state",
+		"name": "{{Etat porte avant droite}}",
+		"type": "info",
+		"subType": "string",
+		"configuration": {
+			"endpoint": "doors"
+		},
+		"template": {
+			"dashboard": "core::badge",
+			"mobile": "core::badge"
+		}
+	},{
+		"logicalId": "door_rl_state",
+		"name": "{{Etat porte arrière gauche}}",
+		"type": "info",
+		"subType": "string",
+		"configuration": {
+			"endpoint": "doors"
+		},
+		"template": {
+			"dashboard": "core::badge",
+			"mobile": "core::badge"
+		}
+	},{
+		"logicalId": "door_rr_state",
+		"name": "{{Etat porte arrière droite}}",
+		"type": "info",
+		"subType": "string",
+		"configuration": {
+			"endpoint": "doors"
+		},
+		"template": {
+			"dashboard": "core::badge",
+			"mobile": "core::badge"
+		},
+		"display": {
+			"forceReturnLineAfter" : "1"
+		}
+	},{
+		"logicalId": "win_fl_closed",
+		"name": "{{fenêtre avant gauche fermée}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"endpoint": "windows"
+		}
+	},{
+		"logicalId": "win_fr_closed",
+		"name": "{{fenêtre avant droite fermée}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"endpoint": "windows"
+		}
+	},{
+		"logicalId": "win_rl_closed",
+		"name": "{{fenêtre arrière gauche fermée}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"endpoint": "windows"
+		}
+	},{
+		"logicalId": "win_rr_closed",
+		"name": "{{fenêtre arrière droite fermée}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"endpoint": "windows"
+		},
+		"display": {
+			"forceReturnLineAfter" : "1"
+		}
+	},{
+		"logicalId": "win_fl_open",
+		"name": "{{fenêtre avant gauche ouverte}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"endpoint": "windows"
+		}
+	},{
+		"logicalId": "win_fr_open",
+		"name": "{{fenêtre avant droite ouverte}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"endpoint": "windows"
+		}
+	},{
+		"logicalId": "win_rl_open",
+		"name": "{{fenêtre arrière gauche ouverte}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"endpoint": "windows"
+		}
+	},{
+		"logicalId": "win_rr_open",
+		"name": "{{fenêtre arrière droite ouverte}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"endpoint": "windows"
+		},
+		"display": {
+			"forceReturnLineAfter" : "1"
+		}
+	},{
+		"logicalId": "win_fl_state",
+		"name": "{{état fenêtre avant gauche}}",
+		"type": "info",
+		"subType": "string",
+		"configuration": {
+			"endpoint": "windows"
+		},
+		"template": {
+			"dashboard": "core::badge",
+			"mobile": "core::badge"
+		}
+	},{
+		"logicalId": "win_fr_state",
+		"name": "{{état fenêtre avant droite}}",
+		"type": "info",
+		"subType": "string",
+		"configuration": {
+			"endpoint": "windows"
+		},
+		"template": {
+			"dashboard": "core::badge",
+			"mobile": "core::badge"
+		}
+	},{
+		"logicalId": "win_rl_state",
+		"name": "{{état fenêtre arrière gauche}}",
+		"type": "info",
+		"subType": "string",
+		"configuration": {
+			"endpoint": "windows"
+		},
+		"template": {
+			"dashboard": "core::badge",
+			"mobile": "core::badge"
+		}
+	},{
+		"logicalId": "win_rr_state",
+		"name": "{{état fenêtre arrière droite}}",
+		"type": "info",
+		"subType": "string",
+		"configuration": {
+			"endpoint": "windows"
+		},
+		"template": {
+			"dashboard": "core::badge",
+			"mobile": "core::badge"
+		},
+		"display": {
+			"forceReturnLineAfter" : "1"
+		}
+	},{
+		"logicalId": "hood_closed",
+		"name": "{{capot fermé}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"endpoint": "doors"
+		}
+	},{
+		"logicalId": "tail_closed",
+		"name": "{{hayon fermé}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"endpoint": "doors"
+		}
+	},{
+		"logicalId": "tank_closed",
+		"name": "{{trappe fermée}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"endpoint": "doors"
+		}
+	},{
+		"logicalId": "roof_closed",
+		"name": "{{toit fermé}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"endpoint": "windows"
+		},
+		"display": {
+			"forceReturnLineAfter" : "1"
+		}
+	},{
+		"logicalId": "hood_open",
+		"name": "{{capot ouvert}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"endpoint": "doors"
+		}
+	},{
+		"logicalId": "tail_open",
+		"name": "{{hayon ouvert}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"endpoint": "doors"
+		}
+	},{
+		"logicalId": "tank_open",
+		"name": "{{trappe ouverte}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"endpoint": "doors"
+		}
+	},{
+		"logicalId": "roof_open",
+		"name": "{{toit ouvert}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"endpoint": "windows"
+		},
+		"display": {
+			"forceReturnLineAfter" : "1"
+		}
+	},{
+		"logicalId": "hood_state",
+		"name": "{{état capot}}",
+		"type": "info",
+		"subType": "string",
+		"configuration": {
+			"endpoint": "doors"
+		},
+		"template": {
+			"dashboard": "core::badge",
+			"mobile": "core::badge"
+		}
+	},{
+		"logicalId": "tail_state",
+		"name": "{{état hayon}}",
+		"type": "info",
+		"subType": "string",
+		"configuration": {
+			"endpoint": "doors"
+		},
+		"template": {
+			"dashboard": "core::badge",
+			"mobile": "core::badge"
+		}
+	},{
+		"logicalId": "tank_state",
+		"name": "{{état trappe}}",
+		"type": "info",
+		"subType": "string",
+		"configuration": {
+			"endpoint": "doors"
+		},
+		"template": {
+			"dashboard": "core::badge",
+			"mobile": "core::badge"
+		}
+	},{
+		"logicalId": "roof_state",
+		"name": "{{état toit}}",
+		"type": "info",
+		"subType": "string",
+		"configuration": {
+			"endpoint": "windows"
+		},
+		"template": {
+			"dashboard": "core::badge",
+			"mobile": "core::badge"
+		},
+		"display": {
+			"forceReturnLineAfter" : "1"
+		}
+	},{
+
+
+
 		"logicalId": "al_brake_fluid",
 		"name": "{{niveau liquide de frein}}",
 		"configuration": {
@@ -58,182 +477,6 @@
 		"name": "{{lave-vitre}}",
 		"configuration": {
 			"endpoint": "diagnostics"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "locked",
-		"name": "{{Vérouillé}}",
-		"configuration": {
-			"endpoint": "doors"
-		},
-		"type": "info",
-		"subType": "binary"
-	},{
-		"logicalId": "door_fl_closed",
-		"name": "{{porte avant gauche fermée}}",
-		"configuration": {
-			"endpoint": "doors"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "door_fl_open",
-		"name": "{{porte avant gauche ouverte}}",
-		"configuration": {
-			"endpoint": "doors"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "door_fl_state",
-		"name": "{{état porte avant gauche}}",
-		"configuration": {
-			"endpoint": "doors"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "door_fr_closed",
-		"name": "{{porte avant droite fermée}}",
-		"configuration": {
-			"endpoint": "doors"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "door_fr_open",
-		"name": "{{porte avant droite ouverte}}",
-		"configuration": {
-			"endpoint": "doors"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "door_fr_state",
-		"name": "{{état porte avant droite}}",
-		"configuration": {
-			"endpoint": "doors"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "door_rl_closed",
-		"name": "{{porte arrière gauche fermée}}",
-		"configuration": {
-			"endpoint": "doors"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "door_rl_open",
-		"name": "{{porte arrière gauche ouverte}}",
-		"configuration": {
-			"endpoint": "doors"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "door_rl_state",
-		"name": "{{état arrière avant gauche}}",
-		"configuration": {
-			"endpoint": "doors"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "door_rr_closed",
-		"name": "{{porte arrière droite fermée}}",
-		"configuration": {
-			"endpoint": "doors"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "door_rr_open",
-		"name": "{{porte arrière droite ouverte}}",
-		"configuration": {
-			"endpoint": "doors"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "door_rr_state",
-		"name": "{{état arrière avant droite}}",
-		"configuration": {
-			"endpoint": "doors"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "hood_closed",
-		"name": "{{capot fermé}}",
-		"configuration": {
-			"endpoint": "doors"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "hood_open",
-		"name": "{{capot ouvert}}",
-		"configuration": {
-			"endpoint": "doors"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "hood_state",
-		"name": "{{état capot}}",
-		"configuration": {
-			"endpoint": "doors"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "tail_closed",
-		"name": "{{hayon fermé}}",
-		"configuration": {
-			"endpoint": "doors"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "tail_open",
-		"name": "{{hayon ouvert}}",
-		"configuration": {
-			"endpoint": "doors"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "tail_state",
-		"name": "{{état hayon}}",
-		"configuration": {
-			"endpoint": "doors"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "tank_closed",
-		"name": "{{trappe fermée}}",
-		"configuration": {
-			"endpoint": "doors"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "tank_open",
-		"name": "{{trappe ouverte}}",
-		"configuration": {
-			"endpoint": "doors"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "tank_state",
-		"name": "{{état trappe}}",
-		"configuration": {
-			"endpoint": "doors"
 		},
 		"type": "info",
 		"subType": "numeric"
@@ -492,155 +735,51 @@
 	},{
 		"logicalId": "tyre_fl",
 		"name": "{{pneu avant gauche}}",
+		"type": "info",
+		"subType": "numeric",
 		"configuration": {
 			"endpoint": "tyre"
 		},
-		"type": "info",
-		"subType": "numeric"
+		"template": {
+			"dashboard": "core::badge",
+			"mobile": "core::badge"
+		}
 	},{
 		"logicalId": "tyre_fr",
 		"name": "{{pneu avant droit}}",
+		"type": "info",
+		"subType": "numeric",
 		"configuration": {
 			"endpoint": "tyre"
 		},
-		"type": "info",
-		"subType": "numeric"
+		"template": {
+			"dashboard": "core::badge",
+			"mobile": "core::badge"
+		}
 	},{
 		"logicalId": "tyre_rl",
 		"name": "{{pneu arrière gauche}}",
+		"type": "info",
+		"subType": "numeric",
 		"configuration": {
 			"endpoint": "tyre"
 		},
-		"type": "info",
-		"subType": "numeric"
+		"template": {
+			"dashboard": "core::badge",
+			"mobile": "core::badge"
+		}
 	},{
 		"logicalId": "tyre_rr",
 		"name": "{{pneu arrière droit}}",
+		"type": "info",
+		"subType": "numeric",
 		"configuration": {
 			"endpoint": "tyre"
 		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "win_fl_closed",
-		"name": "{{fenêtre avant gauche fermée}}",
-		"configuration": {
-			"endpoint": "windows"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "win_fl_open",
-		"name": "{{fenêtre avant gauche ouverte}}",
-		"configuration": {
-			"endpoint": "windows"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "win_fl_state",
-		"name": "{{état fenêtre avant gauche}}",
-		"configuration": {
-			"endpoint": "windows"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "win_fr_closed",
-		"name": "{{fenêtre avant droite fermée}}",
-		"configuration": {
-			"endpoint": "windows"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "win_fr_open",
-		"name": "{{fenêtre avant droite ouverte}}",
-		"configuration": {
-			"endpoint": "windows"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "win_fr_state",
-		"name": "{{état fenêtre avant droite}}",
-		"configuration": {
-			"endpoint": "windows"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "win_rl_closed",
-		"name": "{{fenêtre arrière gauche fermée}}",
-		"configuration": {
-			"endpoint": "windows"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "win_rl_open",
-		"name": "{{fenêtre arrière gauche ouverte}}",
-		"configuration": {
-			"endpoint": "windows"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "win_rl_state",
-		"name": "{{état fenêtre arrière gauche}}",
-		"configuration": {
-			"endpoint": "windows"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "win_rr_closed",
-		"name": "{{fenêtre arrière droite fermée}}",
-		"configuration": {
-			"endpoint": "windows"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "win_rr_open",
-		"name": "{{fenêtre arrière droite ouverte}}",
-		"configuration": {
-			"endpoint": "windows"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "win_rr_state",
-		"name": "{{état fenêtre arrière droite}}",
-		"configuration": {
-			"endpoint": "windows"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "roof_closed",
-		"name": "{{toit fermé}}",
-		"configuration": {
-			"endpoint": "windows"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "roof_open",
-		"name": "{{toit ouvert}}",
-		"configuration": {
-			"endpoint": "windows"
-		},
-		"type": "info",
-		"subType": "numeric"
-	},{
-		"logicalId": "roof_state",
-		"name": "{{état toit}}",
-		"configuration": {
-			"endpoint": "windows"
-		},
-		"type": "info",
-		"subType": "numeric"
+		"template": {
+			"dashboard": "core::badge",
+			"mobile": "core::badge"
+		}
 	},{
 		"logicalId": "msg2widget",
 		"name": "{{messages pour widget}}",

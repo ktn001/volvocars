@@ -410,6 +410,40 @@ $('.cmdAction[data-action=recreate]').off('click').on('click',function() {
 	})
 })
 
+/*
+ * Action sur le bouton de tri des commandes
+ */
+$('.cmdAction[data-action=sort]').off('click').on('click',function() {
+	if (modifyWithoutSave) {
+		bootbox.alert("{{Vous devez sauvegarder vos modifications en cours avant de lancer cette opération!}}")
+		return
+	}
+	id = $('.eqLogicAttr[data-l1key=id]').value()
+	$.showLoading()
+	$.ajax({
+		type: 'POST',
+		url: 'plugins/volvocars/core/ajax/volvocars.ajax.php',
+		data: {
+			action: 'sortCmds',
+			id: id
+		},
+		dataType: 'json',
+		global: false,
+		error: function (request, status, error) {
+			$.hideLoading()
+			handleAjaxError(request, status, error)
+		},
+		success: function (data) {
+			if (data.state != 'ok') {
+				$.hideLoading()
+				$.fn.showAlert({message: data.result, level:'danger'})
+				return
+			}
+			location.reload()
+		}
+	})
+})
+
 /* Fonction permettant l'affichage des commandes dans l'équipement */
 function addCmdToTable(_cmd) {
 	if (!isset(_cmd)) {

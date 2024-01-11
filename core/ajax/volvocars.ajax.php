@@ -83,6 +83,19 @@ try {
 		ajax::success($widget);
 	}
 
+	if ($action == 'recreateCmds'){
+		$car_id = init('id');
+		if ($car_id == '') {
+			throw new Exception(__("L'id du véhicule n'est pas défini",__FILE__));
+		}
+		$car = volvocars::byId($car_id);
+		if (!is_object($car)){
+			throw new Exception(sprintf(__("Le véhicule %s est introuvable",__FILE__),$car_id));
+		}
+		$car->createOrUpdateCmds(true);
+		ajax::success();
+	}
+
 	if ($action == 'removeAccount') {
 		$id = init('id');
 		if ($id == '') {
@@ -116,6 +129,19 @@ try {
 		ajax::success();
 	}
 
+	if ($action == 'sortCmds'){
+		$car_id = init('id');
+		if ($car_id == '') {
+			throw new Exception(__("L'id du véhicule n'est pas défini",__FILE__));
+		}
+		$car = volvocars::byId($car_id);
+		if (!is_object($car)){
+			throw new Exception(sprintf(__("Le véhicule %s est introuvable",__FILE__),$car_id));
+		}
+		$car->sortCmds(true);
+		ajax::success();
+	}
+
 	if ($action == 'synchronizeAccount'){
 		$accountId = init('accountId');
 		if ($accountId == '') {
@@ -126,19 +152,6 @@ try {
 			throw new Exception(sprintf(__("Le compte %s est introuvable",__FILE__),$accountId));
 		}
 		$account->synchronize();
-		ajax::success();
-	}
-
-	if ($action == 'recreateCmds'){
-		$car_id = init('id');
-		if ($car_id == '') {
-			throw new Exception(__("L'id du véhicule n'est pas défini",__FILE__));
-		}
-		$car = volvocars::byId($car_id);
-		if (!is_object($car)){
-			throw new Exception(sprintf(__("Le véhicule %s est introuvable",__FILE__),$car_id));
-		}
-		$car->createOrUpdateCmds(true);
 		ajax::success();
 	}
 

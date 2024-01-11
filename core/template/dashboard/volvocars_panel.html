@@ -139,9 +139,9 @@ if (#site2_active#id## == 1) {
 // PRESENCES
 // =========
 function updatePresence(presence_id, site_name, _options) {
-	if (_options.display_value == 1) {
+	if (_options.value == 1) {
 		$('.Cmd' + presence_id).empty().append('<i class="fas fa-house-user color_on" style="font-size:1.75em;" title="{{Présence}} '+site_name+':<br/>{{Oui}}"></i>');
-	} else if (_options.display_value == 0) {
+	} else if (_options.value == 0) {
 		$('.Cmd' + presence_id).empty().append('<i class="fas fa-home color_off" style="font-size:1.75em;" title="{{Présence}} '+site_name+':<br/>{{Non}}"></i>');
 	} else {
 		$('.Cmd' + presence_id).empty().append('<i class="fas fa-house-damage" style="font-size:1.75em;" title="{{Présence}} '+site_name+':<br/>{{Inconnue}}"></i>');
@@ -153,13 +153,13 @@ jeedom.cmd.update['#presence_site1_id#id##'] = function(_options) {
 jeedom.cmd.update['#presence_site2_id#id##'] = function(_options) {
 	updatePresence('#presence_site2_id#id##', '#site2_name#id##', _options)
 }
-jeedom.cmd.update['#presence_site1_id#id##'] ({display_value: '#presence_site1#id##'});
-jeedom.cmd.update['#presence_site2_id#id##'] ({display_value: '#presence_site2#id##'});
+jeedom.cmd.update['#presence_site1_id#id##'] ({value: '#presence_site1#id##'});
+jeedom.cmd.update['#presence_site2_id#id##'] ({value: '#presence_site2#id##'});
 
 // DISTANCES
 // =========
 function updateDistance(distance_id, color_class, _options) {
-	value = parseFloat(_options.display_value)
+	value = parseFloat(_options.value)
 	if (value >= 100000) {
 		txt = (value/1000).toFixed(0) + ' Km'
 	} else if (value >= 10000) {
@@ -172,7 +172,7 @@ function updateDistance(distance_id, color_class, _options) {
 	$('.Cmd' + distance_id).empty().append('<span class="' + color_class + '">' + txt + '</span>')
 }
 jeedom.cmd.update['#distance_site1_id#id##'] = function(_options) {
-	if (_options.display_value <= #site1_limit#id##) {
+	if (_options.value <= #site1_limit#id##) {
 		color_class = 'color_on'
 	} else {
 		color_class = 'color_off'
@@ -180,22 +180,23 @@ jeedom.cmd.update['#distance_site1_id#id##'] = function(_options) {
 	updateDistance('#distance_site1_id#id##', color_class, _options)
 }
 jeedom.cmd.update['#distance_site2_id#id##'] = function(_options) {
-	if (_options.display_value <= #site2_limit#id##) {
+	if (_options.value <= #site2_limit#id##) {
 		color_class = 'color_on'
 	} else {
 		color_class = 'color_off'
 	}
 	updateDistance('#distance_site2_id#id##', color_class, _options)
 }
-jeedom.cmd.update['#distance_site1_id#id##'] ({display_value: '#distance_site1#id##'});
-jeedom.cmd.update['#distance_site2_id#id##'] ({display_value: '#distance_site2#id##'});
+jeedom.cmd.update['#distance_site1_id#id##'] ({value: '#distance_site1#id##'});
+jeedom.cmd.update['#distance_site2_id#id##'] ({value: '#distance_site2#id##'});
 
 // TEMOINS ALERTES
 // ===============
 
 // OIL
 jeedom.cmd.update['#oil_id#id##'] = function(_options) {
-	if (_options.display_value != 0) {
+	console.log(_options)
+	if (_options.value != 0) {
 		img = 'oil_red.svg'
 	} else {
 		if ($('body').data('theme').endsWith('Dark')) {
@@ -204,13 +205,13 @@ jeedom.cmd.update['#oil_id#id##'] = function(_options) {
 			img = 'oil_grey_light.svg'
 		}
 	}
-	$('#div_al_oil#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.display_value)
+	$('#div_al_oil#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
 }
-jeedom.cmd.update['#oil_id#id##'] ({display_value: #oil#id##})
+jeedom.cmd.update['#oil_id#id##'] ({value: #oil#id##})
 
 // COOLANT
 jeedom.cmd.update['#coolant_id#id##'] = function(_options) {
-	if (_options.display_value == 1) {
+	if (_options.value == 1) {
 		img = 'coolant_red.svg'
 	} else {
 		if ($('body').data('theme').endsWith('Dark')) {
@@ -219,13 +220,13 @@ jeedom.cmd.update['#coolant_id#id##'] = function(_options) {
 			img = 'coolant_grey_light.svg'
 		}
 	}
-	$('#div_al_coolant#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.display_value)
+	$('#div_al_coolant#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
 }
-jeedom.cmd.update['#coolant_id#id##'] ({display_value: #coolant#id##})
+jeedom.cmd.update['#coolant_id#id##'] ({value: #coolant#id##})
 
 // BRAKE
 jeedom.cmd.update['#brake_id#id##'] = function(_options) {
-	if (_options.display_value == 1) {
+	if (_options.value == 1) {
 		img = 'brake_red.svg'
 	} else {
 		if ($('body').data('theme').endsWith('Dark')) {
@@ -234,13 +235,13 @@ jeedom.cmd.update['#brake_id#id##'] = function(_options) {
 			img = 'brake_grey_light.svg'
 		}
 	}
-	$('#div_al_brake#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.display_value)
+	$('#div_al_brake#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
 }
-jeedom.cmd.update['#brake_id#id##'] ({display_value: #brake#id##})
+jeedom.cmd.update['#brake_id#id##'] ({value: #brake#id##})
 
 // WASH
 jeedom.cmd.update['#wash_id#id##'] = function(_options) {
-	if (_options.display_value == 1) {
+	if (_options.value == 1) {
 		img = 'wash_red.svg'
 	} else {
 		if ($('body').data('theme').endsWith('Dark')) {
@@ -249,13 +250,13 @@ jeedom.cmd.update['#wash_id#id##'] = function(_options) {
 			img = 'wash_grey_light.svg'
 		}
 	}
-	$('#div_al_wash#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.display_value)
+	$('#div_al_wash#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
 }
-jeedom.cmd.update['#wash_id#id##'] ({display_value: #wash#id##})
+jeedom.cmd.update['#wash_id#id##'] ({value: #wash#id##})
 
 // HEAT AUTONOMY
 jeedom.cmd.update['#heatautonomy_id#id##'] = function(_options) {
-	if (_options.display_value == 1) {
+	if (_options.value == 1) {
 		img = 'station_gas_red.svg'
 	} else {
 		if ($('body').data('theme').endsWith('Dark')) {
@@ -264,13 +265,13 @@ jeedom.cmd.update['#heatautonomy_id#id##'] = function(_options) {
 			img = 'station_gas_grey_light.svg'
 		}
 	}
-	$('#div_al_heatautonomy#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.display_value)
+	$('#div_al_heatautonomy#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
 }
-jeedom.cmd.update['#heatautonomy_id#id##'] ({display_value: #heatautonomy#id##})
+jeedom.cmd.update['#heatautonomy_id#id##'] ({value: #heatautonomy#id##})
 
 // ELECTRIC AUTONOMY
 jeedom.cmd.update['#electricautonomy_id#id##'] = function(_options) {
-	if (_options.display_value == 1) {
+	if (_options.value == 1) {
 		img = 'station_recharge_red.svg'
 	} else {
 		if ($('body').data('theme').endsWith('Dark')) {
@@ -279,13 +280,13 @@ jeedom.cmd.update['#electricautonomy_id#id##'] = function(_options) {
 			img = 'station_recharge_grey_light.svg'
 		}
 	}
-	$('#div_al_electricautonomy#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.display_value)
+	$('#div_al_electricautonomy#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
 }
-jeedom.cmd.update['#electricautonomy_id#id##'] ({display_value: #electricautonomy#id##})
+jeedom.cmd.update['#electricautonomy_id#id##'] ({value: #electricautonomy#id##})
 
 // TYRE
 jeedom.cmd.update['#tyre_id#id##'] = function(_options) {
-	if (_options.display_value >= 1) {
+	if (_options.value >= 1) {
 		img = 'tyre_red.svg'
 	} else {
 		if ($('body').data('theme').endsWith('Dark')) {
@@ -294,13 +295,13 @@ jeedom.cmd.update['#tyre_id#id##'] = function(_options) {
 			img = 'tyre_grey_light.svg'
 		}
 	}
-	$('#div_al_tyre#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.display_value)
+	$('#div_al_tyre#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
 }
-jeedom.cmd.update['#tyre_id#id##'] ({display_value: #tyre#id##})
+jeedom.cmd.update['#tyre_id#id##'] ({value: #tyre#id##})
 
 // LIGHT
 jeedom.cmd.update['#light_id#id##'] = function(_options) {
-	if (_options.display_value == 1) {
+	if (_options.value == 1) {
 		img = 'light_red.svg'
 	} else {
 		if ($('body').data('theme').endsWith('Dark')) {
@@ -309,16 +310,16 @@ jeedom.cmd.update['#light_id#id##'] = function(_options) {
 			img = 'light_grey_light.svg'
 		}
 	}
-	$('#div_al_light#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.display_value)
+	$('#div_al_light#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
 }
-jeedom.cmd.update['#light_id#id##'] ({display_value: #light#id##})
+jeedom.cmd.update['#light_id#id##'] ({value: #light#id##})
 
 
 // MISE A JOUR DES TEXTES INFO
 jeedom.cmd.update['#msg2widget_id#id##'] = function(_options) {
 	msg_default = {}
-	console.log(_options.display_value)
-	messages = json_decode(_options.display_value)
+	console.log(_options.value)
+	messages = json_decode(_options.value)
 	for (cible in messages) {
 		msg = ''
 		sep = ''
@@ -329,5 +330,5 @@ jeedom.cmd.update['#msg2widget_id#id##'] = function(_options) {
 		$('#'+cible + '#id#').attr('title',msg)
 	}
 }
-jeedom.cmd.update['#msg2widget_id#id##'] ({display_value: "#msg2widget#id##"})
+jeedom.cmd.update['#msg2widget_id#id##'] ({value: "#msg2widget#id##"})
 </script>

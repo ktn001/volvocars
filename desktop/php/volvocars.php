@@ -421,7 +421,12 @@ $accounts = volvoAccount::all();
 
 			<!-- Onglet des commandes de l'équipement -->
 			<div role="tabpanel" class="tab-pane" id="commandtab">
-				<a class="btn btn-default btn-sm pull-right cmdAction" data-action="recreate" style="margin-top:5px;"><i class="fas fa-plus-circle"></i> {{Recréer commandes manquantes}}</a>
+				<div class="input-group pull-right" style="display:inline-flex;">
+					<span class="input-group-btn">
+						<a class="btn btn-default btn-sm cmdAction" data-action="sort" style="margin-top:5px;"><i class="fas fa-sort-amount-down"></i> {{Trier}}</a>
+						<a class="btn btn-default btn-sm cmdAction" data-action="recreate" style="margin-top:5px;"><i class="fas fa-plus-circle"></i> {{Recréer commandes manquantes}}</a>
+					</span>
+				</div>
 				<br><br>
 				<div class="table-responsive">
 					<table id="table_cmd" class="table table-bordered table-condensed">
