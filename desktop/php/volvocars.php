@@ -306,7 +306,7 @@ $accounts = volvoAccount::all();
 							<div id="heatAutonomy" class="form-group">
 								<label class="col-sm-4 control-label">{{Autonomie thermique (Km)}}</label>
 								<div class="col-sm-6">
-									<input class="eqLogicAttr form-control" type="text" checked data-l1key="configuration" data-l2key="heatAutonomyLimit">
+									<input class="eqLogicAttr form-control" type="text" data-l1key="configuration" data-l2key="heatAutonomyLimit">
 								</div>
 							</div>
 

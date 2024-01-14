@@ -446,234 +446,318 @@
 			"forceReturnLineAfter" : "1"
 		}
 	},{
-
-
-
-		"logicalId": "al_brake_fluid",
-		"name": "{{niveau liquide de frein}}",
-		"configuration": {
-			"endpoint": "brakes"
-		},
+		"logicalId": "brake_fluid_level",
+		"name": "{{Niveau liquide de frein}}",
 		"type": "info",
-		"subType": "numeric"
+		"subType": "string",
+		"configuration": {
+			"endpoint": "brakes",
+			"dependencies": "al_brake_fluid"
+		}
+	},{
+		"logicalId": "al_brake_fluid",
+		"name": "{{alerte liquide de frein}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"dependTo": "brake_fluid_level"
+		}
+	},{
+		"logicalId": "coolant_level",
+		"name": "{{Niveau liquide refroidissement}}",
+		"type": "info",
+		"subType": "string",
+		"configuration": {
+			"endpoint": "engine_diagnostics",
+			"dependencies": "al_coolant"
+		}
 	},{
 		"logicalId": "al_coolant",
-		"name": "{{niveau du liquide de refroidissement}}",
-		"configuration": {
-			"endpoint": "diagnostics"
-		},
+		"name": "{{alerte liquide de refroidissement}}",
 		"type": "info",
-		"subType": "numeric"
+		"subType": "binary",
+		"configuration": {
+			"dependTo": "coolant_level"
+		}
+	},{
+		"logicalId": "oil_level",
+		"name": "{{niveau d'huile}}",
+		"type": "info",
+		"subType": "string",
+		"configuration": {
+			"endpoint": "engine_diagnostics",
+			"dependencies": "al_oil"
+		}
 	},{
 		"logicalId": "al_oil",
-		"name": "{{niveau d'huile}}",
-		"configuration": {
-			"endpoint": "diagnostics"
-		},
+		"name": "{{alerte niveau d'huile}}",
 		"type": "info",
-		"subType": "numeric"
+		"subType": "binary",
+		"configuration": {
+			"dependTo": "oil_level"
+		}
+	},{
+		"logicalId": "washer_fluid_level",
+		"name": "{{niveau lave-vitres}}",
+		"type": "info",
+		"subType": "string",
+		"configuration": {
+			"endpoint": "diagnostics",
+			"dependencies": "al_washer_fluid"
+		}
 	},{
 		"logicalId": "al_washer_fluid",
-		"name": "{{lave-vitre}}",
-		"configuration": {
-			"endpoint": "diagnostics"
-		},
+		"name": "{{alerte lave-vitre}}",
 		"type": "info",
-		"subType": "numeric"
+		"subType": "binary",
+		"configuration": {
+			"dependTo": "washer_fluid_level"
+		}
 	},{
 		"logicalId": "al_light",
 		"name": "{{alerte lampe}}",
 		"type": "info",
-		"subType": "binary"
+		"subType": "binary",
+		"configuration": {
+			"dependTo": [
+                    "al_brakeLight_c",
+                    "al_brakeLight_l",
+                    "al_brakeLight_r",
+                    "al_daytimeRunningLight_l",
+                    "al_daytimeRunningLight_r",
+                    "al_fogLight_f",
+                    "al_fogLight_r",
+                    "al_hazardLights",
+                    "al_highBeam_l",
+                    "al_highBeam_r",
+                    "al_lowBeam_l",
+                    "al_lowBeam_r",
+                    "al_positionLight_fl",
+                    "al_positionLight_fr",
+                    "al_positionLight_rl",
+                    "al_positionLight_rr",
+                    "al_registrationPlateLight",
+                    "al_reverseLights",
+                    "al_sideMarkLights",
+                    "al_turnIndication_fl",
+                    "al_turnIndication_fr",
+                    "al_turnIndication_rl",
+                    "al_turnIndication_rr"
+			]
+		}
 	},{
 		"logicalId": "al_brakeLight_l",
 		"name": "{{feu frein gauche}}",
-		"configuration": {
-			"endpoint": "warnings"
-		},
 		"type": "info",
-		"subType": "numeric"
+		"subType": "string",
+		"configuration": {
+			"endpoint": "warnings",
+			"dependencies": "al_light"
+		}
 	},{
 		"logicalId": "al_brakeLight_r",
 		"name": "{{feu frein droite}}",
-		"configuration": {
-			"endpoint": "warnings"
-		},
 		"type": "info",
-		"subType": "numeric"
+		"subType": "string",
+		"configuration": {
+			"endpoint": "warnings",
+			"dependencies": "al_light"
+		}
 	},{
 		"logicalId": "al_brakeLight_c",
 		"name": "{{feu frein central}}",
-		"configuration": {
-			"endpoint": "warnings"
-		},
 		"type": "info",
-		"subType": "numeric"
+		"subType": "string",
+		"configuration": {
+			"endpoint": "warnings",
+			"dependencies": "al_light"
+		}
 	},{
 		"logicalId": "al_daytimeRunningLight_l",
 		"name": "{{feu jour gauche}}",
-		"configuration": {
-			"endpoint": "warnings"
-		},
 		"type": "info",
-		"subType": "numeric"
+		"subType": "string",
+		"configuration": {
+			"endpoint": "warnings",
+			"dependencies": "al_light"
+		}
 	},{
 		"logicalId": "al_daytimeRunningLight_r",
 		"name": "{{feu jour droit}}",
-		"configuration": {
-			"endpoint": "warnings"
-		},
 		"type": "info",
-		"subType": "numeric"
+		"subType": "string",
+		"configuration": {
+			"endpoint": "warnings",
+			"dependencies": "al_light"
+		}
 	},{
 		"logicalId": "al_fogLight_f",
 		"name": "{{feux brouillard avant}}",
-		"configuration": {
-			"endpoint": "warnings"
-		},
 		"type": "info",
-		"subType": "numeric"
+		"subType": "string",
+		"configuration": {
+			"endpoint": "warnings",
+			"dependencies": "al_light"
+		}
 	},{
 		"logicalId": "al_fogLight_r",
 		"name": "{{feux brouillard arrière}}",
-		"configuration": {
-			"endpoint": "warnings"
-		},
 		"type": "info",
-		"subType": "numeric"
+		"subType": "string",
+		"configuration": {
+			"endpoint": "warnings",
+			"dependencies": "al_light"
+		}
 	},{
 		"logicalId": "al_hazardLights",
 		"name": "{{feux détresse}}",
-		"configuration": {
-			"endpoint": "warnings"
-		},
 		"type": "info",
-		"subType": "numeric"
+		"subType": "string",
+		"configuration": {
+			"endpoint": "warnings",
+			"dependencies": "al_light"
+		}
 	},{
 		"logicalId": "al_highBeam_l",
 		"name": "{{feu route gauche}}",
-		"configuration": {
-			"endpoint": "warnings"
-		},
 		"type": "info",
-		"subType": "numeric"
+		"subType": "string",
+		"configuration": {
+			"endpoint": "warnings",
+			"dependencies": "al_light"
+		}
 	},{
 		"logicalId": "al_highBeam_r",
 		"name": "{{feu route droite}}",
-		"configuration": {
-			"endpoint": "warnings"
-		},
 		"type": "info",
-		"subType": "numeric"
+		"subType": "string",
+		"configuration": {
+			"endpoint": "warnings",
+			"dependencies": "al_light"
+		}
 	},{
 		"logicalId": "al_lowBeam_l",
 		"name": "{{feu croisement gauche}}",
-		"configuration": {
-			"endpoint": "warnings"
-		},
 		"type": "info",
-		"subType": "numeric"
+		"subType": "string",
+		"configuration": {
+			"endpoint": "warnings",
+			"dependencies": "al_light"
+		}
 	},{
 		"logicalId": "al_lowBeam_r",
 		"name": "{{feu croisement droite}}",
-		"configuration": {
-			"endpoint": "warnings"
-		},
 		"type": "info",
-		"subType": "numeric"
+		"subType": "string",
+		"configuration": {
+			"endpoint": "warnings",
+			"dependencies": "al_light"
+		}
 	},{
 		"logicalId": "al_positionLight_fl",
 		"name": "{{feu position avant gauche}}",
-		"configuration": {
-			"endpoint": "warnings"
-		},
 		"type": "info",
-		"subType": "numeric"
+		"subType": "string",
+		"configuration": {
+			"endpoint": "warnings",
+			"dependencies": "al_light"
+		}
 	},{
 		"logicalId": "al_positionLight_fr",
 		"name": "{{feu position avant droite}}",
-		"configuration": {
-			"endpoint": "warnings"
-		},
 		"type": "info",
-		"subType": "numeric"
+		"subType": "string",
+		"configuration": {
+			"endpoint": "warnings",
+			"dependencies": "al_light"
+		}
 	},{
 		"logicalId": "al_positionLight_rl",
 		"name": "{{feu position arrière gauche}}",
-		"configuration": {
-			"endpoint": "warnings"
-		},
 		"type": "info",
-		"subType": "numeric"
+		"subType": "string",
+		"configuration": {
+			"endpoint": "warnings",
+			"dependencies": "al_light"
+		}
 	},{
 		"logicalId": "al_positionLight_rr",
 		"name": "{{feu position arrière droit}}",
-		"configuration": {
-			"endpoint": "warnings"
-		},
 		"type": "info",
-		"subType": "numeric"
+		"subType": "string",
+		"configuration": {
+			"endpoint": "warnings",
+			"dependencies": "al_light"
+		}
 	},{
 		"logicalId": "al_registrationPlateLight",
 		"name": "{{feu plaque}}",
-		"configuration": {
-			"endpoint": "warnings"
-		},
 		"type": "info",
-		"subType": "numeric"
+		"subType": "string",
+		"configuration": {
+			"endpoint": "warnings",
+			"dependencies": "al_light"
+		}
 	},{
 		"logicalId": "al_reverseLights",
 		"name": "{{feu recule}}",
-		"configuration": {
-			"endpoint": "warnings"
-		},
 		"type": "info",
-		"subType": "numeric"
+		"subType": "string",
+		"configuration": {
+			"endpoint": "warnings",
+			"dependencies": "al_light"
+		}
 	},{
 		"logicalId": "al_sideMarkLights",
 		"name": "{{feux latéraux}}",
-		"configuration": {
-			"endpoint": "warnings"
-		},
 		"type": "info",
-		"subType": "numeric"
+		"subType": "string",
+		"configuration": {
+			"endpoint": "warnings",
+			"dependencies": "al_light"
+		}
 	},{
 		"logicalId": "al_turnIndication_fl",
 		"name": "{{clignotant avant gauche}}",
-		"configuration": {
-			"endpoint": "warnings"
-		},
 		"type": "info",
-		"subType": "numeric"
+		"subType": "string",
+		"configuration": {
+			"endpoint": "warnings",
+			"dependencies": "al_light"
+		}
 	},{
 		"logicalId": "al_turnIndication_fr",
 		"name": "{{clignotant avant droit}}",
-		"configuration": {
-			"endpoint": "warnings"
-		},
 		"type": "info",
-		"subType": "numeric"
+		"subType": "string",
+		"configuration": {
+			"endpoint": "warnings",
+			"dependencies": "al_light"
+		}
 	},{
 		"logicalId": "al_turnIndication_rl",
 		"name": "{{clignotant arrière gauche}}",
-		"configuration": {
-			"endpoint": "warnings"
-		},
 		"type": "info",
-		"subType": "numeric"
+		"subType": "string",
+		"configuration": {
+			"endpoint": "warnings",
+			"dependencies": "al_light"
+		}
 	},{
 		"logicalId": "al_turnIndication_rr",
 		"name": "{{clignotant arrière droit}}",
-		"configuration": {
-			"endpoint": "warnings"
-		},
 		"type": "info",
-		"subType": "numeric"
+		"subType": "string",
+		"configuration": {
+			"endpoint": "warnings",
+			"dependencies": "al_light"
+		}
 	},{
 		"logicalId": "position",
 		"name": "{{position}}",
 		"configuration": {
-			"endpoint": "location"
+			"endpoint": "location",
+			"dependencies": "al_light"
 		},
 		"type": "info",
 		"subType": "string"
@@ -702,43 +786,60 @@
 	},{
 		"logicalId": "electricAutonomy",
 		"name": "{{Autonomie électrique}}",
+		"type": "info",
+		"subType": "numeric",
 		"unite": "Km",
 		"configuration": {
-			"endpoint": "statistics"
-		},
-		"type": "info",
-		"subType": "numeric"
+			"endpoint": "statistics",
+			"dependencies" : "al_electricAutonomy"
+		}
 	},{
 		"logicalId": "al_electricAutonomy",
 		"name": "{{Autonomie électrique faible}}",
 		"type": "info",
-		"subType": "numeric"
+		"subType": "binary",
+		"configuration": {
+			"dependTo": "electricAutonomy"
+		}
 	},{
 		"logicalId": "heatAutonomy",
 		"name": "{{Autonomie thermique}}",
+		"type": "info",
+		"subType": "numeric",
 		"unite": "Km",
 		"configuration": {
-			"endpoint": "statistics"
-		},
-		"type": "info",
-		"subType": "numeric"
+			"endpoint": "statistics",
+			"dependencies" : "al_heatAutonomy"
+		}
 	},{
 		"logicalId": "al_heatAutonomy",
 		"name": "{{Autonomie thermique faible}}",
 		"type": "info",
-		"subType": "numeric"
+		"subType": "binary",
+		"configuration": {
+			"dependTo": "heatAutonomy"
+		}
 	},{
 		"logicalId": "al_tyre",
 		"name": "{{alerte pneus}}",
 		"type": "info",
-		"subType": "numeric"
+		"subType": "binary",
+		"configuration": {
+			"dependTo": [
+				"tyre_fl",
+				"tyre_fr",
+				"tyre_rl",
+				"tyre_rr"
+			]
+		}
 	},{
 		"logicalId": "tyre_fl",
 		"name": "{{pneu avant gauche}}",
 		"type": "info",
-		"subType": "numeric",
+		"subType": "string",
 		"configuration": {
-			"endpoint": "tyre"
+			"endpoint": "tyre",
+			"dependencies": "al_tyre"
 		},
 		"template": {
 			"dashboard": "core::badge",
@@ -748,9 +849,10 @@
 		"logicalId": "tyre_fr",
 		"name": "{{pneu avant droit}}",
 		"type": "info",
-		"subType": "numeric",
+		"subType": "string",
 		"configuration": {
-			"endpoint": "tyre"
+			"endpoint": "tyre",
+			"dependencies": "al_tyre"
 		},
 		"template": {
 			"dashboard": "core::badge",
@@ -760,9 +862,10 @@
 		"logicalId": "tyre_rl",
 		"name": "{{pneu arrière gauche}}",
 		"type": "info",
-		"subType": "numeric",
+		"subType": "string",
 		"configuration": {
-			"endpoint": "tyre"
+			"endpoint": "tyre",
+			"dependencies": "al_tyre"
 		},
 		"template": {
 			"dashboard": "core::badge",
@@ -772,9 +875,10 @@
 		"logicalId": "tyre_rr",
 		"name": "{{pneu arrière droit}}",
 		"type": "info",
-		"subType": "numeric",
+		"subType": "string",
 		"configuration": {
-			"endpoint": "tyre"
+			"endpoint": "tyre",
+			"dependencies": "al_tyre"
 		},
 		"template": {
 			"dashboard": "core::badge",

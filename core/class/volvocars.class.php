@@ -30,6 +30,7 @@ class volvocars extends eqLogic {
 		"warnings",
 		"location",
 		"statistics",
+		"engine_diagnostics",
 		"tyre",
 		"windows",
 	];
@@ -38,12 +39,6 @@ class volvocars extends eqLogic {
 	 * Permet de définir les possibilités de personnalisation du widget (en cas d'utilisation de la fonction 'toHtml' par exemple)
 	 * Tableau multidimensionnel - exemple: array('custom' => true, 'custom::layout' => false)
 	 * public static $_widgetPossibility = array();
-	*/
-
-	/*
-	 * Permet de crypter/décrypter automatiquement des champs de configuration du plugin
-	 * Exemple : "param1" & "param2" seront cryptés mais pas "param3"
-	 * public static $_encryptConfigKey = array('param1', 'param2');
 	*/
 
 	/*	 * ***********************Methode static*************************** */
@@ -56,6 +51,9 @@ class volvocars extends eqLogic {
 	 * }
 	 */
 
+	/*
+	 * Retourne tous les eqLogics de véhicule associés à un compte
+	 */
 	public static function byAccount_id($_account_id, $_onlyEnable = false) {
 		$cars = array();
 		foreach (self::byType(__CLASS__, $_onlyEnable) as $car) {
@@ -66,10 +64,16 @@ class volvocars extends eqLogic {
 		return $cars;
 	}
 
+	/*
+	 * Cherche un véhicule via son VIN
+	 */
 	public static function byVin($_vin, $_onlyEnable = false) {
 		return self::byLogicalId($_vin, __CLASS__);
 	}
 
+	/*
+	 * Recherche un véhicule via son nom
+	 */
 	public static function byName($_name, $_onlyEnable = false) {
 		$cars = array();
 		foreach (self::byType(__CLASS__, $_onlyEnable) as $car) {
@@ -106,33 +110,40 @@ class volvocars extends eqLogic {
 			return;
 		}
 		$logicalId = $cmd->getLogicalId();
-		if ($logicalId == 'al_tyre' || $logicalId == 'al_light') {
-			usleep(800);
-		}
+
 		$mapping = [
-			'div_al_oil' => [
-				'al_oil' => [
-					'0' => __("Niveau d'huile OK",__FILE__),
-					'1' => __("Niveau d'huile bas",__FILE__),
-					'2' => __("Niveau d'huile haut",__FILE__),
+			'div_al_brake' => [
+				'al_brake_fluid' => [
+					'0' => __("Niveau liquide de frein OK",__FILE__),
+				],
+				'brake_fluid_level' => [
+					'TOO_LOW' => __("Niveau liquide de freins bas",__FILE__),
 				],
 			],
 			'div_al_coolant' => [
 				'al_coolant' => [
 					'0' => __("Niveau liquide refroidissement OK",__FILE__),
-					'1' => __("Niveau liquide refroidissement bas",__FILE__),
+				],
+				'coolant_level' => [
+					'TOO_LOW' => __("Niveau liquide refroidissement bas",__FILE__),
 				],
 			],
-			'div_al_brake' => [
-				'al_brake_fluid' => [
-					'0' => __("Niveau liquide de frein OK",__FILE__),
-					'1' => __("Niveau liquide de freins bas",__FILE__),
+			'div_al_oil' => [
+				'al_oil' => [
+					'0' => __("Niveau d'huile OK",__FILE__),
+				],
+				'oil_level' => [
+					'SERVICE_REQUIRED' => __("Service à effectuer",__FILE__),
+					"TOO_LOW" => __("Niveau d'huile bas",__FILE__),
+					"TOO_HIGH" => __("Niveau d'huile haut",__FILE__),
 				],
 			],
 			'div_al_wash' => [
 				'al_washer_fluid' => [
-					'1' => __("Niveau lave-vitres bas",__FILE__),
 					'0' => __("Niveau lave-vitres OK", __FILE__),
+				],
+				'washer_fluid_level' => [
+					'TOO_LOW' => __("Niveau liquide lave-vitres bas",__FILE__),
 				],
 			],
 			'div_al_heatautonomy' => [
@@ -150,51 +161,51 @@ class volvocars extends eqLogic {
 					'0' => __("Pression pneus OK",__FILE__),
 				],
 				'tyre_fl' => [
-					'1' => __("Pression pneu avant gauche élévée",__FILE__),
-					'2' => __("Pression pneu avant gauche basse",__FILE__),
-					'3' => __("Pression pneu avant gauche très basse",__FILE__),
+					"VERY_LOW_PRESSURE" => __("Pression pneu avant gauche très basse",__FILE__),
+					"LOW_PRESSURE" =>      __("Pression pneu avant gauche basse",__FILE__),
+					"HIGH_PRESSURE" =>     __("Pression pneu avant gauche élevée",__FILE__),
 				],
 				'tyre_fr' => [
-					'1' => __("Pression pneu avant droit élévée",__FILE__),
-					'2' => __("Pression pneu avant droit basse",__FILE__),
-					'3' => __("Pression pneu avant droit très basse",__FILE__),
+					"VERY_LOW_PRESSURE" => __("Pression pneu avant droit très basse",__FILE__),
+					"LOW_PRESSURE" =>      __("Pression pneu avant droit basse",__FILE__),
+					"HIGH_PRESSURE" =>     __("Pression pneu avant droit élevée",__FILE__),
 				],
 				'tyre_rl' => [
-					'1' => __("Pression pneu arrière gauche élévée",__FILE__),
-					'2' => __("Pression pneu arrière gauche basse",__FILE__),
-					'3' => __("Pression pneu arrière gauche très basse",__FILE__),
+					"VERY_LOW_PRESSURE" => __("Pression pneu arrière gauche très basse",__FILE__),
+					"LOW_PRESSURE" =>      __("Pression pneu arrière gauche basse",__FILE__),
+					"HIGH_PRESSURE" =>     __("Pression pneu arrière gauche élevée",__FILE__),
 				],
 				'tyre_rr' => [
-					'1' => __("Pression pneu arrière droit élévée",__FILE__),
-					'2' => __("Pression pneu arrière droit basse",__FILE__),
-					'3' => __("Pression pneu arrière droit très basse",__FILE__),
+					"VERY_LOW_PRESSURE" => __("Pression pneu arrière droit très basse",__FILE__),
+					"LOW_PRESSURE" =>      __("Pression pneu arrière droit basse",__FILE__),
+					"HIGH_PRESSURE" =>     __("Pression pneu arrière droit élevée",__FILE__),
 				],
 			],
 			'div_al_light' => [
-				'al_light'					=> [ '0'	=> __("Feux OK",__FILE__) ],
-				"al_brakeLight_l"           => [ '1' => __("Défaut feu frein gauche",__FILE__) ],
-				"al_brakeLight_r"           => [ '1' => __("Défaut feu frein droite",__FILE__) ],
-				"al_brakeLight_c"           => [ '1' => __("Défaut feu frein central",__FILE__) ],
-				"al_daytimeRunningLight_l"  => [ '1' => __("Défaut feu jour gauche",__FILE__) ],
-				"al_daytimeRunningLight_r"  => [ '1' => __("Défaut feu jour droit",__FILE__) ],
-				"al_fogLight_f"             => [ '1' => __("Défaut feux brouillard avant",__FILE__) ],
-				"al_fogLight_r"             => [ '1' => __("Défaut feux brouillard arrière",__FILE__) ],
-				"al_hazardLights"           => [ '1' => __("Défaut feux détresse",__FILE__) ],
-				"al_highBeam_l"             => [ '1' => __("Défaut feu route gauche",__FILE__) ],
-				"al_highBeam_r"             => [ '1' => __("Défaut feu route droite",__FILE__) ],
-				"al_lowBeam_l"              => [ '1' => __("Défaut feu croisement gauche",__FILE__) ],
-				"al_lowBeam_r"              => [ '1' => __("Défaut feu croisement droite",__FILE__) ],
-				"al_positionLight_fl"       => [ '1' => __("Défaut feu position avant gauche",__FILE__) ],
-				"al_positionLight_fr"       => [ '1' => __("Défaut feu position avant droite",__FILE__) ],
-				"al_positionLight_rl"       => [ '1' => __("Défaut feu position arrière gauche",__FILE__) ],
-				"al_positionLight_rr"       => [ '1' => __("Défaut feu position arrière droit",__FILE__) ],
-				"al_registrationPlateLight" => [ '1' => __("Défaut feu plaque",__FILE__) ],
-				"al_reverseLights"          => [ '1' => __("Défaut feu recule",__FILE__) ],
-				"al_sideMarkLights"         => [ '1' => __("Défaut feux latéraux",__FILE__) ],
-				"al_turnIndication_fl"      => [ '1' => __("Défaut clignotant avant gauche",__FILE__) ],
-				"al_turnIndication_fr"      => [ '1' => __("Défaut clignotant avant droit",__FILE__) ],
-				"al_turnIndication_rl"      => [ '1' => __("Défaut clignotant arrière gauche",__FILE__) ],
-				"al_turnIndication_rr"      => [ '1' => __("Défaut clignotant arrière droit",__FILE__) ],
+				'al_light'					=> [ '0' => __("Feux OK",__FILE__) ],
+				"al_brakeLight_l"           => [ 'FAILURE' => __("Défaut feu frein gauche",__FILE__) ],
+				"al_brakeLight_r"           => [ 'FAILURE' => __("Défaut feu frein droite",__FILE__) ],
+				"al_brakeLight_c"           => [ 'FAILURE' => __("Défaut feu frein central",__FILE__) ],
+				"al_daytimeRunningLight_l"  => [ 'FAILURE' => __("Défaut feu jour gauche",__FILE__) ],
+				"al_daytimeRunningLight_r"  => [ 'FAILURE' => __("Défaut feu jour droit",__FILE__) ],
+				"al_fogLight_f"             => [ 'FAILURE' => __("Défaut feux brouillard avant",__FILE__) ],
+				"al_fogLight_r"             => [ 'FAILURE' => __("Défaut feux brouillard arrière",__FILE__) ],
+				"al_hazardLights"           => [ 'FAILURE' => __("Défaut feux détresse",__FILE__) ],
+				"al_highBeam_l"             => [ 'FAILURE' => __("Défaut feu route gauche",__FILE__) ],
+				"al_highBeam_r"             => [ 'FAILURE' => __("Défaut feu route droite",__FILE__) ],
+				"al_lowBeam_l"              => [ 'FAILURE' => __("Défaut feu croisement gauche",__FILE__) ],
+				"al_lowBeam_r"              => [ 'FAILURE' => __("Défaut feu croisement droite",__FILE__) ],
+				"al_positionLight_fl"       => [ 'FAILURE' => __("Défaut feu position avant gauche",__FILE__) ],
+				"al_positionLight_fr"       => [ 'FAILURE' => __("Défaut feu position avant droite",__FILE__) ],
+				"al_positionLight_rl"       => [ 'FAILURE' => __("Défaut feu position arrière gauche",__FILE__) ],
+				"al_positionLight_rr"       => [ 'FAILURE' => __("Défaut feu position arrière droit",__FILE__) ],
+				"al_registrationPlateLight" => [ 'FAILURE' => __("Défaut feu plaque",__FILE__) ],
+				"al_reverseLights"          => [ 'FAILURE' => __("Défaut feu recule",__FILE__) ],
+				"al_sideMarkLights"         => [ 'FAILURE' => __("Défaut feux latéraux",__FILE__) ],
+				"al_turnIndication_fl"      => [ 'FAILURE' => __("Défaut clignotant avant gauche",__FILE__) ],
+				"al_turnIndication_fr"      => [ 'FAILURE' => __("Défaut clignotant avant droit",__FILE__) ],
+				"al_turnIndication_rl"      => [ 'FAILURE' => __("Défaut clignotant arrière gauche",__FILE__) ],
+				"al_turnIndication_rr"      => [ 'FAILURE' => __("Défaut clignotant arrière droit",__FILE__) ],
 			],
 		];
 
@@ -214,24 +225,25 @@ class volvocars extends eqLogic {
 
 	/*
 	 * Les handlers des listener
-	 *   un handler par endpoinit car il y a trop de commandes pour l'enregistrement d'un seul
+	 *   un handler par endpoint car il y a trop de commandes pour l'enregistrement d'un seul
 	 *   handler pour toutes les commandes (contrainte de la DB)
 	 */
-	public static function lh_brakes($_options)			{ self::updateMessages($_options); }
-	public static function lh_diagnostics($_options)	{ self::updateMessages($_options); }
-	public static function lh_doors($_options)			{ self::updateMessages($_options); }
-	public static function lh_location($_options)		{ self::updateMessages($_options); }
-	public static function lh_statistics($_options)		{ self::updateMessages($_options); }
-	public static function lh_tyre($_options)			{ self::updateMessages($_options); }
-	public static function lh_warnings($_options)		{ self::updateMessages($_options); }
-	public static function lh_windows($_options)		{ self::updateMessages($_options); }
-	public static function lh_plugin($_options)			{ self::updateMessages($_options); }
+	public static function lh_brakes($_options)				{ self::updateMessages($_options); }
+	public static function lh_diagnostics($_options)		{ self::updateMessages($_options); }
+	public static function lh_engine_diagnostics($_options)	{ self::updateMessages($_options); }
+	public static function lh_doors($_options)				{ self::updateMessages($_options); }
+	public static function lh_location($_options)			{ self::updateMessages($_options); }
+	public static function lh_statistics($_options)			{ self::updateMessages($_options); }
+	public static function lh_tyre($_options)				{ self::updateMessages($_options); }
+	public static function lh_warnings($_options)			{ self::updateMessages($_options); }
+	public static function lh_windows($_options)			{ self::updateMessages($_options); }
+	public static function lh_plugin($_options)				{ self::updateMessages($_options); }
 
 
 	/*
 	 * Config de templatge de widgets
 	 */
-	public function templateWidget() {
+	public static function templateWidget() {
 		$return = [
 			'info' => [
 				'binary' => [
@@ -263,7 +275,9 @@ class volvocars extends eqLogic {
 
 	/*	 * *********************Méthodes d'instance************************* */
 
-	// Fonction exécutée automatiquement avant la création de l'équipement
+	/*
+	 * Fonction exécutée automatiquement avant la création de l'équipement
+	 */
 	public function preInsert() {
 		if ($this->getVin() != '') {
 			$car = self::byVin($this->getVin());
@@ -271,9 +285,13 @@ class volvocars extends eqLogic {
 				throw new Exception (__("Il y a déjà un véhicule avec ce vin!",__FILE__));
 			}
 		}
+		$this->setDisplay('width','832px');
+		$this->setDisplay('height','1292px');
 	}
 
-	// Fonction exécutée automatiquement avant la mise à jour de l'équipement
+	/*
+	 * Fonction exécutée automatiquement avant la mise à jour de l'équipement
+	 */
 	public function preUpdate() {
 		if ($this->getVin() == '') {
 			throw new Exception (__("Le vin n'est pas défini",__FILE__));
@@ -291,7 +309,7 @@ class volvocars extends eqLogic {
 		}
 
 		if ($this->getConfiguration('heatEngine')){
-			$limit = trim($this->getConfiguration('heatAautonomyLimit'));
+			$limit = trim($this->getConfiguration('heatAutonomyLimit'));
 			if ($limit == '') {
 				$limit = 0;
 			}
@@ -317,10 +335,16 @@ class volvocars extends eqLogic {
 		}
 	}
 
+	/*
+	 * Fonction appelée après la création d'un véhicule
+	 */
 	public function postInsert() {
 		$this->createOrUpdateCmds();
 	}
 
+	/*
+	 * Fonction appelée après la sauvegarde de l'eqLogic et des commandes via l'interface WEB
+	 */
 	public function postAjax() {
 		foreach (['distance_site1','distance_site2'] as $logicalId){
 			$cmd = $this->getCmd('info',$logicalId);
@@ -379,10 +403,16 @@ class volvocars extends eqLogic {
 			}
 		}
 		$this->setCarListeners();
+		$this->cleanWidgetMessages();
 	}
 
 	/*
-	 * Fonctions pour la gestion du listener
+	 * Fonctions pour la gestion des listeners du véhicule
+	 * ***************************************************
+	 */
+
+	/*
+	 * Retourne le liste des listeners
 	 */
 	private function getCarListeners() {
 		$listeners = array();
@@ -394,6 +424,9 @@ class volvocars extends eqLogic {
 		return ($listeners);
 	}
 
+	/*
+	 * Suppression de tous les listeners du véhicule
+	 */
 	private function removeCarListeners() {
 		log::add("volvocars","info",$this->getname() . ": " . __("Suppression des listeners",__FILE__));
 		foreach ($this->getCarListeners() as $listener) {
@@ -401,6 +434,9 @@ class volvocars extends eqLogic {
 		}
 	}
 
+	/*
+	 * Configuration des Listeners du vhéhicule
+	 */
 	private function setCarListeners() {
 		if ($this->getIsEnable() == 0) {
 			$this->removeCarListeners();
@@ -444,6 +480,9 @@ class volvocars extends eqLogic {
 		}
 	}
 
+	/*
+	 * Retourne l'image du véhicule
+	 */
 	public function getImage() {
 		$img = $this->getVin() .'.png';
 		$imgPath = __DIR__ . '/../../data/' . $img;
@@ -454,11 +493,19 @@ class volvocars extends eqLogic {
 		return $plugin->getPathImgIcon();
 	}
 
+	/*
+	 * Mise à jour des détails du vhéhicule et des valeurs des commandes info
+	 * à partir des infos fournies par les API Volvo
+	 */
 	public function synchronize() {
 		$this->updateDetails();
 		$this->retrieveInfos(true);
 	}
 
+	/*
+	 * Meise à jour de détails du véhicule à partir des infis fournies par
+	 * les API de Volvo
+	 */
 	public function updateDetails() {
 		$changed = false;
 		$account = $this->getAccount();
@@ -623,7 +670,7 @@ class volvocars extends eqLogic {
 				curl_exec($session);
 				$httpCode = curl_getinfo($session,CURLINFO_HTTP_CODE);
 				if ($httpCode != 200) {
-					log::add("volvocars","info",sprintf(__("Erreur lors du éléchargement de l'image. HTTPCODE: %s",__FILE__) . $httpCode));
+					log::add("volvocars","info",sprintf(__("Erreur lors du téléchargement de l'image. HTTPCODE: %s",__FILE__) . $httpCode));
 				}
 				curl_close($session);
 				fclose($image);
@@ -637,11 +684,17 @@ class volvocars extends eqLogic {
 		}
 	}
 
+	/*
+	 * Création de mise à jour des commandes sur la base du fichier de configuration
+	 */
 	public function createOrUpdateCmds($createOnly = false) {
 		$createCmdOpen = config::byKey("create_cmd_open","volvocars", '0');
 		$createCmdState = config::byKey("create_cmd_state","volvocars", '0');
 		$cmdsFile = realpath(__DIR__ . '/../config/cmds.json');
 		$commands = json_decode(file_get_contents($cmdsFile),true);
+		if (!is_array($commands)) {
+			throw new Exception (sprintf(__("Erreur lors de la lecture de %s",__FILE__),$cmdsFile));
+		}
 		foreach ($commands as $command) {
 			if (!is_array($command)) {
 			 	log::add("volvocars","erro","createCmd called with wrong argument");
@@ -688,6 +741,9 @@ class volvocars extends eqLogic {
 		}
 	}
 
+	/*
+	 * Tri des commandes sur la base du fichier de configuration
+	 */
 	public function sortCmds() {
 		$cmdsFile = realpath(__DIR__ . '/../config/cmds.json');
 		$commands = json_decode(file_get_contents($cmdsFile),true);
@@ -706,186 +762,137 @@ class volvocars extends eqLogic {
 		}
 	}
 
+	/*
+	 * Mise à jour des infos retournée par un endpoint des API Volvo
+	 */
 	public function getInfosFromApi($endpoint){
-		log::add("volvocars","info",sprintf("┌Getting infos '%s'...",$endpoint));
 		if ($this->getConfiguration('heatEngine') == 0){
 			if ($endpoint == 'engine_diagnostics'){
 				return;
 			}
 		}
+		log::add("volvocars","info",sprintf("┌Getting infos '%s'...",$endpoint));
 		$account = $this->getAccount();
 		$infos = $account->getInfos($endpoint,$this->getVin());
+
+		$endpoint2cmd = [
+			'engine_diagnostics.engineCoolantLevelWarning'	=> ['coolant_level'],
+			'engine_diagnostics.oilLevelWarning'			=> ['oil_level'],
+
+			'brakes.brakeFluidLevelWarning'	=>	['brake_fluid_level'],
+
+			'diagnostics.washerFluidLevelWarning' => ['washer_fluid_level'],
+
+			'statistics.distanceToEmptyBattery' => ['electricAutonomy'],
+			'statistics.distanceToEmptyTank'	=> ['heatAutonomy'],
+
+			'tyre.frontLeft'  => ['tyre_fl'],
+			'tyre.frontRight' => ['tyre_fr'],
+			'tyre.rearLeft'   => ['tyre_rl'],
+			'tyre.rearRight'  => ['tyre_rr'],
+
+			'warnings.brakeLightCenterWarning'			=> ['al_brakeLight_c'],
+			'warnings.brakeLightLeftWarning'			=> ['al_brakeLight_l'],
+			'warnings.brakeLightRightWarning'			=> ['al_brakeLight_r'],
+			'warnings.daytimeRunningLightLeftWarning'	=> ['al_daytimeRunningLight_l'],
+			'warnings.daytimeRunningLightRightWarning'	=> ['al_daytimeRunningLight_r'],
+			'warnings.fogLightFrontWarning'				=> ['al_fogLight_f'],
+			'warnings.fogLightRearWarning'				=> ['al_fogLight_r'],
+			'warnings.hazardLightsWarning'				=> ['al_hazardLights'],
+			'warnings.highBeamLeftWarning'				=> ['al_highBeam_l'],
+			'warnings.highBeamRightWarning'				=> ['al_highBeam_r'],
+			'warnings.lowBeamLeftWarning'				=> ['al_lowBeam_l'],
+			'warnings.lowBeamRightWarning'				=> ['al_lowBeam_r'],
+			'warnings.positionLightFrontLeftWarning'	=> ['al_positionLight_fl'],
+			'warnings.positionLightFrontRightWarning'	=> ['al_positionLight_fr'],
+			'warnings.positionLightRearLeftWarning'		=> ['al_positionLight_rl'],
+			'warnings.positionLightRearRightWarning'	=> ['al_positionLight_rr'],
+			'warnings.registrationPlateLightWarning'	=> ['al_registrationPlateLight'],
+			'warnings.reverseLightsWarning'				=> ['al_reverseLights'],
+			'warnings.sideMarkLightsWarning'			=> ['al_sideMarkLights'],
+			'warnings.turnIndicationFrontLeftWarning'	=> ['al_turnIndication_fl'],
+			'warnings.turnIndicationFrontRightWarning'	=> ['al_turnIndication_fr'],
+			'warnings.turnIndicationRearLeftWarning'	=> ['al_turnIndication_rl'],
+			'warnings.turnIndicationRearRightWarning'	=> ['al_turnIndication_rr'],
+		];
 		foreach (array_keys($infos) as $key) {
 			log::add("volvocars","debug",sprintf("├─key: %s",$key));
 			$logicalIds = array();
-			switch ($endpoint.".".$key) {
-				case 'brakes.brakeFluidLevelWarning':
-					$logicalIds[] = 'al_brake_fluid';
-					break;
-				case 'diagnostics.engineCoolantLevelWarning':
-					$logicalIds[] = 'al_coolant';
-					break;
-				case 'diagnostics.oilLevelWarning':
-					$logicalIds[] = 'al_oil';
-					break;
-				case 'diagnostics.washerFluidLevelWarning':
-					$logicalIds[] = 'al_washer_fluid';
-					break;
-				case 'doors.centralLock':
-					$logicalIds[] = 'locked';
-					break;
-				case 'doors.frontLeftDoor':
-					$logicalIds[] = 'door_fl_closed';
-					$logicalIds[] = 'door_fl_open';
-					$logicalIds[] = 'door_fl_state';
-					break;
-				case 'doors.frontRightDoor':
-					$logicalIds[] = 'door_fr_closed';
-					$logicalIds[] = 'door_fr_open';
-					$logicalIds[] = 'door_fr_state';
-					break;
-				case 'doors.rearLeftDoor':
-					$logicalIds[] = 'door_rl_closed';
-					$logicalIds[] = 'door_rl_open';
-					$logicalIds[] = 'door_rl_state';
-					break;
-				case 'doors.rearRightDoor':
-					$logicalIds[] = 'door_rr_closed';
-					$logicalIds[] = 'door_rr_open';
-					$logicalIds[] = 'door_rr_state';
-					break;
-				case 'doors.hood':
-					$logicalIds[] = 'hood_closed';
-					$logicalIds[] = 'hood_open';
-					$logicalIds[] = 'hood_state';
-					break;
-				case 'doors.tailgate':
-					$logicalIds[] = 'tail_closed';
-					$logicalIds[] = 'tail_open';
-					$logicalIds[] = 'tail_state';
-					break;
-				case 'doors.tankLid':
-					$logicalIds[] = 'tank_closed';
-					$logicalIds[] = 'tank_open';
-					$logicalIds[] = 'tank_state';
-					break;
-				case 'warnings.brakeLightCenterWarning':
-					$logicalIds[] = 'al_brakeLight_c';
-					break;
-				case 'warnings.brakeLightLeftWarning':
-					$logicalIds[] = 'al_brakeLight_l';
-					break;
-				case 'warnings.brakeLightRightWarning':
-					$logicalIds[] = 'al_brakeLight_r';
-					break;
-				case 'warnings.daytimeRunningLightLeftWarning':
-					$logicalIds[] = 'al_daytimeRunningLight_l';
-					break;
-				case 'warnings.daytimeRunningLightRightWarning':
-					$logicalIds[] = 'al_daytimeRunningLight_r';
-					break;
-				case 'warnings.fogLightFrontWarning':
-					$logicalIds[] = 'al_fogLight_f';
-					break;
-				case 'warnings.fogLightRearWarning':
-					$logicalIds[] = 'al_fogLight_r';
-					break;
-				case 'warnings.hazardLightsWarning':
-					$logicalIds[] = 'al_hazardLights';
-					break;
-				case 'warnings.highBeamLeftWarning':
-					$logicalIds[] = 'al_highBeam_l';
-					break;
-				case 'warnings.highBeamRightWarning':
-					$logicalIds[] = 'al_highBeam_r';
-					break;
-				case 'warnings.lowBeamLeftWarning':
-					$logicalIds[] = 'al_lowBeam_l';
-					break;
-				case 'warnings.lowBeamRightWarning':
-					$logicalIds[] = 'al_lowBeam_r';
-					break;
-				case 'warnings.positionLightFrontLeftWarning':
-					$logicalIds[] = 'al_positionLight_fl';
-					break;
-				case 'warnings.positionLightFrontRightWarning':
-					$logicalIds[] = 'al_positionLight_fr';
-					break;
-				case 'warnings.positionLightRearLeftWarning':
-					$logicalIds[] = 'al_positionLight_rl';
-					break;
-				case 'warnings.positionLightRearRightWarning':
-					$logicalIds[] = 'al_positionLight_rr';
-					break;
-				case 'warnings.registrationPlateLightWarning':
-					$logicalIds[] = 'al_registrationPlateLight';
-					break;
-				case 'warnings.reverseLightsWarning':
-					$logicalIds[] = 'al_reverseLights';
-					break;
-				case 'warnings.sideMarkLightsWarning':
-					$logicalIds[] = 'al_sideMarkLights';
-					break;
-				case 'warnings.turnIndicationFrontLeftWarning':
-					$logicalIds[] = 'al_turnIndication_fl';
-					break;
-				case 'warnings.turnIndicationFrontRightWarning':
-					$logicalIds[] = 'al_turnIndication_fr';
-					break;
-				case 'warnings.turnIndicationRearLeftWarning':
-					$logicalIds[] = 'al_turnIndication_rl';
-					break;
-				case 'warnings.turnIndicationRearRightWarning':
-					$logicalIds[] = 'al_turnIndication_rr';
-					break;
-				case 'location.location':
-					$logicalIds[] = 'position';
-					break;
-				case 'statistics.distanceToEmptyBattery':
-					$logicalIds[] = 'electricAutonomy';
-					break;
-				case 'statistics.distanceToEmptyTank':
-					$logicalIds[] = 'heatAutonomy';
-					break;
-				case 'tyre.frontLeft':
-					$logicalIds[] = 'tyre_fl';
-					break;
-				case 'tyre.frontRight':
-					$logicalIds[] = 'tyre_fr';
-					break;
-				case 'tyre.rearLeft':
-					$logicalIds[] = 'tyre_rl';
-					break;
-				case 'tyre.rearRight':
-					$logicalIds[] = 'tyre_rr';
-					break;
-				case 'windows.frontLeftWindow':
-					$logicalIds[] = 'win_fl_closed';
-					$logicalIds[] = 'win_fl_open';
-					$logicalIds[] = 'win_fl_state';
-					break;
-				case 'windows.frontRightWindow':
-					$logicalIds[] = 'win_fr_closed';
-					$logicalIds[] = 'win_fr_open';
-					$logicalIds[] = 'win_fr_state';
-					break;
-				case 'windows.rearLeftWindow':
-					$logicalIds[] = 'win_rl_closed';
-					$logicalIds[] = 'win_rl_open';
-					$logicalIds[] = 'win_rl_state';
-					break;
-				case 'windows.rearRightWindow':
-					$logicalIds[] = 'win_rr_closed';
-					$logicalIds[] = 'win_rr_open';
-					$logicalIds[] = 'win_rr_state';
-					break;
-				case 'windows.sunroof':
-					$logicalIds[] = 'roof_closed';
-					$logicalIds[] = 'roof_open';
-					$logicalIds[] = 'roof_state';
-					break;
-				default:
-					log::add('volvocars','debug',"│ " . sprintf(__("%s.%s inconnu",__FILE__),$endpoint, $key));
+
+			if (isset($endpoint2cmd[$endpoint.".".$key])) {
+				$logicalIds = $endpoint2cmd[$endpoint.".".$key] ;
+			} else {
+
+				switch ($endpoint.".".$key) {
+					case 'doors.centralLock':
+						$logicalIds[] = 'locked';
+						break;
+					case 'doors.frontLeftDoor':
+						$logicalIds[] = 'door_fl_closed';
+						$logicalIds[] = 'door_fl_open';
+						$logicalIds[] = 'door_fl_state';
+						break;
+					case 'doors.frontRightDoor':
+						$logicalIds[] = 'door_fr_closed';
+						$logicalIds[] = 'door_fr_open';
+						$logicalIds[] = 'door_fr_state';
+						break;
+					case 'doors.rearLeftDoor':
+						$logicalIds[] = 'door_rl_closed';
+						$logicalIds[] = 'door_rl_open';
+						$logicalIds[] = 'door_rl_state';
+						break;
+					case 'doors.rearRightDoor':
+						$logicalIds[] = 'door_rr_closed';
+						$logicalIds[] = 'door_rr_open';
+						$logicalIds[] = 'door_rr_state';
+						break;
+					case 'doors.hood':
+						$logicalIds[] = 'hood_closed';
+						$logicalIds[] = 'hood_open';
+						$logicalIds[] = 'hood_state';
+						break;
+					case 'doors.tailgate':
+						$logicalIds[] = 'tail_closed';
+						$logicalIds[] = 'tail_open';
+						$logicalIds[] = 'tail_state';
+						break;
+					case 'doors.tankLid':
+						$logicalIds[] = 'tank_closed';
+						$logicalIds[] = 'tank_open';
+						$logicalIds[] = 'tank_state';
+						break;
+					case 'location.location':
+						$logicalIds[] = 'position';
+						break;
+					case 'windows.frontLeftWindow':
+						$logicalIds[] = 'win_fl_closed';
+						$logicalIds[] = 'win_fl_open';
+						$logicalIds[] = 'win_fl_state';
+						break;
+					case 'windows.frontRightWindow':
+						$logicalIds[] = 'win_fr_closed';
+						$logicalIds[] = 'win_fr_open';
+						$logicalIds[] = 'win_fr_state';
+						break;
+					case 'windows.rearLeftWindow':
+						$logicalIds[] = 'win_rl_closed';
+						$logicalIds[] = 'win_rl_open';
+						$logicalIds[] = 'win_rl_state';
+						break;
+					case 'windows.rearRightWindow':
+						$logicalIds[] = 'win_rr_closed';
+						$logicalIds[] = 'win_rr_open';
+						$logicalIds[] = 'win_rr_state';
+						break;
+					case 'windows.sunroof':
+						$logicalIds[] = 'roof_closed';
+						$logicalIds[] = 'roof_open';
+						$logicalIds[] = 'roof_state';
+						break;
+					default:
+						log::add('volvocars','warning',"│ " . sprintf(__("%s.%s inconnu",__FILE__),$endpoint, $key));
+				}
 			}
 			foreach ($logicalIds as $logicalId) {
 				$cmd = $this->getCmd('info',$logicalId);
@@ -896,6 +903,9 @@ class volvocars extends eqLogic {
 				switch ($logicalId) {
 					case 'locked':
 						$value = $infos[$key]['value'] == 'LOCKED' ? 1 : 0;
+						break;
+					case 'position':
+						$value = $infos[$key]['coordinates'][1] . ',' . $infos[$key]['coordinates'][0];
 						break;
 					case 'door_fl_closed':
 					case 'door_fr_closed':
@@ -935,10 +945,9 @@ class volvocars extends eqLogic {
 		log::add("volvocars","info","└OK");
 	}
 
-	public function refresh() {
-		$this->retrieveInfos();
-	}
-
+	/*
+	 * Interrogation de tous les endpoint de l'API pour remonter les infos
+	 */
 	public function retrieveInfos() {
 		$this->getInfosFromApi('doors');
 		$this->getInfosFromApi('location');
@@ -951,12 +960,44 @@ class volvocars extends eqLogic {
 		$this->getInfosFromApi('warnings');
 	}
 
+	/*
+	 * Retourne un filedescriptor utiliser pour la gestion de lock
+	 */
+	private function getFileDescriptorLock() {
+		if (!isset($this->_lockFd) || $this->_lockFd === null) {
+			$this->_lockFd = fopen(jeedom::getTmpFolder() . '/volvocars_' . $this->getId() . ".lock", 'w');
+		}
+		return $this->_lockFd;
+	}
+
+	/*
+	 * Prise d'un lock exclusif
+	 */
+	private function getLock() {
+		$return = flock($this->getFileDescriptorLock(), LOCK_EX);
+		return $return;
+	}
+
+	/*
+	 * Libération du lock
+	 */
+	private function releaseLock() {
+		$return = flock($this->getFileDescriptorLock(), LOCK_UN);
+		return $return;
+	}
+
+	/*
+	 * Ajout d'un message d'aides du panel
+	 * Un lock permet de s'assurer qu'un seul process lit, modifie pour enregistre
+	 * les messages
+	 */
 	public function addWidgetMessage ($cible, $id, $message) {
 		$cmd = $this->getCmd("info","msg2widget");
 		if (! is_object($cmd)) {
 			log::add("volvocars","warning",sprintf(__("la commande %s est introuvable",__FILE__),'msg2widget'));
 			return;
 		}
+		$this->getLock();
 		$messages = json_decode($cmd->execCmd(),true);
 		if (!is_array($messages)) {
 			$messages = array();
@@ -966,27 +1007,71 @@ class volvocars extends eqLogic {
 		}
 		$messages[$cible][$id] = $message;
 		$this->checkAndUpdateCmd('msg2widget',json_encode($messages));
+		$this->releaseLock();
+		return;
 	}
 
+	/*
+	 * Retrait d'un message d'aides du panel
+	 * Un lock permet de s'assurer qu'un seul process lit, modifie pour enregistre
+	 * les messages
+	 */
 	public function rmWidgetMessage ($cible, $id) {
 		$cmd = $this->getCmd("info","msg2widget");
 		if (! is_object($cmd)) {
 			log::add("volvocars","warning",sprintf(__("la commande %s est introuvable",__FILE__),'msg2widget'));
 			return;
 		}
+		$this->getLock();
 		$messages = json_decode($cmd->execCmd(),true);
 		if (!is_array($messages)) {
+			$this->releaseLock();
 			return;
 		}
 		if (!isset($messages[$cible])) {
+			$this->releaseLock();
 			return;
 		}
 		if (isset($messages[$cible][$id])) {
 			unset($messages[$cible][$id]);
 			$this->checkAndUpdateCmd('msg2widget',json_encode($messages));
 		}
+		$this->releaseLock();
 		return;
 	}
+
+	/*
+	 * Suppression de messages pour les commandes inexistantes
+	 */
+	public function cleanWidgetMessages() {
+		$cmd = $this->getCmd("info","msg2widget");
+		if (! is_object($cmd)) {
+			log::add("volvocars","warning",sprintf(__("la commande %s est introuvable",__FILE__),'msg2widget'));
+			return;
+		}
+		$this->getLock();
+		$messages = json_decode($cmd->execCmd(),true);
+		if (!is_array($messages)) {
+			$this->releaseLock();
+			return;
+		}
+		foreach (array_keys($messages) as $cible){
+			if (is_array($messages[$cible])) {
+				foreach(array_keys($messages[$cible]) as $id) {
+					$cmd = cmd::byId($id);
+					if (!is_object($cmd)){
+						unset ($messages[$cible][$id]);
+					}
+				}
+				if (count($messages[$cible]) == 0) {
+					unset ($messages[$cible]);
+				}
+			}
+		}
+		$this->checkAndUpdateCmd('msg2widget',json_encode($messages));
+		$this->releaseLock();
+	}
+
 	/*
 	* Widget pour le panel
 	*/
@@ -1003,7 +1088,6 @@ class volvocars extends eqLogic {
 		}
 
 		$replace = $this->preToHtml($_version);
-		log::add("volvocars","debug",$this->getId() . "  ". print_r($replace,true));
 		if (!is_array($replace)){
 			return $replace;
 		}
@@ -1021,16 +1105,6 @@ class volvocars extends eqLogic {
 		$replace['#site2_active'.$this->getId().'#'] = $this->getConfiguration('site2_active',0);
 		$replace['#site1_limit'.$this->getId().'#'] = $this->getConfiguration('site1_limit',0);
 		$replace['#site2_limit'.$this->getId().'#'] = $this->getConfiguration('site2_limit',0);
-
-		//---- MESSAGES INFO PAR DEFAUT
-		//$replace['#div_al_oil_defaultMsg#'] = __("Niveau d'huile OK",__FILE__);
-		//$replace['#div_al_coolant_defaultMsg#'] = __("Liquide de refroidissement OK",__FILE__);
-		//$replace['#div_al_brake_defaultMsg#'] = __("Liquide freins OK",__FILE__);
-		//$replace['#div_al_wash_defaultMsg#'] = __("Niveau lave-vitre OK",__FILE__);
-		//$replace['#div_al_heatautonomy_defaultMsg#'] = __("Autonomie thermique",__FILE__);
-		//$replace['#div_al_electricautonomy_defaultMsg#'] = __("Autonomie électrique",__FILE__);
-		//$replace['#div_al_tyre_defaultMsg#'] = __("Pression pneus OK",__FILE__);
-		//$replace['#div_al_light_defaultMsg#'] = __("Feux OK",__FILE__);
 
 		//---- COMMANDES ID et VALUE
 		$mapping = array(
@@ -1081,6 +1155,9 @@ class volvocars extends eqLogic {
 		return $this->postToHtml($_version, template_replace($replace, getTemplate('core',$_version,$template, 'volvocars')));
 	}
 
+	/*
+	 * Retourne la position actuelle du véhicule
+	 */
 	public function getPosition(){
 		$position = array('lat' => '0.000000', 'long' => '0.000000');
 		$cmd = $this->getCmd('info','position');
@@ -1095,10 +1172,6 @@ class volvocars extends eqLogic {
 	}
 
 	/*	 * **********************Getteur Setteur*************************** */
-
-	public function setIsEnable($_isEnable) {
-		parent::setIsEnable($_isEnable);
-	}
 
 	public function setVin($_vin){
 		$this->setLogicalId($_vin);
@@ -1148,6 +1221,19 @@ class volvocarsCmd extends cmd {
 	*/
 
 	public function preSave(){
+		$logicalIds = $this->getConfiguration('dependTo');
+		if (!is_array($logicalIds)) {
+			$logicalIds = array ($logicalIds);
+		}
+		$value = '';
+		foreach ($logicalIds as $logicalId) {
+			$cmd = $this->getEqLogic()->getCmd('info',$logicalId);
+			if (is_object($cmd)) {
+				$value .= '#' . $cmd->getId() . '#';
+			}
+		}
+		$this->setValue($value);
+
 		switch ($this->getLogicalId()) {
 			case 'distance_site1':
 			case 'distance_site2':
@@ -1168,66 +1254,19 @@ class volvocarsCmd extends cmd {
 					$this->setValue("#" . $distanceCmd->getId() . '#');
 				}
 				break;
-			case 'al_electricAutonomy':
-				$autonomyCmd = $this->getEqLogic()->getCmd('info','electricAutonomy');
-				if (is_object($autonomyCmd)) {
-					$this->setValue("#" . $autonomyCmd->getId() . '#');
-				}
-				break;
-			case 'al_heatAutonomy':
-				$autonomyCmd = $this->getEqLogic()->getCmd('info','heatAutonomy');
-				if (is_object($autonomyCmd)) {
-					$this->setValue("#" . $autonomyCmd->getId() . '#');
-				}
-				break;
-			case 'al_tyre':
-				$values = '';
-				foreach (['tyre_fl', 'tyre_fr', 'tyre_rl', 'tyre_rr'] as $tyre) {
-					$tyreCmd = $this->getEqLogic()->getCmd('info', $tyre);
-					if (is_object($tyreCmd)) {
-						$values .= "#".$tyreCmd->getId()."#";
-					}
-				}
-				$this->setValue($values);
-				break;
-			case 'al_light':
-				$values = '';
-				foreach ([
-					'al_brakeLight_c',
-					'al_brakeLight_l',
-					'al_brakeLight_r',
-					'al_daytimeRunningLight_l',
-					'al_daytimeRunningLight_r',
-					'al_fogLight_f',
-					'al_fogLight_r',
-					'al_hazardLights',
-					'al_highBeam_l',
-					'al_highBeam_r',
-					'al_lowBeam_l',
-					'al_lowBeam_r',
-					'al_positionLight_fl',
-					'al_positionLight_fr',
-					'al_positionLight_rl',
-					'al_positionLight_rr',
-					'al_registrationPlateLight',
-					'al_reverseLights',
-					'al_sideMarkLights',
-					'al_turnIndication_fl',
-					'al_turnIndication_fr',
-					'al_turnIndication_rl',
-					'al_turnIndication_rr'
-				] as $light) {
-					$lightCmd = $this->getEqLogic()->getCmd('info', $light);
-					if (is_object($lightCmd)) {
-						$values .= "#".$lightCmd->getId()."#";
-					}
-				}
-				$this->setValue($values);
-				break;
 		}
 	}
 
 	public function postInsert() {
+		$logicalIds = $this->getConfiguration('dependencies');
+		if ($logicalIds != '') {
+			foreach (explode(',',$logicalIds) as $logicalId) {
+				$cmd = $this->getEqLogic()->getCmd('info',$logicalId);
+				if (is_object($cmd)) {
+					$cmd->save();
+				}
+			}
+		}
 		switch ($this->getLogicalId()) {
 			case 'position':
 				foreach (['distance_site1', 'distance_site2'] as $logicalId) {
@@ -1249,55 +1288,6 @@ class volvocarsCmd extends cmd {
 					$cmd->save();
 				}
 				break;
-			case 'electricAutonomy':
-				$cmd = $this->getEqLogic()->getCmd('info','al_electricAutonomy');
-				if (is_object($cmd)) {
-					$cmd->save();
-				}
-				break;
-			case 'heatAutonomy':
-				$cmd = $this->getEqLogic()->getCmd('info','al_heatAutonomy');
-				if (is_object($cmd)) {
-					$cmd->save();
-				}
-				break;
-			case 'tyre_fl':
-			case 'tyre_fr':
-			case 'tyre_rl':
-			case 'tyre_rr':
-				$cmd = $this->getEqLogic()->getCmd('info','al_tyre');
-				if (is_object($cmd)) {
-					$cmd->save();
-				}
-				break;
-			case 'al_brakeLight_c':
-			case 'al_brakeLight_l':
-			case 'al_brakeLight_r':
-			case 'al_daytimeRunningLight_l':
-			case 'al_daytimeRunningLight_r':
-			case 'al_fogLight_f':
-			case 'al_fogLight_r':
-			case 'al_hazardLights':
-			case 'al_highBeam_l':
-			case 'al_highBeam_r':
-			case 'al_lowBeam_l':
-			case 'al_lowBeam_r':
-			case 'al_positionLight_fl':
-			case 'al_positionLight_fr':
-			case 'al_positionLight_rl':
-			case 'al_positionLight_rr':
-			case 'al_registrationPlateLight':
-			case 'al_reverseLights':
-			case 'al_sideMarkLights':
-			case 'al_turnIndication_fl':
-			case 'al_turnIndication_fr':
-			case 'al_turnIndication_rl':
-			case 'al_turnIndication_rr':
-				$cmd = $this->getEqLogic()->getCmd('info','al_light');
-				if (is_object($cmd)) {
-					$cmd->save();
-				}
-				break;
 		}
 	}
 
@@ -1305,221 +1295,280 @@ class volvocarsCmd extends cmd {
 	public function execute($_options = array()) {
 		$car = $this->getEqLogic();
 		$logicalId = $this->getLogicalId();
-		switch ($logicalId) {
-			case 'refresh':
-				$car->refresh();
-				break;
-			case 'distance_site1':
-			case 'distance_site2':
-				switch($logicalId) {
-					case 'distance_site1':
-						if ($car->getConfiguration('site1_active') != 1) {
-							return '-1';
-						}
-						switch ($car->getConfiguration('site1_source')) {
-							case 'jeedom':
-								$siteLat = config::byKey('info::latitude','core',0);
-								$siteLong = config::byKey('info::longitude','core',0);
-								break;
-							case 'manual':
-							case 'vehicle':
-								$siteLat = $car->getConfiguration('site1_lat');
-								$siteLong = $car->getConfiguration('site1_long');
-								break;
-							default:
-								$siteLat = 0;
-								$siteLong = 0;
-						}
-						if ($siteLat == 0 && $siteLong == 0) {
-							log::add("volvocars","warning",__("Les coordonées GPS du site 1 ne sont pas définies",__FILE__));
-							return '-1';
-						}
-						break;
-					case 'distance_site2':
-						if ($car->getConfiguration('site2_active') != 1) {
-							return '-1';
-						}
-						switch ($car->getConfiguration('site2_source')) {
-							case 'jeedom':
-								$siteLat = config::byKey('info::latitude','core',0);
-								$siteLong = config::byKey('info::longitude','core',0);
-								break;
-							case 'manual':
-							case 'vehicle':
-								$siteLat = $car->getConfiguration('site2_lat');
-								$siteLong = $car->getConfiguration('site2_long');
-								break;
-							default:
-								$siteLat = 0;
-								$siteLong = 0;
-						}
-						if ($siteLat == 0 && $siteLong == 0) {
-							log::add("volvocars","warning",__("Les coordonées GPS du site 2 ne sont pas définies",__FILE__));
-							return '-1';
-						}
-						break;
-				}
-				$position = $car->getPosition();
-				if ($position['lat'] == 0 && $position['long'] == 0) {
-					log::add("volvocars","warning",__("Les coordonées GPS de la position du véhicule ne sont pas définies",__FILE__));
-					return '-1';
-				}
-				$earth_radius = 6371;
-				log::add("volvocars","info",$logicalId);
-				log::add("volvocars","info","siteLat:  ". $siteLat);
-				log::add("volvocars","info","siteLong: ". $siteLong);
-				log::add("volvocars","info","PosLat:   ". $position['lat']);
-				log::add("volvocars","info","PosLong:  ". $position['long']);
-
-				$rla1 = deg2rad( floatval($siteLat) );
-				$rlo1 = deg2rad( floatval($siteLong) );
-				$rla2 = deg2rad( floatval($position['lat']) );
-				$rlo2 = deg2rad( floatval($position['long']) );
-				$dlo = ($rlo2 - $rlo1) / 2;
-				$dla = ($rla2 - $rla1) / 2;
-				$a = (sin($dla) * sin($dla)) + cos($rla1) * cos($rla2) * (sin($dlo) * sin($dlo));
-				$d = 2 * atan2(sqrt($a), sqrt(1 - $a));
-				return round(($earth_radius * $d * 1000), 1);
-				break;
-			case 'presence_site1':
-				if ($car->getConfiguration('site1_active') != 1) {
-					return '';
-				}
-				$distanceCmd = $car->getCmd('info','distance_site1');
-				if (! is_object($distanceCmd)) {
-					log::add("volvocars","error",__("La commande de distance pour le site 1 est introuvable",__FILE__));
-					return '';
-				}
-				$distance = $distanceCmd->execCmd();
-				if ($distance < 0) {
-					log::add("volvocars","error",__("La distance du site 1 est indéterminée",__FILE__));
-					return '';
-				}
-				$limite = $car->getConfiguration('site1_limit', '');
-				if (! is_numeric($limite)) {
-					log::add("volvocars","error",__("La distance limite pour le site 1 est indéterminée",__FILE__));
-					return '';
-				}
-				if ($distance <= $limite) {
-					return 1;
-				} else {
-					return 0;
-				}
-				break;
-			case 'presence_site2':
-				if ($car->getConfiguration('site2_active') != 1) {
-					return '';
-				}
-				$distanceCmd = $car->getCmd('info','distance_site2');
-				if (! is_object($distanceCmd)) {
-					log::add("volvocars","error",__("La commande de distance pour le site 2 est introuvable",__FILE__));
-					return '';
-				}
-				$distance = $distanceCmd->execCmd();
-				if ($distance < 0) {
-					log::add("volvocars","error",__("La distance du site 2 est indéterminée",__FILE__));
-					return '';
-				}
-				$limite = $car->getConfiguration('site2_limit', '');
-				if (! is_numeric($limite)) {
-					log::add("volvocars","error",__("La distance limite pour le site 2 est indéterminée",__FILE__));
-					return '';
-				}
-				if ($distance <= $limite) {
-					return 1;
-				} else {
-					return 0;
-				}
-				break;
-			case 'al_electricAutonomy':
-				if ($car->getConfiguration('electricEngine') != 1) {
-					return 0;
-				}
-				$limit = $car->getConfiguration('electricAutonomyLimit');
-				$autonomyCmd = $car->getCmd('info','electricAutonomy');
-				if (! is_object($autonomyCmd)) {
-					return 0;
-				}
-				if ($autonomyCmd->execCmd() < $limit) {
-					return 1;
-				}
-				return 0;
-				break;
-			case 'al_heatAutonomy':
-				if ($car->getConfiguration('heatEngine') != 1) {
-					return 0;
-				}
-				$limit = $car->getConfiguration('heatAutonomyLimit');
-				$autonomyCmd = $car->getCmd('info','heatAutonomy');
-				if (! is_object($autonomyCmd)) {
-					return 0;
-				}
-				if ($autonomyCmd->execCmd() < $limit) {
-					return 1;
-				}
-				return 0;
-				break;
-			case 'al_tyre':
-				$value = 0;
-				foreach (['tyre_fl', 'tyre_fr', 'tyre_rl', 'tyre_rr'] as $tyre) {
-					$tyreCmd = $this->getEqLogic()->getCmd('info', $tyre);
-					if (is_object($tyreCmd)) {
-						$tyreValue = $tyreCmd->execCmd();
-						$value = $tyreValue > $value ? $tyreValue : $value;
+		if ($this->getType() == 'action') {
+			switch ($logicalId) {
+				case 'refresh':
+					$car->retrieveInfos();
+					break;
+				case 'lock':
+				case 'lock-reduced':
+				case 'unlock':
+					$car->getAccount()->sendCommand($this->getLogicalId(),$car->getVin());
+					$car->getInfosFromApi('doors');
+					break;
+				case 'clim_start':
+				case 'clim_stop':
+					$car->getAccount()->sendCommand($this->getLogicalId(),$car->getVin());
+					break;
+				default:
+					log::add("volvocars","error",sprintf(__('Exécution de la commande action "%s" non définie',__FILE__),$this->getLogicalId()));
+					return false;
+			}
+			return;
+		}
+		if ($this->getType() == 'info') {
+			switch ($logicalId) {
+				case 'distance_site1':
+				case 'distance_site2':
+					switch($logicalId) {
+						case 'distance_site1':
+							if ($car->getConfiguration('site1_active') != 1) {
+								return '-1';
+							}
+							switch ($car->getConfiguration('site1_source')) {
+								case 'jeedom':
+									$siteLat = config::byKey('info::latitude','core',0);
+									$siteLong = config::byKey('info::longitude','core',0);
+									break;
+								case 'manual':
+								case 'vehicle':
+									$siteLat = $car->getConfiguration('site1_lat');
+									$siteLong = $car->getConfiguration('site1_long');
+									break;
+								default:
+									$siteLat = 0;
+									$siteLong = 0;
+							}
+							if ($siteLat == 0 && $siteLong == 0) {
+								log::add("volvocars","warning",__("Les coordonées GPS du site 1 ne sont pas définies",__FILE__));
+								return '-1';
+							}
+							break;
+						case 'distance_site2':
+							if ($car->getConfiguration('site2_active') != 1) {
+								return '-1';
+							}
+							switch ($car->getConfiguration('site2_source')) {
+								case 'jeedom':
+									$siteLat = config::byKey('info::latitude','core',0);
+									$siteLong = config::byKey('info::longitude','core',0);
+									break;
+								case 'manual':
+								case 'vehicle':
+									$siteLat = $car->getConfiguration('site2_lat');
+									$siteLong = $car->getConfiguration('site2_long');
+									break;
+								default:
+									$siteLat = 0;
+									$siteLong = 0;
+							}
+							if ($siteLat == 0 && $siteLong == 0) {
+								log::add("volvocars","warning",__("Les coordonées GPS du site 2 ne sont pas définies",__FILE__));
+								return '-1';
+							}
+							break;
 					}
-				}
-				return $value;
-				break;
-			case 'al_light':
-				$value = 0;
-				foreach ([
-					'al_brakeLight_c',
-					'al_brakeLight_l',
-					'al_brakeLight_r',
-					'al_daytimeRunningLight_l',
-					'al_daytimeRunningLight_r',
-					'al_fogLight_f',
-					'al_fogLight_r',
-					'al_hazardLights',
-					'al_highBeam_l',
-					'al_highBeam_r',
-					'al_lowBeam_l',
-					'al_lowBeam_r',
-					'al_positionLight_fl',
-					'al_positionLight_fr',
-					'al_positionLight_rl',
-					'al_positionLight_rr',
-					'al_registrationPlateLight',
-					'al_reverseLights',
-					'al_sideMarkLights',
-					'al_turnIndication_fl',
-					'al_turnIndication_fr',
-					'al_turnIndication_rl',
-					'al_turnIndication_rr'
-				] as $light) {
-					$lightCmd = $this->getEqLogic()->getCmd('info', $light);
-					if (is_object($lightCmd)) {
-						if ($lightCmd->execCmd() == 1) {
-							$value = 1;
+					$position = $car->getPosition();
+					if ($position['lat'] == 0 && $position['long'] == 0) {
+						log::add("volvocars","warning",__("Les coordonées GPS de la position du véhicule ne sont pas définies",__FILE__));
+						return '-1';
+					}
+					$earth_radius = 6371;
+					log::add("volvocars","info",$logicalId);
+					log::add("volvocars","info","siteLat:  ". $siteLat);
+					log::add("volvocars","info","siteLong: ". $siteLong);
+					log::add("volvocars","info","PosLat:   ". $position['lat']);
+					log::add("volvocars","info","PosLong:  ". $position['long']);
+
+					$rla1 = deg2rad( floatval($siteLat) );
+					$rlo1 = deg2rad( floatval($siteLong) );
+					$rla2 = deg2rad( floatval($position['lat']) );
+					$rlo2 = deg2rad( floatval($position['long']) );
+					$dlo = ($rlo2 - $rlo1) / 2;
+					$dla = ($rla2 - $rla1) / 2;
+					$a = (sin($dla) * sin($dla)) + cos($rla1) * cos($rla2) * (sin($dlo) * sin($dlo));
+					$d = 2 * atan2(sqrt($a), sqrt(1 - $a));
+					return round(($earth_radius * $d * 1000), 1);
+					break;
+				case 'presence_site1':
+					if ($car->getConfiguration('site1_active') != 1) {
+						return '';
+					}
+					$distanceCmd = $car->getCmd('info','distance_site1');
+					if (! is_object($distanceCmd)) {
+						log::add("volvocars","error",__("La commande de distance pour le site 1 est introuvable",__FILE__));
+						return '';
+					}
+					$distance = $distanceCmd->execCmd();
+					if ($distance < 0) {
+						log::add("volvocars","error",__("La distance du site 1 est indéterminée",__FILE__));
+						return '';
+					}
+					$limite = $car->getConfiguration('site1_limit', '');
+					if (! is_numeric($limite)) {
+						log::add("volvocars","error",__("La distance limite pour le site 1 est indéterminée",__FILE__));
+						return '';
+					}
+					if ($distance <= $limite) {
+						return 1;
+					} else {
+						return 0;
+					}
+					break;
+				case 'presence_site2':
+					if ($car->getConfiguration('site2_active') != 1) {
+						return '';
+					}
+					$distanceCmd = $car->getCmd('info','distance_site2');
+					if (! is_object($distanceCmd)) {
+						log::add("volvocars","error",__("La commande de distance pour le site 2 est introuvable",__FILE__));
+						return '';
+					}
+					$distance = $distanceCmd->execCmd();
+					if ($distance < 0) {
+						log::add("volvocars","error",__("La distance du site 2 est indéterminée",__FILE__));
+						return '';
+					}
+					$limite = $car->getConfiguration('site2_limit', '');
+					if (! is_numeric($limite)) {
+						log::add("volvocars","error",__("La distance limite pour le site 2 est indéterminée",__FILE__));
+						return '';
+					}
+					if ($distance <= $limite) {
+						return 1;
+					} else {
+						return 0;
+					}
+					break;
+				case 'al_brake_fluid':
+					$cmd = $this->getEqLogic()->getCmd('info','brake_fluid_level');
+					if (is_object($cmd)) {
+						switch ($cmd->execCmd()) {
+							case 'TOO_LOW':
+								return 1;
+						}
+					}
+					return 0;
+					break;
+				case 'al_coolant':
+					$cmd = $this->getEqLogic()->getCmd('info','coolant_level');
+					if (is_object($cmd)) {
+						switch ($cmd->execCmd()) {
+							case 'TOO_LOW':
+								return 1;
+						}
+					}
+					return 0;
+					break;
+				case 'al_oil':
+					$cmd = $this->getEqLogic()->getCmd('info','oil_level');
+					if (is_object($cmd)) {
+						switch ($cmd->execCmd()) {
+							case 'SERVICE_REQUIRED':
+							case 'TOO_LOW':
+							case 'TOO_HIGH':
+								return 1;
+						}
+					}
+					return 0;
+					break;
+				case 'al_washer_fluid':
+					$cmd = $this->getEqLogic()->getCmd('info','washer_fluid_level');
+					if (is_object($cmd)) {
+						switch ($cmd->execCmd()) {
+							case 'TOO_LOW':
+								return 1;
+						}
+					}
+					return 0;
+					break;
+				case 'al_electricAutonomy':
+					if ($car->getConfiguration('electricEngine') != 1) {
+						return 0;
+					}
+					$limit = $car->getConfiguration('electricAutonomyLimit');
+					$autonomyCmd = $car->getCmd('info','electricAutonomy');
+					if (! is_object($autonomyCmd)) {
+						return 0;
+					}
+					if ($autonomyCmd->execCmd() < $limit) {
+						return 1;
+					}
+					return 0;
+					break;
+				case 'al_heatAutonomy':
+					if ($car->getConfiguration('heatEngine') != 1) {
+						return 0;
+					}
+					$limit = $car->getConfiguration('heatAutonomyLimit');
+					$autonomyCmd = $car->getCmd('info','heatAutonomy');
+					if (! is_object($autonomyCmd)) {
+						return 0;
+					}
+					if ($autonomyCmd->execCmd() < $limit) {
+						return 1;
+					}
+					return 0;
+					break;
+				case 'al_tyre':
+					$value = 0;
+					foreach (['tyre_fl', 'tyre_fr', 'tyre_rl', 'tyre_rr'] as $tyre) {
+						$tyreCmd = $this->getEqLogic()->getCmd('info', $tyre);
+						if (is_object($tyreCmd)) {
+							switch ($tyreCmd->execCmd()) {
+								case 'VERY_LOW_PRESSURE':
+								case 'LOW_PRESSURE':
+								case 'HIGH_PRESSURE':
+									$value = 1;
+							}
+						}
+						if ($value == 1) {
 							break;
 						}
 					}
-				}
-				return $value;
-				break;
-			case 'lock':
-			case 'lock-reduced':
-			case 'unlock':
-				$car->getAccount()->sendCommand($this->getLogicalId(),$car->getVin());
-				$car->getInfosFromApi('doors');
-				break;
-			case 'clim_start':
-			case 'clim_stop':
-				$car->getAccount()->sendCommand($this->getLogicalId(),$car->getVin());
-				break;
-			default:
-				log::add("volvocars","error",sprintf(__('Exécution de la commande "%s" non définie',__FILE__),$this->getLogicalId()));
-				return false;
+					return $value;
+					break;
+				case 'al_light':
+					$value = 0;
+					foreach ([
+						'al_brakeLight_c',
+						'al_brakeLight_l',
+						'al_brakeLight_r',
+						'al_daytimeRunningLight_l',
+						'al_daytimeRunningLight_r',
+						'al_fogLight_f',
+						'al_fogLight_r',
+						'al_hazardLights',
+						'al_highBeam_l',
+						'al_highBeam_r',
+						'al_lowBeam_l',
+						'al_lowBeam_r',
+						'al_positionLight_fl',
+						'al_positionLight_fr',
+						'al_positionLight_rl',
+						'al_positionLight_rr',
+						'al_registrationPlateLight',
+						'al_reverseLights',
+						'al_sideMarkLights',
+						'al_turnIndication_fl',
+						'al_turnIndication_fr',
+						'al_turnIndication_rl',
+						'al_turnIndication_rr'
+					] as $light) {
+						$lightCmd = $this->getEqLogic()->getCmd('info', $light);
+						if (is_object($lightCmd)) {
+							if ($lightCmd->execCmd() == 'FAILURE') {
+								$value = 1;
+								break;
+							}
+						}
+					}
+					return $value;
+					break;
+				default:
+					log::add("volvocars","error",sprintf(__('Exécution de la commande "%s" non définie',__FILE__),$this->getLogicalId()));
+					return false;
+			}
 		}
 	}
 
