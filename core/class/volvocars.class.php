@@ -23,7 +23,7 @@ require_once __DIR__  . '/volvoAccount.class.php';
 class volvocars extends eqLogic {
 	/*	 * *************************Attributs****************************** */
 
-	static $endpoints = [
+	static $_endpoints = [
 		"brakes",
 		"diagnostics",
 		"doors",
@@ -85,6 +85,13 @@ class volvocars extends eqLogic {
 			}
 		}
 		return $cars;
+	}
+
+	static public function cron() {
+		foreach (volvocars::byType(__CLASS__, true) as $car) {
+			log::add("volvocars","debug","cron pour : " . $car->getName());
+			$car->retrieveInfos();
+		}
 	}
 
 	/*
@@ -451,7 +458,7 @@ class volvocars extends eqLogic {
 
 		log::add("volvocars","info",$this->getName() . ": " . __("mise à jour des listeners",__FILE__));
 		$listeners = $this->getCarListeners();
-		foreach (array_merge(self::$endpoints, ['plugin']) as $endpoint) {
+		foreach (array_merge(self::$_endpoints, ['plugin']) as $endpoint) {
 			$function = "lh_" . $endpoint;
 			if (! isset($listeners[$function])) {
 				$listener = new listener();
