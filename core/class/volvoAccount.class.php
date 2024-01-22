@@ -24,6 +24,10 @@ class volvoAccount {
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/brakes",
 			"accept" => "application/json",
 		],
+		"details" => [
+			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s",
+			"accept" => "application/json",
+		],
 		"diagnostics" =>[
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/diagnostics",
 			"accept" => "application/json",
@@ -60,6 +64,10 @@ class volvoAccount {
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/tyres",
 			"accept" => "application/json",
 		],
+		"vehicles" =>[
+			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles",
+			"accept" => "application/json",
+		],
 		"warnings" =>[
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/warnings",
 			"accept" => "application/json",
@@ -72,10 +80,8 @@ class volvoAccount {
 
 	const OAUTH_URL = "https://volvoid.eu.volvocars.com/as/token.oauth2";
 
-	const VEHICLES_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles";
 	const COMMANDS_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands";
 
-	const VEHICLE_DETAILS_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s";
 
 	const CAR_LOCK_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands/lock";
 	const CAR_LOCK_REDUCED_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands/lock-reduced-guard";
