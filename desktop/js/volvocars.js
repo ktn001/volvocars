@@ -273,11 +273,11 @@ $('[data-l2key=electricEngine]').off('change').on('change', function() {
 /*
  * Action sur changement moteur thermique
  */
-$('[data-l2key=heatEngine]').off('change').on('change', function() {
+$('[data-l2key=fuelEngine]').off('change').on('change', function() {
 	if ($(this).value() == 1) {
-		$('#heatAutonomy').removeClass('hidden')
+		$('#fuelAutonomy').removeClass('hidden')
 	} else {
-		$('#heatAutonomy').addClass('hidden')
+		$('#fuelAutonomy').addClass('hidden')
 	}
 })
 

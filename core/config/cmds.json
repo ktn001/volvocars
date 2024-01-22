@@ -446,8 +446,48 @@
 			"forceReturnLineAfter" : "1"
 		}
 	},{
+		"logicalId": "odometer",
+		"name": "{{odometre}}",
+		"type": "info",
+		"subType" : "numeric",
+		"unite": "Km",
+		"configuration": {
+			"endpoint": "odometer"
+		},
+		"template": {
+			"dashboard": "core::badge",
+			"mobile": "core::badge"
+		}
+	},{
+		"logicalId": "fuel_amount",
+		"Name": "{{Carburant}}",
+		"type": "info",
+		"subType": "numeric",
+		"unite": "l",
+		"configuration": {
+			"endpoint": "fuel"
+		}
+	},{
+		"logicalId": "conso_fuel",
+		"name": "{{consommation carburant}}",
+		"type": "info",
+		"subType": "numeric",
+		"unite": "l/100km",
+		"configuration": {
+			"endpoint": "statistics"
+		}
+	},{
+		"logicalId": "conso_fuel_trip",
+		"name": "{{consommation carburant (parcours)}}",
+		"type": "info",
+		"subType": "numeric",
+		"unite": "l/100km",
+		"configuration": {
+			"endpoint": "statistics"
+		}
+	},{
 		"logicalId": "brake_fluid_level",
-		"name": "{{Niveau liquide de frein}}",
+		"name": "{{niveau liquide de frein}}",
 		"type": "info",
 		"subType": "string",
 		"configuration": {
@@ -464,7 +504,7 @@
 		}
 	},{
 		"logicalId": "coolant_level",
-		"name": "{{Niveau liquide refroidissement}}",
+		"name": "{{niveau liquide refroidissement}}",
 		"type": "info",
 		"subType": "string",
 		"configuration": {
@@ -507,7 +547,7 @@
 		}
 	},{
 		"logicalId": "al_washer_fluid",
-		"name": "{{alerte lave-vitre}}",
+		"name": "{{alerte lave-vitres}}",
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
@@ -784,6 +824,53 @@
 		"type": "info",
 		"subType": "numeric"
 	},{
+		"logicalId": "batteryLevel",
+		"name": "{{niveau charge batterie}}",
+		"type": "info",
+		"subType": "numeric",
+		"unite": "%",
+		"configuration": {
+			"endpoint": "recharge_status"
+		}
+	},{
+		"logicalId": "chargingStatus",
+		"name": "{{Etat de la charge}}",
+		"type": "info",
+		"subType": "string",
+		"configuration": {
+			"endpoint": "recharge_status"
+		}
+	},{
+		"logicalId": "chargingRemainingTime",
+		"name": "{{Temps de charge restant}}",
+		"type": "info",
+		"subType": "numeric",
+		"configuration": {
+			"endpoint": "recharge_status",
+			"dependencies" : "chargingEndTime"
+		},
+		"template": {
+			"dashboard": "core::badge",
+			"mobile": "core::badge"
+		}
+	},{
+		"logicalId": "chargingEndTime",
+		"name": "{{Heure fin de charge}}",
+		"type": "info",
+		"subType": "string",
+		"configuration": {
+			"dependTo": "chargingRemainingTime"
+		}
+	},{
+		"logicalId": "conso_electric",
+		"name": "{{consommation électrique}}",
+		"type": "info",
+		"subType": "numeric",
+		"unite": "kWh/100km",
+		"configuration": {
+			"endpoint": "statistics"
+		}
+	},{
 		"logicalId": "electricAutonomy",
 		"name": "{{Autonomie électrique}}",
 		"type": "info",
@@ -802,22 +889,22 @@
 			"dependTo": "electricAutonomy"
 		}
 	},{
-		"logicalId": "heatAutonomy",
+		"logicalId": "fuelAutonomy",
 		"name": "{{Autonomie thermique}}",
 		"type": "info",
 		"subType": "numeric",
 		"unite": "Km",
 		"configuration": {
 			"endpoint": "statistics",
-			"dependencies" : "al_heatAutonomy"
+			"dependencies" : "al_fuelAutonomy"
 		}
 	},{
-		"logicalId": "al_heatAutonomy",
+		"logicalId": "al_fuelAutonomy",
 		"name": "{{Autonomie thermique faible}}",
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"dependTo": "heatAutonomy"
+			"dependTo": "fuelAutonomy"
 		}
 	},{
 		"logicalId": "al_tyre",

@@ -17,6 +17,11 @@ include_file('desktop', 'panel', 'css', 'volvocars');
 <div class="row row-overflow" id="bckgd">
 
 	<div id="div_display_eqLogicList" class="col-lg-2 col-md-3 col-sm-4">
+		<div>
+		<img class="volvo_logo_black" src="/plugins/volvocars/desktop/img/volvo_black.svg">
+        <img class="volvo_logo_white" src="/plugins/volvocars/desktop/img/volvo_white.svg">
+		</div>
+
 		<span id="title"><i class="fas fa-car"></i> {{Mes véhicules}}</span>
 		<div class="bs-sidebar">
 			<ul id="ul_object" class="nav nav-list bs-sidenav">

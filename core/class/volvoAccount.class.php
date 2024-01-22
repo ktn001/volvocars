@@ -19,21 +19,63 @@
 
 class volvoAccount {
 
+	const ENDPOINT = [
+		"brakes" => [
+			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/brakes",
+			"accept" => "application/json",
+		],
+		"diagnostics" =>[
+			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/diagnostics",
+			"accept" => "application/json",
+		],
+		"doors" =>[
+			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/doors",
+			"accept" => "application/json",
+		],
+		"engine_diagnostics" =>[
+			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/engine",
+			"accept" => "application/json",
+		],
+		"fuel" =>[
+			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/fuel",
+			"accept" => "application/json",
+		],
+		"location" =>[
+			"url" => "https://api.volvocars.com/location/v1/vehicles/%s/location",
+			"accept" => "application/json",
+		],
+		"odometer" =>[
+			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/odometer",
+			"accept" => "application/json",
+		],
+		"recharge_status" =>[
+			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status",
+			"accept" => "application/vnd.volvocars.api.energy.vehicledata.v1+json",
+		],
+		"statistics" =>[
+			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/statistics",
+			"accept" => "application/json",
+		],
+		"tyre" =>[
+			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/tyres",
+			"accept" => "application/json",
+		],
+		"warnings" =>[
+			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/warnings",
+			"accept" => "application/json",
+		],
+		"windows" =>[
+			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/windows",
+			"accept" => "application/json",
+		],
+	];
+
 	const OAUTH_URL = "https://volvoid.eu.volvocars.com/as/token.oauth2";
 
 	const VEHICLES_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles";
 	const COMMANDS_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands";
 
 	const VEHICLE_DETAILS_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s";
-	const DOORS_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/doors";
-	const WINDOWS_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/windows";
-	const LOCATION_STATE_URL = "https://api.volvocars.com/location/v1/vehicles/%s/location";
-	const ENGINE_DIAGNOSTICS_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/engine";
-	const BRAKES_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/brakes";
-	const DIAGNOSTICS_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/diagnostics";
-	const STATISTICS_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/statistics";
-	const TYRE_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/tyres";
-	const WARNINGS_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/warnings";
 
 	const CAR_LOCK_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands/lock";
 	const CAR_LOCK_REDUCED_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands/lock-reduced-guard";
@@ -41,10 +83,7 @@ class volvoAccount {
 	const CLIMATE_START_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands/climatization-start";
 	const CLIMATE_STOP_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands/climatization-stop";
 
-	const RECHARGE_STATE_URL = "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status";
-	const ODOMETER_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/odometer";
 	const ENGINE_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/engine-status";
-	const FUEL_BATTERY_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/fuel";
 	const API_BACKEND_STATUS = "https://oip-dev-bff.euwest1.production.volvo.care/api/v1/backend-status";
 
 	private $id = -1;
@@ -245,7 +284,7 @@ class volvoAccount {
 		log::add("volvocars","info",sprintf(__("Token du compte %s raffraîchi!",__FILE__),$this->getName()));
 	}
 
-	public function session($url) {
+	public function session($url, $endpoint = null) {
 		if ($this->_token == null or $this->_token['expires_at'] <= time()) {
 			// Il n'y a pas de token ou il a expiré
 			$this->_token = null;
@@ -271,10 +310,15 @@ class volvoAccount {
 			}
 		}
 		$session = curl_init($url);
+		if ($endpoint === null) {
+			$accept = "application/json";
+		} else {
+			$accept = self::ENDPOINT[$endpoint]['accept'];
+		}
 		curl_setopt($session, CURLOPT_HTTPHEADER, [
 			"authorization: Bearer " . $this->_token['access_token'],
 			"vcc-api-key: f3eeea40752040b88125725896290bad",
-			"accept: application/json",
+			"accept: " . $accept,
 			"content-type: application/json"
 		]);
 		curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
@@ -300,46 +344,12 @@ class volvoAccount {
 	}
 
 	public function getInfos($endpoint, $vin=null) {
-		switch ($endpoint) {
-			case 'brakes':
-				$url = sprintf(self::BRAKES_URL,$vin);
-				break;
-			case 'commands':
-				$url = sprintf(self::COMMANDS_URL,$vin);
-				break;
-			case 'diagnostics':
-				$url = sprintf(self::DIAGNOSTICS_URL,$vin);
-				break;
-			case 'details':
-				$url = sprintf(self::VEHICLE_DETAILS_URL,$vin);
-				break;
-			case 'doors':
-				$url = sprintf(self::DOORS_STATE_URL,$vin);
-				break;
-			case 'engine_diagnostics':
-				$url = sprintf(self::ENGINE_DIAGNOSTICS_URL,$vin);
-				break;
-			case 'location':
-				$url = sprintf(self::LOCATION_STATE_URL,$vin);
-				break;
-			case 'statistics':
-				$url = sprintf(self::STATISTICS_URL,$vin);
-				break;
-			case 'tyre':
-				$url = sprintf(self::TYRE_STATE_URL,$vin);
-				break;
-			case 'vehicles':
-				$url = sprintf(self::VEHICLES_URL,$vin);
-				break;
-			case 'windows':
-				$url = sprintf(self::WINDOWS_STATE_URL,$vin);
-				break;
-			case 'warnings':
-				$url = sprintf(self::WARNINGS_URL,$vin);
-				break;
+		if (!isset (SELF::ENDPOINT[$endpoint])) {
+			log::add("volvocars","error",sprintf(__("URL pour le endpoint %s non définie",__FILE__),$endpoint));
 		}
+		$url = sprintf(self::ENDPOINT[$endpoint]['url'],$vin);
 		log::add("volvocars","debug","│ URL: " .$url);
-		$session = $this->session($url);
+		$session = $this->session($url, $endpoint);
 		$content = curl_exec($session);
 		log::add("volvocars","debug","│ ".$content);
 		$content = is_json($content,$content);

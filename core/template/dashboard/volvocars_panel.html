@@ -1,13 +1,11 @@
 <!--
  vim: tabstop=4 autoindent
 -->
-<div id="volvocars_panel_ID" class="eqLogic-widget eqLogic noResize volvo_panel" style="border:#border#; border-radius:#border-radius#; background-color:#background-color#; color:#color#; #style#;" data-eqType="#eqType#" data-translate-category="#translate_category#" data-category="#category#" data-tags="#tags#" data-eqLogic_id="#id#" data-eqLogic_uid="#uid#" data-version="panel">
+<div class="eqLogic-widget eqLogic noResize volvo_panel" style="border:#border#; border-radius:#border-radius#; background-color:#background-color#; color:#color#; #style#;" data-eqType="#eqType#" data-translate-category="#translate_category#" data-category="#category#" data-tags="#tags#" data-eqLogic_id="#id#" data-eqLogic_uid="#uid#" data-version="panel">
 
-	<a href="#eqLink#" id="titre">
-		<img class="volvo_logo_black " src="/plugins/volvocars/desktop/img/Volvo_logo_black.svg">
-		<img class="volvo_logo_white" src="/plugins/volvocars/desktop/img/Volvo_logo_white.svg">
-		<span> #name_display#</span>
-	</a>
+	<div id="carName">
+		<a href="#eqLink#" id="titre"><strong> #name_display# </strong></a>
+	</div>
 
 	<div class="container-fluid">
 		<div>
@@ -23,53 +21,131 @@
 
 				<!-- ALERTES -->
 				<div id='div_alertes' class="col-xs-12 tile ">
-					<span id='div_al_oil#id#' class="#heatEngineOnly#id##"><img></img></span>
-					<span id='div_al_coolant#id#' class="#heatEngineOnly#id##"><img></img></span>
+					<span id='div_al_oil#id#' class="#fuelEngineOnly#id##"><img></img></span>
+					<span id='div_al_coolant#id#' class="#fuelEngineOnly#id##"><img></img></span>
 					<span id='div_al_brake#id#'><img></img></span>
 					<span id='div_al_wash#id#'><img></img></span>
-					<span id='div_al_heatautonomy#id#' class='#heatEngineOnly#id##'><img></img></span>
-					<span id='div_al_electricautonomy#id#' class='#electricEngineOnly#id##'><img></img></span>
+					<span id='div_al_fuelautonomy#id#' class='#al_fuelEngineOnly#id##'><img></img></span>
+					<span id='div_al_electricautonomy#id#' class='#al_electricEngineOnly#id##'><img></img></span>
 					<span id='div_al_tyre#id#'><img></img></span>
 					<span id='div_al_light#id#'><img></img></span>
 				</div>
 
 				<!-- PRESENCES -->
-				<div class="col-xs-12 tile">
-					<div id="div_site1#id#" class="col-xs-6" style='padding:0px !important'>
-						<div id='name_site1_#id#' class="tile_titel"><span>#site1_name#id##</span></div>
-						<div id='presence_site1_#id#'><i class='Cmd#presence_site1_id#id##'></i></div>
-						<div id='distance_site1_#id#'><span class='Cmd#distance_site1_id#id##'>span1</span></div>
+				<div class="col-xs-8 tile">
+					<div class="col-xs-8 tile-title">{{Présences}}</div>
+					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-map-marker-alt"></i></div>
+					<div class="col-xs-12 tile-value-container">
+						<div id="div_site2#id#" class="col-xs-6">
+							<div id='presence_site1_#id#'><i class='Cmd#presence_site1_id#id##'></i></div>
+							<div id='name_site1_#id#' class="widget-title"><span>#site1_name#id##</span></div>
+							<div class="col-xs-12 tile-subvalue-container">
+								<div id='distance_site1_#id#'><span class='Cmd#distance_site1_id#id##'></span></div>
+							</div>
+						</div>
+						<div id="div_site2#id#" class="col-xs-6">
+							<div id='presence_site2_#id#'><i class='Cmd#presence_site2_id#id##'></i></div>
+							<div id='name_site2_#id#' class="widget-title"><span>#site2_name#id##</span></div>
+							<div class="col-xs-12 tile-subvalue-container">
+								<div id='distance_site2_#id#'><span class='Cmd#distance_site2_id#id##'></span></div>
+							</div>
+						</div>
 					</div>
-					<div id="div_site2#id#" class="col-xs-6" style='padding:0px !important'>
-						<div id='name_site2_#id#' class="tile_titel"><span>#site2_name#id##</span></div>
-						<div id='presence_site2_#id#'><i class='Cmd#presence_site2_id#id##'></i></div>
-						<div id='distance_site2_#id#'><span class='Cmd#distance_site2_id#id##'>span2</span></div>
+				</div>
+
+				<!-- ODOMETRE -->
+				<div class="col-xs-4 tile">
+					<div class="col-xs-8 tile-title">{{Kilométrage}}</div>
+					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-map-signs"></i></div>
+					<div class="col-xs-12 tile-value-container">
+						<span class="value#odometer_id#id## tile-value"></span>
+						<span class="unit#odometer_id#id## tile-unit"></span>
 					</div>
 				</div>
 
-				<div class="col-xs-4 tile">
-					text<br>
-					text<br>
-					text
+				<!-- CARBURANT -->
+				<div class="col-xs-4 tile #fuelEngineOnly#id##">
+					<div class="col-xs-8 tile-title">{{Niveau carburant}}</div>
+					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-gas-pump"></i></div>
+					<div class="col-xs-12 tile-value-container">
+						<span class="value#fuel_amount_id#id## tile-value"></span>
+						<span class="unit#fuel_amount_id#id## tile-unit"></span>
+					</div>
 				</div>
 
-				<div class="col-xs-4 tile">
-					text<br>
-					text<br>
-					text
+				<!-- AUTONOMIE CARBURANT -->
+				<div class="col-xs-4 tile #fuelEngineOnly#id##">
+					<div class="col-xs-8 tile-title">{{Km restants (thermique)}}</div>
+					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-map-pin"></i></div>
+					<div class="col-xs-12 tile-value-container">
+						<span class="value#fuelAutonomy_id#id## tile-value"></span>
+						<span class="unit#fuelAutonomy_id#id## tile-unit"></span>
+					</div>
 				</div>
 
-				<div class="col-xs-4 tile">
-					text<br>
-					text<br>
-					text
+				<!-- CONSOMMATION CARBURANT -->
+				<div class="col-xs-4 tile #fuelEngineOnly#id##">
+					<div class="col-xs-8 tile-title">{{Consommation (carburant)}}</div>
+					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-map-pin"></i></div>
+					<div class="col-xs-12 tile-value-container">
+						<span class="value#conso_fuel_id#id## tile-value"></span>
+						<span class="unit#conso_fuel_id#id## tile-unit"></span>
+					</div>
 				</div>
 
-				<div class="col-xs-4 tile">
-					text<br>
-					text<br>
-					text
+				<!-- CONSOMMATION CARBURANT PARCOURS-->
+				<div class="col-xs-4 tile #fuelEngineOnly#id##">
+					<div class="col-xs-8 tile-title">{{Consommation parcours (carburant)}}</div>
+					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-map-pin"></i></div>
+					<div class="col-xs-12 tile-value-container">
+						<span class="value#conso_fuel_trip_id#id## tile-value"></span>
+						<span class="unit#conso_fuel_trip_id#id## tile-unit"></span>
+					</div>
 				</div>
+
+				<!-- BATTERY LEVEL -->
+				<div class="col-xs-4 tile #electricEngineOnly#id##">
+					<div class="col-xs-8 tile-title">{{Batterie}}</div>
+					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-car-battery"></i></div>
+					<div class="col-xs-12 tile-value-container">
+						<span class="value#batteryLevel_id#id## tile-value"></span>
+						<span class="unit#batteryLevel_id#id## tile-unit"></span>
+					</div>
+				</div>
+
+				<!-- AUTONOMIE ELECTRIQUE -->
+				<div class="col-xs-4 tile #electricEngineOnly#id##">
+					<div class="col-xs-8 tile-title">{{Km restants (électrique)}}</div>
+					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-map-pin"></i></div>
+					<div class="col-xs-12 tile-value-container">
+						<span class="value#electricAutonomy_id#id## tile-value"></span>
+						<span class="unit#electricAutonomy_id#id## tile-unit"></span>
+					</div>
+				</div>
+
+				<!-- CONSOMMATION ELECTRIQUE -->
+				<div class="col-xs-4 tile #electricEngineOnly#id##">
+					<div class="col-xs-8 tile-title">{{Consommation électrique}}</div>
+					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-map-pin"></i></div>
+					<div class="col-xs-12 tile-value-container">
+						<span class="value#conso_electric_id#id## tile-value"></span>
+						<span class="unit#conso_electric_id#id## tile-unit"></span>
+					</div>
+				</div>
+
+				<!-- RECHARGE -->
+				<div class="col-xs-4 tile #electricEngineOnly#id##">
+					<div class="col-xs-8 tile-title">{{Recharge}}</div>
+					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-charging-station"></i></div>
+					<div class="col-xs-12 tile-value-container">
+						<span class="value#chargingStatus_id#id## tile-value"></span>
+						<span class="unit#chargingStatus_id#id## tile-unit"></span>
+						<div class="col-xs-12 tile-subvalue-container">
+							{{Fin de charge prévue }} <strong class="value#chargingEndTime_id#id##"></strong>
+						</div>
+					</div>
+				</div>
+
 			</div>
 
 			<!-- Column N°2 -->
@@ -136,15 +212,139 @@ if (#site2_active#id## == 1) {
 	$('#div_site1').addClass('col-xs-offset-3')
 }
 
+// TEMOINS ALERTES
+// ===============
+
+// OIL
+jeedom.cmd.update['#al_oil_id#id##'] = function(_options) {
+	console.log(_options)
+	if (_options.value != 0) {
+		img = 'oil_red.svg'
+	} else {
+		if ($('body').data('theme').endsWith('Dark')) {
+			img = 'oil_grey_dark.svg'
+		} else {
+			img = 'oil_grey_light.svg'
+		}
+	}
+	$('#div_al_oil#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+}
+jeedom.cmd.update['#al_oil_id#id##'] ({value: "#al_oil#id##"})
+
+// COOLANT
+jeedom.cmd.update['#al_coolant_id#id##'] = function(_options) {
+	if (_options.value == 1) {
+		img = 'coolant_red.svg'
+	} else {
+		if ($('body').data('theme').endsWith('Dark')) {
+			img = 'coolant_grey_dark.svg'
+		} else {
+			img = 'coolant_grey_light.svg'
+		}
+	}
+	$('#div_al_coolant#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+}
+jeedom.cmd.update['#al_coolant_id#id##'] ({value: "#al_coolant#id##"})
+
+// BRAKE
+jeedom.cmd.update['#al_brake_fluid_id#id##'] = function(_options) {
+	if (_options.value == 1) {
+		img = 'brake_red.svg'
+	} else {
+		if ($('body').data('theme').endsWith('Dark')) {
+			img = 'brake_grey_dark.svg'
+		} else {
+			img = 'brake_grey_light.svg'
+		}
+	}
+	$('#div_al_brake#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+}
+jeedom.cmd.update['#al_brake_fluid_id#id##'] ({value: "#al_brake_fluid#id##"})
+
+// WASH
+jeedom.cmd.update['#al_washer_fluid_id#id##'] = function(_options) {
+	if (_options.value == 1) {
+		img = 'wash_red.svg'
+	} else {
+		if ($('body').data('theme').endsWith('Dark')) {
+			img = 'wash_grey_dark.svg'
+		} else {
+			img = 'wash_grey_light.svg'
+		}
+	}
+	$('#div_al_wash#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+}
+jeedom.cmd.update['#al_washer_fluid_id#id##'] ({value: "#al_washer_fluid#id##"})
+
+// AL FUEL AUTONOMY
+jeedom.cmd.update['#al_fuelautonomy_id#id##'] = function(_options) {
+	if (_options.value == 1) {
+		img = 'station_gas_red.svg'
+	} else {
+		if ($('body').data('theme').endsWith('Dark')) {
+			img = 'station_gas_grey_dark.svg'
+		} else {
+			img = 'station_gas_grey_light.svg'
+		}
+	}
+	$('#div_al_fuelautonomy#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+}
+jeedom.cmd.update['#al_fuelautonomy_id#id##'] ({value: "#al_fuelautonomy#id##"})
+
+// AL ELECTRIC AUTONOMY
+jeedom.cmd.update['#al_electricautonomy_id#id##'] = function(_options) {
+	if (_options.value == 1) {
+		img = 'station_recharge_red.svg'
+	} else {
+		if ($('body').data('theme').endsWith('Dark')) {
+			img = 'station_recharge_grey_dark.svg'
+		} else {
+			img = 'station_recharge_grey_light.svg'
+		}
+	}
+	$('#div_al_electricautonomy#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+}
+jeedom.cmd.update['#al_electricautonomy_id#id##'] ({value: "#al_electricautonomy#id##"})
+
+// TYRE
+jeedom.cmd.update['#al_tyre_id#id##'] = function(_options) {
+	if (_options.value >= 1) {
+		img = 'tyre_red.svg'
+	} else {
+		if ($('body').data('theme').endsWith('Dark')) {
+			img = 'tyre_grey_dark.svg'
+		} else {
+			img = 'tyre_grey_light.svg'
+		}
+	}
+	$('#div_al_tyre#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+}
+jeedom.cmd.update['#al_tyre_id#id##'] ({value: "#al_tyre#id##"})
+
+// LIGHT
+jeedom.cmd.update['#al_light_id#id##'] = function(_options) {
+	if (_options.value == 1) {
+		img = 'light_red.svg'
+	} else {
+		if ($('body').data('theme').endsWith('Dark')) {
+			img = 'light_grey_dark.svg'
+		} else {
+			img = 'light_grey_light.svg'
+		}
+	}
+	$('#div_al_light#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+}
+jeedom.cmd.update['#al_light_id#id##'] ({value: "#al_light#id##"})
+
 // PRESENCES
 // =========
 function updatePresence(presence_id, site_name, _options) {
 	if (_options.value == 1) {
-		$('.Cmd' + presence_id).empty().append('<i class="fas fa-house-user color_on" style="font-size:1.75em;" title="{{Présence}} '+site_name+':<br/>{{Oui}}"></i>');
+		$('.Cmd' + presence_id).empty().append('<i class="fas fa-house-user color_on" style="font-size:1.75em;"></i>');
 	} else if (_options.value == 0) {
-		$('.Cmd' + presence_id).empty().append('<i class="fas fa-home color_off" style="font-size:1.75em;" title="{{Présence}} '+site_name+':<br/>{{Non}}"></i>');
+		$('.Cmd' + presence_id).empty().append('<i class="fas fa-home color_off" style="font-size:1.75em;"></i>');
 	} else {
-		$('.Cmd' + presence_id).empty().append('<i class="fas fa-house-damage" style="font-size:1.75em;" title="{{Présence}} '+site_name+':<br/>{{Inconnue}}"></i>');
+		$('.Cmd' + presence_id).empty().append('<i class="fas fa-house-damage" style="font-size:1.75em;"></i>');
 	}
 }
 jeedom.cmd.update['#presence_site1_id#id##'] = function(_options) {
@@ -160,16 +360,20 @@ jeedom.cmd.update['#presence_site2_id#id##'] ({value: '#presence_site2#id##'});
 // =========
 function updateDistance(distance_id, color_class, _options) {
 	value = parseFloat(_options.value)
-	if (value >= 100000) {
-		txt = (value/1000).toFixed(0) + ' Km'
-	} else if (value >= 10000) {
-		txt = (value/1000).toFixed(1) + ' Km'
-	} else if (value >= 1000) {
-		txt = (value/1000).toFixed(2) + ' Km'
-	} else {
-		txt = value.toFixed(0) + ' m'
+	unit = _options.unit
+	if (unit == 'm') {
+		if (value > 100000) {
+			value = (value/1000).toFixed(0)
+			unit = 'Km'
+		} else if (value > 10000) {
+			value = (value/1000).toFixed(1)
+			unit = 'Km'
+		} else if (value > 1000) {
+			value = (value/1000).toFixed(2)
+			unit = 'Km'
+		}
 	}
-	$('.Cmd' + distance_id).empty().append('<span class="' + color_class + '">' + txt + '</span>')
+	$('.Cmd' + distance_id).empty().append('<span class="' + color_class + '">' + value + ' ' + unit + '</span>')
 }
 jeedom.cmd.update['#distance_site1_id#id##'] = function(_options) {
 	if (_options.value <= #site1_limit#id##) {
@@ -187,135 +391,100 @@ jeedom.cmd.update['#distance_site2_id#id##'] = function(_options) {
 	}
 	updateDistance('#distance_site2_id#id##', color_class, _options)
 }
-jeedom.cmd.update['#distance_site1_id#id##'] ({value: '#distance_site1#id##'});
-jeedom.cmd.update['#distance_site2_id#id##'] ({value: '#distance_site2#id##'});
+jeedom.cmd.update['#distance_site1_id#id##'] ({
+	value: '#distance_site1#id##',
+	display_value: '#distance_site1_display_value#id##',
+	unit: '#distance_site1_unit#id##'
+})
+jeedom.cmd.update['#distance_site2_id#id##'] ({
+	value: '#distance_site2#id##',
+	display_value: '#distance_site2_display_value#id##',
+	unit: '#distance_site2_unit#id##'
+})
 
-// TEMOINS ALERTES
-// ===============
 
-// OIL
-jeedom.cmd.update['#oil_id#id##'] = function(_options) {
-	console.log(_options)
-	if (_options.value != 0) {
-		img = 'oil_red.svg'
-	} else {
-		if ($('body').data('theme').endsWith('Dark')) {
-			img = 'oil_grey_dark.svg'
-		} else {
-			img = 'oil_grey_light.svg'
-		}
-	}
-	$('#div_al_oil#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+// ODOMETER
+// ========
+jeedom.cmd.update['#odometer_id#id##'] = function(_options) {
+	$('.value#odometer_id#id##').html(_options.display_value)
+	$('.unit#odometer_id#id##').html(_options.unit)
 }
-jeedom.cmd.update['#oil_id#id##'] ({value: "#oil#id##"})
+jeedom.cmd.update['#odometer_id#id##'] ({display_value: "#odometer_display_value#id##", unit: "#odometer_unit#id##"})
 
-// COOLANT
-jeedom.cmd.update['#coolant_id#id##'] = function(_options) {
-	if (_options.value == 1) {
-		img = 'coolant_red.svg'
-	} else {
-		if ($('body').data('theme').endsWith('Dark')) {
-			img = 'coolant_grey_dark.svg'
-		} else {
-			img = 'coolant_grey_light.svg'
-		}
-	}
-	$('#div_al_coolant#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+// FUEL
+// ====
+jeedom.cmd.update['#fuel_amount_id#id##'] = function(_options) {
+	$('.value#fuel_amount_id#id##').html(_options.display_value)
+	$('.unit#fuel_amount_id#id##').html(_options.unit)
 }
-jeedom.cmd.update['#coolant_id#id##'] ({value: "#coolant#id##"})
+jeedom.cmd.update['#fuel_amount_id#id##'] ({display_value: "#fuel_amount_display_value#id##", unit: "#fuel_amount_unit#id##"})
 
-// BRAKE
-jeedom.cmd.update['#brake_id#id##'] = function(_options) {
-	if (_options.value == 1) {
-		img = 'brake_red.svg'
-	} else {
-		if ($('body').data('theme').endsWith('Dark')) {
-			img = 'brake_grey_dark.svg'
-		} else {
-			img = 'brake_grey_light.svg'
-		}
-	}
-	$('#div_al_brake#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+// KM THERMIQUE RESTANTS
+//======================
+jeedom.cmd.update['#fuelAutonomy_id#id##'] = function(_options) {
+	$('.value#fuelAutonomy_id#id##').html(_options.display_value)
+	$('.unit#fuelAutonomy_id#id##').html(_options.unit)
 }
-jeedom.cmd.update['#brake_id#id##'] ({value: "#brake#id##"})
+jeedom.cmd.update['#fuelAutonomy_id#id##'] ({display_value: "#fuelAutonomy_display_value#id##", unit: "#fuelAutonomy_unit#id##"})
 
-// WASH
-jeedom.cmd.update['#wash_id#id##'] = function(_options) {
-	if (_options.value == 1) {
-		img = 'wash_red.svg'
-	} else {
-		if ($('body').data('theme').endsWith('Dark')) {
-			img = 'wash_grey_dark.svg'
-		} else {
-			img = 'wash_grey_light.svg'
-		}
-	}
-	$('#div_al_wash#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+// CONSO FUEL
+//===========
+jeedom.cmd.update['#conso_fuel_id#id##'] = function(_options) {
+	$('.value#conso_fuel_id#id##').html(_options.display_value)
+	$('.unit#conso_fuel_id#id##').html(_options.unit)
 }
-jeedom.cmd.update['#wash_id#id##'] ({value: "#wash#id##"})
+jeedom.cmd.update['#conso_fuel_id#id##'] ({display_value: "#conso_fuel_display_value#id##", unit: "#conso_fuel_unit#id##"})
 
-// HEAT AUTONOMY
-jeedom.cmd.update['#heatautonomy_id#id##'] = function(_options) {
-	if (_options.value == 1) {
-		img = 'station_gas_red.svg'
-	} else {
-		if ($('body').data('theme').endsWith('Dark')) {
-			img = 'station_gas_grey_dark.svg'
-		} else {
-			img = 'station_gas_grey_light.svg'
-		}
-	}
-	$('#div_al_heatautonomy#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+// CONSO FUEL PARCOURS
+//====================
+jeedom.cmd.update['#conso_fuel_trip_id#id##'] = function(_options) {
+	$('.value#conso_fuel_trip_id#id##').html(_options.display_value)
+	$('.unit#conso_fuel_trip_id#id##').html(_options.unit)
 }
-jeedom.cmd.update['#heatautonomy_id#id##'] ({value: "#heatautonomy#id##"})
+jeedom.cmd.update['#conso_fuel_trip_id#id##'] ({display_value: "#conso_fuel_trip_display_value#id##", unit: "#conso_fuel_trip_unit#id##"})
 
-// ELECTRIC AUTONOMY
-jeedom.cmd.update['#electricautonomy_id#id##'] = function(_options) {
-	if (_options.value == 1) {
-		img = 'station_recharge_red.svg'
-	} else {
-		if ($('body').data('theme').endsWith('Dark')) {
-			img = 'station_recharge_grey_dark.svg'
-		} else {
-			img = 'station_recharge_grey_light.svg'
-		}
-	}
-	$('#div_al_electricautonomy#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+// BATTERY LEVEL
+// =============
+jeedom.cmd.update['#batteryLevel_id#id##'] = function(_options) {
+	$('.value#batteryLevel_id#id##').html(_options.display_value)
+	$('.unit#batteryLevel_id#id##').html(_options.unit)
 }
-jeedom.cmd.update['#electricautonomy_id#id##'] ({value: "#electricautonomy#id##"})
+jeedom.cmd.update['#batteryLevel_id#id##'] ({display_value: "#batteryLevel_display_value#id##", unit: "#batteryLevel_unit#id##"})
 
-// TYRE
-jeedom.cmd.update['#tyre_id#id##'] = function(_options) {
-	if (_options.value >= 1) {
-		img = 'tyre_red.svg'
-	} else {
-		if ($('body').data('theme').endsWith('Dark')) {
-			img = 'tyre_grey_dark.svg'
-		} else {
-			img = 'tyre_grey_light.svg'
-		}
-	}
-	$('#div_al_tyre#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+// KM ELECTRIQUE RESTANTS
+// ======================
+jeedom.cmd.update['#electricAutonomy_id#id##'] = function(_options) {
+	$('.value#electricAutonomy_id#id##').html(_options.display_value)
+	$('.unit#electricAutonomy_id#id##').html(_options.unit)
 }
-jeedom.cmd.update['#tyre_id#id##'] ({value: "#tyre#id##"})
+jeedom.cmd.update['#electricAutonomy_id#id##'] ({display_value: "#electricAutonomy_display_value#id##", unit: "#electricAutonomy_unit#id##"})
 
-// LIGHT
-jeedom.cmd.update['#light_id#id##'] = function(_options) {
-	if (_options.value == 1) {
-		img = 'light_red.svg'
-	} else {
-		if ($('body').data('theme').endsWith('Dark')) {
-			img = 'light_grey_dark.svg'
-		} else {
-			img = 'light_grey_light.svg'
-		}
-	}
-	$('#div_al_light#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+// CONSO ELECTRIQUE
+//=================
+jeedom.cmd.update['#conso_electric_id#id##'] = function(_options) {
+	$('.value#conso_electric_id#id##').html(_options.display_value)
+	$('.unit#conso_electric_id#id##').html(_options.unit)
 }
-jeedom.cmd.update['#light_id#id##'] ({value: "#light#id##"})
+jeedom.cmd.update['#conso_electric_id#id##'] ({display_value: "#conso_electric_display_value#id##", unit: "#conso_electric_unit#id##"})
+
+// RECHARGE
+// ========
+jeedom.cmd.update['#chargingStatus_id#id##'] = function(_options) {
+	$('.value#chargingStatus_id#id##').html(_options.display_value)
+	$('.unit#chargingStatus_id#id##').html(_options.unit)
+}
+jeedom.cmd.update['#chargingStatus_id#id##'] ({display_value: "#chargingStatus_display_value#id##", unit: "#chargingStatus_unit#id##"})
+
+// RECHARGE END TIME
+// =================
+jeedom.cmd.update['#chargingEndTime_id#id##'] = function(_options) {
+	$('.value#chargingEndTime_id#id##').html(_options.display_value)
+}
+jeedom.cmd.update['#chargingEndTime_id#id##'] ({display_value: "#chargingEndTime_display_value#id##", unit: "#chargingEndTime_unit#id##"})
 
 
 // MISE A JOUR DES TEXTES INFO
+// ===========================
 jeedom.cmd.update['#msg2widget_id#id##'] = function(_options) {
 	msg_default = {}
 	console.log(_options.value)
@@ -331,4 +500,5 @@ jeedom.cmd.update['#msg2widget_id#id##'] = function(_options) {
 	}
 }
 jeedom.cmd.update['#msg2widget_id#id##'] ({value: "#msg2widget#id##"})
+
 </script>

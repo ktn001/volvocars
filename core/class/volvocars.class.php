@@ -27,11 +27,14 @@ class volvocars extends eqLogic {
 		"brakes",
 		"diagnostics",
 		"doors",
-		"warnings",
-		"location",
-		"statistics",
 		"engine_diagnostics",
+		"fuel",
+		"location",
+		"odometer",
+		"recharge_status",
+		"statistics",
 		"tyre",
+		"warnings",
 		"windows",
 	];
 
@@ -146,8 +149,8 @@ class volvocars extends eqLogic {
 					'TOO_LOW' => __("Niveau liquide lave-vitres bas",__FILE__),
 				],
 			],
-			'div_al_heatautonomy' => [
-				'heatAutonomy' => [
+			'div_al_fuelautonomy' => [
+				'fuelAutonomy' => [
 					$_options['value'] => __("Autonomie:",__FILE__) . " #value# #unite#",
 				],
 			],
@@ -230,9 +233,12 @@ class volvocars extends eqLogic {
 	 */
 	public static function lh_brakes($_options)				{ self::updateMessages($_options); }
 	public static function lh_diagnostics($_options)		{ self::updateMessages($_options); }
-	public static function lh_engine_diagnostics($_options)	{ self::updateMessages($_options); }
 	public static function lh_doors($_options)				{ self::updateMessages($_options); }
+	public static function lh_engine_diagnostics($_options)	{ self::updateMessages($_options); }
+	public static function lh_fuel($_options)				{ self::updateMessages($_options); }
 	public static function lh_location($_options)			{ self::updateMessages($_options); }
+	public static function lh_odometer($_options)			{ self::updateMessages($_options); }
+	public static function lh_recharge_status($_options)	{ self::updateMessages($_options); }
 	public static function lh_statistics($_options)			{ self::updateMessages($_options); }
 	public static function lh_tyre($_options)				{ self::updateMessages($_options); }
 	public static function lh_warnings($_options)			{ self::updateMessages($_options); }
@@ -308,15 +314,15 @@ class volvocars extends eqLogic {
 			$this->setConfiguration('electricAutonomyLimit', $limit);
 		}
 
-		if ($this->getConfiguration('heatEngine')){
-			$limit = trim($this->getConfiguration('heatAutonomyLimit'));
+		if ($this->getConfiguration('fuelEngine')){
+			$limit = trim($this->getConfiguration('fuelAutonomyLimit'));
 			if ($limit == '') {
 				$limit = 0;
 			}
 			if (! is_numeric($limit)) {
 				throw new Exception (__("La limite d'autonomie doit être une valeur numérique",__FILE__));
 			}
-			$this->setConfiguration('heatAutonomyLimit', $limit);
+			$this->setConfiguration('fuelAutonomyLimit', $limit);
 		}
 
 		$car = self::byVin($this->getVin());
@@ -395,7 +401,7 @@ class volvocars extends eqLogic {
 		}
 		foreach ([
 			'al_electricAutonomy',
-			'al_heatAutonomy'
+			'al_fuelAutonomy'
 		] as $logicalId) {
 			$cmd = $this->getCmd('info',$logicalId);
 			if (is_object($cmd)){
@@ -503,7 +509,7 @@ class volvocars extends eqLogic {
 	}
 
 	/*
-	 * Meise à jour de détails du véhicule à partir des infis fournies par
+	 * Mise à jour de détails du véhicule à partir des infis fournies par
 	 * les API de Volvo
 	 */
 	public function updateDetails() {
@@ -622,7 +628,7 @@ class volvocars extends eqLogic {
 			if ($fuelType != $this->getConfiguration('fuelType')){
 				log::add("volvocars","info",sprintf(__("Mise à jour du carburant pour le véhicule %s",__FILE__),$this->getVin()));
 				$this->setConfiguration('fuelType',$fuelType);
-				$this->setConfiguration('heatEngine',$combustion);
+				$this->setConfiguration('fuelEngine',$combustion);
 				$this->setConfiguration('electricEngine',$electric);
 				$changed = true;
 			}
@@ -766,7 +772,7 @@ class volvocars extends eqLogic {
 	 * Mise à jour des infos retournée par un endpoint des API Volvo
 	 */
 	public function getInfosFromApi($endpoint){
-		if ($this->getConfiguration('heatEngine') == 0){
+		if ($this->getConfiguration('fuelEngine') == 0){
 			if ($endpoint == 'engine_diagnostics'){
 				return;
 			}
@@ -783,8 +789,19 @@ class volvocars extends eqLogic {
 
 			'diagnostics.washerFluidLevelWarning' => ['washer_fluid_level'],
 
-			'statistics.distanceToEmptyBattery' => ['electricAutonomy'],
-			'statistics.distanceToEmptyTank'	=> ['heatAutonomy'],
+			'fuel.fuelAmount' => ['fuel_amount'],
+
+			'odometer.odometer' => ['odometer'],
+
+			'recharge_status.batteryChargeLevel'	=> ['batteryLevel'],
+			'recharge_status.chargingSystemStatus'	=> ['chargingStatus'],
+			'recharge_status.estimatedChargingTime' => ['chargingRemainingTime'],
+
+			'statistics.averageEnergyConsumption'		 => ['conso_electric'],
+			'statistics.averageFuelConsumption'			 => ['conso_fuel'],
+			'statistics.averageFuelConsumptionAutomatic' => ['conso_fuel_trip'],
+			'statistics.distanceToEmptyBattery'			 => ['electricAutonomy'],
+			'statistics.distanceToEmptyTank'			 => ['fuelAutonomy'],
 
 			'tyre.frontLeft'  => ['tyre_fl'],
 			'tyre.frontRight' => ['tyre_fr'],
@@ -949,14 +966,17 @@ class volvocars extends eqLogic {
 	 * Interrogation de tous les endpoint de l'API pour remonter les infos
 	 */
 	public function retrieveInfos() {
-		$this->getInfosFromApi('doors');
-		$this->getInfosFromApi('location');
-		$this->getInfosFromApi('windows');
-		$this->getInfosFromApi('engine_diagnostics');
 		$this->getInfosFromApi('brakes');
 		$this->getInfosFromApi('diagnostics');
+		$this->getInfosFromApi('doors');
+		$this->getInfosFromApi('engine_diagnostics');
+		$this->getInfosFromApi('fuel');
+		$this->getInfosFromApi('location');
+		$this->getInfosFromApi('odometer');
+		$this->getInfosFromApi('recharge_status');
 		$this->getInfosFromApi('statistics');
 		$this->getInfosFromApi('tyre');
+		$this->getInfosFromApi('windows');
 		$this->getInfosFromApi('warnings');
 	}
 
@@ -1107,33 +1127,53 @@ class volvocars extends eqLogic {
 		$replace['#site2_limit'.$this->getId().'#'] = $this->getConfiguration('site2_limit',0);
 
 		//---- COMMANDES ID et VALUE
-		$mapping = array(
-			'al_oil'				=> 'oil',
-			'al_coolant'			=> 'coolant',
-			'al_brake_fluid'		=> 'brake',
-			'al_washer_fluid'		=> 'wash',
-			'al_heatautonomy'		=> 'heatautonomy',
-			'al_electricautonomy'	=> 'electricautonomy',
-			'al_tyre'				=> 'tyre',
-			'al_light'				=> 'light',
-			'presence_site1'		=> 'presence_site1',
-			'distance_site1'		=> 'distance_site1',
-			'presence_site2'		=> 'presence_site2',
-			'distance_site2'		=> 'distance_site2',
+		$logicalIds = array(
+			'al_oil',
+			'al_coolant',
+			'al_brake_fluid',
+			'al_washer_fluid',
+			'al_fuelautonomy',
+			'al_electricautonomy',
+			'al_tyre',
+			'al_light',
+			'batteryLevel',
+			'chargingStatus',
+			'chargingEndTime',
+			'presence_site1',
+			'distance_site1',
+			'presence_site2',
+			'distance_site2',
+			'odometer',
+			'fuel_amount',
+			'fuelAutonomy',
+			'conso_electric',
+			'conso_fuel',
+			'conso_fuel_trip',
+			'electricAutonomy',
 		);
-		foreach ($mapping as $logicalId => $htmlId) {
+		foreach ($logicalIds as $logicalId) {
 			$cmd = $this->getCmd('info',$logicalId);
 			if (is_object($cmd)) {
-				$replace['#' . $htmlId . '_id' . $id . '#'] = $cmd->getId();
-				$replace['#' . $htmlId . $id . '#'] = $cmd->execCmd();
+				$value = $cmd->execCmd();
+				$unit=$cmd->getUnite();
+				$display_value = $cmd->getDisplayValue($value);
+				if ($cmd->getSubType() == 'numeric') {
+					$valueInfo = volvocarsCmd::autoValueArray($value, $cmd->getConfiguration('historizeRound', 99), $cmd->getUnite());
+					$display_value = $valueInfo[0];
+					$unit = $valueInfo[1];
+				}
+				$replace['#' . $logicalId . '_id' . $id . '#'] = $cmd->getId();
+				$replace['#' . $logicalId . $id . '#'] = $value;
+				$replace['#' . $logicalId . '_display_value' . $id . '#'] = $display_value;
+				$replace['#' . $logicalId . '_unit' . $id . '#'] = $unit;
 			}
 		}
 
 		//---- WIDGETS UNIQUEMENT POUR MOTEUR THERMIQUE
-		if ($this->getConfiguration('heatEngine') == 0) {
-			$replace['#heatEngineOnly'.$id.'#'] = 'hidden';
+		if ($this->getConfiguration('fuelEngine') == 0) {
+			$replace['#fuelEngineOnly'.$id.'#'] = 'hidden';
 		} else {
-			$replace['#heatEngineOnly'.$id.'#'] = '';
+			$replace['#fuelEngineOnly'.$id.'#'] = '';
 		}
 
 		//---- WIDGETS UNIQUEMENT POUR MOTEUR ELECTRIQUE
@@ -1150,8 +1190,10 @@ class volvocars extends eqLogic {
 		}
 
 		if ($panel == true) {
-			$template = 'volvocars_panel';
+			$widgetFile = realpath( __DIR__ . '/../template/' . $_version . '/volvocars_panel.html');
 		}
+		$html = template_replace($replace, file_get_contents($widgetFile));
+		return translate::exec($html,$widgetFile);
 		return $this->postToHtml($_version, template_replace($replace, getTemplate('core',$_version,$template, 'volvocars')));
 	}
 
@@ -1496,12 +1538,12 @@ class volvocarsCmd extends cmd {
 					}
 					return 0;
 					break;
-				case 'al_heatAutonomy':
-					if ($car->getConfiguration('heatEngine') != 1) {
+				case 'al_fuelAutonomy':
+					if ($car->getConfiguration('fuelEngine') != 1) {
 						return 0;
 					}
-					$limit = $car->getConfiguration('heatAutonomyLimit');
-					$autonomyCmd = $car->getCmd('info','heatAutonomy');
+					$limit = $car->getConfiguration('fuelAutonomyLimit');
+					$autonomyCmd = $car->getCmd('info','fuelAutonomy');
 					if (! is_object($autonomyCmd)) {
 						return 0;
 					}
@@ -1565,11 +1607,76 @@ class volvocarsCmd extends cmd {
 					}
 					return $value;
 					break;
+				case 'chargingEndTime':
+					$cmd = $car->getCmd('info','chargingRemainingTime');
+					if (! is_object($cmd)){
+						return false;
+					}
+					$remaining = $cmd->execCmd();
+					return date_fr(date('D H:i', strtotime($cmd->getValueDate() . "+" . $remaining . "minutes")));
+					break;
 				default:
 					log::add("volvocars","error",sprintf(__('Exécution de la commande "%s" non définie',__FILE__),$this->getLogicalId()));
 					return false;
 			}
 		}
+	}
+
+	public function getDisplayValue($value) {
+		$textes = [
+			"CHARGING_SYSTEM_CHARGING"		=> __("en charge",__FILE__),
+			"CHARGING_SYSTEM_IDLE"			=> __("en pause",__FILE__),
+			"CHARGING_SYSTEM_DONE"			=> __("terminée",__FILE__),
+			"CHARGING_SYSTEM_FAULT"			=> __("en erreur",__FILE__),
+			"CHARGING_SYSTEM_SCHEDULED"		=> __("programmée",__FILE__),
+			"CHARGING_SYSTEM_UNSPECIFIED"	=> __("indéterminée",__FILE__),
+			"NO_WARNING"					=> __("OK",__FILE__),
+		];
+
+		if ($this->getSubType() == 'string') {
+			$logicalId = $this->getLogicalId();
+			if (substr($logicalId,-6) == '_state') {
+				switch (strtok($logicalId,'_')) {
+					case 'win':
+					case 'door':
+						switch ($value) {
+							case 'OPEN':
+								return __("ouverte",__FILE__);
+							case 'AJAR':
+								return __("entre-ouverte",__FILE__);
+							case "CLOSED":
+								return __("fermée",__FILE__);
+							case "UNSPECIFIED":
+								return __("indéterminée",__FILE__);
+						}
+				}
+			}
+			if (isset($textes[$value])) {
+				return $textes[$value];
+			}
+			return $value;
+		}
+		if ($this->getSubType() == 'binary' && $this->getDisplay('invertBinary') == 1) {
+			return ($value == 1) ? 0 : 1;
+		}
+
+		if ($this->getSubType() == 'numeric') {
+			if (trim($value) === '') {
+				$value = 0;
+			}
+			if ($this->getLogicalId() == 'chargingRemainingTime') {
+				return sprintf("%d:%02d", floor($value / 60), $value % 60);
+			}
+			return $value;
+		}
+		if ($this->getSubType() == 'binary' && trim($value) === '') {
+			return 0;
+		}
+		return $value;
+	}
+
+	public function formatValueWidget($value) {
+		return $this->getDisplayValue($value);
 	}
 
 	/*	 * **********************Getteur Setteur*************************** */

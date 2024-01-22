@@ -11,24 +11,32 @@ body[data-theme=core2019_Dark] {
 	--vlv-bg-color: black;
 	--vlv-display-light: none;
 	--vlv-display-dark: inherit;
+	--vlv-value-color: #FFFFFF !important;
 }
-	
+
 body[data-theme=core2019_Light] {
 	--vlv-bg-color: white;
 	--vlv-display-light: inherit;
 	--vlv-display-dark: none;
+	--vlv-value-color: #000000 !important;
 }
 
 body[data-theme=core2019_Legacy] {
 	--vlv-bg-color: inherit;
 	--vlv-display-light: inherit;
 	--vlv-display-dark: none;
+	--vlv-value-color: #000000 !important;
 }
 
 #bckgd {
 	background-color: var(--vlv-bg-color);
 }
-	
+
+.column {
+	margin : 0px !important;
+	padding : 0px !important;
+}
+
 #title {
 	font-size: 17px;
 	line-height: 2.32;
@@ -39,17 +47,27 @@ body[data-theme=core2019_Legacy] {
 	height: 40px;
 }
 
-#titre img.volvo_logo_white {
+.volvo_logo_black,
+.volvo_logo_white {
+	height: 70px;
+	padding: 30px;
+}
+
+img.volvo_logo_white {
 	display: var(--vlv-display-dark);
 }
 
-#titre img.volvo_logo_black {
+img.volvo_logo_black {
 	display: var(--vlv-display-light);
 }
 
 #titre span {
 	padding-left: 10px;
 	font-size: 17px;
+}
+
+#div_display_eqLogicList {
+	padding-right : 5px !important;
 }
 
 .bs-sidebar {
@@ -79,10 +97,11 @@ body[data-theme=core2019_Legacy] {
 }
 
 #div_display_eqLogic {
+	padding-left: 0px !important;
 	overflow-x: auto;
 }
 
-#volvocars_panel_ID.eqLogic-widget {
+.eqLogic-widget {
 	background-color: inherit !important;
 	min-width:1392px !important;
 	max-width:1392px !important;
@@ -91,83 +110,72 @@ body[data-theme=core2019_Legacy] {
 	text-align:center;
 }
 
-#volvocars_panel_ID .color_on {
+#carName {
+	font-size: 21px;
+	padding: 14px 0px;
+}
+
+#carName a {
+	color: var(--vlv-value-color) !important;
+}
+
+.color_on {
 	color: var(--vlv-color-on);
 }
 
-#volvocars_panel_ID .color_off{
+.color_off{
 	color: var(--vlv-color-off);
 }
 
-#volvocars_panel_ID .tile_titel {
-	color: var(--link-color) !important;		
-}
-
-#volvocars_panel_ID .column {
-	padding : 0px !important;
-}
-
-#volvocars_panel_ID .tile {
+.tile {
 	background-color: rgba(var(--bg-color));
-	margin: 5px;
-	filter: contrast(105%);
+	margin: 0px !important;
+	padding: 0px !important;
+	border: 4px solid var(--vlv-bg-color);
 }
 
-#volvocars_panel_ID #div_alertes {
+.tile-title {
+	height: 60px;
+	color: var(--link-color) !important;
+	padding: 10px 0px 0px 10px !important;
+	text-align: left;
+}
+
+.tile-icon {
+	height: 60px;
+	padding: 10px 10px 0px 0px !important;
+	color: rgb(80,120,170) !important;
+}
+
+.tile-icon i {
+	float: right;
+	padding-top: 4px;
+}
+
+.tile-value-container {
+	height: 80px;
+	padding: 0px !important;
+}
+
+.tile-subvalue-container {
+	font-size: 11px;
+}
+
+.tile-value {
+	color: var(--vlv-value-color);
+	font-size: 22px
+}
+
+.tile .widget-title {
+	color: var(--link-color) !important;
+}
+
+#div_alertes {
 	height: 50px;
 	cursor:default !important;
 }
 
-#volvocars_panel_ID #div_alertes img {
+#div_alertes img {
 	height: 32px;
 	margin: 9px 5px;
 }
-
-#volvocars_panel_ID .tile.col-xs-12 {
-	width: calc( 100% - 10px );
-}
-
-#volvocars_panel_ID .tile.col-xs-11 {
-	width: calc( 91.66666667% - 10px );
-}
-
-#volvocars_panel_ID .tile.col-xs-10 {
-	width: calc( 83.33333333% - 10px );
-}
-
-#volvocars_panel_ID .tile.col-xs-9 {
-	width: calc( 75% - 10px );
-}
-
-#volvocars_panel_ID .tile.col-xs-8 {
-	width: calc( 66.66666667% - 10px );
-}
-
-#volvocars_panel_ID .tile.col-xs-7 {
-	width: calc( 58.33333333% - 10px );
-}
-
-#volvocars_panel_ID .tile.col-xs-6 {
-	width: calc( 50% - 10px );
-}
-
-#volvocars_panel_ID .tile.col-xs-5 {
-	width: calc( 41.66666667%- 10px );
-}
-
-#volvocars_panel_ID .tile.col-xs-4 {
-	width: calc( 33.33333333% - 10px );
-}
-
-#volvocars_panel_ID .tile.col-xs-3 {
-	width: calc( 25% - 10px );
-}
-
-#volvocars_panel_ID .tile.col-xs-2 {
-	width: calc( 16.66666667% - 10px );
-}
-
-#volvocars_panel_ID .tile.col-xs-1 {
-	width: calc( 8.33333333% - 10px );
-}
-

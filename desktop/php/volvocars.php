@@ -282,7 +282,7 @@ $accounts = volvoAccount::all();
 								<label class="col-sm-4 control-label">{{Moteur}}</label>
 								<div class="col-sm-6">
 									<label class="checkbox-inline"><input class="eqLogicAttr sensible" type="checkbox" data-l1key="configuration" data-l2key="electricEngine">{{Electrique}}</label>
-									<label class="checkbox-inline"><input class="eqLogicAttr sensible" type="checkbox" data-l1key="configuration" data-l2key="heatEngine">{{Thermique}}</label>
+									<label class="checkbox-inline"><input class="eqLogicAttr sensible" type="checkbox" data-l1key="configuration" data-l2key="fuelEngine">{{Thermique}}</label>
 								</div>
 							</div>
 							<div class="form-group">
@@ -303,10 +303,10 @@ $accounts = volvoAccount::all();
 									<input class="eqLogicAttr form-control" type="text" data-l1key="configuration" data-l2key="electricAutonomyLimit"></input>
 								</div>
 							</div>
-							<div id="heatAutonomy" class="form-group">
+							<div id="fuelAutonomy" class="form-group">
 								<label class="col-sm-4 control-label">{{Autonomie thermique (Km)}}</label>
 								<div class="col-sm-6">
-									<input class="eqLogicAttr form-control" type="text" data-l1key="configuration" data-l2key="heatAutonomyLimit">
+									<input class="eqLogicAttr form-control" type="text" data-l1key="configuration" data-l2key="fuelAutonomyLimit">
 								</div>
 							</div>
 
