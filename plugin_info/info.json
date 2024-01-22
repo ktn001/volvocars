@@ -1,6 +1,6 @@
 {
 	"id" : "volvocars",
-	"name" : "Volvo cars",
+	"name" : "Volvo",
 	"description" : {
 		"fr_FR": "Plugin pour l'intégration de véhicules Volvo dans Jeedom"
 	},
@@ -14,8 +14,6 @@
 	"maxDependancyInstallTime" : 0,
 	"changelog" :          "https://ktn001.github.io/fr_FR/volvocars/changelog.html",
 	"documentation" :      "https://ktn001.github.io/fr_FR/volvocars/index.html",
-	"changelog_beta" :     "https://ktn001.github.io/fr_FR/volvocars/changelog.html",
-	"documentation_beta" : "https://ktn001.github.io/fr_FR/volvocars/index.html",
 	"link" : {
 		"forum":"https://community.jeedom.com/tag/plugin-volvocars"
 	},
