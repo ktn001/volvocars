@@ -478,7 +478,12 @@ jeedom.cmd.update['#chargingStatus_id#id##'] ({display_value: "#chargingStatus_d
 // RECHARGE END TIME
 // =================
 jeedom.cmd.update['#chargingEndTime_id#id##'] = function(_options) {
-	$('.value#chargingEndTime_id#id##').html(_options.display_value)
+	if (_options.display_value == '') {
+		$(".value#chargingEndTime_id#id##").closest('div').addClass('hidden')
+	} else {
+		$(".value#chargingEndTime_id#id##").closest('div').removeClass('hidden')
+		$('.value#chargingEndTime_id#id##').html(_options.display_value)
+	}
 }
 jeedom.cmd.update['#chargingEndTime_id#id##'] ({display_value: "#chargingEndTime_display_value#id##", unit: "#chargingEndTime_unit#id##"})
 

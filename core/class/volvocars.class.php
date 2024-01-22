@@ -1617,9 +1617,12 @@ class volvocarsCmd extends cmd {
 				case 'chargingEndTime':
 					$cmd = $car->getCmd('info','chargingRemainingTime');
 					if (! is_object($cmd)){
-						return false;
+						return "";
 					}
 					$remaining = $cmd->execCmd();
+					if ($remaining == 0) {
+						return "";
+					}
 					return date_fr(date('D H:i', strtotime($cmd->getValueDate() . "+" . $remaining . "minutes")));
 					break;
 				default:
