@@ -833,6 +833,14 @@
 			"endpoint": "recharge_status"
 		}
 	},{
+		"logicalId": "connectorStatus",
+		"name": "{{Etat de la prise}}",
+		"type": "info",
+		"subType": "string",
+		"configuration": {
+			"endpoint": "recharge_status"
+		}
+	},{
 		"logicalId": "chargingStatus",
 		"name": "{{Etat de la charge}}",
 		"type": "info",

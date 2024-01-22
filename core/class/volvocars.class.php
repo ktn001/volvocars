@@ -800,9 +800,10 @@ class volvocars extends eqLogic {
 
 			'odometer.odometer' => ['odometer'],
 
-			'recharge_status.batteryChargeLevel'	=> ['batteryLevel'],
-			'recharge_status.chargingSystemStatus'	=> ['chargingStatus'],
-			'recharge_status.estimatedChargingTime' => ['chargingRemainingTime'],
+			'recharge_status.batteryChargeLevel'		=> ['batteryLevel'],
+			'recharge_status.chargingSystemStatus'		=> ['chargingStatus'],
+			'recharge_status.estimatedChargingTime'		=> ['chargingRemainingTime'],
+			'recharge_status.chargingConnectionStatus'	=> ['connectorStatus'],
 
 			'statistics.averageEnergyConsumption'		 => ['conso_electric'],
 			'statistics.averageFuelConsumption'			 => ['conso_fuel'],
@@ -1145,6 +1146,7 @@ class volvocars extends eqLogic {
 			'al_light',
 			'batteryLevel',
 			'chargingStatus',
+			'connectorStatus',
 			'chargingEndTime',
 			'presence_site1',
 			'distance_site1',
@@ -1640,6 +1642,13 @@ class volvocarsCmd extends cmd {
 			"CHARGING_SYSTEM_FAULT"			=> __("en erreur",__FILE__),
 			"CHARGING_SYSTEM_SCHEDULED"		=> __("programmée",__FILE__),
 			"CHARGING_SYSTEM_UNSPECIFIED"	=> __("indéterminée",__FILE__),
+
+			"CONNECTION_STATUS_CONNECTED_AC" => __("branchée (AC)",__FILE__),
+			"CONNECTION_STATUS_CONNECTED_DC" => __("branchée (DC)",__FILE__),
+			"CONNECTION_STATUS_DISCONNECTED" => __("débranchée",__FILE__),
+			"CONNECTION_STATUS_FAULT"		 => __("en erreur",__FILE__),
+			"CONNECTION_STATUS_UNSPECIFIED"	 => __("indéterminée",__FILE__),
+
 			"NO_WARNING"					=> __("OK",__FILE__),
 		];
 
