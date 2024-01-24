@@ -404,6 +404,7 @@ class volvocars extends eqLogic {
 					$cmd->setName($presence . ' ' . $siteName);
 					$cmd->save();
 				}
+				$cmd->event($cmd->execute());
 			}
 		}
 		foreach ([
