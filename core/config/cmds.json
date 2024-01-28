@@ -7,17 +7,13 @@
 	},{
 		"logicalId": "locked",
 		"name": "{{Vérouillé}}",
+		"type": "info",
+		"subType": "string",
 		"configuration": {
 			"endpoint": "doors"
 		},
-		"type": "info",
-		"subType": "binary",
 		"display": {
 			"forceReturnLineAfter" : "1"
-		},
-		"template": {
-			"dashboard": "core::lock",
-			"mobile": "core::lock"
 		}
 	},{
 		"logicalId": "unlock",

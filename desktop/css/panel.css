@@ -134,15 +134,37 @@ img.volvo_logo_black {
 	border: 4px solid var(--vlv-bg-color);
 }
 
+.tile-group {
+	padding: 0px !important;
+}
+
+.tile-alert {
+	height: 57px !important;
+}
+
+.tile.tile1 {
+	height: 150px;
+}
+
+.tile.tile2 {
+	height: 100px;
+}
+
 .tile-title {
-	height: 60px;
 	color: var(--link-color) !important;
 	padding: 10px 0px 0px 10px !important;
 	text-align: left;
 }
 
-.tile-icon {
+.tile.tile1 .tile-title {
 	height: 60px;
+}
+
+.tile.tile2 .tile-title {
+	height: 35px;
+}
+
+.tile-icon {
 	padding: 10px 10px 0px 0px !important;
 	color: rgb(80,120,170) !important;
 }
@@ -153,7 +175,6 @@ img.volvo_logo_black {
 }
 
 .tile-value-container {
-	height: 80px;
 	padding: 0px !important;
 }
 

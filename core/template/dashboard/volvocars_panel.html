@@ -15,12 +15,12 @@
 				<!-- IMAGE -->
 				<div class="col-xs-12 tile"> 
 					<div id="picture">
-						<img id="img_car_#id#" src="#vehicle_img#id##" style='width:100%' />
+						<img id="img_car_#id#" src="#vehicle_img#id##" style='max-width:100%; max-height:270px' />
 					</div>
 				</div>
 
 				<!-- ALERTES -->
-				<div id='div_alertes' class="col-xs-12 tile ">
+				<div id='div_alertes' class="col-xs-12 tile tile-alert">
 					<span id='div_al_oil#id#' class="#fuelEngineOnly#id##"><img></img></span>
 					<span id='div_al_coolant#id#' class="#fuelEngineOnly#id##"><img></img></span>
 					<span id='div_al_brake#id#'><img></img></span>
@@ -32,29 +32,31 @@
 				</div>
 
 				<!-- PRESENCES -->
-				<div class="col-xs-8 tile">
-					<div class="col-xs-8 tile-title">{{Présences}}</div>
+				<div class="col-xs-4 tile tile1">
+					<div class="col-xs-8 tile-title">{{Présences}} #site1_name#id##</div>
 					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-map-marker-alt"></i></div>
 					<div class="col-xs-12 tile-value-container">
-						<div id="div_site2#id#" class="col-xs-6">
-							<div id='presence_site1_#id#'><i class='Cmd#presence_site1_id#id##'></i></div>
-							<div id='name_site1_#id#' class="widget-title"><span>#site1_name#id##</span></div>
-							<div class="col-xs-12 tile-subvalue-container">
-								<div id='distance_site1_#id#'><span class='Cmd#distance_site1_id#id##'></span></div>
-							</div>
+						<div id='presence_site1_#id#'><i class='Cmd#presence_site1_id#id##'></i></div>
+						<div class="col-xs-12">
+							<div class="widget-title">{{Distance}}:</div>
+							<div id='distance_site1_#id#'><span class='Cmd#distance_site1_id#id##'></span></div>
 						</div>
-						<div id="div_site2#id#" class="col-xs-6">
-							<div id='presence_site2_#id#'><i class='Cmd#presence_site2_id#id##'></i></div>
-							<div id='name_site2_#id#' class="widget-title"><span>#site2_name#id##</span></div>
-							<div class="col-xs-12 tile-subvalue-container">
-								<div id='distance_site2_#id#'><span class='Cmd#distance_site2_id#id##'></span></div>
-							</div>
+					</div>
+				</div>
+				<div class="col-xs-4 tile tile1">
+					<div class="col-xs-8 tile-title">{{Présences}} #site2_name#id##</div>
+					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-map-marker-alt"></i></div>
+					<div class="col-xs-12 tile-value-container">
+						<div id='presence_site2_#id#'><i class='Cmd#presence_site2_id#id##'></i></div>
+						<div class="col-xs-12">
+							<div class="widget-title">{{Distance}}:</div>
+							<div id='distance_site2_#id#'><span class='Cmd#distance_site2_id#id##'></span></div>
 						</div>
 					</div>
 				</div>
 
 				<!-- ODOMETRE -->
-				<div class="col-xs-4 tile">
+				<div class="col-xs-4 tile tile1">
 					<div class="col-xs-8 tile-title">{{Kilométrage}}</div>
 					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-map-signs"></i></div>
 					<div class="col-xs-12 tile-value-container">
@@ -64,7 +66,7 @@
 				</div>
 
 				<!-- CARBURANT -->
-				<div class="col-xs-4 tile #fuelEngineOnly#id##">
+				<div class="col-xs-4 tile tile1 #fuelEngineOnly#id##">
 					<div class="col-xs-8 tile-title">{{Niveau carburant}}</div>
 					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-gas-pump"></i></div>
 					<div class="col-xs-12 tile-value-container">
@@ -74,7 +76,7 @@
 				</div>
 
 				<!-- AUTONOMIE CARBURANT -->
-				<div class="col-xs-4 tile #fuelEngineOnly#id##">
+				<div class="col-xs-4 tile tile1 #fuelEngineOnly#id##">
 					<div class="col-xs-8 tile-title">{{Km restants (thermique)}}</div>
 					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-map-pin"></i></div>
 					<div class="col-xs-12 tile-value-container">
@@ -84,7 +86,7 @@
 				</div>
 
 				<!-- CONSOMMATION CARBURANT -->
-				<div class="col-xs-4 tile #fuelEngineOnly#id##">
+				<div class="col-xs-4 tile tile1 #fuelEngineOnly#id##">
 					<div class="col-xs-8 tile-title">{{Consommation (carburant)}}</div>
 					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-map-pin"></i></div>
 					<div class="col-xs-12 tile-value-container">
@@ -94,7 +96,7 @@
 				</div>
 
 				<!-- CONSOMMATION CARBURANT PARCOURS-->
-				<div class="col-xs-4 tile #fuelEngineOnly#id##">
+				<div class="col-xs-4 tile tile1 #fuelEngineOnly#id##">
 					<div class="col-xs-8 tile-title">{{Consommation parcours (carburant)}}</div>
 					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-map-pin"></i></div>
 					<div class="col-xs-12 tile-value-container">
@@ -104,7 +106,7 @@
 				</div>
 
 				<!-- BATTERY LEVEL -->
-				<div class="col-xs-4 tile #electricEngineOnly#id##">
+				<div class="col-xs-4 tile tile1 #electricEngineOnly#id##">
 					<div class="col-xs-8 tile-title">{{Batterie}}</div>
 					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-car-battery"></i></div>
 					<div class="col-xs-12 tile-value-container">
@@ -114,7 +116,7 @@
 				</div>
 
 				<!-- AUTONOMIE ELECTRIQUE -->
-				<div class="col-xs-4 tile #electricEngineOnly#id##">
+				<div class="col-xs-4 tile tile1 #electricEngineOnly#id##">
 					<div class="col-xs-8 tile-title">{{Km restants (électrique)}}</div>
 					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-map-pin"></i></div>
 					<div class="col-xs-12 tile-value-container">
@@ -124,7 +126,7 @@
 				</div>
 
 				<!-- CONSOMMATION ELECTRIQUE -->
-				<div class="col-xs-4 tile #electricEngineOnly#id##">
+				<div class="col-xs-4 tile tile1 #electricEngineOnly#id##">
 					<div class="col-xs-8 tile-title">{{Consommation électrique}}</div>
 					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-map-pin"></i></div>
 					<div class="col-xs-12 tile-value-container">
@@ -133,8 +135,9 @@
 					</div>
 				</div>
 
+				<div class="col-xs-12 tile-group">
 				<!-- PRISE -->
-				<div class="col-xs-4 tile #electricEngineOnly#id##">
+				<div class="col-xs-6 tile tile2 #electricEngineOnly#id##">
 					<div class="col-xs-8 tile-title">{{Prise}}</div>
 					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-plug"></i></div>
 					<div class="col-xs-12 tile-value-container">
@@ -143,7 +146,7 @@
 				</div>
 
 				<!-- RECHARGE -->
-				<div class="col-xs-4 tile #electricEngineOnly#id##">
+				<div class="col-xs-6 tile tile2 #electricEngineOnly#id##">
 					<div class="col-xs-8 tile-title">{{Recharge}}</div>
 					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-charging-station"></i></div>
 					<div class="col-xs-12 tile-value-container">
@@ -153,14 +156,19 @@
 						</div>
 					</div>
 				</div>
+				</div>
 
 			</div>
 
 			<!-- Column N°2 -->
 			<div class="col-xs-4 column">
 
-				<div class="col-xs-6 tile">
-					text
+				<div class="col-xs-6 tile tile2">
+					<div class="col-xs-8 tile-title">{{Vérouillage}}</div>
+					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-unlock-alt"></i></div>
+					<div class="col-xs-12 tile-value-container">
+						<span class="value#locked_id#id## tile-value"></span>
+					</div>
 				</div>
 
 				<div class="col-xs-6 tile">
@@ -500,6 +508,13 @@ jeedom.cmd.update['#chargingEndTime_id#id##'] = function(_options) {
 	}
 }
 jeedom.cmd.update['#chargingEndTime_id#id##'] ({display_value: "#chargingEndTime_display_value#id##", unit: "#chargingEndTime_unit#id##"})
+
+// VEROUILLAGE
+// ===========
+jeedom.cmd.update['#locked_id#id##'] = function(_options) {
+		$('.value#locked_id#id##').html(_options.display_value)
+}
+jeedom.cmd.update['#locked_id#id##'] ({display_value: "#locked_display_value#id##"})
 
 
 // MISE A JOUR DES TEXTES INFO

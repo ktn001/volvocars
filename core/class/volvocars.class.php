@@ -790,56 +790,71 @@ class volvocars extends eqLogic {
 		$infos = $account->getInfos($endpoint,$this->getVin());
 
 		$endpoint2cmd = [
-			'engine_diagnostics.engineCoolantLevelWarning'	=> ['coolant_level'],
-			'engine_diagnostics.oilLevelWarning'			=> ['oil_level'],
+			'brakes.brakeFluidLevelWarning'	=>	'brake_fluid_level',
 
-			'brakes.brakeFluidLevelWarning'	=>	['brake_fluid_level'],
+			'diagnostics.washerFluidLevelWarning' => 'washer_fluid_level',
 
-			'diagnostics.washerFluidLevelWarning' => ['washer_fluid_level'],
+			'doors.centralLock'		=> 'locked',
+			'doors.frontLeftDoor'	=> 'door_fl_state',
+			'doors.frontRightDoor'	=> 'door_fr_state',
+			'doors.rearLeftDoor'	=> 'door_rl_state',
+			'doors.rearRightDoor'	=> 'door_rr_state',
+			'doors.hood'			=> 'hood_state',
+			'doors.tailgate'		=> 'tail_state',
+			'doors.tankLid'			=> 'tank_state',
 
-			'fuel.fuelAmount' => ['fuel_amount'],
+			'engine_diagnostics.engineCoolantLevelWarning'	=> 'coolant_level',
+			'engine_diagnostics.oilLevelWarning'			=> 'oil_level',
 
-			'odometer.odometer' => ['odometer'],
+			'fuel.fuelAmount' => 'fuel_amount',
 
-			'recharge_status.batteryChargeLevel'		=> ['batteryLevel'],
-			'recharge_status.chargingSystemStatus'		=> ['chargingStatus'],
-			'recharge_status.estimatedChargingTime'		=> ['chargingRemainingTime'],
-			'recharge_status.chargingConnectionStatus'	=> ['connectorStatus'],
+			'odometer.odometer' => 'odometer',
 
-			'statistics.averageEnergyConsumption'		 => ['conso_electric'],
-			'statistics.averageFuelConsumption'			 => ['conso_fuel'],
-			'statistics.averageFuelConsumptionAutomatic' => ['conso_fuel_trip'],
-			'statistics.distanceToEmptyBattery'			 => ['electricAutonomy'],
-			'statistics.distanceToEmptyTank'			 => ['fuelAutonomy'],
+			'recharge_status.batteryChargeLevel'		=> 'batteryLevel',
+			'recharge_status.chargingSystemStatus'		=> 'chargingStatus',
+			'recharge_status.estimatedChargingTime'		=> 'chargingRemainingTime',
+			'recharge_status.chargingConnectionStatus'	=> 'connectorStatus',
 
-			'tyre.frontLeft'  => ['tyre_fl'],
-			'tyre.frontRight' => ['tyre_fr'],
-			'tyre.rearLeft'   => ['tyre_rl'],
-			'tyre.rearRight'  => ['tyre_rr'],
+			'statistics.averageEnergyConsumption'		 => 'conso_electric',
+			'statistics.averageFuelConsumption'			 => 'conso_fuel',
+			'statistics.averageFuelConsumptionAutomatic' => 'conso_fuel_trip',
+			'statistics.distanceToEmptyBattery'			 => 'electricAutonomy',
+			'statistics.distanceToEmptyTank'			 => 'fuelAutonomy',
 
-			'warnings.brakeLightCenterWarning'			=> ['al_brakeLight_c'],
-			'warnings.brakeLightLeftWarning'			=> ['al_brakeLight_l'],
-			'warnings.brakeLightRightWarning'			=> ['al_brakeLight_r'],
-			'warnings.daytimeRunningLightLeftWarning'	=> ['al_daytimeRunningLight_l'],
-			'warnings.daytimeRunningLightRightWarning'	=> ['al_daytimeRunningLight_r'],
-			'warnings.fogLightFrontWarning'				=> ['al_fogLight_f'],
-			'warnings.fogLightRearWarning'				=> ['al_fogLight_r'],
-			'warnings.hazardLightsWarning'				=> ['al_hazardLights'],
-			'warnings.highBeamLeftWarning'				=> ['al_highBeam_l'],
-			'warnings.highBeamRightWarning'				=> ['al_highBeam_r'],
-			'warnings.lowBeamLeftWarning'				=> ['al_lowBeam_l'],
-			'warnings.lowBeamRightWarning'				=> ['al_lowBeam_r'],
-			'warnings.positionLightFrontLeftWarning'	=> ['al_positionLight_fl'],
-			'warnings.positionLightFrontRightWarning'	=> ['al_positionLight_fr'],
-			'warnings.positionLightRearLeftWarning'		=> ['al_positionLight_rl'],
-			'warnings.positionLightRearRightWarning'	=> ['al_positionLight_rr'],
-			'warnings.registrationPlateLightWarning'	=> ['al_registrationPlateLight'],
-			'warnings.reverseLightsWarning'				=> ['al_reverseLights'],
-			'warnings.sideMarkLightsWarning'			=> ['al_sideMarkLights'],
-			'warnings.turnIndicationFrontLeftWarning'	=> ['al_turnIndication_fl'],
-			'warnings.turnIndicationFrontRightWarning'	=> ['al_turnIndication_fr'],
-			'warnings.turnIndicationRearLeftWarning'	=> ['al_turnIndication_rl'],
-			'warnings.turnIndicationRearRightWarning'	=> ['al_turnIndication_rr'],
+			'tyre.frontLeft'  => 'tyre_fl',
+			'tyre.frontRight' => 'tyre_fr',
+			'tyre.rearLeft'   => 'tyre_rl',
+			'tyre.rearRight'  => 'tyre_rr',
+
+			'warnings.brakeLightCenterWarning'			=> 'al_brakeLight_c',
+			'warnings.brakeLightLeftWarning'			=> 'al_brakeLight_l',
+			'warnings.brakeLightRightWarning'			=> 'al_brakeLight_r',
+			'warnings.daytimeRunningLightLeftWarning'	=> 'al_daytimeRunningLight_l',
+			'warnings.daytimeRunningLightRightWarning'	=> 'al_daytimeRunningLight_r',
+			'warnings.fogLightFrontWarning'				=> 'al_fogLight_f',
+			'warnings.fogLightRearWarning'				=> 'al_fogLight_r',
+			'warnings.hazardLightsWarning'				=> 'al_hazardLights',
+			'warnings.highBeamLeftWarning'				=> 'al_highBeam_l',
+			'warnings.highBeamRightWarning'				=> 'al_highBeam_r',
+			'warnings.lowBeamLeftWarning'				=> 'al_lowBeam_l',
+			'warnings.lowBeamRightWarning'				=> 'al_lowBeam_r',
+			'warnings.positionLightFrontLeftWarning'	=> 'al_positionLight_fl',
+			'warnings.positionLightFrontRightWarning'	=> 'al_positionLight_fr',
+			'warnings.positionLightRearLeftWarning'		=> 'al_positionLight_rl',
+			'warnings.positionLightRearRightWarning'	=> 'al_positionLight_rr',
+			'warnings.registrationPlateLightWarning'	=> 'al_registrationPlateLight',
+			'warnings.reverseLightsWarning'				=> 'al_reverseLights',
+			'warnings.sideMarkLightsWarning'			=> 'al_sideMarkLights',
+			'warnings.turnIndicationFrontLeftWarning'	=> 'al_turnIndication_fl',
+			'warnings.turnIndicationFrontRightWarning'	=> 'al_turnIndication_fr',
+			'warnings.turnIndicationRearLeftWarning'	=> 'al_turnIndication_rl',
+			'warnings.turnIndicationRearRightWarning'	=> 'al_turnIndication_rr',
+
+			'windows.frontLeftWindow'	=> 'win_fl_state',
+			'windows.frontRightWindow'	=> 'win_fr_state',
+			'windows.rearLeftWindow'	=> 'win_rl_state',
+			'windows.rearRightWindow'	=> 'win_rr_state',
+			'windows.sunroof'			=> 'roof_state',
 		];
 		foreach (array_keys($infos) as $key) {
 			log::add("volvocars","debug",sprintf("├─key: %s",$key));
@@ -850,123 +865,60 @@ class volvocars extends eqLogic {
 			} else {
 
 				switch ($endpoint.".".$key) {
-					case 'doors.centralLock':
-						$logicalIds[] = 'locked';
-						break;
-					case 'doors.frontLeftDoor':
-						$logicalIds[] = 'door_fl_closed';
-						$logicalIds[] = 'door_fl_open';
-						$logicalIds[] = 'door_fl_state';
-						break;
-					case 'doors.frontRightDoor':
-						$logicalIds[] = 'door_fr_closed';
-						$logicalIds[] = 'door_fr_open';
-						$logicalIds[] = 'door_fr_state';
-						break;
-					case 'doors.rearLeftDoor':
-						$logicalIds[] = 'door_rl_closed';
-						$logicalIds[] = 'door_rl_open';
-						$logicalIds[] = 'door_rl_state';
-						break;
-					case 'doors.rearRightDoor':
-						$logicalIds[] = 'door_rr_closed';
-						$logicalIds[] = 'door_rr_open';
-						$logicalIds[] = 'door_rr_state';
-						break;
-					case 'doors.hood':
-						$logicalIds[] = 'hood_closed';
-						$logicalIds[] = 'hood_open';
-						$logicalIds[] = 'hood_state';
-						break;
-					case 'doors.tailgate':
-						$logicalIds[] = 'tail_closed';
-						$logicalIds[] = 'tail_open';
-						$logicalIds[] = 'tail_state';
-						break;
-					case 'doors.tankLid':
-						$logicalIds[] = 'tank_closed';
-						$logicalIds[] = 'tank_open';
-						$logicalIds[] = 'tank_state';
-						break;
+
 					case 'location.location':
 						$logicalIds[] = 'position';
-						break;
-					case 'windows.frontLeftWindow':
-						$logicalIds[] = 'win_fl_closed';
-						$logicalIds[] = 'win_fl_open';
-						$logicalIds[] = 'win_fl_state';
-						break;
-					case 'windows.frontRightWindow':
-						$logicalIds[] = 'win_fr_closed';
-						$logicalIds[] = 'win_fr_open';
-						$logicalIds[] = 'win_fr_state';
-						break;
-					case 'windows.rearLeftWindow':
-						$logicalIds[] = 'win_rl_closed';
-						$logicalIds[] = 'win_rl_open';
-						$logicalIds[] = 'win_rl_state';
-						break;
-					case 'windows.rearRightWindow':
-						$logicalIds[] = 'win_rr_closed';
-						$logicalIds[] = 'win_rr_open';
-						$logicalIds[] = 'win_rr_state';
-						break;
-					case 'windows.sunroof':
-						$logicalIds[] = 'roof_closed';
-						$logicalIds[] = 'roof_open';
-						$logicalIds[] = 'roof_state';
 						break;
 					default:
 						log::add('volvocars','warning',"│ " . sprintf(__("%s.%s inconnu",__FILE__),$endpoint, $key));
 				}
 			}
-			foreach ($logicalIds as $logicalId) {
-				$cmd = $this->getCmd('info',$logicalId);
-				if (!is_object($cmd)) {
-					continue;
-				}
-				$time = date('Y-m-d H:i:s', strtotime($infos[$key]['timestamp']));
-				switch ($logicalId) {
-					case 'locked':
-						$value = $infos[$key]['value'] == 'LOCKED' ? 1 : 0;
-						break;
-					case 'position':
-						$value = $infos[$key]['coordinates'][1] . ',' . $infos[$key]['coordinates'][0];
-						break;
-					case 'door_fl_closed':
-					case 'door_fr_closed':
-					case 'door_rl_closed':
-					case 'door_rr_closed':
-					case 'win_fl_closed':
-					case 'win_fr_closed':
-					case 'win_rl_closed':
-					case 'win_rr_closed':
-					case 'hood_closed':
-					case 'tail_closed':
-					case 'tank_closed':
-					case 'roof_closed':
-						$value = $infos[$key]['value'] == 'CLOSED' ? 1 : 0;
-						break;
-					case 'door_fl_open':
-					case 'door_fr_open':
-					case 'door_rl_open':
-					case 'door_rr_open':
-					case 'win_fl_open':
-					case 'win_fr_open':
-					case 'win_rl_open':
-					case 'win_rr_open':
-					case 'hood_open':
-					case 'tail_open':
-					case 'tank_open':
-					case 'roof_open':
-						$value = $infos[$key]['value'] == 'OPEN' ? 1 : 0;
-						break;
-					default:
-						$value = $infos[$key]['value'];
-				}
-				log::add("volvocars","info",sprintf("│ %s: %s",$logicalId,$value));
-				$this->checkAndUpdateCmd($cmd,$value,$time);
+			$cmd = $this->getCmd('info',$logicalId);
+			if (!is_object($cmd)) {
+				continue;
 			}
+			$time = date('Y-m-d H:i:s', strtotime($infos[$key]['timestamp']));
+			switch ($logicalId) {
+				case 'position':
+					$value = $infos[$key]['coordinates'][1] . ',' . $infos[$key]['coordinates'][0];
+					break;
+				case 'door_fl_state':
+				case 'door_fr_state':
+				case 'door_rl_state':
+				case 'door_rr_state':
+				case 'hood_state':
+				case 'tail_state':
+				case 'tank_state':
+				case 'win_fl_state':
+				case 'win_fr_state':
+				case 'win_rl_state':
+				case 'win_rr_state':
+				case 'roof_state':
+					$openCmd = $this->getCmd('info',str_replace('state','open',$logicalId));
+					$closedCmd = $this->getCmd('info',str_replace('state','closed',$logicalId));
+					switch ($infos[$key]['value']) {
+						case 'OPEN':
+							$this->checkAndUpdate(str_replace('state','open',$logicalId), 1);
+							$this->checkAndUpdate(str_replace('state','closed',$logicalId), 0);
+							break;
+						case 'CLOSED':
+							$this->checkAndUpdate(str_replace('state','open',$logicalId), 0);
+							$this->checkAndUpdate(str_replace('state','closed',$logicalId), 1);
+							break;
+						case 'AJAR':
+							$this->checkAndUpdate(str_replace('state','open',$logicalId), 0);
+							$this->checkAndUpdate(str_replace('state','closed',$logicalId), 0);
+							break;
+						case 'UNSPECIFIED':
+							break;
+					}
+					$value = $infos[$key]['value'];
+					break;
+				default:
+					$value = $infos[$key]['value'];
+			}
+			log::add("volvocars","info",sprintf("│ %s: %s",$logicalId,$value));
+			$this->checkAndUpdateCmd($cmd,$value,$time);
 		}
 		log::add("volvocars","info","└OK");
 	}
@@ -1137,29 +1089,30 @@ class volvocars extends eqLogic {
 
 		//---- COMMANDES ID et VALUE
 		$logicalIds = array(
-			'al_oil',
-			'al_coolant',
 			'al_brake_fluid',
-			'al_washer_fluid',
-			'al_fuelautonomy',
+			'al_coolant',
 			'al_electricautonomy',
-			'al_tyre',
+			'al_fuelautonomy',
 			'al_light',
+			'al_oil',
+			'al_tyre',
+			'al_washer_fluid',
 			'batteryLevel',
+			'chargingEndTime',
 			'chargingStatus',
 			'connectorStatus',
-			'chargingEndTime',
-			'presence_site1',
-			'distance_site1',
-			'presence_site2',
-			'distance_site2',
-			'odometer',
-			'fuel_amount',
-			'fuelAutonomy',
 			'conso_electric',
 			'conso_fuel',
 			'conso_fuel_trip',
+			'distance_site1',
+			'distance_site2',
 			'electricAutonomy',
+			'fuel_amount',
+			'fuelAutonomy',
+			'locked',
+			'odometer',
+			'presence_site1',
+			'presence_site2',
 		);
 		foreach ($logicalIds as $logicalId) {
 			$cmd = $this->getCmd('info',$logicalId);
@@ -1650,7 +1603,11 @@ class volvocarsCmd extends cmd {
 			"CONNECTION_STATUS_FAULT"		 => __("en erreur",__FILE__),
 			"CONNECTION_STATUS_UNSPECIFIED"	 => __("indéterminée",__FILE__),
 
-			"NO_WARNING"					=> __("OK",__FILE__),
+			"LOCKED"	=> __("vérouillé",__FILE__),
+			"UNLOCKED"	=> __("dévérouillé",__FILE__),
+
+			"UNSPECIFIED"	=> __("indéterminé",__FILE__),
+			"NO_WARNING"	=> __("OK",__FILE__),
 		];
 
 		if ($this->getSubType() == 'string') {
