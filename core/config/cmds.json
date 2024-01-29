@@ -52,7 +52,8 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "doors"
+			"endpoint": "doors",
+			"dependTo": "door_fl_state"
 		},
 		"template": {
 			"dashboard":"volvocars::DoorClosed",
@@ -64,7 +65,8 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "doors"
+			"endpoint": "doors",
+			"dependTo": "door_fr_state"
 		},
 		"template": {
 			"dashboard":"volvocars::DoorClosed",
@@ -76,7 +78,8 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "doors"
+			"endpoint": "doors",
+			"dependTo": "door_rl_state"
 		},
 		"template": {
 			"dashboard":"volvocars::DoorClosed",
@@ -88,7 +91,8 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "doors"
+			"endpoint": "doors",
+			"dependTo": "door_rr_state"
 		},
 		"template": {
 			"dashboard":"volvocars::DoorClosed",
@@ -103,7 +107,8 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "doors"
+			"endpoint": "doors",
+			"dependTo": "door_fl_state"
 		},
 		"template": {
 			"dashboard":"volvocars::DoorOpen",
@@ -115,7 +120,8 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "doors"
+			"endpoint": "doors",
+			"dependTo": "door_fr_state"
 		},
 		"template": {
 			"dashboard":"volvocars::DoorOpen",
@@ -127,7 +133,8 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "doors"
+			"endpoint": "doors",
+			"dependTo": "door_rl_state"
 		},
 		"template": {
 			"dashboard":"volvocars::DoorOpen",
@@ -139,7 +146,8 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "doors"
+			"endpoint": "doors",
+			"dependTo": "door_rr_state"
 		},
 		"template": {
 			"dashboard":"volvocars::DoorOpen",
@@ -154,7 +162,11 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "doors"
+			"endpoint": "doors",
+			"dependencies": [
+				"door_fl_open",
+				"door_fl_closed"
+			]
 		},
 		"template": {
 			"dashboard": "core::badge",
@@ -166,7 +178,11 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "doors"
+			"endpoint": "doors",
+			"dependencies": [
+				"door_fr_open",
+				"door_fr_closed"
+			]
 		},
 		"template": {
 			"dashboard": "core::badge",
@@ -178,7 +194,11 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "doors"
+			"endpoint": "doors",
+			"dependencies": [
+				"door_rl_open",
+				"door_rl_closed"
+			]
 		},
 		"template": {
 			"dashboard": "core::badge",
@@ -190,7 +210,11 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "doors"
+			"endpoint": "doors",
+			"dependencies": [
+				"door_rr_open",
+				"door_rr_closed"
+			]
 		},
 		"template": {
 			"dashboard": "core::badge",
@@ -205,7 +229,8 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "windows"
+			"endpoint": "windows",
+			"dependTo": "win_fl_state"
 		}
 	},{
 		"logicalId": "win_fr_closed",
@@ -213,7 +238,8 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "windows"
+			"endpoint": "windows",
+			"dependTo": "win_fr_state"
 		}
 	},{
 		"logicalId": "win_rl_closed",
@@ -221,7 +247,8 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "windows"
+			"endpoint": "windows",
+			"dependTo": "win_rl_state"
 		}
 	},{
 		"logicalId": "win_rr_closed",
@@ -229,7 +256,8 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "windows"
+			"endpoint": "windows",
+			"dependTo": "win_rr_state"
 		},
 		"display": {
 			"forceReturnLineAfter" : "1"
@@ -240,7 +268,8 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "windows"
+			"endpoint": "windows",
+			"dependTo": "win_fl_state"
 		}
 	},{
 		"logicalId": "win_fr_open",
@@ -248,7 +277,8 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "windows"
+			"endpoint": "windows",
+			"dependTo": "win_fr_state"
 		}
 	},{
 		"logicalId": "win_rl_open",
@@ -256,7 +286,8 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "windows"
+			"endpoint": "windows",
+			"dependTo": "win_rl_state"
 		}
 	},{
 		"logicalId": "win_rr_open",
@@ -264,7 +295,8 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "windows"
+			"endpoint": "windows",
+			"dependTo": "win_rr_state"
 		},
 		"display": {
 			"forceReturnLineAfter" : "1"
@@ -275,7 +307,11 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "windows"
+			"endpoint": "windows",
+			"dependencies": [
+				"win_fl_open",
+				"win_fl_closed"
+			]
 		},
 		"template": {
 			"dashboard": "core::badge",
@@ -287,7 +323,11 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "windows"
+			"endpoint": "windows",
+			"dependencies": [
+				"win_fr_open",
+				"win_fr_closed"
+			]
 		},
 		"template": {
 			"dashboard": "core::badge",
@@ -299,7 +339,11 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "windows"
+			"endpoint": "windows",
+			"dependencies": [
+				"win_rl_open",
+				"win_rl_closed"
+			]
 		},
 		"template": {
 			"dashboard": "core::badge",
@@ -311,7 +355,11 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "windows"
+			"endpoint": "windows",
+			"dependencies": [
+				"win_rr_open",
+				"win_rr_closed"
+			]
 		},
 		"template": {
 			"dashboard": "core::badge",
@@ -326,7 +374,8 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "doors"
+			"endpoint": "doors",
+			"dependTo": "hood_state"
 		}
 	},{
 		"logicalId": "tail_closed",
@@ -334,7 +383,8 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "doors"
+			"endpoint": "doors",
+			"dependTo": "tail_state"
 		}
 	},{
 		"logicalId": "tank_closed",
@@ -342,7 +392,8 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "doors"
+			"endpoint": "doors",
+			"dependTo": "tank_state"
 		}
 	},{
 		"logicalId": "roof_closed",
@@ -350,7 +401,8 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "windows"
+			"endpoint": "windows",
+			"dependTo": "roof_state"
 		},
 		"display": {
 			"forceReturnLineAfter" : "1"
@@ -361,7 +413,8 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "doors"
+			"endpoint": "doors",
+			"dependTo": "hood_state"
 		}
 	},{
 		"logicalId": "tail_open",
@@ -369,7 +422,8 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "doors"
+			"endpoint": "doors",
+			"dependTo": "tail_state"
 		}
 	},{
 		"logicalId": "tank_open",
@@ -377,7 +431,8 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "doors"
+			"endpoint": "doors",
+			"dependTo": "tank_state"
 		}
 	},{
 		"logicalId": "roof_open",
@@ -385,7 +440,8 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "windows"
+			"endpoint": "windows",
+			"dependTo": "roof_state"
 		},
 		"display": {
 			"forceReturnLineAfter" : "1"
@@ -396,7 +452,11 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "doors"
+			"endpoint": "doors",
+			"dependencies": [
+				 "hood_open",
+				 "hood_closed"
+			]
 		},
 		"template": {
 			"dashboard": "core::badge",
@@ -408,7 +468,11 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "doors"
+			"endpoint": "doors",
+			"dependencies": [
+				 "tail_open",
+				 "tail_closed"
+			]
 		},
 		"template": {
 			"dashboard": "core::badge",
@@ -420,7 +484,11 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "doors"
+			"endpoint": "doors",
+			"dependencies": [
+				 "tank_open",
+				 "tank_closed"
+			]
 		},
 		"template": {
 			"dashboard": "core::badge",
@@ -432,7 +500,11 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "windows"
+			"endpoint": "windows",
+			"dependencies": [
+				 "roof_open",
+				 "roof_closed"
+			]
 		},
 		"template": {
 			"dashboard": "core::badge",

@@ -47,6 +47,10 @@ body[data-theme=core2019_Legacy] {
 	height: 40px;
 }
 
+.cmd.refresh {
+	position: initial !important;
+}
+
 .volvo_logo_black,
 .volvo_logo_white {
 	height: 70px;

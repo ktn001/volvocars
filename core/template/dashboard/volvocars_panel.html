@@ -5,6 +5,9 @@
 
 	<div id="carName">
 		<a href="#eqLink#" id="titre"><strong> #name_display# </strong></a>
+		<span class="cmd refresh cursor" data-cmd_id="#refresh_id#id##" onclick="jeedom.cmd.execute({id: #refresh_id#id##})">
+			<i class="fas fa-sync"></i>
+		</span>
 	</div>
 
 	<div class="container-fluid">
@@ -25,8 +28,8 @@
 					<span id='div_al_coolant#id#' class="#fuelEngineOnly#id##"><img></img></span>
 					<span id='div_al_brake#id#'><img></img></span>
 					<span id='div_al_wash#id#'><img></img></span>
-					<span id='div_al_fuelautonomy#id#' class='#al_fuelEngineOnly#id##'><img></img></span>
-					<span id='div_al_electricautonomy#id#' class='#al_electricEngineOnly#id##'><img></img></span>
+					<span id='div_al_fuelautonomy#id#' class='#fuelEngineOnly#id##'><img></img></span>
+					<span id='div_al_electricautonomy#id#' class='#electricEngineOnly#id##'><img></img></span>
 					<span id='div_al_tyre#id#'><img></img></span>
 					<span id='div_al_light#id#'><img></img></span>
 				</div>

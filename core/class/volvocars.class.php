@@ -808,6 +808,8 @@ class volvocars extends eqLogic {
 
 			'fuel.fuelAmount' => 'fuel_amount',
 
+			'location.location' => 'position',
+
 			'odometer.odometer' => 'odometer',
 
 			'recharge_status.batteryChargeLevel'		=> 'batteryLevel',
@@ -861,61 +863,20 @@ class volvocars extends eqLogic {
 			$logicalIds = array();
 
 			if (isset($endpoint2cmd[$endpoint.".".$key])) {
-				$logicalIds = $endpoint2cmd[$endpoint.".".$key] ;
+				$logicalId = $endpoint2cmd[$endpoint.".".$key] ;
 			} else {
-
-				switch ($endpoint.".".$key) {
-
-					case 'location.location':
-						$logicalIds[] = 'position';
-						break;
-					default:
-						log::add('volvocars','warning',"│ " . sprintf(__("%s.%s inconnu",__FILE__),$endpoint, $key));
-				}
+				log::add('volvocars','warning',"│ " . sprintf(__("%s.%s inconnu",__FILE__),$endpoint, $key));
+				continue;
 			}
 			$cmd = $this->getCmd('info',$logicalId);
 			if (!is_object($cmd)) {
 				continue;
 			}
 			$time = date('Y-m-d H:i:s', strtotime($infos[$key]['timestamp']));
-			switch ($logicalId) {
-				case 'position':
-					$value = $infos[$key]['coordinates'][1] . ',' . $infos[$key]['coordinates'][0];
-					break;
-				case 'door_fl_state':
-				case 'door_fr_state':
-				case 'door_rl_state':
-				case 'door_rr_state':
-				case 'hood_state':
-				case 'tail_state':
-				case 'tank_state':
-				case 'win_fl_state':
-				case 'win_fr_state':
-				case 'win_rl_state':
-				case 'win_rr_state':
-				case 'roof_state':
-					$openCmd = $this->getCmd('info',str_replace('state','open',$logicalId));
-					$closedCmd = $this->getCmd('info',str_replace('state','closed',$logicalId));
-					switch ($infos[$key]['value']) {
-						case 'OPEN':
-							$this->checkAndUpdate(str_replace('state','open',$logicalId), 1);
-							$this->checkAndUpdate(str_replace('state','closed',$logicalId), 0);
-							break;
-						case 'CLOSED':
-							$this->checkAndUpdate(str_replace('state','open',$logicalId), 0);
-							$this->checkAndUpdate(str_replace('state','closed',$logicalId), 1);
-							break;
-						case 'AJAR':
-							$this->checkAndUpdate(str_replace('state','open',$logicalId), 0);
-							$this->checkAndUpdate(str_replace('state','closed',$logicalId), 0);
-							break;
-						case 'UNSPECIFIED':
-							break;
-					}
-					$value = $infos[$key]['value'];
-					break;
-				default:
-					$value = $infos[$key]['value'];
+			if ($logicalId == 'position') {
+				$value = $infos[$key]['coordinates'][1] . ',' . $infos[$key]['coordinates'][0];
+			} else {
+				$value = $infos[$key]['value'];
 			}
 			log::add("volvocars","info",sprintf("│ %s: %s",$logicalId,$value));
 			$this->checkAndUpdateCmd($cmd,$value,$time);
@@ -1113,22 +1074,26 @@ class volvocars extends eqLogic {
 			'odometer',
 			'presence_site1',
 			'presence_site2',
+			'refresh',
 		);
 		foreach ($logicalIds as $logicalId) {
-			$cmd = $this->getCmd('info',$logicalId);
+			$cmd = $this->getCmd(null,$logicalId);
 			if (is_object($cmd)) {
-				$value = $cmd->execCmd();
-				$unit=$cmd->getUnite();
-				$display_value = $cmd->getDisplayValue($value);
-				if ($cmd->getSubType() == 'numeric') {
-					$valueInfo = volvocarsCmd::autoValueArray($value, $cmd->getConfiguration('historizeRound', 99), $cmd->getUnite());
-					$display_value = $valueInfo[0];
-					$unit = $valueInfo[1];
+				if ($cmd->getType() == 'info') {
+					$value = $cmd->execCmd();
+					$unit=$cmd->getUnite();
+					$display_value = $cmd->getDisplayValue($value);
+					if ($cmd->getSubType() == 'numeric') {
+						$valueInfo = volvocarsCmd::autoValueArray($value, $cmd->getConfiguration('historizeRound', 99), $cmd->getUnite());
+						$display_value = $valueInfo[0];
+						$unit = $valueInfo[1];
+					}
+					$replace['#' . $logicalId . '_id' . $id . '#'] = $cmd->getId();
+					$replace['#' . $logicalId . $id . '#'] = $value;
+					$replace['#' . $logicalId . '_display_value' . $id . '#'] = $display_value;
+					$replace['#' . $logicalId . '_unit' . $id . '#'] = $unit;
 				}
 				$replace['#' . $logicalId . '_id' . $id . '#'] = $cmd->getId();
-				$replace['#' . $logicalId . $id . '#'] = $value;
-				$replace['#' . $logicalId . '_display_value' . $id . '#'] = $display_value;
-				$replace['#' . $logicalId . '_unit' . $id . '#'] = $unit;
 			}
 		}
 
@@ -1570,6 +1535,53 @@ class volvocarsCmd extends cmd {
 					}
 					return $value;
 					break;
+				case 'door_fl_open':
+				case 'door_fr_open':
+				case 'door_rl_open':
+				case 'door_rr_open':
+				case 'win_fl_open':
+				case 'win_fr_open':
+				case 'win_rl_open':
+				case 'win_rr_open':
+				case 'hood_open':
+				case 'tail_open':
+				case 'tank_open':
+				case 'roof_open':
+					log::add("volvocars","debug","1111111111111111 " . $logicalId);
+					$stateCmd = $car->getCmd('info',str_replace('open','state',$logicalId));
+					if (is_object($stateCmd)) {
+						switch ($stateCmd->execCmd()) {
+							case 'OPEN':
+								return 1;
+							case 'AJAR':
+							case 'CLOSED':
+								return 0;
+						}
+						return $this->execCmd();
+					}
+				case 'door_fl_closed':
+				case 'door_fr_closed':
+				case 'door_rl_closed':
+				case 'door_rr_closed':
+				case 'win_fl_closed':
+				case 'win_fr_closed':
+				case 'win_rl_closed':
+				case 'win_rr_closed':
+				case 'hood_closed':
+				case 'tail_closed':
+				case 'tank_closed':
+				case 'roof_closed':
+					$stateCmd = $car->getCmd('info',str_replace('closed','state',$logicalId));
+					if (is_object($stateCmd)) {
+						switch ($stateCmd->execCmd()) {
+							case 'OPEN':
+								return 0;
+							case 'AJAR':
+							case 'CLOSED':
+								return 1;
+						}
+						return $this->execCmd();
+					}
 				case 'chargingEndTime':
 					$cmd = $car->getCmd('info','chargingRemainingTime');
 					if (! is_object($cmd)){
