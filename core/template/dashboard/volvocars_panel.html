@@ -235,125 +235,140 @@ if (#site2_active#id## == 1) {
 // ===============
 
 // OIL
-jeedom.cmd.update['#al_oil_id#id##'] = function(_options) {
-	console.log(_options)
-	if (_options.value != 0) {
-		img = 'oil_red.svg'
-	} else {
-		if ($('body').data('theme').endsWith('Dark')) {
-			img = 'oil_grey_dark.svg'
+if (!"#al_oil_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#al_oil_id#id##'] = function(_options) {
+		if (_options.value != 0) {
+			img = 'oil_red.svg'
 		} else {
-			img = 'oil_grey_light.svg'
+			if ($('body').data('theme').endsWith('Dark')) {
+				img = 'oil_grey_dark.svg'
+			} else {
+				img = 'oil_grey_light.svg'
+			}
 		}
+		$('#div_al_oil#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
 	}
-	$('#div_al_oil#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+	jeedom.cmd.update['#al_oil_id#id##'] ({value: "#al_oil#id##"})
 }
-jeedom.cmd.update['#al_oil_id#id##'] ({value: "#al_oil#id##"})
 
 // COOLANT
-jeedom.cmd.update['#al_coolant_id#id##'] = function(_options) {
-	if (_options.value == 1) {
-		img = 'coolant_red.svg'
-	} else {
-		if ($('body').data('theme').endsWith('Dark')) {
-			img = 'coolant_grey_dark.svg'
+if (!"#al_coolant_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#al_coolant_id#id##'] = function(_options) {
+		if (_options.value == 1) {
+			img = 'coolant_red.svg'
 		} else {
-			img = 'coolant_grey_light.svg'
+			if ($('body').data('theme').endsWith('Dark')) {
+				img = 'coolant_grey_dark.svg'
+			} else {
+				img = 'coolant_grey_light.svg'
+			}
 		}
+		$('#div_al_coolant#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
 	}
-	$('#div_al_coolant#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+	jeedom.cmd.update['#al_coolant_id#id##'] ({value: "#al_coolant#id##"})
 }
-jeedom.cmd.update['#al_coolant_id#id##'] ({value: "#al_coolant#id##"})
 
 // BRAKE
-jeedom.cmd.update['#al_brake_fluid_id#id##'] = function(_options) {
-	if (_options.value == 1) {
-		img = 'brake_red.svg'
-	} else {
-		if ($('body').data('theme').endsWith('Dark')) {
-			img = 'brake_grey_dark.svg'
+if (!"#al_brake_fluid_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#al_brake_fluid_id#id##'] = function(_options) {
+		if (_options.value == 1) {
+			img = 'brake_red.svg'
 		} else {
-			img = 'brake_grey_light.svg'
+			if ($('body').data('theme').endsWith('Dark')) {
+				img = 'brake_grey_dark.svg'
+			} else {
+				img = 'brake_grey_light.svg'
+			}
 		}
+		$('#div_al_brake#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
 	}
-	$('#div_al_brake#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+	jeedom.cmd.update['#al_brake_fluid_id#id##'] ({value: "#al_brake_fluid#id##"})
 }
-jeedom.cmd.update['#al_brake_fluid_id#id##'] ({value: "#al_brake_fluid#id##"})
 
 // WASH
-jeedom.cmd.update['#al_washer_fluid_id#id##'] = function(_options) {
-	if (_options.value == 1) {
-		img = 'wash_red.svg'
-	} else {
-		if ($('body').data('theme').endsWith('Dark')) {
-			img = 'wash_grey_dark.svg'
+if (!"#al_washer_fluid_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#al_washer_fluid_id#id##'] = function(_options) {
+		if (_options.value == 1) {
+			img = 'wash_red.svg'
 		} else {
-			img = 'wash_grey_light.svg'
+			if ($('body').data('theme').endsWith('Dark')) {
+				img = 'wash_grey_dark.svg'
+			} else {
+				img = 'wash_grey_light.svg'
+			}
 		}
+		$('#div_al_wash#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
 	}
-	$('#div_al_wash#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+	jeedom.cmd.update['#al_washer_fluid_id#id##'] ({value: "#al_washer_fluid#id##"})
 }
-jeedom.cmd.update['#al_washer_fluid_id#id##'] ({value: "#al_washer_fluid#id##"})
 
 // AL FUEL AUTONOMY
-jeedom.cmd.update['#al_fuelautonomy_id#id##'] = function(_options) {
-	if (_options.value == 1) {
-		img = 'station_gas_red.svg'
-	} else {
-		if ($('body').data('theme').endsWith('Dark')) {
-			img = 'station_gas_grey_dark.svg'
+if (!"#al_fuelautonomy_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#al_fuelautonomy_id#id##'] = function(_options) {
+		if (_options.value == 1) {
+			img = 'station_gas_red.svg'
 		} else {
-			img = 'station_gas_grey_light.svg'
+			if ($('body').data('theme').endsWith('Dark')) {
+				img = 'station_gas_grey_dark.svg'
+			} else {
+				img = 'station_gas_grey_light.svg'
+			}
 		}
+		$('#div_al_fuelautonomy#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
 	}
-	$('#div_al_fuelautonomy#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+	jeedom.cmd.update['#al_fuelautonomy_id#id##'] ({value: "#al_fuelautonomy#id##"})
 }
-jeedom.cmd.update['#al_fuelautonomy_id#id##'] ({value: "#al_fuelautonomy#id##"})
 
 // AL ELECTRIC AUTONOMY
-jeedom.cmd.update['#al_electricautonomy_id#id##'] = function(_options) {
-	if (_options.value == 1) {
-		img = 'station_recharge_red.svg'
-	} else {
-		if ($('body').data('theme').endsWith('Dark')) {
-			img = 'station_recharge_grey_dark.svg'
+if (!"#al_electricautonomy_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#al_electricautonomy_id#id##'] = function(_options) {
+		if (_options.value == 1) {
+			img = 'station_recharge_red.svg'
 		} else {
-			img = 'station_recharge_grey_light.svg'
+			if ($('body').data('theme').endsWith('Dark')) {
+				img = 'station_recharge_grey_dark.svg'
+			} else {
+				img = 'station_recharge_grey_light.svg'
+			}
 		}
+		$('#div_al_electricautonomy#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
 	}
-	$('#div_al_electricautonomy#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+	jeedom.cmd.update['#al_electricautonomy_id#id##'] ({value: "#al_electricautonomy#id##"})
 }
-jeedom.cmd.update['#al_electricautonomy_id#id##'] ({value: "#al_electricautonomy#id##"})
 
 // TYRE
-jeedom.cmd.update['#al_tyre_id#id##'] = function(_options) {
-	if (_options.value >= 1) {
-		img = 'tyre_red.svg'
-	} else {
-		if ($('body').data('theme').endsWith('Dark')) {
-			img = 'tyre_grey_dark.svg'
+if (!"#al_tyre_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#al_tyre_id#id##'] = function(_options) {
+		if (_options.value >= 1) {
+			img = 'tyre_red.svg'
 		} else {
-			img = 'tyre_grey_light.svg'
+			if ($('body').data('theme').endsWith('Dark')) {
+				img = 'tyre_grey_dark.svg'
+			} else {
+				img = 'tyre_grey_light.svg'
+			}
 		}
+		$('#div_al_tyre#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
 	}
-	$('#div_al_tyre#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+	jeedom.cmd.update['#al_tyre_id#id##'] ({value: "#al_tyre#id##"})
 }
-jeedom.cmd.update['#al_tyre_id#id##'] ({value: "#al_tyre#id##"})
 
 // LIGHT
-jeedom.cmd.update['#al_light_id#id##'] = function(_options) {
-	if (_options.value == 1) {
-		img = 'light_red.svg'
-	} else {
-		if ($('body').data('theme').endsWith('Dark')) {
-			img = 'light_grey_dark.svg'
+if (!"#al_light_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#al_light_id#id##'] = function(_options) {
+		if (_options.value == 1) {
+			img = 'light_red.svg'
 		} else {
-			img = 'light_grey_light.svg'
+			if ($('body').data('theme').endsWith('Dark')) {
+				img = 'light_grey_dark.svg'
+			} else {
+				img = 'light_grey_light.svg'
+			}
 		}
+		$('#div_al_light#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
 	}
-	$('#div_al_light#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+	jeedom.cmd.update['#al_light_id#id##'] ({value: "#al_light#id##"})
 }
-jeedom.cmd.update['#al_light_id#id##'] ({value: "#al_light#id##"})
 
 // PRESENCES
 // =========
@@ -366,14 +381,18 @@ function updatePresence(presence_id, site_name, _options) {
 		$('.Cmd' + presence_id).empty().append('<i class="fas fa-house-damage" style="font-size:1.75em;"></i>');
 	}
 }
-jeedom.cmd.update['#presence_site1_id#id##'] = function(_options) {
-	updatePresence('#presence_site1_id#id##', '#site1_name#id##', _options)
+if (!"#presence_site1_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#presence_site1_id#id##'] = function(_options) {
+		updatePresence('#presence_site1_id#id##', '#site1_name#id##', _options)
+	}
+	jeedom.cmd.update['#presence_site1_id#id##'] ({value: '#presence_site1#id##'});
 }
-jeedom.cmd.update['#presence_site2_id#id##'] = function(_options) {
-	updatePresence('#presence_site2_id#id##', '#site2_name#id##', _options)
+if (!"#presence_site2_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#presence_site2_id#id##'] = function(_options) {
+		updatePresence('#presence_site2_id#id##', '#site2_name#id##', _options)
+	}
+	jeedom.cmd.update['#presence_site2_id#id##'] ({value: '#presence_site2#id##'});
 }
-jeedom.cmd.update['#presence_site1_id#id##'] ({value: '#presence_site1#id##'});
-jeedom.cmd.update['#presence_site2_id#id##'] ({value: '#presence_site2#id##'});
 
 // DISTANCES
 // =========
@@ -394,73 +413,87 @@ function updateDistance(distance_id, color_class, _options) {
 	}
 	$('.Cmd' + distance_id).empty().append('<span class="' + color_class + '">' + value + ' ' + unit + '</span>')
 }
-jeedom.cmd.update['#distance_site1_id#id##'] = function(_options) {
-	if (_options.value <= #site1_limit#id##) {
-		color_class = 'color_on'
-	} else {
-		color_class = 'color_off'
+if (!"#distance_site1_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#distance_site1_id#id##'] = function(_options) {
+		if (_options.value <= #site1_limit#id##) {
+			color_class = 'color_on'
+		} else {
+			color_class = 'color_off'
+		}
+		updateDistance('#distance_site1_id#id##', color_class, _options)
 	}
-	updateDistance('#distance_site1_id#id##', color_class, _options)
+	jeedom.cmd.update['#distance_site1_id#id##'] ({
+		value: '#distance_site1#id##',
+		display_value: '#distance_site1_display_value#id##',
+		unit: '#distance_site1_unit#id##'
+	})
 }
-jeedom.cmd.update['#distance_site2_id#id##'] = function(_options) {
-	if (_options.value <= #site2_limit#id##) {
-		color_class = 'color_on'
-	} else {
-		color_class = 'color_off'
+if (!"#distance_site2_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#distance_site2_id#id##'] = function(_options) {
+		if (_options.value <= #site2_limit#id##) {
+			color_class = 'color_on'
+		} else {
+			color_class = 'color_off'
+		}
+		updateDistance('#distance_site2_id#id##', color_class, _options)
 	}
-	updateDistance('#distance_site2_id#id##', color_class, _options)
+	jeedom.cmd.update['#distance_site2_id#id##'] ({
+		value: '#distance_site2#id##',
+		display_value: '#distance_site2_display_value#id##',
+		unit: '#distance_site2_unit#id##'
+	})
 }
-jeedom.cmd.update['#distance_site1_id#id##'] ({
-	value: '#distance_site1#id##',
-	display_value: '#distance_site1_display_value#id##',
-	unit: '#distance_site1_unit#id##'
-})
-jeedom.cmd.update['#distance_site2_id#id##'] ({
-	value: '#distance_site2#id##',
-	display_value: '#distance_site2_display_value#id##',
-	unit: '#distance_site2_unit#id##'
-})
 
 
 // ODOMETER
 // ========
-jeedom.cmd.update['#odometer_id#id##'] = function(_options) {
-	$('.value#odometer_id#id##').html(_options.display_value)
-	$('.unit#odometer_id#id##').html(_options.unit)
+if (!"#odometer_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#odometer_id#id##'] = function(_options) {
+		$('.value#odometer_id#id##').html(_options.display_value)
+		$('.unit#odometer_id#id##').html(_options.unit)
+	}
+	jeedom.cmd.update['#odometer_id#id##'] ({display_value: "#odometer_display_value#id##", unit: "#odometer_unit#id##"})
 }
-jeedom.cmd.update['#odometer_id#id##'] ({display_value: "#odometer_display_value#id##", unit: "#odometer_unit#id##"})
 
 // FUEL
 // ====
-jeedom.cmd.update['#fuel_amount_id#id##'] = function(_options) {
-	$('.value#fuel_amount_id#id##').html(_options.display_value)
-	$('.unit#fuel_amount_id#id##').html(_options.unit)
+if (!"#fuel_amount_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#fuel_amount_id#id##'] = function(_options) {
+		$('.value#fuel_amount_id#id##').html(_options.display_value)
+		$('.unit#fuel_amount_id#id##').html(_options.unit)
+	}
+	jeedom.cmd.update['#fuel_amount_id#id##'] ({display_value: "#fuel_amount_display_value#id##", unit: "#fuel_amount_unit#id##"})
 }
-jeedom.cmd.update['#fuel_amount_id#id##'] ({display_value: "#fuel_amount_display_value#id##", unit: "#fuel_amount_unit#id##"})
 
 // KM THERMIQUE RESTANTS
 //======================
-jeedom.cmd.update['#fuelAutonomy_id#id##'] = function(_options) {
-	$('.value#fuelAutonomy_id#id##').html(_options.display_value)
-	$('.unit#fuelAutonomy_id#id##').html(_options.unit)
+if (!"#fuelAutonomy_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#fuelAutonomy_id#id##'] = function(_options) {
+		$('.value#fuelAutonomy_id#id##').html(_options.display_value)
+		$('.unit#fuelAutonomy_id#id##').html(_options.unit)
+	}
+	jeedom.cmd.update['#fuelAutonomy_id#id##'] ({display_value: "#fuelAutonomy_display_value#id##", unit: "#fuelAutonomy_unit#id##"})
 }
-jeedom.cmd.update['#fuelAutonomy_id#id##'] ({display_value: "#fuelAutonomy_display_value#id##", unit: "#fuelAutonomy_unit#id##"})
 
 // CONSO FUEL
 //===========
-jeedom.cmd.update['#conso_fuel_id#id##'] = function(_options) {
-	$('.value#conso_fuel_id#id##').html(_options.display_value)
-	$('.unit#conso_fuel_id#id##').html(_options.unit)
+if (!"#conso_fuel_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#conso_fuel_id#id##'] = function(_options) {
+		$('.value#conso_fuel_id#id##').html(_options.display_value)
+		$('.unit#conso_fuel_id#id##').html(_options.unit)
+	}
+	jeedom.cmd.update['#conso_fuel_id#id##'] ({display_value: "#conso_fuel_display_value#id##", unit: "#conso_fuel_unit#id##"})
 }
-jeedom.cmd.update['#conso_fuel_id#id##'] ({display_value: "#conso_fuel_display_value#id##", unit: "#conso_fuel_unit#id##"})
 
 // CONSO FUEL PARCOURS
 //====================
-jeedom.cmd.update['#conso_fuel_trip_id#id##'] = function(_options) {
-	$('.value#conso_fuel_trip_id#id##').html(_options.display_value)
-	$('.unit#conso_fuel_trip_id#id##').html(_options.unit)
+if (!"#conso_fuel_trip_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#conso_fuel_trip_id#id##'] = function(_options) {
+		$('.value#conso_fuel_trip_id#id##').html(_options.display_value)
+		$('.unit#conso_fuel_trip_id#id##').html(_options.unit)
+	}
+	jeedom.cmd.update['#conso_fuel_trip_id#id##'] ({display_value: "#conso_fuel_trip_display_value#id##", unit: "#conso_fuel_trip_unit#id##"})
 }
-jeedom.cmd.update['#conso_fuel_trip_id#id##'] ({display_value: "#conso_fuel_trip_display_value#id##", unit: "#conso_fuel_trip_unit#id##"})
 
 // BATTERY LEVEL
 // =============
@@ -472,70 +505,81 @@ jeedom.cmd.update['#batteryLevel_id#id##'] ({display_value: "#batteryLevel_displ
 
 // KM ELECTRIQUE RESTANTS
 // ======================
-jeedom.cmd.update['#electricAutonomy_id#id##'] = function(_options) {
-	$('.value#electricAutonomy_id#id##').html(_options.display_value)
-	$('.unit#electricAutonomy_id#id##').html(_options.unit)
+	jeedom.cmd.update['#electricAutonomy_id#id##'] = function(_options) {
+		$('.value#electricAutonomy_id#id##').html(_options.display_value)
+		$('.unit#electricAutonomy_id#id##').html(_options.unit)
+	}
+	jeedom.cmd.update['#electricAutonomy_id#id##'] ({display_value: "#electricAutonomy_display_value#id##", unit: "#electricAutonomy_unit#id##"})
 }
-jeedom.cmd.update['#electricAutonomy_id#id##'] ({display_value: "#electricAutonomy_display_value#id##", unit: "#electricAutonomy_unit#id##"})
-
+	
 // CONSO ELECTRIQUE
 //=================
 jeedom.cmd.update['#conso_electric_id#id##'] = function(_options) {
-	$('.value#conso_electric_id#id##').html(_options.display_value)
-	$('.unit#conso_electric_id#id##').html(_options.unit)
+	jeedom.cmd.update['#conso_electric_id#id##'] = function(_options) {
+		$('.value#conso_electric_id#id##').html(_options.display_value)
+		$('.unit#conso_electric_id#id##').html(_options.unit)
+	}
+	jeedom.cmd.update['#conso_electric_id#id##'] ({display_value: "#conso_electric_display_value#id##", unit: "#conso_electric_unit#id##"})
 }
-jeedom.cmd.update['#conso_electric_id#id##'] ({display_value: "#conso_electric_display_value#id##", unit: "#conso_electric_unit#id##"})
-
+	
 // PRISE
 // =====
 jeedom.cmd.update['#connectorStatus_id#id##'] = function(_options) {
-	$('.value#connectorStatus_id#id##').html(_options.display_value)
+	jeedom.cmd.update['#connectorStatus_id#id##'] = function(_options) {
+		$('.value#connectorStatus_id#id##').html(_options.display_value)
+	}
+	jeedom.cmd.update['#connectorStatus_id#id##'] ({display_value: "#connectorStatus_display_value#id##"})
 }
-jeedom.cmd.update['#connectorStatus_id#id##'] ({display_value: "#connectorStatus_display_value#id##"})
-
+	
 // RECHARGE
 // ========
 jeedom.cmd.update['#chargingStatus_id#id##'] = function(_options) {
-	$('.value#chargingStatus_id#id##').html(_options.display_value)
+	jeedom.cmd.update['#chargingStatus_id#id##'] = function(_options) {
+		$('.value#chargingStatus_id#id##').html(_options.display_value)
+	}
+	jeedom.cmd.update['#chargingStatus_id#id##'] ({display_value: "#chargingStatus_display_value#id##"})
 }
-jeedom.cmd.update['#chargingStatus_id#id##'] ({display_value: "#chargingStatus_display_value#id##"})
 
 // RECHARGE END TIME
 // =================
 jeedom.cmd.update['#chargingEndTime_id#id##'] = function(_options) {
-	if (_options.display_value == '') {
-		$(".value#chargingEndTime_id#id##").closest('div').addClass('hidden')
-	} else {
-		$(".value#chargingEndTime_id#id##").closest('div').removeClass('hidden')
-		$('.value#chargingEndTime_id#id##').html(_options.display_value)
+	jeedom.cmd.update['#chargingEndTime_id#id##'] = function(_options) {
+		if (_options.display_value == '') {
+			$(".value#chargingEndTime_id#id##").closest('div').addClass('hidden')
+		} else {
+			$(".value#chargingEndTime_id#id##").closest('div').removeClass('hidden')
+			$('.value#chargingEndTime_id#id##').html(_options.display_value)
+		}
 	}
+	jeedom.cmd.update['#chargingEndTime_id#id##'] ({display_value: "#chargingEndTime_display_value#id##", unit: "#chargingEndTime_unit#id##"})
 }
-jeedom.cmd.update['#chargingEndTime_id#id##'] ({display_value: "#chargingEndTime_display_value#id##", unit: "#chargingEndTime_unit#id##"})
-
+	
 // VEROUILLAGE
 // ===========
 jeedom.cmd.update['#locked_id#id##'] = function(_options) {
-		$('.value#locked_id#id##').html(_options.display_value)
+	jeedom.cmd.update['#locked_id#id##'] = function(_options) {
+			$('.value#locked_id#id##').html(_options.display_value)
+	}
+	jeedom.cmd.update['#locked_id#id##'] ({display_value: "#locked_display_value#id##"})
 }
-jeedom.cmd.update['#locked_id#id##'] ({display_value: "#locked_display_value#id##"})
 
 
 // MISE A JOUR DES TEXTES INFO
 // ===========================
 jeedom.cmd.update['#msg2widget_id#id##'] = function(_options) {
-	msg_default = {}
-	console.log(_options.value)
-	messages = json_decode(_options.value)
-	for (cible in messages) {
-		msg = ''
-		sep = ''
-		for (id in messages[cible]) {
-			msg += sep + messages[cible][id]
-			sep = '<br>'
+	jeedom.cmd.update['#msg2widget_id#id##'] = function(_options) {
+		messages = json_decode(_options.value)
+		for (cible in messages) {
+			msg = ''
+			sep = ''
+			for (id in messages[cible]) {
+				msg += sep + messages[cible][id]
+				sep = '<br>'
+			}
+			$('#'+cible + '#id#').attr('title',msg)
 		}
-		$('#'+cible + '#id#').attr('title',msg)
 	}
+	jeedom.cmd.update['#msg2widget_id#id##'] ({value: "#msg2widget#id##"})
 }
-jeedom.cmd.update['#msg2widget_id#id##'] ({value: "#msg2widget#id##"})
 
 </script>
