@@ -497,14 +497,17 @@ if (!"#conso_fuel_trip_id#id##".startsWith('#')) {
 
 // BATTERY LEVEL
 // =============
-jeedom.cmd.update['#batteryLevel_id#id##'] = function(_options) {
-	$('.value#batteryLevel_id#id##').html(_options.display_value)
-	$('.unit#batteryLevel_id#id##').html(_options.unit)
+if (!"#batteryLevel_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#batteryLevel_id#id##'] = function(_options) {
+		$('.value#batteryLevel_id#id##').html(_options.display_value)
+		$('.unit#batteryLevel_id#id##').html(_options.unit)
+	}
+	jeedom.cmd.update['#batteryLevel_id#id##'] ({display_value: "#batteryLevel_display_value#id##", unit: "#batteryLevel_unit#id##"})
 }
-jeedom.cmd.update['#batteryLevel_id#id##'] ({display_value: "#batteryLevel_display_value#id##", unit: "#batteryLevel_unit#id##"})
 
 // KM ELECTRIQUE RESTANTS
 // ======================
+if (!"#electricAutonomy_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#electricAutonomy_id#id##'] = function(_options) {
 		$('.value#electricAutonomy_id#id##').html(_options.display_value)
 		$('.unit#electricAutonomy_id#id##').html(_options.unit)
@@ -514,30 +517,35 @@ jeedom.cmd.update['#batteryLevel_id#id##'] ({display_value: "#batteryLevel_displ
 	
 // CONSO ELECTRIQUE
 //=================
-jeedom.cmd.update['#conso_electric_id#id##'] = function(_options) {
+if (!"#conso_electric_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#conso_electric_id#id##'] = function(_options) {
-		$('.value#conso_electric_id#id##').html(_options.display_value)
-		$('.unit#conso_electric_id#id##').html(_options.unit)
+		jeedom.cmd.update['#conso_electric_id#id##'] = function(_options) {
+			$('.value#conso_electric_id#id##').html(_options.display_value)
+			$('.unit#conso_electric_id#id##').html(_options.unit)
+		}
 	}
 	jeedom.cmd.update['#conso_electric_id#id##'] ({display_value: "#conso_electric_display_value#id##", unit: "#conso_electric_unit#id##"})
-}
 	
 // PRISE
 // =====
-jeedom.cmd.update['#connectorStatus_id#id##'] = function(_options) {
+if (!"#connectorStatus_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#connectorStatus_id#id##'] = function(_options) {
-		$('.value#connectorStatus_id#id##').html(_options.display_value)
+		jeedom.cmd.update['#connectorStatus_id#id##'] = function(_options) {
+			$('.value#connectorStatus_id#id##').html(_options.display_value)
+		}
+		jeedom.cmd.update['#connectorStatus_id#id##'] ({display_value: "#connectorStatus_display_value#id##"})
 	}
-	jeedom.cmd.update['#connectorStatus_id#id##'] ({display_value: "#connectorStatus_display_value#id##"})
 }
 	
 // RECHARGE
 // ========
-jeedom.cmd.update['#chargingStatus_id#id##'] = function(_options) {
+if (!"#chargingStatus_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#chargingStatus_id#id##'] = function(_options) {
-		$('.value#chargingStatus_id#id##').html(_options.display_value)
+		jeedom.cmd.update['#chargingStatus_id#id##'] = function(_options) {
+			$('.value#chargingStatus_id#id##').html(_options.display_value)
+		}
+		jeedom.cmd.update['#chargingStatus_id#id##'] ({display_value: "#chargingStatus_display_value#id##"})
 	}
-	jeedom.cmd.update['#chargingStatus_id#id##'] ({display_value: "#chargingStatus_display_value#id##"})
 }
 
 // RECHARGE END TIME
