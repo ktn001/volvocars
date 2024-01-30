@@ -1075,6 +1075,7 @@ class volvocars extends eqLogic {
 			'presence_site1',
 			'presence_site2',
 			'refresh',
+			'topViewImg',
 		);
 		foreach ($logicalIds as $logicalId) {
 			$cmd = $this->getCmd(null,$logicalId);
@@ -1547,7 +1548,6 @@ class volvocarsCmd extends cmd {
 				case 'tail_open':
 				case 'tank_open':
 				case 'roof_open':
-					log::add("volvocars","debug","1111111111111111 " . $logicalId);
 					$stateCmd = $car->getCmd('info',str_replace('open','state',$logicalId));
 					if (is_object($stateCmd)) {
 						switch ($stateCmd->execCmd()) {
@@ -1592,6 +1592,28 @@ class volvocarsCmd extends cmd {
 						return "";
 					}
 					return date_fr(date('D H:i', strtotime($cmd->getValueDate() . "+" . $remaining . "minutes")));
+					break;
+				case 'topViewImg':
+					$keyStr = '';
+					foreach ([
+						'door_fl_state',
+						'door_fr_state',
+						'door_rl_state',
+						'door_rr_state',
+						'hood_state',
+						'roof_state',
+						'tail_state'
+					] as $logicalId) {
+						$key = 'c';
+						$cmd = $car->getCmd('info',$logicalId);
+						if (is_object($cmd)) {
+							if (in_array($cmd->execCmd(), ['OPEN','AJAR'])) {
+								$key = 'o';
+							}
+						}
+						$keyStr .= $key;
+					}
+					return "/plugins/volvocars/desktop/img/car-top_" . $keyStr . ".png";
 					break;
 				default:
 					log::add("volvocars","error",sprintf(__('Exécution de la commande "%s" non définie',__FILE__),$this->getLogicalId()));

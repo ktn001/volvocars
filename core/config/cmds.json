@@ -165,7 +165,8 @@
 			"endpoint": "doors",
 			"dependencies": [
 				"door_fl_open",
-				"door_fl_closed"
+				"door_fl_closed",
+				"topViewImg"
 			]
 		},
 		"template": {
@@ -181,7 +182,8 @@
 			"endpoint": "doors",
 			"dependencies": [
 				"door_fr_open",
-				"door_fr_closed"
+				"door_fr_closed",
+				"topViewImg"
 			]
 		},
 		"template": {
@@ -197,7 +199,8 @@
 			"endpoint": "doors",
 			"dependencies": [
 				"door_rl_open",
-				"door_rl_closed"
+				"door_rl_closed",
+				"topViewImg"
 			]
 		},
 		"template": {
@@ -213,7 +216,8 @@
 			"endpoint": "doors",
 			"dependencies": [
 				"door_rr_open",
-				"door_rr_closed"
+				"door_rr_closed",
+				"topViewImg"
 			]
 		},
 		"template": {
@@ -454,8 +458,9 @@
 		"configuration": {
 			"endpoint": "doors",
 			"dependencies": [
-				 "hood_open",
-				 "hood_closed"
+				"hood_open",
+				"hood_closed",
+				"topViewImg"
 			]
 		},
 		"template": {
@@ -470,8 +475,9 @@
 		"configuration": {
 			"endpoint": "doors",
 			"dependencies": [
-				 "tail_open",
-				 "tail_closed"
+				"tail_open",
+				"tail_closed",
+				"topViewImg"
 			]
 		},
 		"template": {
@@ -486,8 +492,8 @@
 		"configuration": {
 			"endpoint": "doors",
 			"dependencies": [
-				 "tank_open",
-				 "tank_closed"
+				"tank_open",
+				"tank_closed"
 			]
 		},
 		"template": {
@@ -502,8 +508,9 @@
 		"configuration": {
 			"endpoint": "windows",
 			"dependencies": [
-				 "roof_open",
-				 "roof_closed"
+				"roof_open",
+				"roof_closed",
+				"topViewImg"
 			]
 		},
 		"template": {
@@ -1051,8 +1058,25 @@
 		"logicalId": "msg2widget",
 		"name": "{{messages pour widget}}",
 		"type": "info",
-		"subType" : "string",
+		"subType": "string",
 		"isVisible" : 0
+	},{
+		"logicalId": "topViewImg",
+		"name": "clé pour images topview",
+		"type": "info",
+		"subType": "string",
+		"isVisible" : 0,
+		"configuration": {
+			"dependTo": [
+				"door_fl_state",
+				"door_fr_state",
+				"door_rl_state",
+				"door_rr_state",
+				"hood_state",
+				"roof_state",
+				"tail_state"
+			]
+		}
 	}
 ]
 
