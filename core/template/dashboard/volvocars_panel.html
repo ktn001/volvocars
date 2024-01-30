@@ -519,38 +519,33 @@ if (!"#electricAutonomy_id#id##".startsWith('#')) {
 //=================
 if (!"#conso_electric_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#conso_electric_id#id##'] = function(_options) {
-		jeedom.cmd.update['#conso_electric_id#id##'] = function(_options) {
-			$('.value#conso_electric_id#id##').html(_options.display_value)
-			$('.unit#conso_electric_id#id##').html(_options.unit)
-		}
+		$('.value#conso_electric_id#id##').html(_options.display_value)
+		$('.unit#conso_electric_id#id##').html(_options.unit)
 	}
 	jeedom.cmd.update['#conso_electric_id#id##'] ({display_value: "#conso_electric_display_value#id##", unit: "#conso_electric_unit#id##"})
+}
 	
 // PRISE
 // =====
 if (!"#connectorStatus_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#connectorStatus_id#id##'] = function(_options) {
-		jeedom.cmd.update['#connectorStatus_id#id##'] = function(_options) {
-			$('.value#connectorStatus_id#id##').html(_options.display_value)
-		}
-		jeedom.cmd.update['#connectorStatus_id#id##'] ({display_value: "#connectorStatus_display_value#id##"})
+		$('.value#connectorStatus_id#id##').html(_options.display_value)
 	}
+	jeedom.cmd.update['#connectorStatus_id#id##'] ({display_value: "#connectorStatus_display_value#id##"})
 }
 	
 // RECHARGE
 // ========
 if (!"#chargingStatus_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#chargingStatus_id#id##'] = function(_options) {
-		jeedom.cmd.update['#chargingStatus_id#id##'] = function(_options) {
-			$('.value#chargingStatus_id#id##').html(_options.display_value)
-		}
-		jeedom.cmd.update['#chargingStatus_id#id##'] ({display_value: "#chargingStatus_display_value#id##"})
+		$('.value#chargingStatus_id#id##').html(_options.display_value)
 	}
+	jeedom.cmd.update['#chargingStatus_id#id##'] ({display_value: "#chargingStatus_display_value#id##"})
 }
 
 // RECHARGE END TIME
 // =================
-jeedom.cmd.update['#chargingEndTime_id#id##'] = function(_options) {
+if (!"#chargingEndTime_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#chargingEndTime_id#id##'] = function(_options) {
 		if (_options.display_value == '') {
 			$(".value#chargingEndTime_id#id##").closest('div').addClass('hidden')
@@ -564,7 +559,7 @@ jeedom.cmd.update['#chargingEndTime_id#id##'] = function(_options) {
 	
 // VEROUILLAGE
 // ===========
-jeedom.cmd.update['#locked_id#id##'] = function(_options) {
+if (!"#locked_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#locked_id#id##'] = function(_options) {
 			$('.value#locked_id#id##').html(_options.display_value)
 	}
@@ -574,7 +569,7 @@ jeedom.cmd.update['#locked_id#id##'] = function(_options) {
 
 // MISE A JOUR DES TEXTES INFO
 // ===========================
-jeedom.cmd.update['#msg2widget_id#id##'] = function(_options) {
+if (!"#msg2widget_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#msg2widget_id#id##'] = function(_options) {
 		messages = json_decode(_options.value)
 		for (cible in messages) {
