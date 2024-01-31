@@ -195,8 +195,23 @@
 					<div class="col-xs-4">
 						GAUCHE
 					</div>
-					<div id="topView" class="col-xs-4">
-						<img id="img_car_#id#" src="#topViewImg#id##"/>
+					<div id="topView#id#" class="topView col-xs-4">
+						<img src="/plugins/volvocars/desktop/img/car-top/car-top.png"/>
+						<img class="hidden" src="/plugins/volvocars/desktop/img/car-top/door_fl_o.png"/>
+						<img class="hidden door_fl_c" src="/plugins/volvocars/desktop/img/car-top/door_fl_c.png"/>
+						<img class="hidden door_fl_o" src="/plugins/volvocars/desktop/img/car-top/door_fl_o.png"/>
+						<img class="hidden door_fr_c" src="/plugins/volvocars/desktop/img/car-top/door_fr_c.png"/>
+						<img class="hidden door_fr_o" src="/plugins/volvocars/desktop/img/car-top/door_fr_o.png"/>
+						<img class="hidden door_rl_c" src="/plugins/volvocars/desktop/img/car-top/door_rl_c.png"/>
+						<img class="hidden door_rl_o" src="/plugins/volvocars/desktop/img/car-top/door_rl_o.png"/>
+						<img class="hidden door_rr_c" src="/plugins/volvocars/desktop/img/car-top/door_rr_c.png"/>
+						<img class="hidden door_rr_o" src="/plugins/volvocars/desktop/img/car-top/door_rr_o.png"/>
+						<img class="hidden hood_c" src="/plugins/volvocars/desktop/img/car-top/hood_c.png"/>
+						<img class="hidden hood_o" src="/plugins/volvocars/desktop/img/car-top/hood_o.png"/>
+						<img class="hidden roof_c" src="/plugins/volvocars/desktop/img/car-top/roof_c.png"/>
+						<img class="hidden roof_o" src="/plugins/volvocars/desktop/img/car-top/roof_o.png"/>
+						<img class="hidden tail_c" src="/plugins/volvocars/desktop/img/car-top/tail_c.png"/>
+						<img class="hidden tail_o" src="/plugins/volvocars/desktop/img/car-top/tail_o.png"/>
 					</div>
 					<div class="col-xs-4">
 						DROITE
@@ -582,13 +597,65 @@ if (!"#locked_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#locked_id#id##'] ({display_value: "#locked_display_value#id##"})
 }
 
-// TOP VIEW
-// ========
-if (!"#topViewImg#id##".startsWith('#')) {
-	jeedom.cmd.update['#topViewImg_id#id##'] = function(_options) {
-		$('#topView img').attr('src',_options.display_value)
+// DOORS
+// =====
+function show_opening (name, value) {
+	switch(value) {
+		case 'CLOSED':
+			$('#topView#id# .' + name + '_o').addClass('hidden') 
+			$('#topView#id# .' + name + '_c').removeClass('hidden') 
+			break
+		case 'OPEN':
+		case 'AJAR':
+			$('#topView#id# .' + name + '_c').addClass('hidden') 
+			$('#topView#id# .' + name + '_o').removeClass('hidden') 
+			break
+		default:
+			$('#topView#id# .' + name + '_o').addClass('hidden') 
+			$('#topView#id# .' + name + '_c').addClass('hidden') 
 	}
-	jeedom.cmd.update['#topViewImg_id#id##'] ({display_value: "#topViewImg_display_value#id##"})
+}
+if (!"#door_fl_state_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#door_fl_state_id#id##'] = function(_options) {
+		show_opening('door_fl', _options.value)
+	}
+	jeedom.cmd.update['#door_fl_state_id#id##'] ({value: "#door_fl_state#id##"})
+}
+if (!"#door_fr_state_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#door_fr_state_id#id##'] = function(_options) {
+		show_opening('door_fr', _options.value)
+	}
+	jeedom.cmd.update['#door_fr_state_id#id##'] ({value: "#door_fr_state#id##"})
+}
+if (!"#door_rl_state_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#door_rl_state_id#id##'] = function(_options) {
+		show_opening('door_rl', _options.value)
+	}
+	jeedom.cmd.update['#door_rl_state_id#id##'] ({value: "#door_rl_state#id##"})
+}
+if (!"#door_rr_state_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#door_rr_state_id#id##'] = function(_options) {
+		show_opening('door_rr', _options.value)
+	}
+	jeedom.cmd.update['#door_rr_state_id#id##'] ({value: "#door_rr_state#id##"})
+}
+if (!"#hood_state_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#hood_state_id#id##'] = function(_options) {
+		show_opening('hood', _options.value)
+	}
+	jeedom.cmd.update['#hood_state_id#id##'] ({value: "#hood_state#id##"})
+}
+if (!"#roof_state_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#roof_state_id#id##'] = function(_options) {
+		show_opening('roof', _options.value)
+	}
+	jeedom.cmd.update['#roof_state_id#id##'] ({value: "#roof_state#id##"})
+}
+if (!"#tail_state_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#tail_state_id#id##'] = function(_options) {
+		show_opening('tail', _options.value)
+	}
+	jeedom.cmd.update['#tail_state_id#id##'] ({value: "#tail_state#id##"})
 }
 
 // MISE A JOUR DES TEXTES INFO

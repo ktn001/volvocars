@@ -1060,23 +1060,6 @@
 		"type": "info",
 		"subType": "string",
 		"isVisible" : 0
-	},{
-		"logicalId": "topViewImg",
-		"name": "clé pour images topview",
-		"type": "info",
-		"subType": "string",
-		"isVisible" : 0,
-		"configuration": {
-			"dependTo": [
-				"door_fl_state",
-				"door_fr_state",
-				"door_rl_state",
-				"door_rr_state",
-				"hood_state",
-				"roof_state",
-				"tail_state"
-			]
-		}
 	}
 ]
 

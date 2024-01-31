@@ -205,6 +205,14 @@ img.volvo_logo_black {
 	margin: 9px 5px;
 }
 
-#topView img {
-	height: 200px;
+.topView {
+	height: 230px;
 }
+
+.topView img {
+	height: 200px;
+	position: absolute;
+	left: 14px;
+	top: 15px;
+}
+
