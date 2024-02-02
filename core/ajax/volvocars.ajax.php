@@ -129,6 +129,34 @@ try {
 		ajax::success();
 	}
 
+	if ($action == 'getCmdsUse'){
+		$return = array();
+		foreach (init('ids') as $id) {
+			$cmd = cmd::byId($id);
+			if (is_object($cmd)){
+				$return[$id] = array();
+				$usages = $cmd->getUsedBy();
+				foreach ( $usages as $composant => $usage ) {
+					if (count($usage) == 0) {
+						continue;
+					}
+					$return[$id][$composant] = array();
+					foreach ($usage as $user) {
+						$entry = [];
+						$entry['id'] = $user->getId();
+						if (method_exists($user, 'getHumanName')) {
+							$entry['name'] = $user->getHumanName();
+						} else if (method_exists($user, 'getName')) {
+							$entry['name'] = $user->getName();
+						}
+						$return[$id][$composant][] = $entry;
+					}
+				}
+			}
+		}
+		ajax::success(json_encode($return));
+	}
+
 	if ($action == 'sortCmds'){
 		$car_id = init('id');
 		if ($car_id == '') {

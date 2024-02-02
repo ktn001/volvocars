@@ -30,12 +30,12 @@ if (!isConnect()) {
       </label>
       <div class="col-md-4 col-sm-6">
 	<label>{{Ouvert}}
-          <sup><i class="fas fa-question-circle tooltips" title="{{Prend la valeur 1 (true) lorsque l'ouvrant est complètement ouvert}}"></i></sup>
+          <sup><i class="fas fa-question-circle tooltips" title="{{Prend la valeur 1 (true) lorsque l'ouvrant est ouvert}}"></i></sup>
 	  <input type="checkbox" class="configKey" data-l1key="create_cmd_open" checked></input>
 	</label>
-	<label>{{Etat}}
-          <sup><i class="fas fa-question-circle tooltips" title="{{Prend la valeur<br>&nbsp;0: fermé<br>&nbsp;1: entre-ouvert<br>&nbsp;2: ouvert<br>-1: indéfini}}"></i></sup>
-	  <input type="checkbox" class="configKey" data-l1key="create_cmd_state" checked></input>
+	<label>{{Fermé}}
+          <sup><i class="fas fa-question-circle tooltips" title="{{Prend la valeur 1 (true) lorsque l'ouvrant est fermé}}"></i></sup>
+	  <input type="checkbox" class="configKey" data-l1key="create_cmd_closed" checked></input>
 	</label>
       </div>
     </div>

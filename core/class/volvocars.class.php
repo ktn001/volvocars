@@ -727,7 +727,7 @@ class volvocars extends eqLogic {
 				if (! $createCmdOpen == 1 && substr_compare($command['logicalId'], '_open',-5) == 0) {
 					continue;
 				}
-				if (! $createCmdState == 1 && substr_compare($command['logicalId'], '_state',-6) == 0) {
+				if (! $createCmdClosed == 1 && substr_compare($command['logicalId'], '_closed',-7) == 0) {
 					continue;
 				}
 			}

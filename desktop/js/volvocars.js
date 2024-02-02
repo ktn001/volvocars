@@ -336,44 +336,142 @@ $('.eqLogicAction[data-action=get_pos]').off('click').on('click', function() {
 /*
  * Changement de source d'un site
  */
-$('.eqLogicAttr[data-l2key$=_source]').off('change').on('focus', function() {
-	site = $(this).data('site')
-	switch ($(this).value()) {
-		case 'manual':
-			$(this).data('old_manual_lat', $('[data-l2key='+site+'_lat]').value())
-			$(this).data('old_manual_long', $('[data-l2key='+site+'_long]').value())
-			break
-		case 'manual':
-			$(this).data('old_vehicle_lat', $('[data-l2key='+site+'_lat]').value())
-			$(this).data('old_vehicle_long', $('[data-l2key='+site+'_long]').value())
-			break
-	}
-}).on( 'change', function() {
-	site = $(this).data('site')
-	switch ($(this).value()){
-		case 'jeedom':
-			$('input[data-l2key='+site+'_lat], input[data-l2key='+site+'_long]').addClass('hidden')
-			$('.'+site+' .btn[data-action=get_pos]').addClass('hidden')
-			break
-		case 'vehicle':
-			$('[data-l2key='+site+'_lat').value($(this).data('old_vehicle_lat'))
-			$('[data-l2key='+site+'_long').value($(this).data('old_vehicle_long'))
-			$('input[data-l2key='+site+'_lat], input[data-l2key='+site+'_long]').removeClass('hidden')
-			$('input[data-l2key='+site+'_lat], input[data-l2key='+site+'_long]').addClass('disabled')
-			$('.'+site+' .btn[data-action=get_pos]').removeClass('hidden')
-			// getPosition(site)
-			break
-		case 'manual':
-			$('[data-l2key='+site+'_lat').value($(this).data('old_manual_lat'))
-			$('[data-l2key='+site+'_long').value($(this).data('old_manual_long'))
-			$('input[data-l2key='+site+'_lat], input[data-l2key='+site+'_long]').removeClass('hidden')
-			$('input[data-l2key='+site+'_lat], input[data-l2key='+site+'_long]').removeClass('disabled')
-			$('.'+site+' .btn[data-action=get_pos]').addClass('hidden')
-			break
-		default:
-			$('input[data-l2key='+site+'_lat], input[data-l2key='+site+'_long]').addClass('hidden')
-			$('.'+site+' .btn[data-action=get_pos]').addClass('hidden')
-	}
+$('.eqLogicAttr[data-l2key$=_source]').off('change')
+	.on('focus', function() {
+		site = $(this).data('site')
+		switch ($(this).value()) {
+			case 'manual':
+				$(this).data('old_manual_lat', $('[data-l2key='+site+'_lat]').value())
+				$(this).data('old_manual_long', $('[data-l2key='+site+'_long]').value())
+				break
+			case 'manual':
+				$(this).data('old_vehicle_lat', $('[data-l2key='+site+'_lat]').value())
+				$(this).data('old_vehicle_long', $('[data-l2key='+site+'_long]').value())
+				break
+		}
+	})
+	.on( 'change', function() {
+		site = $(this).data('site')
+		switch ($(this).value()){
+			case 'jeedom':
+				$('input[data-l2key='+site+'_lat], input[data-l2key='+site+'_long]').addClass('hidden')
+				$('.'+site+' .btn[data-action=get_pos]').addClass('hidden')
+				break
+			case 'vehicle':
+				$('[data-l2key='+site+'_lat').value($(this).data('old_vehicle_lat'))
+				$('[data-l2key='+site+'_long').value($(this).data('old_vehicle_long'))
+				$('input[data-l2key='+site+'_lat], input[data-l2key='+site+'_long]').removeClass('hidden')
+				$('input[data-l2key='+site+'_lat], input[data-l2key='+site+'_long]').addClass('disabled')
+				$('.'+site+' .btn[data-action=get_pos]').removeClass('hidden')
+				// getPosition(site)
+				break
+			case 'manual':
+				$('[data-l2key='+site+'_lat').value($(this).data('old_manual_lat'))
+				$('[data-l2key='+site+'_long').value($(this).data('old_manual_long'))
+				$('input[data-l2key='+site+'_lat], input[data-l2key='+site+'_long]').removeClass('hidden')
+				$('input[data-l2key='+site+'_lat], input[data-l2key='+site+'_long]').removeClass('disabled')
+				$('.'+site+' .btn[data-action=get_pos]').addClass('hidden')
+				break
+			default:
+				$('input[data-l2key='+site+'_lat], input[data-l2key='+site+'_long]').addClass('hidden')
+				$('.'+site+' .btn[data-action=get_pos]').addClass('hidden')
+		}
+	})
+
+/*
+ * Suppression d'une liste de commandes
+ */
+function removeCmds (ids) {
+	var id = $('.eqLogicAttr[data-l1key=id]').value()
+	$.ajax({
+		type: 'POST',
+		url: '/plugins/volvocars/core/ajax/volvocars.ajax.php',
+		data: {
+			action: 'getCmdsUse',
+			ids: ids,
+		},
+		dataType: 'json',
+		global: false,
+		error: function (request, status, error) {
+			handleAjaxError(request, status, error)
+		},
+		success: function (data) {
+			if (data.state != 'ok') {
+				$.fn.showAlert({message: data.result, level:'danger'})
+				return
+			}
+			uses = json_decode(data.result)
+			var text ='{{Êtes-vous sûr de vouloir supprimer les commandes}}' + "?<br>"
+			for (id in uses) {
+				var name = $('#table_cmd tr[data-cmd_id=' + id + ']').find('.cmdAttr[data-l1key=name]').val()
+				text += '- <b>' + name + '</b><br>'
+				var usageText = ''
+				for (composant in uses[id]) {
+					switch (composant) {
+						case 'cmd':         display_composant = '{{Commande}}';    break
+						case 'eqLogic':     display_composant = '{{Equipement}}';  break
+						case 'interactDef': display_composant = '{{Intéraction}}'; break
+						case 'object':      display_composant = '{{Objet}}';       break
+						case 'plan':        display_composant = '{{Plan}}';        break
+						case 'plan3d':      display_composant = '{{Plan3d}}';      break
+						case 'plugin':      display_composant = '{{Plugin}}';      break
+						case 'scenario':    display_composant = '{{Scénario}}';    break
+						case 'view':        display_composant = '{{Vue}}';         break
+						default:
+							display_composant = composant
+					}
+					for (entry in uses[id][composant]) {
+						usageText += '&nbsp;&nbsp;&nbsp;&nbsp;• ' + display_composant + ' :  <b>' + uses[id][composant][entry].name + '</b><br>'
+					}
+				}
+				if (usageText.length > 0) {
+					text += "&nbsp;&nbsp;&nbsp;&nbsp;" + '{{Utilisé par:}}' + '<br>' + usageText 
+				}
+			}
+			bootbox.confirm(text, function(result) {
+				if (result) {
+					modifyWithoutSave = true
+					ids.forEach(function(id) {
+						$('#table_cmd tr.cmd[data-cmd_id=' + id + ']').remove()
+					})
+				}
+			})
+		}
+	})
+}
+
+/*
+ * Action sur bouton de suppression des commandes OPEN
+ */
+$('.cmdAction[data-action=removeOpen]').off('click').on('click', function() {
+	removeCmds(
+		$('#table_cmd .cmdAttr[data-l1key=logicalId]')
+		.filter(function() {
+			return this.value.endsWith('_open')
+		})
+		.closest('tr')
+		.map(function(){
+			return $(this).attr('data-cmd_id')
+		})
+		.get()
+	)
+})
+
+/*
+ * Action sur bouton de suppression des commandes CLOSED
+ */
+$('.cmdAction[data-action=removeClosed]').off('click').on('click', function() {
+	removeCmds(
+		$('#table_cmd .cmdAttr[data-l1key=logicalId]')
+		.filter(function() {
+			return this.value.endsWith('_closed')
+		})
+		.closest('tr')
+		.map(function(){
+			return $(this).attr('data-cmd_id')
+		})
+		.get()
+	)
 })
 
 /*
@@ -451,6 +549,14 @@ function addCmdToTable(_cmd) {
 	}
 	if (!isset(_cmd.configuration)) {
 		_cmd.configuration = {}
+	}
+	if (isset(_cmd.logicalId)) {
+		if (_cmd.logicalId.endsWith("_open")) { 
+			$('.cmdAction[data-action=removeOpen]').removeClass('hidden')
+		}
+		if (_cmd.logicalId.endsWith("_closed")) {
+			$('.cmdAction[data-action=removeClosed]').removeClass('hidden')
+		}
 	}
 	var tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">'
 	tr += '<td class="hidden-xs">'
