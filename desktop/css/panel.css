@@ -207,6 +207,7 @@ img.volvo_logo_black {
 
 .topView {
 	height: 230px;
+	padding: 0px !important;
 }
 
 .topView img {
@@ -214,5 +215,74 @@ img.volvo_logo_black {
 	position: absolute;
 	left: 14px;
 	top: 15px;
+}
+
+.info_name,
+.info_name + div {
+	text-align: right;
+	padding : 0px 5px 0px 5px !important;
+}
+
+.info_text {
+	color: var(--vlv-value-color);
+	text-align: left;
+}
+
+.info_left,
+.info_right {
+	padding: 0px !important;
+}
+
+.tyre_f,
+.door_f,
+.win_f,
+.door_r,
+.win_r,
+.tyre_r {
+	margin-right: -5px;
+}
+
+.info_text {
+	width: 95px;
+}
+
+.info_right .info_name {
+	margin-left: -20px;
+}
+
+.tyre_f + div,
+.tyre_f {
+	margin-top: 35px;
+}
+
+.door_f + div,
+.door_f {
+	margin-top: 25px;
+	margin-bottom: 0px !important;
+}
+
+.win_f + div,
+.win_f,
+.win_r + div,
+.win_r,
+.tail,
+.tail + div{
+	margin-top: -5px;
+}
+
+.door_r + div,
+.door_r {
+	margin-top: 5px;
+	margin-bottom: 0px !important;
+}
+
+.roof + div,
+.roof {
+	margin-bottom: 0px !important;
+}
+
+.tyre_r + div,
+.tyre_r {
+	margin-top: 15px;
 }
 

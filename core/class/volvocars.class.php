@@ -1082,6 +1082,14 @@ class volvocars extends eqLogic {
 			'refresh',
 			'roof_state',
 			'tail_state',
+			'tyre_fl',
+			'tyre_fr',
+			'tyre_rl',
+			'tyre_rr',
+			'win_fl_state',
+			'win_fr_state',
+			'win_rl_state',
+			'win_rr_state',
 		);
 		foreach ($logicalIds as $logicalId) {
 			$cmd = $this->getCmd(null,$logicalId);
@@ -1624,28 +1632,15 @@ class volvocarsCmd extends cmd {
 			"LOCKED"	=> __("vérouillé",__FILE__),
 			"UNLOCKED"	=> __("dévérouillé",__FILE__),
 
+			'OPEN'		=> __("ouvert",__FILE__),
+			'AJAR'		=> __("entre-ouvert",__FILE__),
+			"CLOSED"	=> __("fermé",__FILE__),
+
 			"UNSPECIFIED"	=> __("indéterminé",__FILE__),
 			"NO_WARNING"	=> __("OK",__FILE__),
 		];
 
 		if ($this->getSubType() == 'string') {
-			$logicalId = $this->getLogicalId();
-			if (substr($logicalId,-6) == '_state') {
-				switch (strtok($logicalId,'_')) {
-					case 'win':
-					case 'door':
-						switch ($value) {
-							case 'OPEN':
-								return __("ouverte",__FILE__);
-							case 'AJAR':
-								return __("entre-ouverte",__FILE__);
-							case "CLOSED":
-								return __("fermée",__FILE__);
-							case "UNSPECIFIED":
-								return __("indéterminée",__FILE__);
-						}
-				}
-			}
 			if (isset($textes[$value])) {
 				return $textes[$value];
 			}

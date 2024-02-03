@@ -187,13 +187,39 @@
 				</div>
 
 				<div class="col-xs-12 tile tile3">
-					<div class="col-xs-8 tile-title">{{OUVRANTS}}</div>
+					<div class="col-xs-8 tile-title">{{INFORMATIONS}}</div>
 					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-info"></i></div>
-					<div class="col-xs-12">
-						AVANT
+					<div class="col-xs-12 info_front">
+						<div class="col-xs-6 info_name">{{Capot}}</div>
+						<div class="col-xs-6 Cmd#hood_state_id#id##">
+							<div class="info_text"></div>
+						</div>
 					</div>
-					<div class="col-xs-4">
-						GAUCHE
+					<div class="col-xs-4 info_left">
+						<div class="col-xs-6 info_name tyre_f">{{Pression}}</div>
+						<div class="col-xs-6 Cmd#tyre_fl_id#id##">
+							<div class="info_text"></div>
+						</div>
+						<div class="col-xs-6 info_name door_f">{{Porte}}</div>
+						<div class="col-xs-6 Cmd#door_fl_state_id#id##">
+							<div class="info_text"></div>
+						</div>
+						<div class="col-xs-6 info_name win_f">{{Fenêtre}}</div>
+						<div class="col-xs-6 Cmd#win_fl_state_id#id##">
+							<div class="info_text"></div>
+						</div>
+						<div class="col-xs-6 info_name door_r">{{Porte}}</div>
+						<div class="col-xs-6 Cmd#door_rl_state_id#id##">
+							<div class="info_text"></div>
+						</div>
+						<div class="col-xs-6 info_name win_f">{{Fenêtre}}</div>
+						<div class="col-xs-6 Cmd#win_rl_state_id#id##">
+							<div class="info_text"></div>
+						</div>
+						<div class="col-xs-6 info_name tyre_r">{{Pression}}</div>
+						<div class="col-xs-6 Cmd#tyre_rl_id#id##">
+							<div class="info_text"></div>
+						</div>
 					</div>
 					<div id="topView#id#" class="topView col-xs-4">
 						<img src="/plugins/volvocars/desktop/img/car-top/car-top.png"/>
@@ -213,11 +239,41 @@
 						<img class="hidden tail_c" src="/plugins/volvocars/desktop/img/car-top/tail_c.png"/>
 						<img class="hidden tail_o" src="/plugins/volvocars/desktop/img/car-top/tail_o.png"/>
 					</div>
-					<div class="col-xs-4">
-						DROITE
+					<div class="col-xs-4 info_right">
+						<div class="col-xs-6 info_name tyre_f">{{Pression}}</div>
+						<div class="col-xs-6 Cmd#tyre_fr_id#id##">
+							<div class="info_text"></div>
+						</div>
+						<div class="col-xs-6 info_name door_f">{{Porte}}</div>
+						<div class="col-xs-6 Cmd#door_fr_state_id#id##">
+							<div class="info_text"></div>
+						</div>
+						<div class="col-xs-6 info_name win_f">{{Fenêtre}}</div>
+						<div class="col-xs-6 Cmd#win_fr_state_id#id##">
+							<div class="info_text"></div>
+						</div>
+						<div class="col-xs-6 info_name door_r">{{Porte}}</div>
+						<div class="col-xs-6 Cmd#door_rr_state_id#id##">
+							<div class="info_text"></div>
+						</div>
+						<div class="col-xs-6 info_name win_f">{{Fenêtre}}</div>
+						<div class="col-xs-6 Cmd#win_rr_state_id#id##">
+							<div class="info_text"></div>
+						</div>
+						<div class="col-xs-6 info_name tyre_r">{{Pression}}</div>
+						<div class="col-xs-6 Cmd#tyre_rr_id#id##">
+							<div class="info_text"></div>
+						</div>
 					</div>
 					<div class="col-xs-12">
-						ARRIERE
+						<div class="col-xs-6 info_name roof">{{Toit ouvrant}}</div>
+						<div class="col-xs-6 Cmd#roof_state_id#id##">
+							<div class="info_text">X</div>
+						</div>
+						<div class="col-xs-6 info_name tail">{{Coffre}}</div>
+						<div class="col-xs-6 Cmd#tail_state_id#id##">
+							<div class="info_text">X</div>
+						</div>
 					</div>
 				</div>
 
@@ -367,7 +423,7 @@ if (!"#al_electricautonomy_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#al_electricautonomy_id#id##'] ({value: "#al_electricautonomy#id##"})
 }
 
-// TYRE
+// AL TYRE
 if (!"#al_tyre_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#al_tyre_id#id##'] = function(_options) {
 		if (_options.value >= 1) {
@@ -384,7 +440,7 @@ if (!"#al_tyre_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#al_tyre_id#id##'] ({value: "#al_tyre#id##"})
 }
 
-// LIGHT
+// AL LIGHT
 if (!"#al_light_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#al_light_id#id##'] = function(_options) {
 		if (_options.value == 1) {
@@ -588,13 +644,40 @@ if (!"#chargingEndTime_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#chargingEndTime_id#id##'] ({display_value: "#chargingEndTime_display_value#id##", unit: "#chargingEndTime_unit#id##"})
 }
 	
-// VEROUILLAGE
-// ===========
+// VERROUILLAGE
+// ============
 if (!"#locked_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#locked_id#id##'] = function(_options) {
 		$('.value#locked_id#id##').html(_options.display_value)
 	}
 	jeedom.cmd.update['#locked_id#id##'] ({display_value: "#locked_display_value#id##"})
+}
+
+// TYRE
+// ====
+if (!"#tyre_fl_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#tyre_fl_id#id##'] = function(_options) {
+		$('.Cmd#tyre_fl_id#id## .info_text').html(_options.display_value)
+	}
+	jeedom.cmd.update['#tyre_fl_id#id##'] ({display_value: "#tyre_fl_display_value#id##"})
+}
+if (!"#tyre_fr_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#tyre_fr_id#id##'] = function(_options) {
+		$('.Cmd#tyre_fr_id#id## .info_text').html(_options.display_value)
+	}
+	jeedom.cmd.update['#tyre_fr_id#id##'] ({display_value: "#tyre_fr_display_value#id##"})
+}
+if (!"#tyre_rl_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#tyre_rl_id#id##'] = function(_options) {
+		$('.Cmd#tyre_rl_id#id## .info_text').html(_options.display_value)
+	}
+	jeedom.cmd.update['#tyre_rl_id#id##'] ({display_value: "#tyre_rl_display_value#id##"})
+}
+if (!"#tyre_rr_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#tyre_rr_id#id##'] = function(_options) {
+		$('.Cmd#tyre_rr_id#id## .info_text').html(_options.display_value)
+	}
+	jeedom.cmd.update['#tyre_rr_id#id##'] ({display_value: "#tyre_rr_display_value#id##"})
 }
 
 // DOORS
@@ -618,44 +701,80 @@ function show_opening (name, value) {
 if (!"#door_fl_state_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#door_fl_state_id#id##'] = function(_options) {
 		show_opening('door_fl', _options.value)
+		$('.Cmd#door_fl_state_id#id## .info_text').html(_options.display_value)
 	}
-	jeedom.cmd.update['#door_fl_state_id#id##'] ({value: "#door_fl_state#id##"})
+	jeedom.cmd.update['#door_fl_state_id#id##'] ({value: "#door_fl_state#id##", display_value: "#door_fl_state_display_value#id##"})
 }
 if (!"#door_fr_state_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#door_fr_state_id#id##'] = function(_options) {
 		show_opening('door_fr', _options.value)
+		$('.Cmd#door_fr_state_id#id## .info_text').html(_options.display_value)
 	}
-	jeedom.cmd.update['#door_fr_state_id#id##'] ({value: "#door_fr_state#id##"})
+	jeedom.cmd.update['#door_fr_state_id#id##'] ({value: "#door_fr_state#id##", display_value: "#door_fr_state_display_value#id##"})
 }
 if (!"#door_rl_state_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#door_rl_state_id#id##'] = function(_options) {
 		show_opening('door_rl', _options.value)
+		$('.Cmd#door_rl_state_id#id## .info_text').html(_options.display_value)
 	}
-	jeedom.cmd.update['#door_rl_state_id#id##'] ({value: "#door_rl_state#id##"})
+	jeedom.cmd.update['#door_rl_state_id#id##'] ({value: "#door_rl_state#id##", display_value: "#door_rl_state_display_value#id##"})
 }
 if (!"#door_rr_state_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#door_rr_state_id#id##'] = function(_options) {
 		show_opening('door_rr', _options.value)
+		$('.Cmd#door_rr_state_id#id## .info_text').html(_options.display_value)
 	}
-	jeedom.cmd.update['#door_rr_state_id#id##'] ({value: "#door_rr_state#id##"})
+	jeedom.cmd.update['#door_rr_state_id#id##'] ({value: "#door_rr_state#id##", display_value: "#door_rr_state_display_value#id##"})
 }
+
+// WINDOWS
+// =======
+if (!"#win_fl_state_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#win_fl_state_id#id##'] = function(_options) {
+		$('.Cmd#win_fl_state_id#id## .info_text').html(_options.display_value)
+	}
+	jeedom.cmd.update['#win_fl_state_id#id##'] ({display_value: "#win_fl_state_display_value#id##"})
+}
+if (!"#win_fr_state_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#win_fr_state_id#id##'] = function(_options) {
+		$('.Cmd#win_fr_state_id#id## .info_text').html(_options.display_value)
+	}
+	jeedom.cmd.update['#win_fr_state_id#id##'] ({display_value: "#win_fr_state_display_value#id##"})
+}
+if (!"#win_rl_state_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#win_rl_state_id#id##'] = function(_options) {
+		$('.Cmd#win_rl_state_id#id## .info_text').html(_options.display_value)
+	}
+	jeedom.cmd.update['#win_rl_state_id#id##'] ({display_value: "#win_rl_state_display_value#id##"})
+}
+if (!"#win_rr_state_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#win_rr_state_id#id##'] = function(_options) {
+		$('.Cmd#win_rr_state_id#id## .info_text').html(_options.display_value)
+	}
+	jeedom.cmd.update['#win_rr_state_id#id##'] ({display_value: "#win_rr_state_display_value#id##"})
+}
+
+
 if (!"#hood_state_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#hood_state_id#id##'] = function(_options) {
 		show_opening('hood', _options.value)
+		$('.Cmd#hood_state_id#id## .info_text').html(_options.display_value)
 	}
-	jeedom.cmd.update['#hood_state_id#id##'] ({value: "#hood_state#id##"})
+	jeedom.cmd.update['#hood_state_id#id##'] ({value: "#hood_state#id##", display_value: "#hood_state_display_value#id##"})
 }
 if (!"#roof_state_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#roof_state_id#id##'] = function(_options) {
 		show_opening('roof', _options.value)
+		$('.Cmd#roof_state_id#id## .info_text').html(_options.display_value)
 	}
-	jeedom.cmd.update['#roof_state_id#id##'] ({value: "#roof_state#id##"})
+	jeedom.cmd.update['#roof_state_id#id##'] ({value: "#roof_state#id##", display_value: "#roof_state_display_value#id##"})
 }
 if (!"#tail_state_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#tail_state_id#id##'] = function(_options) {
 		show_opening('tail', _options.value)
+		$('.Cmd#tail_state_id#id## .info_text').html(_options.display_value)
 	}
-	jeedom.cmd.update['#tail_state_id#id##'] ({value: "#tail_state#id##"})
+	jeedom.cmd.update['#tail_state_id#id##'] ({value: "#tail_state#id##", display_value: "#tail_state_display_value#id##"})
 }
 
 // MISE A JOUR DES TEXTES INFO
