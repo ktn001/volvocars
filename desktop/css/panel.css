@@ -191,6 +191,11 @@ img.volvo_logo_black {
 	font-size: 22px
 }
 
+.tile-complement {
+	color: var(--vlv-value-color);
+	margin-top: -4px;
+}
+
 .tile .widget-title {
 	color: var(--link-color) !important;
 }
@@ -215,6 +220,14 @@ img.volvo_logo_black {
 	position: absolute;
 	left: 14px;
 	top: 15px;
+}
+
+.info_front {
+	margin-top: 10px;
+}
+
+.info_rear {
+	margin-bottom: 14px !important;
 }
 
 .info_name,

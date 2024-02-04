@@ -24,6 +24,7 @@ class volvocars extends eqLogic {
 	/*	 * *************************Attributs****************************** */
 
 	static $_endpoints = [
+		"avaibility",
 		"brakes",
 		"diagnostics",
 		"doors",
@@ -790,6 +791,7 @@ class volvocars extends eqLogic {
 		$infos = $account->getInfos($endpoint,$this->getVin());
 
 		$endpoint2cmd = [
+			'availability.availabilityStatus' => [ 'availability', 'unavailableReason' ],
 			'brakes.brakeFluidLevelWarning'	=>	'brake_fluid_level',
 
 			'diagnostics.washerFluidLevelWarning' => 'washer_fluid_level',
@@ -860,26 +862,37 @@ class volvocars extends eqLogic {
 		];
 		foreach (array_keys($infos) as $key) {
 			log::add("volvocars","debug",sprintf("├─key: %s",$key));
-			$logicalIds = array();
 
-			if (isset($endpoint2cmd[$endpoint.".".$key])) {
-				$logicalId = $endpoint2cmd[$endpoint.".".$key] ;
-			} else {
+			if (!isset($endpoint2cmd[$endpoint.".".$key])) {
 				log::add('volvocars','warning',"│ " . sprintf(__("%s.%s inconnu",__FILE__),$endpoint, $key));
 				continue;
 			}
-			$cmd = $this->getCmd('info',$logicalId);
-			if (!is_object($cmd)) {
-				continue;
+			$logicalIds = $endpoint2cmd[$endpoint.".".$key] ;
+			if (!is_array($logicalIds)) {
+				$logicalIds = array($logicalIds);
 			}
-			$time = date('Y-m-d H:i:s', strtotime($infos[$key]['timestamp']));
-			if ($logicalId == 'position') {
-				$value = $infos[$key]['coordinates'][1] . ',' . $infos[$key]['coordinates'][0];
-			} else {
-				$value = $infos[$key]['value'];
+			foreach ($logicalIds as $logicalId) {
+				$cmd = $this->getCmd('info',$logicalId);
+				if (!is_object($cmd)) {
+					continue;
+				}
+				switch ($logicalId) {
+					case 'position':
+						$value = $infos[$key]['coordinates'][1] . ',' . $infos[$key]['coordinates'][0];
+						break;
+					case 'unavailableReason':
+						if (isset($infos[$key]['unavailableReason'])) {
+							$value = $infos[$key]['unavailableReason'];
+						} else {
+							$value = "";
+						}
+						break;
+					default:
+						$value = $infos[$key]['value'];
+				}
+				log::add("volvocars","info",sprintf("│ %s: %s",$logicalId,$value));
+				$this->checkAndUpdateCmd($cmd,$value);
 			}
-			log::add("volvocars","info",sprintf("│ %s: %s",$logicalId,$value));
-			$this->checkAndUpdateCmd($cmd,$value,$time);
 		}
 		log::add("volvocars","info","└OK");
 	}
@@ -888,6 +901,7 @@ class volvocars extends eqLogic {
 	 * Interrogation de tous les endpoint de l'API pour remonter les infos
 	 */
 	public function retrieveInfos() {
+		$this->getInfosFromApi('availability');
 		$this->getInfosFromApi('brakes');
 		$this->getInfosFromApi('diagnostics');
 		$this->getInfosFromApi('doors');
@@ -1050,6 +1064,8 @@ class volvocars extends eqLogic {
 
 		//---- COMMANDES ID et VALUE
 		$logicalIds = array(
+			'availability',
+			'unavailableReason',
 			'al_brake_fluid',
 			'al_coolant',
 			'al_electricautonomy',
@@ -1628,6 +1644,12 @@ class volvocarsCmd extends cmd {
 			"CONNECTION_STATUS_DISCONNECTED" => __("débranchée",__FILE__),
 			"CONNECTION_STATUS_FAULT"		 => __("en erreur",__FILE__),
 			"CONNECTION_STATUS_UNSPECIFIED"	 => __("indéterminée",__FILE__),
+
+			"AVAILABLE"	   => __("accessible",__FILE__),
+			"UNAVAILABLE"  => __("indisponnible",__FILE__),
+			"NO_INTERNET"  => __("pas d'accès Internet",__FILE__),
+			"POWER_SAWING" => __("en veille",__FILE__),
+			"CAR_IN_USE"   => __("en court d'utilisation",__FILE__),
 
 			"LOCKED"	=> __("vérouillé",__FILE__),
 			"UNLOCKED"	=> __("dévérouillé",__FILE__),

@@ -166,6 +166,7 @@
 			<!-- Column N°2 -->
 			<div class="col-xs-4 column">
 
+				<!-- Verrouillage -->
 				<div class="col-xs-6 tile tile2">
 					<div class="col-xs-8 tile-title">{{Vérouillage}}</div>
 					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-unlock-alt"></i></div>
@@ -174,18 +175,19 @@
 					</div>
 				</div>
 
-				<div class="col-xs-6 tile">
-					text
+				<!-- Accessibilité -->
+				<div class="col-xs-6 tile tile2">
+					<div class="col-xs-8 tile-title">{{Accessibilité}}</div>
+					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-check-circle"></i></div>
+					<div class="col-xs-12 tile-value-container">
+						<span class="value#availability_id#id## tile-value"></span>
+					</div>
+					<div class="col-xs-12 tile-complement">
+						<span class="value#unavailableReason_id#id## ">XXX</span>
+					</div>
 				</div>
 
-				<div class="col-xs-6 tile">
-					text
-				</div>
-
-				<div class="col-xs-6 tile">
-					text
-				</div>
-
+				<!-- TOP VIEW -->
 				<div class="col-xs-12 tile tile3">
 					<div class="col-xs-8 tile-title">{{INFORMATIONS}}</div>
 					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-info"></i></div>
@@ -265,7 +267,7 @@
 							<div class="info_text"></div>
 						</div>
 					</div>
-					<div class="col-xs-12">
+					<div class="col-xs-12 info_rear">
 						<div class="col-xs-6 info_name roof">{{Toit ouvrant}}</div>
 						<div class="col-xs-6 Cmd#roof_state_id#id##">
 							<div class="info_text">X</div>
@@ -651,6 +653,21 @@ if (!"#locked_id#id##".startsWith('#')) {
 		$('.value#locked_id#id##').html(_options.display_value)
 	}
 	jeedom.cmd.update['#locked_id#id##'] ({display_value: "#locked_display_value#id##"})
+}
+
+// ACCESSIBILITE
+// =============
+if (!"#availability_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#availability_id#id##'] = function(_options) {
+		$('.value#availability_id#id##').html(_options.display_value)
+	}
+	jeedom.cmd.update['#availability_id#id##'] ({display_value: "#availability_display_value#id##"})
+}
+if (!"#unavailableReason_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#unavailableReason_id#id##'] = function(_options) {
+		$('.value#unavailableReason_id#id##').html(_options.display_value)
+	}
+	jeedom.cmd.update['#unavailableReason_id#id##'] ({display_value: "#unavailableReason_display_value#id##"})
 }
 
 // TYRE

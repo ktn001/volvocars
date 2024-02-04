@@ -5,6 +5,22 @@
 		"type": "action",
 		"subType": "other"
 	},{
+		"logicalId": "availability",
+		"name": "{{Disponibilité}}",
+		"type": "info",
+		"subType": "string",
+		"configuration": {
+			"endpoint": "availability"
+		}
+	},{
+		"logicalId": "unavailableReason",
+		"name": "{{Raison indiponibilité}}",
+		"type": "info",
+		"subType": "string",
+		"configuration": {
+			"endpoint": "availability"
+		}
+	},{
 		"logicalId": "locked",
 		"name": "{{Vérouillé}}",
 		"type": "info",

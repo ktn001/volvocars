@@ -20,6 +20,10 @@
 class volvoAccount {
 
 	const ENDPOINT = [
+		"availability" => [
+			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/command-accessibility",
+			"accept" => "application/json",
+		],
 		"brakes" => [
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/brakes",
 			"accept" => "application/json",
