@@ -1,302 +1,307 @@
 <!--
  vim: tabstop=4 autoindent
 -->
-<div class="eqLogic-widget eqLogic noResize volvo_panel" style="border:#border#; border-radius:#border-radius#; background-color:#background-color#; color:#color#; #style#;" data-eqType="#eqType#" data-translate-category="#translate_category#" data-category="#category#" data-tags="#tags#" data-eqLogic_id="#id#" data-eqLogic_uid="#uid#" data-version="panel">
+<div class="eqLogic-widget eqLogic noResize volvo_panel" data-eqType="#eqType#" data-translate-category="#translate_category#" data-category="#category#" data-tags="#tags#" data-eqLogic_id="#id#" data-eqLogic_uid="#uid#" data-version="panel">
 
-	<div id="carName">
-		<a href="#eqLink#" id="titre"><strong> #name_display# </strong></a>
-		<span class="cmd refresh cursor" data-cmd_id="#refresh_id#id##" onclick="jeedom.cmd.execute({id: #refresh_id#id##})">
-			<i class="fas fa-sync"></i>
-		</span>
+	<div class="div_title">
+		<a href="#eqLink#" class="title">#name_display#</a>
 	</div>
 
-	<div class="container-fluid">
-		<div>
-			<!-- Column N°1 -->
-			<div class="col-xs-4 column">
+	<div>
+		<!-- Column N°1 -->
+		<div class="col-xs-4 column">
 
-				<!-- IMAGE -->
-				<div class="col-xs-12 tile"> 
-					<div id="picture">
-						<img id="img_car_#id#" src="#vehicle_img#id##" style='max-width:100%; max-height:270px' />
-					</div>
-				</div>
-
-				<!-- ALERTES -->
-				<div id='div_alertes' class="col-xs-12 tile tile-alert">
-					<span id='div_al_oil#id#' class="#fuelEngineOnly#id##"><img></img></span>
-					<span id='div_al_coolant#id#' class="#fuelEngineOnly#id##"><img></img></span>
-					<span id='div_al_brake#id#'><img></img></span>
-					<span id='div_al_wash#id#'><img></img></span>
-					<span id='div_al_fuelautonomy#id#' class='#fuelEngineOnly#id##'><img></img></span>
-					<span id='div_al_electricautonomy#id#' class='#electricEngineOnly#id##'><img></img></span>
-					<span id='div_al_tyre#id#'><img></img></span>
-					<span id='div_al_light#id#'><img></img></span>
-				</div>
-
-				<!-- PRESENCES -->
-				<div class="col-xs-4 tile tile1">
-					<div class="col-xs-8 tile-title">{{Présences}} #site1_name#id##</div>
-					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-map-marker-alt"></i></div>
-					<div class="col-xs-12 tile-value-container">
-						<div id='presence_site1_#id#'><i class='Cmd#presence_site1_id#id##'></i></div>
-						<div class="col-xs-12">
-							<div class="widget-title">{{Distance}}:</div>
-							<div id='distance_site1_#id#'><span class='Cmd#distance_site1_id#id##'></span></div>
-						</div>
-					</div>
-				</div>
-				<div class="col-xs-4 tile tile1">
-					<div class="col-xs-8 tile-title">{{Présences}} #site2_name#id##</div>
-					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-map-marker-alt"></i></div>
-					<div class="col-xs-12 tile-value-container">
-						<div id='presence_site2_#id#'><i class='Cmd#presence_site2_id#id##'></i></div>
-						<div class="col-xs-12">
-							<div class="widget-title">{{Distance}}:</div>
-							<div id='distance_site2_#id#'><span class='Cmd#distance_site2_id#id##'></span></div>
-						</div>
-					</div>
-				</div>
-
-				<!-- ODOMETRE -->
-				<div class="col-xs-4 tile tile1">
-					<div class="col-xs-8 tile-title">{{Kilométrage}}</div>
-					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-map-signs"></i></div>
-					<div class="col-xs-12 tile-value-container">
-						<span class="value#odometer_id#id## tile-value"></span>
-						<span class="unit#odometer_id#id## tile-unit"></span>
-					</div>
-				</div>
-
-				<!-- CARBURANT -->
-				<div class="col-xs-4 tile tile1 #fuelEngineOnly#id##">
-					<div class="col-xs-8 tile-title">{{Niveau carburant}}</div>
-					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-gas-pump"></i></div>
-					<div class="col-xs-12 tile-value-container">
-						<span class="value#fuel_amount_id#id## tile-value"></span>
-						<span class="unit#fuel_amount_id#id## tile-unit"></span>
-					</div>
-				</div>
-
-				<!-- AUTONOMIE CARBURANT -->
-				<div class="col-xs-4 tile tile1 #fuelEngineOnly#id##">
-					<div class="col-xs-8 tile-title">{{Km restants (thermique)}}</div>
-					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-map-pin"></i></div>
-					<div class="col-xs-12 tile-value-container">
-						<span class="value#fuelAutonomy_id#id## tile-value"></span>
-						<span class="unit#fuelAutonomy_id#id## tile-unit"></span>
-					</div>
-				</div>
-
-				<!-- CONSOMMATION CARBURANT -->
-				<div class="col-xs-4 tile tile1 #fuelEngineOnly#id##">
-					<div class="col-xs-8 tile-title">{{Consommation (carburant)}}</div>
-					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-map-pin"></i></div>
-					<div class="col-xs-12 tile-value-container">
-						<span class="value#conso_fuel_id#id## tile-value"></span>
-						<span class="unit#conso_fuel_id#id## tile-unit"></span>
-					</div>
-				</div>
-
-				<!-- CONSOMMATION CARBURANT PARCOURS-->
-				<div class="col-xs-4 tile tile1 #fuelEngineOnly#id##">
-					<div class="col-xs-8 tile-title">{{Consommation parcours (carburant)}}</div>
-					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-map-pin"></i></div>
-					<div class="col-xs-12 tile-value-container">
-						<span class="value#conso_fuel_trip_id#id## tile-value"></span>
-						<span class="unit#conso_fuel_trip_id#id## tile-unit"></span>
-					</div>
-				</div>
-
-				<!-- BATTERY LEVEL -->
-				<div class="col-xs-4 tile tile1 #electricEngineOnly#id##">
-					<div class="col-xs-8 tile-title">{{Batterie}}</div>
-					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-car-battery"></i></div>
-					<div class="col-xs-12 tile-value-container">
-						<span class="value#batteryLevel_id#id## tile-value"></span>
-						<span class="unit#batteryLevel_id#id## tile-unit"></span>
-					</div>
-				</div>
-
-				<!-- AUTONOMIE ELECTRIQUE -->
-				<div class="col-xs-4 tile tile1 #electricEngineOnly#id##">
-					<div class="col-xs-8 tile-title">{{Km restants (électrique)}}</div>
-					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-map-pin"></i></div>
-					<div class="col-xs-12 tile-value-container">
-						<span class="value#electricAutonomy_id#id## tile-value"></span>
-						<span class="unit#electricAutonomy_id#id## tile-unit"></span>
-					</div>
-				</div>
-
-				<!-- CONSOMMATION ELECTRIQUE -->
-				<div class="col-xs-4 tile tile1 #electricEngineOnly#id##">
-					<div class="col-xs-8 tile-title">{{Consommation électrique}}</div>
-					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-map-pin"></i></div>
-					<div class="col-xs-12 tile-value-container">
-						<span class="value#conso_electric_id#id## tile-value"></span>
-						<span class="unit#conso_electric_id#id## tile-unit"></span>
-					</div>
-				</div>
-
-				<div class="col-xs-12 tile-group">
-				<!-- PRISE -->
-				<div class="col-xs-6 tile tile2 #electricEngineOnly#id##">
-					<div class="col-xs-8 tile-title">{{Prise}}</div>
-					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-plug"></i></div>
-					<div class="col-xs-12 tile-value-container">
-						<span class="value#connectorStatus_id#id## tile-value"></span>
-					</div>
-				</div>
-
-				<!-- RECHARGE -->
-				<div class="col-xs-6 tile tile2 #electricEngineOnly#id##">
-					<div class="col-xs-8 tile-title">{{Recharge}}</div>
-					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-charging-station"></i></div>
-					<div class="col-xs-12 tile-value-container">
-						<span class="value#chargingStatus_id#id## tile-value"></span>
-						<div class="col-xs-12 tile-subvalue-container">
-							{{Fin de charge prévue }} <strong class="value#chargingEndTime_id#id##"></strong>
-						</div>
-					</div>
-				</div>
-				</div>
-
-			</div>
-
-			<!-- Column N°2 -->
-			<div class="col-xs-4 column">
-
-				<!-- Verrouillage -->
-				<div class="col-xs-6 tile tile2">
-					<div class="col-xs-8 tile-title">{{Vérouillage}}</div>
-					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-unlock-alt"></i></div>
-					<div class="col-xs-12 tile-value-container">
-						<span class="value#locked_id#id## tile-value"></span>
-					</div>
-				</div>
-
-				<!-- Accessibilité -->
-				<div class="col-xs-6 tile tile2">
-					<div class="col-xs-8 tile-title">{{Accessibilité}}</div>
-					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-check-circle"></i></div>
-					<div class="col-xs-12 tile-value-container">
-						<span class="value#availability_id#id## tile-value"></span>
-					</div>
-					<div class="col-xs-12 tile-complement">
-						<span class="value#unavailableReason_id#id## ">XXX</span>
-					</div>
-				</div>
-
-				<!-- TOP VIEW -->
-				<div class="col-xs-12 tile tile3">
-					<div class="col-xs-8 tile-title">{{INFORMATIONS}}</div>
-					<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-info"></i></div>
-					<div class="col-xs-12 info_front">
-						<div class="col-xs-6 info_name">{{Capot}}</div>
-						<div class="col-xs-6 Cmd#hood_state_id#id##">
-							<div class="info_text"></div>
-						</div>
-					</div>
-					<div class="col-xs-4 info_left">
-						<div class="col-xs-6 info_name tyre_f">{{Pression}}</div>
-						<div class="col-xs-6 Cmd#tyre_fl_id#id##">
-							<div class="info_text"></div>
-						</div>
-						<div class="col-xs-6 info_name door_f">{{Porte}}</div>
-						<div class="col-xs-6 Cmd#door_fl_state_id#id##">
-							<div class="info_text"></div>
-						</div>
-						<div class="col-xs-6 info_name win_f">{{Fenêtre}}</div>
-						<div class="col-xs-6 Cmd#win_fl_state_id#id##">
-							<div class="info_text"></div>
-						</div>
-						<div class="col-xs-6 info_name door_r">{{Porte}}</div>
-						<div class="col-xs-6 Cmd#door_rl_state_id#id##">
-							<div class="info_text"></div>
-						</div>
-						<div class="col-xs-6 info_name win_f">{{Fenêtre}}</div>
-						<div class="col-xs-6 Cmd#win_rl_state_id#id##">
-							<div class="info_text"></div>
-						</div>
-						<div class="col-xs-6 info_name tyre_r">{{Pression}}</div>
-						<div class="col-xs-6 Cmd#tyre_rl_id#id##">
-							<div class="info_text"></div>
-						</div>
-					</div>
-					<div id="topView#id#" class="topView col-xs-4">
-						<img src="/plugins/volvocars/desktop/img/car-top/car-top.png"/>
-						<img class="hidden" src="/plugins/volvocars/desktop/img/car-top/door_fl_o.png"/>
-						<img class="hidden door_fl_c" src="/plugins/volvocars/desktop/img/car-top/door_fl_c.png"/>
-						<img class="hidden door_fl_o" src="/plugins/volvocars/desktop/img/car-top/door_fl_o.png"/>
-						<img class="hidden door_fr_c" src="/plugins/volvocars/desktop/img/car-top/door_fr_c.png"/>
-						<img class="hidden door_fr_o" src="/plugins/volvocars/desktop/img/car-top/door_fr_o.png"/>
-						<img class="hidden door_rl_c" src="/plugins/volvocars/desktop/img/car-top/door_rl_c.png"/>
-						<img class="hidden door_rl_o" src="/plugins/volvocars/desktop/img/car-top/door_rl_o.png"/>
-						<img class="hidden door_rr_c" src="/plugins/volvocars/desktop/img/car-top/door_rr_c.png"/>
-						<img class="hidden door_rr_o" src="/plugins/volvocars/desktop/img/car-top/door_rr_o.png"/>
-						<img class="hidden hood_c" src="/plugins/volvocars/desktop/img/car-top/hood_c.png"/>
-						<img class="hidden hood_o" src="/plugins/volvocars/desktop/img/car-top/hood_o.png"/>
-						<img class="hidden roof_c" src="/plugins/volvocars/desktop/img/car-top/roof_c.png"/>
-						<img class="hidden roof_o" src="/plugins/volvocars/desktop/img/car-top/roof_o.png"/>
-						<img class="hidden tail_c" src="/plugins/volvocars/desktop/img/car-top/tail_c.png"/>
-						<img class="hidden tail_o" src="/plugins/volvocars/desktop/img/car-top/tail_o.png"/>
-					</div>
-					<div class="col-xs-4 info_right">
-						<div class="col-xs-6 info_name tyre_f">{{Pression}}</div>
-						<div class="col-xs-6 Cmd#tyre_fr_id#id##">
-							<div class="info_text"></div>
-						</div>
-						<div class="col-xs-6 info_name door_f">{{Porte}}</div>
-						<div class="col-xs-6 Cmd#door_fr_state_id#id##">
-							<div class="info_text"></div>
-						</div>
-						<div class="col-xs-6 info_name win_f">{{Fenêtre}}</div>
-						<div class="col-xs-6 Cmd#win_fr_state_id#id##">
-							<div class="info_text"></div>
-						</div>
-						<div class="col-xs-6 info_name door_r">{{Porte}}</div>
-						<div class="col-xs-6 Cmd#door_rr_state_id#id##">
-							<div class="info_text"></div>
-						</div>
-						<div class="col-xs-6 info_name win_f">{{Fenêtre}}</div>
-						<div class="col-xs-6 Cmd#win_rr_state_id#id##">
-							<div class="info_text"></div>
-						</div>
-						<div class="col-xs-6 info_name tyre_r">{{Pression}}</div>
-						<div class="col-xs-6 Cmd#tyre_rr_id#id##">
-							<div class="info_text"></div>
-						</div>
-					</div>
-					<div class="col-xs-12 info_rear">
-						<div class="col-xs-6 info_name roof">{{Toit ouvrant}}</div>
-						<div class="col-xs-6 Cmd#roof_state_id#id##">
-							<div class="info_text">X</div>
-						</div>
-						<div class="col-xs-6 info_name tail">{{Coffre}}</div>
-						<div class="col-xs-6 Cmd#tail_state_id#id##">
-							<div class="info_text">X</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="col-xs-12 tile">
-					text
+			<!-- IMAGE -->
+			<div class="col-xs-12 tile"> 
+				<div id="picture">
+					<img id="img_car_#id#" src="#vehicle_img#id##" style='max-width:100%; max-height:270px' />
 				</div>
 			</div>
 
-			<!-- Column N°3 -->
-			<div class="col-xs-4 column">
+			<!-- ALERTES -->
+			<div id='div_alertes' class="col-xs-12 tile tile-alert">
+				<span id='div_al_oil#id#' class="#fuelEngineOnly#id##"><img></img></span>
+				<span id='div_al_coolant#id#' class="#fuelEngineOnly#id##"><img></img></span>
+				<span id='div_al_brake#id#'><img></img></span>
+				<span id='div_al_wash#id#'><img></img></span>
+				<span id='div_al_fuelautonomy#id#' class='#fuelEngineOnly#id##'><img></img></span>
+				<span id='div_al_electricautonomy#id#' class='#electricEngineOnly#id##'><img></img></span>
+				<span id='div_al_tyre#id#'><img></img></span>
+				<span id='div_al_light#id#'><img></img></span>
+			</div>
 
-				<div class="col-xs-12 tile">
-					text
+			<!-- PRESENCES -->
+			<div class="col-xs-4 tile tile1">
+				<div class="col-xs-8 tile-title">{{Présences}} #site1_name#id##</div>
+				<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-map-marker-alt"></i></div>
+				<div class="col-xs-12 tile-value-container">
+					<div id='presence_site1_#id#'><i class='Cmd#presence_site1_id#id##'></i></div>
+					<div class="col-xs-12">
+						<div class="widget-title">{{Distance}}:</div>
+						<div id='distance_site1_#id#'><span class='Cmd#distance_site1_id#id##'></span></div>
+					</div>
 				</div>
+			</div>
+			<div class="col-xs-4 tile tile1">
+				<div class="col-xs-8 tile-title">{{Présences}} #site2_name#id##</div>
+				<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-map-marker-alt"></i></div>
+				<div class="col-xs-12 tile-value-container">
+					<div id='presence_site2_#id#'><i class='Cmd#presence_site2_id#id##'></i></div>
+					<div class="col-xs-12">
+						<div class="widget-title">{{Distance}}:</div>
+						<div id='distance_site2_#id#'><span class='Cmd#distance_site2_id#id##'></span></div>
+					</div>
+				</div>
+			</div>
 
-				<div class="col-xs-12 tile">
-					text
+			<!-- ODOMETRE -->
+			<div class="col-xs-4 tile tile1">
+				<div class="col-xs-8 tile-title">{{Kilométrage}}</div>
+				<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-map-signs"></i></div>
+				<div class="col-xs-12 tile-value-container">
+					<span class="value#odometer_id#id## tile-value"></span>
+					<span class="unit#odometer_id#id## tile-unit"></span>
 				</div>
+			</div>
+
+			<!-- CARBURANT -->
+			<div class="col-xs-4 tile tile1 #fuelEngineOnly#id##">
+				<div class="col-xs-8 tile-title">{{Niveau carburant}}</div>
+				<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-gas-pump"></i></div>
+				<div class="col-xs-12 tile-value-container">
+					<span class="value#fuel_amount_id#id## tile-value"></span>
+					<span class="unit#fuel_amount_id#id## tile-unit"></span>
+				</div>
+			</div>
+
+			<!-- AUTONOMIE CARBURANT -->
+			<div class="col-xs-4 tile tile1 #fuelEngineOnly#id##">
+				<div class="col-xs-8 tile-title">{{Km restants (thermique)}}</div>
+				<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-map-pin"></i></div>
+				<div class="col-xs-12 tile-value-container">
+					<span class="value#fuelAutonomy_id#id## tile-value"></span>
+					<span class="unit#fuelAutonomy_id#id## tile-unit"></span>
+				</div>
+			</div>
+
+			<!-- CONSOMMATION CARBURANT -->
+			<div class="col-xs-4 tile tile1 #fuelEngineOnly#id##">
+				<div class="col-xs-8 tile-title">{{Consommation (carburant)}}</div>
+				<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-map-pin"></i></div>
+				<div class="col-xs-12 tile-value-container">
+					<span class="value#conso_fuel_id#id## tile-value"></span>
+					<span class="unit#conso_fuel_id#id## tile-unit"></span>
+				</div>
+			</div>
+
+			<!-- CONSOMMATION CARBURANT PARCOURS-->
+			<div class="col-xs-4 tile tile1 #fuelEngineOnly#id##">
+				<div class="col-xs-8 tile-title">{{Consommation parcours (carburant)}}</div>
+				<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-map-pin"></i></div>
+				<div class="col-xs-12 tile-value-container">
+					<span class="value#conso_fuel_trip_id#id## tile-value"></span>
+					<span class="unit#conso_fuel_trip_id#id## tile-unit"></span>
+				</div>
+			</div>
+
+			<!-- BATTERY LEVEL -->
+			<div class="col-xs-4 tile tile1 #electricEngineOnly#id##">
+				<div class="col-xs-8 tile-title">{{Batterie}}</div>
+				<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-car-battery"></i></div>
+				<div class="col-xs-12 tile-value-container">
+					<span class="value#batteryLevel_id#id## tile-value"></span>
+					<span class="unit#batteryLevel_id#id## tile-unit"></span>
+				</div>
+			</div>
+
+			<!-- AUTONOMIE ELECTRIQUE -->
+			<div class="col-xs-4 tile tile1 #electricEngineOnly#id##">
+				<div class="col-xs-8 tile-title">{{Km restants (électrique)}}</div>
+				<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-map-pin"></i></div>
+				<div class="col-xs-12 tile-value-container">
+					<span class="value#electricAutonomy_id#id## tile-value"></span>
+					<span class="unit#electricAutonomy_id#id## tile-unit"></span>
+				</div>
+			</div>
+
+			<!-- CONSOMMATION ELECTRIQUE -->
+			<div class="col-xs-4 tile tile1 #electricEngineOnly#id##">
+				<div class="col-xs-8 tile-title">{{Consommation électrique}}</div>
+				<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-map-pin"></i></div>
+				<div class="col-xs-12 tile-value-container">
+					<span class="value#conso_electric_id#id## tile-value"></span>
+					<span class="unit#conso_electric_id#id## tile-unit"></span>
+				</div>
+			</div>
+
+			<div class="col-xs-12 tile-group">
+			<!-- PRISE -->
+			<div class="col-xs-6 tile tile2 #electricEngineOnly#id##">
+				<div class="col-xs-8 tile-title">{{Prise}}</div>
+				<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-plug"></i></div>
+				<div class="col-xs-12 tile-value-container">
+					<span class="value#connectorStatus_id#id## tile-value"></span>
+				</div>
+			</div>
+
+			<!-- RECHARGE -->
+			<div class="col-xs-6 tile tile2 #electricEngineOnly#id##">
+				<div class="col-xs-8 tile-title">{{Recharge}}</div>
+				<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-charging-station"></i></div>
+				<div class="col-xs-12 tile-value-container">
+					<span class="value#chargingStatus_id#id## tile-value"></span>
+					<div class="col-xs-12 tile-subvalue-container">
+						{{Fin de charge prévue }} <strong class="value#chargingEndTime_id#id##"></strong>
+					</div>
+				</div>
+			</div>
 			</div>
 
 		</div>
+
+		<!-- Column N°2 -->
+		<div class="col-xs-4 column">
+
+			<!-- Verrouillage -->
+			<div class="col-xs-6 tile tile2">
+				<div class="col-xs-8 tile-title">{{Verrouillage}}</div>
+				<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-unlock-alt"></i></div>
+				<div class="col-xs-12 tile-value-container">
+					<span class="value#locked_id#id## tile-value"></span>
+				</div>
+			</div>
+
+			<!-- Accessibilité -->
+			<div class="col-xs-6 tile tile2">
+				<div class="col-xs-8 tile-title">{{Accessibilité}}</div>
+				<div class="col-xs-4 tile-icon"><i class="fas fa-lg fa-check-circle"></i></div>
+				<div class="col-xs-12 tile-value-container">
+					<span class="value#availability_id#id## tile-value"></span>
+				</div>
+				<div class="col-xs-12 tile-complement">
+					<span class="value#unavailableReason_id#id## ">XXX</span>
+				</div>
+			</div>
+
+			<!-- TOP VIEW -->
+			<div class="col-xs-12 tile tile3 tile-topview">
+				<div class="col-xs-1 tile-icon"><i class="fas fa-lg fa-info"></i></div>
+				<div class="col-xs-11 tile-title">{{Informations}}</div>
+				<div class="col-xs-12 info_front">
+					<div class="col-xs-6 info_name">{{Capot}}</div>
+					<div class="col-xs-6 Cmd#hood_state_id#id##">
+						<div class="info_text"></div>
+					</div>
+				</div>
+				<div class="col-xs-4 info_left">
+					<div class="col-xs-6 info_name tyre_f">{{Pression}}</div>
+					<div class="col-xs-6 Cmd#tyre_fl_id#id##">
+						<div class="info_text"></div>
+					</div>
+					<div class="col-xs-6 info_name door_f">{{Porte}}</div>
+					<div class="col-xs-6 Cmd#door_fl_state_id#id##">
+						<div class="info_text"></div>
+					</div>
+					<div class="col-xs-6 info_name win_f">{{Vitre}}</div>
+					<div class="col-xs-6 Cmd#win_fl_state_id#id##">
+						<div class="info_text"></div>
+					</div>
+					<div class="col-xs-6 info_name door_r">{{Porte}}</div>
+					<div class="col-xs-6 Cmd#door_rl_state_id#id##">
+						<div class="info_text"></div>
+					</div>
+					<div class="col-xs-6 info_name win_f">{{Vitre}}</div>
+					<div class="col-xs-6 Cmd#win_rl_state_id#id##">
+						<div class="info_text"></div>
+					</div>
+					<div class="col-xs-6 info_name tyre_r">{{Pression}}</div>
+					<div class="col-xs-6 Cmd#tyre_rl_id#id##">
+						<div class="info_text"></div>
+					</div>
+				</div>
+				<div id="topView#id#" class="topView col-xs-4">
+					<img src="/plugins/volvocars/desktop/img/car-top/car-top.png"/>
+					<img class="hidden" src="/plugins/volvocars/desktop/img/car-top/door_fl_o.png"/>
+					<img class="hidden door_fl_c" src="/plugins/volvocars/desktop/img/car-top/door_fl_c.png"/>
+					<img class="hidden door_fl_o" src="/plugins/volvocars/desktop/img/car-top/door_fl_o.png"/>
+					<img class="hidden door_fr_c" src="/plugins/volvocars/desktop/img/car-top/door_fr_c.png"/>
+					<img class="hidden door_fr_o" src="/plugins/volvocars/desktop/img/car-top/door_fr_o.png"/>
+					<img class="hidden door_rl_c" src="/plugins/volvocars/desktop/img/car-top/door_rl_c.png"/>
+					<img class="hidden door_rl_o" src="/plugins/volvocars/desktop/img/car-top/door_rl_o.png"/>
+					<img class="hidden door_rr_c" src="/plugins/volvocars/desktop/img/car-top/door_rr_c.png"/>
+					<img class="hidden door_rr_o" src="/plugins/volvocars/desktop/img/car-top/door_rr_o.png"/>
+					<img class="hidden hood_c" src="/plugins/volvocars/desktop/img/car-top/hood_c.png"/>
+					<img class="hidden hood_o" src="/plugins/volvocars/desktop/img/car-top/hood_o.png"/>
+					<img class="hidden roof_c" src="/plugins/volvocars/desktop/img/car-top/roof_c.png"/>
+					<img class="hidden roof_o" src="/plugins/volvocars/desktop/img/car-top/roof_o.png"/>
+					<img class="hidden tail_c" src="/plugins/volvocars/desktop/img/car-top/tail_c.png"/>
+					<img class="hidden tail_o" src="/plugins/volvocars/desktop/img/car-top/tail_o.png"/>
+				</div>
+				<div class="col-xs-4 info_right">
+					<div class="col-xs-6 info_name tyre_f">{{Pression}}</div>
+					<div class="col-xs-6 Cmd#tyre_fr_id#id##">
+						<div class="info_text"></div>
+					</div>
+					<div class="col-xs-6 info_name door_f">{{Porte}}</div>
+					<div class="col-xs-6 Cmd#door_fr_state_id#id##">
+						<div class="info_text"></div>
+					</div>
+					<div class="col-xs-6 info_name win_f">{{Vitre}}</div>
+					<div class="col-xs-6 Cmd#win_fr_state_id#id##">
+						<div class="info_text"></div>
+					</div>
+					<div class="col-xs-6 info_name door_r">{{Porte}}</div>
+					<div class="col-xs-6 Cmd#door_rr_state_id#id##">
+						<div class="info_text"></div>
+					</div>
+					<div class="col-xs-6 info_name win_f">{{Vitre}}</div>
+					<div class="col-xs-6 Cmd#win_rr_state_id#id##">
+						<div class="info_text"></div>
+					</div>
+					<div class="col-xs-6 info_name tyre_r">{{Pression}}</div>
+					<div class="col-xs-6 Cmd#tyre_rr_id#id##">
+						<div class="info_text"></div>
+					</div>
+				</div>
+				<div class="col-xs-12 info_rear">
+					<div class="col-xs-6 info_name roof">{{Toit ouvrant}}</div>
+					<div class="col-xs-6 Cmd#roof_state_id#id##">
+						<div class="info_text">X</div>
+					</div>
+					<div class="col-xs-6 info_name tail">{{Coffre}}</div>
+					<div class="col-xs-6 Cmd#tail_state_id#id##">
+						<div class="info_text">X</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Actions -->
+			<div class="col-xs-12 tile tile3">
+				<div class="col-xs-1 tile-icon"><i class="fas fa-lg fa-cogs"></i></div>
+				<div class="col-xs-11 tile-title">{{Actions}}</div>
+				<button class="btn cmd Cmd#refresh_id#id##" title="{{Rafraîchir}}" onclick="jeedom.cmd.execute({id: #refresh_id#id##})"><i class="fa-lg icon fas fa-sync-alt"></i></button>
+				<button class="btn cmd Cmd#lock_id#id##" title="{{Verrouiller}}" onclick="jeedom.cmd.execute({id: #lock_id#id##})"><i class="fa-lg icon fas fa-lock"></i></button>
+				<button class="btn cmd Cmd#unlock_id#id##" title="{{Déverrouiller}}" onclick="jeedom.cmd.execute({id: #unlock_id#id##})"><i class="fa-lg icon fas fa-unlock"></i></button>
+				<button class="btn cmd Cmd#clim_start_id#id##" title="{{Ventiller}}" onclick="jeedom.cmd.execute({id: #clim_start_id#id##})"><i class="fa-lg icon fas fa-fan"></i></button>
+				<button class="btn cmd Cmd#clim_stop_id#id##" title="{{Stop ventiller}}" onclick="jeedom.cmd.execute({id: #clim_stop_id#id##})"><i class="fa-lg icon fas fa-ban"></i></button>
+			</div>
+		</div>
+
+		<!-- Column N°3 -->
+		<div class="col-xs-4 column">
+
+			<div class="col-xs-12 tile tile3">
+				<div class="col-xs-1 tile-icon"><i class="fas fa-lg fa-wrench"></i></div>
+				<div class="col-xs-11 tile-title">{{Service}}</div>
+				<div class="col-xs-2 info_name">{{Message}}</div>
+				<div class="col-xs-10 info_text Cmd#service_id#id##"></div>
+			</div>
+
+			<div class="col-xs-12 tile">
+				text
+			</div>
+		</div>
+
 	</div>
 </div>
 
@@ -337,7 +342,7 @@ if (!"#al_oil_id#id##".startsWith('#')) {
 		}
 		$('#div_al_oil#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
 	}
-	jeedom.cmd.update['#al_oil_id#id##'] ({value: "#al_oil#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#al_oil_id#id##', value: "#al_oil#id##"}])
 }
 
 // COOLANT
@@ -354,7 +359,7 @@ if (!"#al_coolant_id#id##".startsWith('#')) {
 		}
 		$('#div_al_coolant#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
 	}
-	jeedom.cmd.update['#al_coolant_id#id##'] ({value: "#al_coolant#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#al_coolant_id#id##', value: "#al_coolant#id##"}])
 }
 
 // BRAKE
@@ -371,7 +376,7 @@ if (!"#al_brake_fluid_id#id##".startsWith('#')) {
 		}
 		$('#div_al_brake#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
 	}
-	jeedom.cmd.update['#al_brake_fluid_id#id##'] ({value: "#al_brake_fluid#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#al_brake_fluid_id#id##', value: "#al_brake_fluid#id##"}])
 }
 
 // WASH
@@ -388,7 +393,7 @@ if (!"#al_washer_fluid_id#id##".startsWith('#')) {
 		}
 		$('#div_al_wash#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
 	}
-	jeedom.cmd.update['#al_washer_fluid_id#id##'] ({value: "#al_washer_fluid#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#al_washer_fluid_id#id##', value: "#al_washer_fluid#id##"}])
 }
 
 // AL FUEL AUTONOMY
@@ -405,7 +410,7 @@ if (!"#al_fuelautonomy_id#id##".startsWith('#')) {
 		}
 		$('#div_al_fuelautonomy#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
 	}
-	jeedom.cmd.update['#al_fuelautonomy_id#id##'] ({value: "#al_fuelautonomy#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#al_fuelautonomy_id#id##', value: "#al_fuelautonomy#id##"}])
 }
 
 // AL ELECTRIC AUTONOMY
@@ -422,7 +427,7 @@ if (!"#al_electricautonomy_id#id##".startsWith('#')) {
 		}
 		$('#div_al_electricautonomy#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
 	}
-	jeedom.cmd.update['#al_electricautonomy_id#id##'] ({value: "#al_electricautonomy#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#al_electricautonomy_id#id##', value: "#al_electricautonomy#id##"}])
 }
 
 // AL TYRE
@@ -439,7 +444,7 @@ if (!"#al_tyre_id#id##".startsWith('#')) {
 		}
 		$('#div_al_tyre#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
 	}
-	jeedom.cmd.update['#al_tyre_id#id##'] ({value: "#al_tyre#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#al_tyre_id#id##', value: "#al_tyre#id##"}])
 }
 
 // AL LIGHT
@@ -456,7 +461,7 @@ if (!"#al_light_id#id##".startsWith('#')) {
 		}
 		$('#div_al_light#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
 	}
-	jeedom.cmd.update['#al_light_id#id##'] ({value: "#al_light#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#al_light_id#id##', value: "#al_light#id##"}])
 }
 
 // PRESENCES
@@ -474,13 +479,13 @@ if (!"#presence_site1_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#presence_site1_id#id##'] = function(_options) {
 		updatePresence('#presence_site1_id#id##', '#site1_name#id##', _options)
 	}
-	jeedom.cmd.update['#presence_site1_id#id##'] ({value: '#presence_site1#id##'});
+	jeedom.cmd.refreshValue([{cmd_id: '#presence_site1_id#id##', value: '#presence_site1#id##'}]);
 }
 if (!"#presence_site2_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#presence_site2_id#id##'] = function(_options) {
 		updatePresence('#presence_site2_id#id##', '#site2_name#id##', _options)
 	}
-	jeedom.cmd.update['#presence_site2_id#id##'] ({value: '#presence_site2#id##'});
+	jeedom.cmd.refreshValue([{cmd_id: '#presence_site2_id#id##', value: '#presence_site2#id##'}]);
 }
 
 // DISTANCES
@@ -511,11 +516,12 @@ if (!"#distance_site1_id#id##".startsWith('#')) {
 		}
 		updateDistance('#distance_site1_id#id##', color_class, _options)
 	}
-	jeedom.cmd.update['#distance_site1_id#id##'] ({
+	jeedom.cmd.refreshValue([{
+		cmd_id: '#distance_site1_id#id##',
 		value: '#distance_site1#id##',
 		display_value: '#distance_site1_display_value#id##',
 		unit: '#distance_site1_unit#id##'
-	})
+	}])
 }
 if (!"#distance_site2_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#distance_site2_id#id##'] = function(_options) {
@@ -526,11 +532,12 @@ if (!"#distance_site2_id#id##".startsWith('#')) {
 		}
 		updateDistance('#distance_site2_id#id##', color_class, _options)
 	}
-	jeedom.cmd.update['#distance_site2_id#id##'] ({
+	jeedom.cmd.refreshValue([{
+		cmd_id: '#distance_site2_id#id##',
 		value: '#distance_site2#id##',
 		display_value: '#distance_site2_display_value#id##',
 		unit: '#distance_site2_unit#id##'
-	})
+	}])
 }
 
 
@@ -541,7 +548,7 @@ if (!"#odometer_id#id##".startsWith('#')) {
 		$('.value#odometer_id#id##').html(_options.display_value)
 		$('.unit#odometer_id#id##').html(_options.unit)
 	}
-	jeedom.cmd.update['#odometer_id#id##'] ({display_value: "#odometer_display_value#id##", unit: "#odometer_unit#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#odometer_id#id##', display_value: "#odometer_display_value#id##", unit: "#odometer_unit#id##"}])
 }
 
 // FUEL
@@ -551,7 +558,7 @@ if (!"#fuel_amount_id#id##".startsWith('#')) {
 		$('.value#fuel_amount_id#id##').html(_options.display_value)
 		$('.unit#fuel_amount_id#id##').html(_options.unit)
 	}
-	jeedom.cmd.update['#fuel_amount_id#id##'] ({display_value: "#fuel_amount_display_value#id##", unit: "#fuel_amount_unit#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#fuel_amount_id#id##', display_value: "#fuel_amount_display_value#id##", unit: "#fuel_amount_unit#id##"}])
 }
 
 // KM THERMIQUE RESTANTS
@@ -561,7 +568,7 @@ if (!"#fuelAutonomy_id#id##".startsWith('#')) {
 		$('.value#fuelAutonomy_id#id##').html(_options.display_value)
 		$('.unit#fuelAutonomy_id#id##').html(_options.unit)
 	}
-	jeedom.cmd.update['#fuelAutonomy_id#id##'] ({display_value: "#fuelAutonomy_display_value#id##", unit: "#fuelAutonomy_unit#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#fuelAutonomy_id#id##', display_value: "#fuelAutonomy_display_value#id##", unit: "#fuelAutonomy_unit#id##"}])
 }
 
 // CONSO FUEL
@@ -571,7 +578,7 @@ if (!"#conso_fuel_id#id##".startsWith('#')) {
 		$('.value#conso_fuel_id#id##').html(_options.display_value)
 		$('.unit#conso_fuel_id#id##').html(_options.unit)
 	}
-	jeedom.cmd.update['#conso_fuel_id#id##'] ({display_value: "#conso_fuel_display_value#id##", unit: "#conso_fuel_unit#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#conso_fuel_id#id##', display_value: "#conso_fuel_display_value#id##", unit: "#conso_fuel_unit#id##"}])
 }
 
 // CONSO FUEL PARCOURS
@@ -581,7 +588,7 @@ if (!"#conso_fuel_trip_id#id##".startsWith('#')) {
 		$('.value#conso_fuel_trip_id#id##').html(_options.display_value)
 		$('.unit#conso_fuel_trip_id#id##').html(_options.unit)
 	}
-	jeedom.cmd.update['#conso_fuel_trip_id#id##'] ({display_value: "#conso_fuel_trip_display_value#id##", unit: "#conso_fuel_trip_unit#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#conso_fuel_trip_id#id##', display_value: "#conso_fuel_trip_display_value#id##", unit: "#conso_fuel_trip_unit#id##"}])
 }
 
 // BATTERY LEVEL
@@ -591,7 +598,7 @@ if (!"#batteryLevel_id#id##".startsWith('#')) {
 		$('.value#batteryLevel_id#id##').html(_options.display_value)
 		$('.unit#batteryLevel_id#id##').html(_options.unit)
 	}
-	jeedom.cmd.update['#batteryLevel_id#id##'] ({display_value: "#batteryLevel_display_value#id##", unit: "#batteryLevel_unit#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#batteryLevel_id#id##', display_value: "#batteryLevel_display_value#id##", unit: "#batteryLevel_unit#id##"}])
 }
 
 // KM ELECTRIQUE RESTANTS
@@ -601,7 +608,7 @@ if (!"#electricAutonomy_id#id##".startsWith('#')) {
 		$('.value#electricAutonomy_id#id##').html(_options.display_value)
 		$('.unit#electricAutonomy_id#id##').html(_options.unit)
 	}
-	jeedom.cmd.update['#electricAutonomy_id#id##'] ({display_value: "#electricAutonomy_display_value#id##", unit: "#electricAutonomy_unit#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#electricAutonomy_id#id##', display_value: "#electricAutonomy_display_value#id##", unit: "#electricAutonomy_unit#id##"}])
 }
 	
 // CONSO ELECTRIQUE
@@ -611,7 +618,7 @@ if (!"#conso_electric_id#id##".startsWith('#')) {
 		$('.value#conso_electric_id#id##').html(_options.display_value)
 		$('.unit#conso_electric_id#id##').html(_options.unit)
 	}
-	jeedom.cmd.update['#conso_electric_id#id##'] ({display_value: "#conso_electric_display_value#id##", unit: "#conso_electric_unit#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#conso_electric_id#id##', display_value: "#conso_electric_display_value#id##", unit: "#conso_electric_unit#id##"}])
 }
 	
 // PRISE
@@ -620,7 +627,7 @@ if (!"#connectorStatus_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#connectorStatus_id#id##'] = function(_options) {
 		$('.value#connectorStatus_id#id##').html(_options.display_value)
 	}
-	jeedom.cmd.update['#connectorStatus_id#id##'] ({display_value: "#connectorStatus_display_value#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#connectorStatus_id#id##', display_value: "#connectorStatus_display_value#id##"}])
 }
 	
 // RECHARGE
@@ -629,7 +636,7 @@ if (!"#chargingStatus_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#chargingStatus_id#id##'] = function(_options) {
 		$('.value#chargingStatus_id#id##').html(_options.display_value)
 	}
-	jeedom.cmd.update['#chargingStatus_id#id##'] ({display_value: "#chargingStatus_display_value#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#chargingStatus_id#id##', display_value: "#chargingStatus_display_value#id##"}])
 }
 
 // RECHARGE END TIME
@@ -643,7 +650,7 @@ if (!"#chargingEndTime_id#id##".startsWith('#')) {
 			$('.value#chargingEndTime_id#id##').html(_options.display_value)
 		}
 	}
-	jeedom.cmd.update['#chargingEndTime_id#id##'] ({display_value: "#chargingEndTime_display_value#id##", unit: "#chargingEndTime_unit#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#chargingEndTime_id#id##', display_value: "#chargingEndTime_display_value#id##", unit: "#chargingEndTime_unit#id##"}])
 }
 	
 // VERROUILLAGE
@@ -652,7 +659,7 @@ if (!"#locked_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#locked_id#id##'] = function(_options) {
 		$('.value#locked_id#id##').html(_options.display_value)
 	}
-	jeedom.cmd.update['#locked_id#id##'] ({display_value: "#locked_display_value#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#locked_id#id##', display_value: "#locked_display_value#id##"}])
 }
 
 // ACCESSIBILITE
@@ -661,13 +668,13 @@ if (!"#availability_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#availability_id#id##'] = function(_options) {
 		$('.value#availability_id#id##').html(_options.display_value)
 	}
-	jeedom.cmd.update['#availability_id#id##'] ({display_value: "#availability_display_value#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#availability_id#id##', display_value: "#availability_display_value#id##"}])
 }
 if (!"#unavailableReason_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#unavailableReason_id#id##'] = function(_options) {
 		$('.value#unavailableReason_id#id##').html(_options.display_value)
 	}
-	jeedom.cmd.update['#unavailableReason_id#id##'] ({display_value: "#unavailableReason_display_value#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#unavailableReason_id#id##', display_value: "#unavailableReason_display_value#id##"}])
 }
 
 // TYRE
@@ -676,25 +683,25 @@ if (!"#tyre_fl_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#tyre_fl_id#id##'] = function(_options) {
 		$('.Cmd#tyre_fl_id#id## .info_text').html(_options.display_value)
 	}
-	jeedom.cmd.update['#tyre_fl_id#id##'] ({display_value: "#tyre_fl_display_value#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#tyre_fl_id#id##', display_value: "#tyre_fl_display_value#id##"}])
 }
 if (!"#tyre_fr_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#tyre_fr_id#id##'] = function(_options) {
 		$('.Cmd#tyre_fr_id#id## .info_text').html(_options.display_value)
 	}
-	jeedom.cmd.update['#tyre_fr_id#id##'] ({display_value: "#tyre_fr_display_value#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#tyre_fr_id#id##', display_value: "#tyre_fr_display_value#id##"}])
 }
 if (!"#tyre_rl_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#tyre_rl_id#id##'] = function(_options) {
 		$('.Cmd#tyre_rl_id#id## .info_text').html(_options.display_value)
 	}
-	jeedom.cmd.update['#tyre_rl_id#id##'] ({display_value: "#tyre_rl_display_value#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#tyre_rl_id#id##', display_value: "#tyre_rl_display_value#id##"}])
 }
 if (!"#tyre_rr_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#tyre_rr_id#id##'] = function(_options) {
 		$('.Cmd#tyre_rr_id#id## .info_text').html(_options.display_value)
 	}
-	jeedom.cmd.update['#tyre_rr_id#id##'] ({display_value: "#tyre_rr_display_value#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#tyre_rr_id#id##', display_value: "#tyre_rr_display_value#id##"}])
 }
 
 // DOORS
@@ -720,28 +727,28 @@ if (!"#door_fl_state_id#id##".startsWith('#')) {
 		show_opening('door_fl', _options.value)
 		$('.Cmd#door_fl_state_id#id## .info_text').html(_options.display_value)
 	}
-	jeedom.cmd.update['#door_fl_state_id#id##'] ({value: "#door_fl_state#id##", display_value: "#door_fl_state_display_value#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#door_fl_state_id#id##', value: "#door_fl_state#id##", display_value: "#door_fl_state_display_value#id##"}])
 }
 if (!"#door_fr_state_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#door_fr_state_id#id##'] = function(_options) {
 		show_opening('door_fr', _options.value)
 		$('.Cmd#door_fr_state_id#id## .info_text').html(_options.display_value)
 	}
-	jeedom.cmd.update['#door_fr_state_id#id##'] ({value: "#door_fr_state#id##", display_value: "#door_fr_state_display_value#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#door_fr_state_id#id##', value: "#door_fr_state#id##", display_value: "#door_fr_state_display_value#id##"}])
 }
 if (!"#door_rl_state_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#door_rl_state_id#id##'] = function(_options) {
 		show_opening('door_rl', _options.value)
 		$('.Cmd#door_rl_state_id#id## .info_text').html(_options.display_value)
 	}
-	jeedom.cmd.update['#door_rl_state_id#id##'] ({value: "#door_rl_state#id##", display_value: "#door_rl_state_display_value#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#door_rl_state_id#id##', value: "#door_rl_state#id##", display_value: "#door_rl_state_display_value#id##"}])
 }
 if (!"#door_rr_state_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#door_rr_state_id#id##'] = function(_options) {
 		show_opening('door_rr', _options.value)
 		$('.Cmd#door_rr_state_id#id## .info_text').html(_options.display_value)
 	}
-	jeedom.cmd.update['#door_rr_state_id#id##'] ({value: "#door_rr_state#id##", display_value: "#door_rr_state_display_value#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#door_rr_state_id#id##', value: "#door_rr_state#id##", display_value: "#door_rr_state_display_value#id##"}])
 }
 
 // WINDOWS
@@ -750,25 +757,25 @@ if (!"#win_fl_state_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#win_fl_state_id#id##'] = function(_options) {
 		$('.Cmd#win_fl_state_id#id## .info_text').html(_options.display_value)
 	}
-	jeedom.cmd.update['#win_fl_state_id#id##'] ({display_value: "#win_fl_state_display_value#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#win_fl_state_id#id##', display_value: "#win_fl_state_display_value#id##"}])
 }
 if (!"#win_fr_state_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#win_fr_state_id#id##'] = function(_options) {
 		$('.Cmd#win_fr_state_id#id## .info_text').html(_options.display_value)
 	}
-	jeedom.cmd.update['#win_fr_state_id#id##'] ({display_value: "#win_fr_state_display_value#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#win_fr_state_id#id##', display_value: "#win_fr_state_display_value#id##"}])
 }
 if (!"#win_rl_state_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#win_rl_state_id#id##'] = function(_options) {
 		$('.Cmd#win_rl_state_id#id## .info_text').html(_options.display_value)
 	}
-	jeedom.cmd.update['#win_rl_state_id#id##'] ({display_value: "#win_rl_state_display_value#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#win_rl_state_id#id##', display_value: "#win_rl_state_display_value#id##"}])
 }
 if (!"#win_rr_state_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#win_rr_state_id#id##'] = function(_options) {
 		$('.Cmd#win_rr_state_id#id## .info_text').html(_options.display_value)
 	}
-	jeedom.cmd.update['#win_rr_state_id#id##'] ({display_value: "#win_rr_state_display_value#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#win_rr_state_id#id##', display_value: "#win_rr_state_display_value#id##"}])
 }
 
 
@@ -777,21 +784,28 @@ if (!"#hood_state_id#id##".startsWith('#')) {
 		show_opening('hood', _options.value)
 		$('.Cmd#hood_state_id#id## .info_text').html(_options.display_value)
 	}
-	jeedom.cmd.update['#hood_state_id#id##'] ({value: "#hood_state#id##", display_value: "#hood_state_display_value#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#hood_state_id#id##', value: "#hood_state#id##", display_value: "#hood_state_display_value#id##"}])
 }
 if (!"#roof_state_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#roof_state_id#id##'] = function(_options) {
 		show_opening('roof', _options.value)
 		$('.Cmd#roof_state_id#id## .info_text').html(_options.display_value)
 	}
-	jeedom.cmd.update['#roof_state_id#id##'] ({value: "#roof_state#id##", display_value: "#roof_state_display_value#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#roof_state_id#id##', value: "#roof_state#id##", display_value: "#roof_state_display_value#id##"}])
 }
 if (!"#tail_state_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#tail_state_id#id##'] = function(_options) {
 		show_opening('tail', _options.value)
 		$('.Cmd#tail_state_id#id## .info_text').html(_options.display_value)
 	}
-	jeedom.cmd.update['#tail_state_id#id##'] ({value: "#tail_state#id##", display_value: "#tail_state_display_value#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#tail_state_id#id##', value: "#tail_state#id##", display_value: "#tail_state_display_value#id##"}])
+}
+// SERVICE
+if (!"#service_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#service_id#id##'] = function(_options) {
+		$('.Cmd#service_id#id##').html(_options.display_value)
+	}
+	jeedom.cmd.refreshValue([{cmd_id: '#service_id#id##', value: '#service#id##', display_value: '#service_display_value#id##'}])
 }
 
 // MISE A JOUR DES TEXTES INFO
@@ -809,7 +823,7 @@ if (!"#msg2widget_id#id##".startsWith('#')) {
 			$('#'+cible + '#id#').attr('title',msg)
 		}
 	}
-	jeedom.cmd.update['#msg2widget_id#id##'] ({value: "#msg2widget#id##"})
+	jeedom.cmd.refreshValue([{cmd_id: '#msg2widget_id#id##', value: "#msg2widget#id##"}])
 }
 
 </script>

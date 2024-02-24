@@ -63,8 +63,8 @@ function displaySelectedEqLogic () {
                 return
             }
 			console.debug(data.result)
-			//$('#div_display_eqLogic').empty().html(data.result)
-			$('#eqLogic_widget_container').empty().html(data.result)
+			$('#div_display_eqLogic').empty().html(data.result)
+			//$('#eqLogic_widget_container').empty().html(data.result)
 			$.hideLoading()
 		}
 	})

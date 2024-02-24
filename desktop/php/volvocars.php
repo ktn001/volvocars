@@ -416,6 +416,9 @@ $accounts = volvoAccount::all();
 							<div class='col-sm-12'>
 								<img id="img_car" class="img-responsive">
 							</div>
+							<div class="col-sm-12" style="text-align:center;">
+								<a class="btn btn-sm btn-primary eqLogicAction" data-action="get_raw-datas"><i class="fas fa-file-alt"></i> {{Données brutes}}</a>
+							</div>
 						</div>
 					</fieldset>
 				</form>
@@ -428,7 +431,7 @@ $accounts = volvoAccount::all();
 						<a class="btn btn-default btn-sm cmdAction hidden" data-action="removeOpen" style="margin-top:5px;"><i class="fas fa-minus-circle"></i> {{Supprimer *open}}</a>
 						<a class="btn btn-default btn-sm cmdAction hidden" data-action="removeClosed" style="margin-top:5px;"><i class="fas fa-minus-circle"></i> {{Supprimer *closed}}</a>
 						<a class="btn btn-success btn-sm cmdAction" data-action="sort" style="margin-top:5px;"><i class="fas fa-sort-amount-down"></i> {{Trier}}</a>
-						<a class="btn btn-success btn-sm cmdAction" data-action="recreate" style="margin-top:5px;"><i class="fas fa-plus-circle"></i> {{Recréer commandes manquantes}}</a>
+						<a class="btn btn-success btn-sm cmdAction" data-action="recreate" style="margin-top:5px;"><i class="fas fa-plus-circle"></i> {{Créer commandes manquantes}}</a>
 					</span>
 				</div>
 				<br><br>

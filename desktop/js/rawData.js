@@ -1,5 +1,4 @@
-<?php
-
+// vim: tabstop=4 autoindent
 /* This file is part of Jeedom.
 *
 * Jeedom is free software: you can redistribute it and/or modify
@@ -16,10 +15,16 @@
 * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
 */
 
-if (!isConnect('admin')) {
-    throw new Exception('{{401 - Accès non autorisé}}');
-}
-?>
+$('.show_values').off('click').on('click', function() {
+	$(this).addClass('hidden')
+	$(this).closest('.rawData').find('.hidde_values').removeClass('hidden')
+	$(this).closest('.rawData').find('.rawData-body').removeClass('hidden')
+})
 
-Exemple de modale
+$('.hidde_values').off('click').on('click', function() {
+	$(this).addClass('hidden')
+	$(this).closest('.rawData').find('.show_values').removeClass('hidden')
+	$(this).closest('.rawData').find('.rawData-body').addClass('hidden')
+})
 
+$('.hidde_values').trigger('click')

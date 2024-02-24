@@ -282,6 +282,15 @@ $('[data-l2key=fuelEngine]').off('change').on('change', function() {
 })
 
 /*
+ * Action du bouton Données brutes
+ */
+$('.eqLogicAction[data-action=get_raw-datas]').off('click').on('click', function() {
+	id = $('.eqLogicAttr[data-l1key=id]').value()
+	$('#md_modal').dialog({title:"{{Données brute}}"})
+	$('#md_modal').load('index.php?v=d&plugin=volvocars&modal=rawData&eqLogicId=' + id).dialog('open')
+})
+
+/*
  * function appelée lors du chargement d'un eqLogic
  */
 function printEqLogic(data) {

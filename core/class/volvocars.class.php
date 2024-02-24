@@ -24,7 +24,7 @@ class volvocars extends eqLogic {
 	/*	 * *************************Attributs****************************** */
 
 	static $_endpoints = [
-		"avaibility",
+		"accessibility",
 		"brakes",
 		"diagnostics",
 		"doors",
@@ -509,7 +509,7 @@ class volvocars extends eqLogic {
 	}
 
 	/*
-	 * Mise à jour des détails du vhéhicule et des valeurs des commandes info
+	 * Mise à jour des détails du véhicule et des valeurs des commandes info
 	 * à partir des infos fournies par les API Volvo
 	 */
 	public function synchronize() {
@@ -518,7 +518,7 @@ class volvocars extends eqLogic {
 	}
 
 	/*
-	 * Mise à jour de détails du véhicule à partir des infis fournies par
+	 * Mise à jour de détails du véhicule à partir des infos fournies par
 	 * les API de Volvo
 	 */
 	public function updateDetails() {
@@ -778,6 +778,17 @@ class volvocars extends eqLogic {
 	}
 
 	/*
+	 * Récupération des infos brutes
+	 */
+	public function getRawDatas() {
+		$data = $this->getAccount()->getRawDatas($this->getVin());
+		$dataFile = __DIR__ . '/../../data/' . $this->getVin() . '.data.json';
+		chmod($dataFile, 0775);
+		file_put_contents($dataFile, json_encode($data, JSON_PRETTY_PRINT));
+		return $data;
+	}
+
+	/*
 	 * Mise à jour des infos retournée par un endpoint des API Volvo
 	 */
 	public function getInfosFromApi($endpoint){
@@ -791,9 +802,11 @@ class volvocars extends eqLogic {
 		$infos = $account->getInfos($endpoint,$this->getVin());
 
 		$endpoint2cmd = [
-			'availability.availabilityStatus' => [ 'availability', 'unavailableReason' ],
+			'accessibility.availabilityStatus' => [ 'availability', 'unavailableReason' ],
+
 			'brakes.brakeFluidLevelWarning'	=>	'brake_fluid_level',
 
+			'diagnostics.serviceWarning'		  => 'service',
 			'diagnostics.washerFluidLevelWarning' => 'washer_fluid_level',
 
 			'doors.centralLock'		=> 'locked',
@@ -901,7 +914,7 @@ class volvocars extends eqLogic {
 	 * Interrogation de tous les endpoint de l'API pour remonter les infos
 	 */
 	public function retrieveInfos() {
-		$this->getInfosFromApi('availability');
+		$this->getInfosFromApi('accessibility');
 		$this->getInfosFromApi('brakes');
 		$this->getInfosFromApi('diagnostics');
 		$this->getInfosFromApi('doors');
@@ -1077,6 +1090,8 @@ class volvocars extends eqLogic {
 			'batteryLevel',
 			'chargingEndTime',
 			'chargingStatus',
+			'clim_start',
+			'clim_stop',
 			'connectorStatus',
 			'conso_electric',
 			'conso_fuel',
@@ -1092,16 +1107,19 @@ class volvocars extends eqLogic {
 			'fuelAutonomy',
 			'hood_state',
 			'locked',
+			'lock',
 			'odometer',
 			'presence_site1',
 			'presence_site2',
 			'refresh',
 			'roof_state',
+			'service',
 			'tail_state',
 			'tyre_fl',
 			'tyre_fr',
 			'tyre_rl',
 			'tyre_rr',
+			'unlock',
 			'win_fl_state',
 			'win_fr_state',
 			'win_rl_state',
@@ -1651,12 +1669,23 @@ class volvocarsCmd extends cmd {
 			"POWER_SAWING" => __("en veille",__FILE__),
 			"CAR_IN_USE"   => __("en court d'utilisation",__FILE__),
 
-			"LOCKED"	=> __("vérouillé",__FILE__),
-			"UNLOCKED"	=> __("dévérouillé",__FILE__),
+			"LOCKED"	=> __("verrouillé",__FILE__),
+			"UNLOCKED"	=> __("déverrouillé",__FILE__),
 
-			'OPEN'		=> __("ouvert",__FILE__),
-			'AJAR'		=> __("entre-ouvert",__FILE__),
+			"OPEN"		=> __("ouvert",__FILE__),
+			"AJAR"		=> __("entre-ouvert",__FILE__),
 			"CLOSED"	=> __("fermé",__FILE__),
+
+			"UNKNOWN_WARNING"								=> __("Service pour raison indterminée",__FILE__),
+			"REGULAR_MAINTENANCE_ALMOST_TIME_FOR_SERVICE"	=> __("Service régulier à prévoire",__FILE__),
+			"REGULAR_MAINTENANCE_TIME_FOR_SERVICE"			=> __("Service régulier à faire",__FILE__),
+			"REGULAR_MAINTENANCE_OVERDUE_FOR_SERVICE"		=> __("service régulier en retard",__FILE__),
+			"ENGINE_HOURS_ALMOST_TIME_FOR_SERVICE"			=> __("Service moteur à prévoire",__FILE__),
+			"ENGINE_HOURS_TIME_FOR_SERVICE"					=> __("Service moteur à faire",__FILE__),
+			"ENGINE_HOURS_OVERDUE_FOR_SERVICE"				=> __("Service moteur en retard",__FILE__),
+			"DISTANCE_DRIVEN_ALMOST_TIME_FOR_SERVICE"		=> __("Service suite kilométrage à prévoire",__FILE__),
+			"DISTANCE_DRIVEN_TIME_FOR_SERVICE"				=> __("Service suite kilométrage à faire",__FILE__),
+			"DISTANCE_DRIVEN_OVERDUE_FOR_SERVICE"			=> __("Service suite kilométrage en retard",__FILE__),
 
 			"UNSPECIFIED"	=> __("indéterminé",__FILE__),
 			"NO_WARNING"	=> __("OK",__FILE__),

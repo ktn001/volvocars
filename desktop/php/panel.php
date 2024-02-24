@@ -14,9 +14,9 @@ if (!$eqLogics) {
 include_file('desktop', 'panel', 'css', 'volvocars');
 ?>
 
-<div class="row row-overflow" id="bckgd">
-
-	<div id="div_display_eqLogicList" class="col-lg-2 col-md-3 col-sm-4">
+<div class="container-fluid" id="bckgd">
+<div class="row">
+	<div id="div_display_eqLogicList" class="col-xs-12 col-md-3 col-lg-2">
 		<div>
 		<img class="volvo_logo_black" src="/plugins/volvocars/desktop/img/volvo_black.svg">
         <img class="volvo_logo_white" src="/plugins/volvocars/desktop/img/volvo_white.svg">
@@ -54,10 +54,9 @@ include_file('desktop', 'panel', 'css', 'volvocars');
 		</div>
 	</div>
 
-	<div id="div_display_eqLogic" class="col-lg-10 col-md-9 col-sm-8">
-		<div id="eqLogic_widget_container" style="width: 100%;">
-		</div>
+	<div id="div_display_eqLogic" class="col-xs-12 col-md-9 col-lg-10">
 	</div>
+</div>
 </div>
 
 <?php
