@@ -17,8 +17,9 @@
 */
 
 /* * ***************************Includes********************************* */
-require_once __DIR__  . '/../../../../core/php/core.inc.php';
-require_once __DIR__  . '/volvoAccount.class.php';
+require_once __DIR__ . '/volvoException.class.php';
+require_once __DIR__ . '/../../../../core/php/core.inc.php';
+require_once __DIR__ . '/volvoAccount.class.php';
 
 class volvocars extends eqLogic {
 	/*	 * *************************Attributs****************************** */
@@ -91,7 +92,7 @@ class volvocars extends eqLogic {
 	static public function cron() {
 		foreach (volvocars::byType(__CLASS__, true) as $car) {
 			log::add("volvocars","debug","cron pour : " . $car->getName());
-			$car->retrieveInfos();
+			$car->refresh();
 		}
 	}
 
@@ -509,12 +510,33 @@ class volvocars extends eqLogic {
 	}
 
 	/*
+	 * Retourne les commandes associées à un endpoint
+	 */
+	public function getCmdByEndpoint($_endpoint, $_type=null){
+		$values = array(
+			'eqLogic_id' => $this->getId(),
+			'endpoint' => '%"endpoint":"' . $_endpoint . '"%',
+		);
+		$sql = 'SELECT ' . DB::buildField('cmd') . '
+		FROM cmd
+		WHERE configuration like :endpoint
+		  AND eqLogic_id = :eqLogic_id';
+		if ($_type !== null) {
+			$values['type'] = $_type;
+			$sql .= ' AND type = :type';
+		}
+		$sql .= ' ORDER by name';
+		log::add("volvocars","debug",$sql);
+		return DB::Prepare($sql, $values, DB::FETCH_TYPE_ALL, PDO::FETCH_CLASS, 'volvocarsCmd');
+	}
+
+	/*
 	 * Mise à jour des détails du véhicule et des valeurs des commandes info
 	 * à partir des infos fournies par les API Volvo
 	 */
 	public function synchronize() {
 		$this->updateDetails();
-		$this->retrieveInfos(true);
+		$this->refresh(true);
 	}
 
 	/*
@@ -911,22 +933,54 @@ class volvocars extends eqLogic {
 	}
 
 	/*
-	 * Interrogation de tous les endpoint de l'API pour remonter les infos
+	 * Interrogation de tous les endpoints de l'API pour remonter les infos
 	 */
-	public function retrieveInfos() {
-		$this->getInfosFromApi('accessibility');
-		$this->getInfosFromApi('brakes');
-		$this->getInfosFromApi('diagnostics');
-		$this->getInfosFromApi('doors');
-		$this->getInfosFromApi('engine_diagnostics');
-		$this->getInfosFromApi('fuel');
-		$this->getInfosFromApi('location');
-		$this->getInfosFromApi('odometer');
-		$this->getInfosFromApi('recharge_status');
-		$this->getInfosFromApi('statistics');
-		$this->getInfosFromApi('tyre');
-		$this->getInfosFromApi('windows');
-		$this->getInfosFromApi('warnings');
+	public function refresh() {
+		try {
+			$this->getInfosFromApi('accessibility');
+		} catch (volvoApiException $e) {
+			if ($e->getHttpCode() == '403') {
+				if (strpos($e->getMessage(),'Out of call volume quota.') !== false) {
+					$cmd = $this->getCmd('info','availability');
+					if (is_object($cmd)){
+						log::add('volvocars','info',sprintf('│ %s: %s','availability','QUOTA_OUT'));
+						$this->checkAndUpdateCmd($cmd,'QUOTA_OUT');
+					}
+					$cmd = $this->getCmd('info','unavailableReason');
+					if (is_object($cmd)) {
+						preg_match('/[\d:]+/',$e->getMessage(), $matches);
+						$delai = $matches[0];
+						$value = sprintf(__('Réinitialisation dans %s',__FILE__), $delai);
+						log::add('volvocars','info',sprintf('│ %s: %s','unavailableReason',$value));
+						$this->checkAndUpdateCmd($cmd,$value);
+					}
+					log::add("volvocars","info","└OK");
+					return;
+				}
+			}
+			throw $e;
+		}
+		foreach ([
+			'brakes',
+			'diagnostics',
+			'doors',
+			'engine_diagnostics',
+			'fuel',
+			'location',
+			'odometer',
+			'recharge_status',
+			'statistics',
+			'tyre',
+			'windows',
+			'warnings'
+		] as $endpoint) {
+			try {
+				if (count($this->getCmdByEndpoint($endpoint,'info')) > 0) {
+					$this->getInfosFromApi($endpoint);
+				}
+			} catch (volvoApiException $e) {
+			}
+		}
 	}
 
 	/*
@@ -1317,7 +1371,7 @@ class volvocarsCmd extends cmd {
 		if ($this->getType() == 'action') {
 			switch ($logicalId) {
 				case 'refresh':
-					$car->retrieveInfos();
+					$car->refresh();
 					break;
 				case 'lock':
 				case 'lock-reduced':
@@ -1655,19 +1709,20 @@ class volvocarsCmd extends cmd {
 			"CHARGING_SYSTEM_DONE"			=> __("terminée",__FILE__),
 			"CHARGING_SYSTEM_FAULT"			=> __("en erreur",__FILE__),
 			"CHARGING_SYSTEM_SCHEDULED"		=> __("programmée",__FILE__),
-			"CHARGING_SYSTEM_UNSPECIFIED"	=> __("indéterminée",__FILE__),
+			"CHARGING_SYSTEM_UNSPECIFIED"	=> __("état inconnu",__FILE__),
 
 			"CONNECTION_STATUS_CONNECTED_AC" => __("branchée (AC)",__FILE__),
 			"CONNECTION_STATUS_CONNECTED_DC" => __("branchée (DC)",__FILE__),
 			"CONNECTION_STATUS_DISCONNECTED" => __("débranchée",__FILE__),
 			"CONNECTION_STATUS_FAULT"		 => __("en erreur",__FILE__),
-			"CONNECTION_STATUS_UNSPECIFIED"	 => __("indéterminée",__FILE__),
+			"CONNECTION_STATUS_UNSPECIFIED"	 => __("état inconnu",__FILE__),
 
 			"AVAILABLE"	   => __("accessible",__FILE__),
 			"UNAVAILABLE"  => __("indisponnible",__FILE__),
 			"NO_INTERNET"  => __("pas d'accès Internet",__FILE__),
 			"POWER_SAWING" => __("en veille",__FILE__),
 			"CAR_IN_USE"   => __("en court d'utilisation",__FILE__),
+			"QUOTA_OUT"    => __("quota API dépassé",__FILE__),
 
 			"LOCKED"	=> __("verrouillé",__FILE__),
 			"UNLOCKED"	=> __("déverrouillé",__FILE__),
@@ -1687,7 +1742,7 @@ class volvocarsCmd extends cmd {
 			"DISTANCE_DRIVEN_TIME_FOR_SERVICE"				=> __("Service suite kilométrage à faire",__FILE__),
 			"DISTANCE_DRIVEN_OVERDUE_FOR_SERVICE"			=> __("Service suite kilométrage en retard",__FILE__),
 
-			"UNSPECIFIED"	=> __("indéterminé",__FILE__),
+			"UNSPECIFIED"	=> __("inconnu",__FILE__),
 			"NO_WARNING"	=> __("OK",__FILE__),
 		];
 

@@ -17,130 +17,9 @@
  * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once __DIR__ . '/volvoException.class.php';
+require_once __DIR__ . '/endpoints.class.php';
 class volvoAccount {
-
-	const ENDPOINT = [
-		"engine_diagnostics" =>[
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/engine",
-			"accept" => "application/json",
-			"type" => "info",
-		],
-		"diagnostics" =>[
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/diagnostics",
-			"accept" => "application/json",
-			"type" => "info",
-		],
-		"brakes" => [
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/brakes",
-			"accept" => "application/json",
-			"type" => "info",
-		],
-		"windows" =>[
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/windows",
-			"accept" => "application/json",
-			"type" => "info",
-		],
-		"doors" =>[
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/doors",
-			"accept" => "application/json",
-			"type" => "info",
-		],
-		"engine_status" =>[
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/engine-status",
-			"accept" => "application/json",
-			"type" => "info",
-		],
-		"fuel" =>[
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/fuel",
-			"accept" => "application/json",
-			"type" => "info",
-		],
-		"odometer" =>[
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/odometer",
-			"accept" => "application/json",
-			"type" => "info",
-		],
-		"statistics" =>[
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/statistics",
-			"accept" => "application/json",
-			"type" => "info",
-		],
-		"tyre" =>[
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/tyres",
-			"accept" => "application/json",
-			"type" => "info",
-		],
-		"vehicles" =>[
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles",
-			"accept" => "application/json",
-			"type" => "account_info",
-		],
-		"details" => [
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s",
-			"accept" => "application/json",
-			"type" => "info",
-		],
-		"warnings" =>[
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/warnings",
-			"accept" => "application/json",
-			"type" => "info",
-		],
-		"battery_level" => [
-			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status/battery-charge-level",
-			"accept" => "application/vnd.volvocars.api.energy.vehicledata.v1+json",
-			"type" => "info",
-		],
-		"charging_connection_status" => [
-			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status/charging-connection-status",
-			"accept" => "application/vnd.volvocars.api.energy.vehicledata.v1+json",
-			"type" => "info",
-		],
-		"charging_system_status" => [
-			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status/charging-system-status",
-			"accept" => "application/vnd.volvocars.api.energy.vehicledata.v1+json",
-			"type" => "info",
-		],
-		"electric-range" => [
-			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status/electric-range",
-			"accept" => "application/vnd.volvocars.api.energy.vehicledata.v1+json",
-			"type" => "info",
-		],
-		"charge-time" => [
-			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status/estimated-charging-time",
-			"accept" => "application/vnd.volvocars.api.energy.vehicledata.v1+json",
-			"type" => "info",
-		],
-		"recharge_status" =>[
-			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status",
-			"accept" => "application/vnd.volvocars.api.energy.vehicledata.v1+json",
-			"type" => "info",
-		],
-		"resources" => [
-			"url" => "https://api.volvocars.com/extended-vehicle/v1/vehicles/%s/resources",
-			"accept" => "application/json",
-			"type" => "info",
-		],
-		"location" =>[
-			"url" => "https://api.volvocars.com/location/v1/vehicles/%s/location",
-			"accept" => "application/json",
-			"type" => "info",
-		],
-		"accessibility" => [
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/command-accessibility",
-			"accept" => "application/json",
-			"type" => "info",
-		],
-		"commands" => [
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands",
-			"accept" => "application/json",
-			"type" => "info",
-		],
-		"vehicles" =>[
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles",
-			"accept" => "application/json",
-			"type" => "account_info",
-		],
-	];
 
 	const OAUTH_URL = "https://volvoid.eu.volvocars.com/as/token.oauth2";
 
@@ -382,7 +261,7 @@ class volvoAccount {
 		if ($endpoint === null) {
 			$accept = "application/json";
 		} else {
-			$accept = self::ENDPOINT[$endpoint]['accept'];
+			$accept = endpoints::getEndpoint('accept');
 		}
 		curl_setopt($session, CURLOPT_HTTPHEADER, [
 			"authorization: Bearer " . $this->_token['access_token'],
@@ -414,20 +293,18 @@ class volvoAccount {
 
 	public function getRawDatas($vin) {
 		$return = array();
-		foreach (self::ENDPOINT as $key => $endpoint) {
-			if ($endpoint['type'] != 'info') {
-				continue;
-			}
+		foreach (endpoints::getEndpoints('info') as $key => $endpoint) {
 			$return[$key] = $this->getInfos($key, $vin);
 		}
 		return $return;
 	}
 
-	public function getInfos($endpoint, $vin=null) {
-		if (!isset (SELF::ENDPOINT[$endpoint])) {
+	public function getInfos($_endpoint, $vin=null) {
+		$endpoint = endpoints::getEndpoint($_endpoint);
+		if ($endpoint === null) {
 			log::add("volvocars","error",sprintf(__("URL pour le endpoint %s non définie",__FILE__),$endpoint));
 		}
-		$url = sprintf(self::ENDPOINT[$endpoint]['url'],$vin);
+		$url = sprintf($endpoint['url'],$vin);
 		log::add("volvocars","debug","│ URL: " .$url);
 		$session = $this->session($url, $endpoint);
 		$content = curl_exec($session);
@@ -435,31 +312,22 @@ class volvoAccount {
 		$content = is_json($content,$content);
 		$httpCode = curl_getinfo($session,CURLINFO_HTTP_CODE);
 		if ( $httpCode != 200) {
-			$lignes = array();
-			$lignes[] = 'Error getting infos "' . $endpoint . '" for vin: ' . $vin;
-			$lignes[] = "httpCode: " . $httpCode;
+			$message = null;
 			if (isset($content['message'])) {
-				$lignes[] = $content['message'];
+				$message = $content['message'];
 			}
 			if (isset($content['error']['message'])) {
-				$lignes[] = $content['error']['message'];
+				$message = $content['error']['message'];
 			}
+			$description = null;
 			if (isset($content['error']['description'])) {
-				$lignes[] =  $content['error']['description'];
+				$description = $content['error']['description'];
 			}
-			if (isset($content['exveErrorMsg'])) {
-				$lignes[] = $content['exveErrorMsg'];
+			$detail = null;
+			if (isset($content['error']['detail'])) {
+				$detail = $content['error']['detail'];
 			}
-			if (isset($content['exveNote'])) {
-				$lignes[] = $content['exveNote'];
-			}
-			$prefix = '┌';
-			for ($i = 0; $i < count($lignes)-1; $i++) {
-				log::add("volvocars","error",$prefix . $lignes[$i]);
-				$prefix = '│';
-			}
-			log::add("volvocars","error",'└' . end($lignes));
-			throw new Exception (sprintf(__("Erreur de la récupération d'infos pour le  véhicule '%s' (http_code: %s)",__FILE__), $vin, $httpCode));
+			throw new volvoApiException ($endpoint, $httpCode, $message, $description, $detail);
 		}
 		if (isset($content['data'])) {
 			$content = $content['data'];
