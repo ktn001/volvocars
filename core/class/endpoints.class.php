@@ -19,8 +19,20 @@
 
 class endpoints {
 	private static $_endpoints = [
-		"engine_diagnostics" => [
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/engine",
+		"accessibility" => [
+			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/command-accessibility",
+			"accept" => "application/json",
+			"type" => "info",
+			"refreshTime" => 1,
+		],
+		"battery_level" => [
+			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status/battery-charge-level",
+			"accept" => "application/vnd.volvocars.api.energy.vehicledata.v1+json",
+			"type" => "info",
+			"refreshTime" => 5,
+		],
+		"brakes" => [
+			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/brakes",
 			"accept" => "application/json",
 			"type" => "info",
 			"refreshTime" => 10,
@@ -31,15 +43,21 @@ class endpoints {
 			"type" => "info",
 			"refreshTime" => 10,
 		],
-		"brakes" => [
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/brakes",
+		"details" => [
+			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s",
 			"accept" => "application/json",
 			"type" => "info",
-			"refreshTime" => 10,
+			"refreshTime" => 0,
 		],
-		"windows" => [
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/windows",
-			"accept" => "application/json",
+		"charging_connection_status" => [
+			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status/charging-connection-status",
+			"accept" => "application/vnd.volvocars.api.energy.vehicledata.v1+json",
+			"type" => "info",
+			"refreshTime" => 1,
+		],
+		"charging_system_status" => [
+			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status/charging-system-status",
+			"accept" => "application/vnd.volvocars.api.energy.vehicledata.v1+json",
 			"type" => "info",
 			"refreshTime" => 1,
 		],
@@ -48,6 +66,12 @@ class endpoints {
 			"accept" => "application/json",
 			"type" => "info",
 			"refreshTime" => 1,
+		],
+		"engine_diagnostics" => [
+			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/engine",
+			"accept" => "application/json",
+			"type" => "info",
+			"refreshTime" => 10,
 		],
 		"engine_status" => [
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/engine-status",
@@ -79,35 +103,17 @@ class endpoints {
 			"type" => "info",
 			"refreshTime" => 5,
 		],
-		"details" => [
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s",
+		"windows" => [
+			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/windows",
 			"accept" => "application/json",
 			"type" => "info",
-			"refreshTime" => 0,
+			"refreshTime" => 1,
 		],
 		"warnings" => [
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/warnings",
 			"accept" => "application/json",
 			"type" => "info",
 			"refreshTime" => 10,
-		],
-		"battery_level" => [
-			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status/battery-charge-level",
-			"accept" => "application/vnd.volvocars.api.energy.vehicledata.v1+json",
-			"type" => "info",
-			"refreshTime" => 5,
-		],
-		"charging_connection_status" => [
-			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status/charging-connection-status",
-			"accept" => "application/vnd.volvocars.api.energy.vehicledata.v1+json",
-			"type" => "info",
-			"refreshTime" => 1,
-		],
-		"charging_system_status" => [
-			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status/charging-system-status",
-			"accept" => "application/vnd.volvocars.api.energy.vehicledata.v1+json",
-			"type" => "info",
-			"refreshTime" => 1,
 		],
 		"electric_range" => [
 			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status/electric-range",
@@ -139,12 +145,6 @@ class endpoints {
 			"type" => "info",
 			"refreshTime" => 1,
 		],
-		"accessibility" => [
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/command-accessibility",
-			"accept" => "application/json",
-			"type" => "info",
-			"refreshTime" => 1,
-		],
 		"commands" => [
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands",
 			"accept" => "application/json",
@@ -166,14 +166,27 @@ class endpoints {
 		return self::$_endpoints[$_endpoint];
 	}
 
-	static function getEndpoints($_type = null) {
+	static function getEndpoints($_type = null, $toRefresh = false) {
 		$return = array();
 		foreach (self::$_endpoints as $property => $value) {
-			if (is_array($value) and isset($value['type'])){
-				if ($_type === null or $value['type'] == $_type) {
-					$return[$property] = $value;
+			if (!is_array($value)) {
+				continue;
+			}
+			if (!isset($value['type'])) {
+				continue;
+			}
+			if ($_type !== null and $value['type'] != $_type) {
+				continue;
+			}
+			if ($toRefresh) {
+				if (!isset($value['refreshTime'])) {
+					continue;
+				}
+				if ($value['refreshTime'] == 0) {
+					continue;
 				}
 			}
+			$return[$property] = $value;
 		}
 		return $return;
 	}

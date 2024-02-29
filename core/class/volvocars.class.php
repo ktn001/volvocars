@@ -41,7 +41,8 @@ class volvocars extends eqLogic {
 	];
 
 	/*
-	 * Permet de définir les possibilités de personnalisation du widget (en cas d'utilisation de la fonction 'toHtml' par exemple)
+	 * Permet de définir les possibilités de personnalisation du widget (en cas d'utilisation de la
+	 * fonction 'toHtml' par exemple)
 	 * Tableau multidimensionnel - exemple: array('custom' => true, 'custom::layout' => false)
 	 * public static $_widgetPossibility = array();
 	*/
@@ -89,6 +90,9 @@ class volvocars extends eqLogic {
 		return $cars;
 	}
 
+	/*
+	 * Le cron
+	 */
 	static public function cron() {
 		foreach (volvocars::byType(__CLASS__, true) as $car) {
 			log::add("volvocars","debug","cron pour : " . $car->getName());
@@ -173,24 +177,24 @@ class volvocars extends eqLogic {
 					'0' => __("Pression pneus OK",__FILE__),
 				],
 				'tyre_fl' => [
-					"VERY_LOW_PRESSURE" => __("Pression pneu avant gauche très basse",__FILE__),
-					"LOW_PRESSURE" =>      __("Pression pneu avant gauche basse",__FILE__),
-					"HIGH_PRESSURE" =>     __("Pression pneu avant gauche élevée",__FILE__),
+					"VERY_LOW_PRESSURE"	=> __("Pression pneu avant gauche très basse",__FILE__),
+					"LOW_PRESSURE"		=> __("Pression pneu avant gauche basse",__FILE__),
+					"HIGH_PRESSURE"		=> __("Pression pneu avant gauche élevée",__FILE__),
 				],
 				'tyre_fr' => [
 					"VERY_LOW_PRESSURE" => __("Pression pneu avant droit très basse",__FILE__),
-					"LOW_PRESSURE" =>      __("Pression pneu avant droit basse",__FILE__),
-					"HIGH_PRESSURE" =>     __("Pression pneu avant droit élevée",__FILE__),
+					"LOW_PRESSURE"		=> __("Pression pneu avant droit basse",__FILE__),
+					"HIGH_PRESSURE"		=> __("Pression pneu avant droit élevée",__FILE__),
 				],
 				'tyre_rl' => [
-					"VERY_LOW_PRESSURE" => __("Pression pneu arrière gauche très basse",__FILE__),
-					"LOW_PRESSURE" =>      __("Pression pneu arrière gauche basse",__FILE__),
-					"HIGH_PRESSURE" =>     __("Pression pneu arrière gauche élevée",__FILE__),
+					"VERY_LOW_PRESSURE"	=> __("Pression pneu arrière gauche très basse",__FILE__),
+					"LOW_PRESSURE"		=> __("Pression pneu arrière gauche basse",__FILE__),
+					"HIGH_PRESSURE"		=> __("Pression pneu arrière gauche élevée",__FILE__),
 				],
 				'tyre_rr' => [
 					"VERY_LOW_PRESSURE" => __("Pression pneu arrière droit très basse",__FILE__),
-					"LOW_PRESSURE" =>      __("Pression pneu arrière droit basse",__FILE__),
-					"HIGH_PRESSURE" =>     __("Pression pneu arrière droit élevée",__FILE__),
+					"LOW_PRESSURE"		=> __("Pression pneu arrière droit basse",__FILE__),
+					"HIGH_PRESSURE"		=> __("Pression pneu arrière droit élevée",__FILE__),
 				],
 			],
 			'div_al_light' => [
@@ -526,7 +530,6 @@ class volvocars extends eqLogic {
 			$sql .= ' AND type = :type';
 		}
 		$sql .= ' ORDER by name';
-		log::add("volvocars","debug",$sql);
 		return DB::Prepare($sql, $values, DB::FETCH_TYPE_ALL, PDO::FETCH_CLASS, 'volvocarsCmd');
 	}
 
@@ -734,7 +737,7 @@ class volvocars extends eqLogic {
 		}
 		foreach ($commands as $command) {
 			if (!is_array($command)) {
-			 	log::add("volvocars","erro","createCmd called with wrong argument");
+				log::add("volvocars","erro","createCmd called with wrong argument");
 				return false;
 			}
 			if (! isset($command['logicalId'])) {
@@ -936,49 +939,32 @@ class volvocars extends eqLogic {
 	 * Interrogation de tous les endpoints de l'API pour remonter les infos
 	 */
 	public function refresh() {
-		try {
-			$this->getInfosFromApi('accessibility');
-		} catch (volvoApiException $e) {
-			if ($e->getHttpCode() == '403') {
-				if (strpos($e->getMessage(),'Out of call volume quota.') !== false) {
-					$cmd = $this->getCmd('info','availability');
-					if (is_object($cmd)){
-						log::add('volvocars','info',sprintf('│ %s: %s','availability','QUOTA_OUT'));
-						$this->checkAndUpdateCmd($cmd,'QUOTA_OUT');
-					}
-					$cmd = $this->getCmd('info','unavailableReason');
-					if (is_object($cmd)) {
-						preg_match('/[\d:]+/',$e->getMessage(), $matches);
-						$delai = $matches[0];
-						$value = sprintf(__('Réinitialisation dans %s',__FILE__), $delai);
-						log::add('volvocars','info',sprintf('│ %s: %s','unavailableReason',$value));
-						$this->checkAndUpdateCmd($cmd,$value);
-					}
-					log::add("volvocars","info","└OK");
-					return;
-				}
-			}
-			throw $e;
-		}
-		foreach ([
-			'brakes',
-			'diagnostics',
-			'doors',
-			'engine_diagnostics',
-			'fuel',
-			'location',
-			'odometer',
-			'recharge_status',
-			'statistics',
-			'tyre',
-			'windows',
-			'warnings'
-		] as $endpoint) {
+		foreach (array_keys(endpoints::getEndpoints('info',true)) as $endpoint) {
 			try {
 				if (count($this->getCmdByEndpoint($endpoint,'info')) > 0) {
 					$this->getInfosFromApi($endpoint);
 				}
 			} catch (volvoApiException $e) {
+				if ($e->getHttpCode() == '403') {
+					if (strpos($e->getMessage(),'Out of call volume quota.') !== false) {
+						$cmd = $this->getCmd('info','availability');
+						if (is_object($cmd)){
+							log::add('volvocars','info',sprintf('│ %s: %s','availability','QUOTA_OUT'));
+							$this->checkAndUpdateCmd($cmd,'QUOTA_OUT');
+						}
+						$cmd = $this->getCmd('info','unavailableReason');
+						if (is_object($cmd)) {
+							preg_match('/[\d:]+/',$e->getMessage(), $matches);
+							$delai = $matches[0];
+							$value = sprintf(__('Réinitialisation dans %s',__FILE__), $delai);
+							log::add('volvocars','info',sprintf('│ %s: %s','unavailableReason',$value));
+							$this->checkAndUpdateCmd($cmd,$value);
+						}
+						log::add("volvocars","info","└KO");
+						return;
+					}
+				}
+				throw $e;
 			}
 		}
 	}
@@ -1011,7 +997,7 @@ class volvocars extends eqLogic {
 
 	/*
 	 * Ajout d'un message d'aides du panel
-	 * Un lock permet de s'assurer qu'un seul process lit, modifie pour enregistre
+	 * Un lock permet de s'assurer qu'un seul process lit, modifie puis enregistre
 	 * les messages
 	 */
 	public function addWidgetMessage ($cible, $id, $message) {
