@@ -8,26 +8,17 @@
 		"logicalId": "availability",
 		"name": "{{Disponibilité}}",
 		"type": "info",
-		"subType": "string",
-		"configuration": {
-			"endpoint": "accessibility"
-		}
+		"subType": "string"
 	},{
 		"logicalId": "unavailableReason",
 		"name": "{{Raison indiponibilité}}",
 		"type": "info",
-		"subType": "string",
-		"configuration": {
-			"endpoint": "accessibility"
-		}
+		"subType": "string"
 	},{
 		"logicalId": "locked",
 		"name": "{{Verrouillé}}",
 		"type": "info",
 		"subType": "string",
-		"configuration": {
-			"endpoint": "doors"
-		},
 		"display": {
 			"forceReturnLineAfter" : "1"
 		}
@@ -68,7 +59,6 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "doors",
 			"dependTo": "door_fl_state"
 		},
 		"template": {
@@ -81,7 +71,6 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "doors",
 			"dependTo": "door_fr_state"
 		},
 		"template": {
@@ -94,7 +83,6 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "doors",
 			"dependTo": "door_rl_state"
 		},
 		"template": {
@@ -107,7 +95,6 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "doors",
 			"dependTo": "door_rr_state"
 		},
 		"template": {
@@ -123,7 +110,6 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "doors",
 			"dependTo": "door_fl_state"
 		},
 		"template": {
@@ -136,7 +122,6 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "doors",
 			"dependTo": "door_fr_state"
 		},
 		"template": {
@@ -149,7 +134,6 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "doors",
 			"dependTo": "door_rl_state"
 		},
 		"template": {
@@ -162,7 +146,6 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "doors",
 			"dependTo": "door_rr_state"
 		},
 		"template": {
@@ -178,7 +161,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "doors",
 			"dependencies": [
 				"door_fl_open",
 				"door_fl_closed",
@@ -195,7 +177,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "doors",
 			"dependencies": [
 				"door_fr_open",
 				"door_fr_closed",
@@ -212,7 +193,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "doors",
 			"dependencies": [
 				"door_rl_open",
 				"door_rl_closed",
@@ -229,7 +209,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "doors",
 			"dependencies": [
 				"door_rr_open",
 				"door_rr_closed",
@@ -249,7 +228,6 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "windows",
 			"dependTo": "win_fl_state"
 		}
 	},{
@@ -258,7 +236,6 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "windows",
 			"dependTo": "win_fr_state"
 		}
 	},{
@@ -267,7 +244,6 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "windows",
 			"dependTo": "win_rl_state"
 		}
 	},{
@@ -276,7 +252,6 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "windows",
 			"dependTo": "win_rr_state"
 		},
 		"display": {
@@ -288,7 +263,6 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "windows",
 			"dependTo": "win_fl_state"
 		}
 	},{
@@ -297,7 +271,6 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "windows",
 			"dependTo": "win_fr_state"
 		}
 	},{
@@ -306,7 +279,6 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "windows",
 			"dependTo": "win_rl_state"
 		}
 	},{
@@ -315,7 +287,6 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "windows",
 			"dependTo": "win_rr_state"
 		},
 		"display": {
@@ -327,7 +298,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "windows",
 			"dependencies": [
 				"win_fl_open",
 				"win_fl_closed"
@@ -343,7 +313,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "windows",
 			"dependencies": [
 				"win_fr_open",
 				"win_fr_closed"
@@ -359,7 +328,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "windows",
 			"dependencies": [
 				"win_rl_open",
 				"win_rl_closed"
@@ -375,7 +343,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "windows",
 			"dependencies": [
 				"win_rr_open",
 				"win_rr_closed"
@@ -394,7 +361,6 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "doors",
 			"dependTo": "hood_state"
 		}
 	},{
@@ -403,7 +369,6 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "doors",
 			"dependTo": "tail_state"
 		}
 	},{
@@ -412,7 +377,6 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "doors",
 			"dependTo": "tank_state"
 		}
 	},{
@@ -421,7 +385,6 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "windows",
 			"dependTo": "roof_state"
 		},
 		"display": {
@@ -433,7 +396,6 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "doors",
 			"dependTo": "hood_state"
 		}
 	},{
@@ -442,7 +404,6 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "doors",
 			"dependTo": "tail_state"
 		}
 	},{
@@ -451,7 +412,6 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "doors",
 			"dependTo": "tank_state"
 		}
 	},{
@@ -460,7 +420,6 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"endpoint": "windows",
 			"dependTo": "roof_state"
 		},
 		"display": {
@@ -472,7 +431,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "doors",
 			"dependencies": [
 				"hood_open",
 				"hood_closed",
@@ -489,7 +447,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "doors",
 			"dependencies": [
 				"tail_open",
 				"tail_closed",
@@ -506,7 +463,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "doors",
 			"dependencies": [
 				"tank_open",
 				"tank_closed"
@@ -522,7 +478,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "windows",
 			"dependencies": [
 				"roof_open",
 				"roof_closed",
@@ -542,9 +497,6 @@
 		"type": "info",
 		"subType" : "numeric",
 		"unite": "Km",
-		"configuration": {
-			"endpoint": "odometer"
-		},
 		"template": {
 			"dashboard": "core::badge",
 			"mobile": "core::badge"
@@ -554,52 +506,38 @@
 		"name": "{{carburant}}",
 		"type": "info",
 		"subType": "numeric",
-		"unite": "l",
-		"configuration": {
-			"endpoint": "fuel"
-		}
+		"unite": "l"
 	},{
 		"logicalId": "conso_fuel",
 		"name": "{{consommation carburant}}",
 		"type": "info",
 		"subType": "numeric",
-		"unite": "l/100km",
-		"configuration": {
-			"endpoint": "statistics"
-		}
+		"unite": "l/100km"
 	},{
 		"logicalId": "conso_fuel_trip",
 		"name": "{{consommation carburant (trajet)}}",
 		"type": "info",
 		"subType": "numeric",
-		"unite": "l/100km",
-		"configuration": {
-			"endpoint": "statistics"
-		}
+		"unite": "l/100km"
 	},{
 		"logicalId": "brake_fluid_level",
 		"name": "{{niveau liquide de frein}}",
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "brakes",
 			"dependencies": "al_brake_fluid"
 		}
 	},{
 		"logicalId": "al_brake_fluid",
 		"name": "{{alerte liquide de frein}}",
 		"type": "info",
-		"subType": "binary",
-		"configuration": {
-			"dependTo": "brake_fluid_level"
-		}
+		"subType": "binary"
 	},{
 		"logicalId": "coolant_level",
 		"name": "{{niveau liquide refroidissement}}",
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "engine_diagnostics",
 			"dependencies": "al_coolant"
 		}
 	},{
@@ -616,7 +554,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "engine_diagnostics",
 			"dependencies": "al_oil"
 		}
 	},{
@@ -633,7 +570,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "diagnostics",
 			"dependencies": "al_washer_fluid"
 		}
 	},{
@@ -682,7 +618,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "warnings",
 			"dependencies": "al_light"
 		}
 	},{
@@ -691,7 +626,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "warnings",
 			"dependencies": "al_light"
 		}
 	},{
@@ -700,7 +634,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "warnings",
 			"dependencies": "al_light"
 		}
 	},{
@@ -709,7 +642,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "warnings",
 			"dependencies": "al_light"
 		}
 	},{
@@ -718,7 +650,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "warnings",
 			"dependencies": "al_light"
 		}
 	},{
@@ -727,7 +658,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "warnings",
 			"dependencies": "al_light"
 		}
 	},{
@@ -736,7 +666,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "warnings",
 			"dependencies": "al_light"
 		}
 	},{
@@ -745,7 +674,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "warnings",
 			"dependencies": "al_light"
 		}
 	},{
@@ -754,7 +682,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "warnings",
 			"dependencies": "al_light"
 		}
 	},{
@@ -763,7 +690,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "warnings",
 			"dependencies": "al_light"
 		}
 	},{
@@ -772,7 +698,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "warnings",
 			"dependencies": "al_light"
 		}
 	},{
@@ -781,7 +706,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "warnings",
 			"dependencies": "al_light"
 		}
 	},{
@@ -790,7 +714,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "warnings",
 			"dependencies": "al_light"
 		}
 	},{
@@ -799,7 +722,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "warnings",
 			"dependencies": "al_light"
 		}
 	},{
@@ -808,7 +730,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "warnings",
 			"dependencies": "al_light"
 		}
 	},{
@@ -817,7 +738,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "warnings",
 			"dependencies": "al_light"
 		}
 	},{
@@ -826,7 +746,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "warnings",
 			"dependencies": "al_light"
 		}
 	},{
@@ -835,7 +754,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "warnings",
 			"dependencies": "al_light"
 		}
 	},{
@@ -844,7 +762,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "warnings",
 			"dependencies": "al_light"
 		}
 	},{
@@ -853,7 +770,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "warnings",
 			"dependencies": "al_light"
 		}
 	},{
@@ -862,7 +778,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "warnings",
 			"dependencies": "al_light"
 		}
 	},{
@@ -871,7 +786,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "warnings",
 			"dependencies": "al_light"
 		}
 	},{
@@ -880,14 +794,12 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "warnings",
 			"dependencies": "al_light"
 		}
 	},{
 		"logicalId": "position",
 		"name": "{{position}}",
 		"configuration": {
-			"endpoint": "location",
 			"dependencies": "al_light"
 		},
 		"type": "info",
@@ -919,33 +831,23 @@
 		"name": "{{niveau charge batterie}}",
 		"type": "info",
 		"subType": "numeric",
-		"unite": "%",
-		"configuration": {
-			"endpoint": "recharge_status"
-		}
+		"unite": "%"
 	},{
 		"logicalId": "connectorStatus",
 		"name": "{{Etat de la prise}}",
 		"type": "info",
-		"subType": "string",
-		"configuration": {
-			"endpoint": "recharge_status"
-		}
+		"subType": "string"
 	},{
 		"logicalId": "chargingStatus",
 		"name": "{{Etat de la charge}}",
 		"type": "info",
-		"subType": "string",
-		"configuration": {
-			"endpoint": "recharge_status"
-		}
+		"subType": "string"
 	},{
 		"logicalId": "chargingRemainingTime",
 		"name": "{{Temps de charge restant}}",
 		"type": "info",
 		"subType": "numeric",
 		"configuration": {
-			"endpoint": "recharge_status",
 			"dependencies" : "chargingEndTime"
 		},
 		"template": {
@@ -965,10 +867,7 @@
 		"name": "{{consommation électrique}}",
 		"type": "info",
 		"subType": "numeric",
-		"unite": "kWh/100km",
-		"configuration": {
-			"endpoint": "statistics"
-		}
+		"unite": "kWh/100km"
 	},{
 		"logicalId": "electricAutonomy",
 		"name": "{{Autonomie électrique}}",
@@ -976,7 +875,6 @@
 		"subType": "numeric",
 		"unite": "Km",
 		"configuration": {
-			"endpoint": "statistics",
 			"dependencies" : "al_electricAutonomy"
 		}
 	},{
@@ -994,7 +892,6 @@
 		"subType": "numeric",
 		"unite": "Km",
 		"configuration": {
-			"endpoint": "statistics",
 			"dependencies" : "al_fuelAutonomy"
 		}
 	},{
@@ -1024,7 +921,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "tyre",
 			"dependencies": "al_tyre"
 		},
 		"template": {
@@ -1037,7 +933,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "tyre",
 			"dependencies": "al_tyre"
 		},
 		"template": {
@@ -1050,7 +945,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "tyre",
 			"dependencies": "al_tyre"
 		},
 		"template": {
@@ -1063,7 +957,6 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"endpoint": "tyre",
 			"dependencies": "al_tyre"
 		},
 		"template": {
@@ -1074,10 +967,7 @@
 		"logicalId": "service",
 		"name": "{{service}}",
 		"type": "info",
-		"subType": "string",
-		"configuration":{
-			"endpoint" : "diagnostics"
-		}
+		"subType": "string"
 	},{
 		"logicalId": "msg2widget",
 		"name": "{{messages pour widget}}",

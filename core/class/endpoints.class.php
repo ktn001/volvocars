@@ -24,6 +24,9 @@ class endpoints {
 			"accept" => "application/json",
 			"type" => "info",
 			"refreshTime" => 1,
+			"cmds" => [
+				"availabilityStatus" => ["availability", "unavailableReason" ],
+			],
 		],
 		"battery_level" => [
 			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status/battery-charge-level",
@@ -36,18 +39,9 @@ class endpoints {
 			"accept" => "application/json",
 			"type" => "info",
 			"refreshTime" => 10,
-		],
-		"diagnostics" => [
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/diagnostics",
-			"accept" => "application/json",
-			"type" => "info",
-			"refreshTime" => 10,
-		],
-		"details" => [
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s",
-			"accept" => "application/json",
-			"type" => "info",
-			"refreshTime" => 0,
+			"cmds" => [
+				"brakeFluidLevelWarning" => "brake_fluid_level",
+			],
 		],
 		"charging_connection_status" => [
 			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status/charging-connection-status",
@@ -61,17 +55,65 @@ class endpoints {
 			"type" => "info",
 			"refreshTime" => 1,
 		],
+		"charge_time" => [
+			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status/estimated-charging-time",
+			"accept" => "application/vnd.volvocars.api.energy.vehicledata.v1+json",
+			"type" => "info",
+			"refreshTime" => 1,
+		],
+		"commands" => [
+			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands",
+			"accept" => "application/json",
+			"type" => "info",
+			"refreshTime" => 0,
+		],
+		"details" => [
+			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s",
+			"accept" => "application/json",
+			"type" => "info",
+			"refreshTime" => 0,
+		],
+		"diagnostics" => [
+			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/diagnostics",
+			"accept" => "application/json",
+			"type" => "info",
+			"refreshTime" => 10,
+			"cmds" => [
+				"serviceWarning"          => "service",
+            	"washerFluidLevelWarning" => "washer_fluid_level",
+			],
+		],
 		"doors" => [
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/doors",
 			"accept" => "application/json",
 			"type" => "info",
 			"refreshTime" => 1,
+			"cmds" => [
+				"centralLock"     => "locked",
+            	"frontLeftDoor"   => "door_fl_state",
+            	"frontRightDoor"  => "door_fr_state",
+            	"rearLeftDoor"    => "door_rl_state",
+            	"rearRightDoor"   => "door_rr_state",
+            	"hood"            => "hood_state",
+            	"tailgate"        => "tail_state",
+            	"tankLid"         => "tank_state",
+			],
+		],
+		"electric_range" => [
+			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status/electric-range",
+			"accept" => "application/vnd.volvocars.api.energy.vehicledata.v1+json",
+			"type" => "info",
+			"refreshTime" => 5,
 		],
 		"engine_diagnostics" => [
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/engine",
 			"accept" => "application/json",
 			"type" => "info",
 			"refreshTime" => 10,
+			"cmds" => [
+				"engineCoolantLevelWarning"  => "coolant_level",
+        	    "oilLevelWarning"            => "oil_level",
+			],
 		],
 		"engine_status" => [
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/engine-status",
@@ -84,54 +126,39 @@ class endpoints {
 			"accept" => "application/json",
 			"type" => "info",
 			"refreshTime" => 5,
+			"cmds" => [
+				"fuelAmount" => "fuel_amount",
+			],
+		],
+		"location" => [
+			"url" => "https://api.volvocars.com/location/v1/vehicles/%s/location",
+			"accept" => "application/json",
+			"type" => "info",
+			"refreshTime" => 1,
+			"cmds" => [
+				"location" => "position",
+			],
 		],
 		"odometer" => [
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/odometer",
 			"accept" => "application/json",
 			"type" => "info",
 			"refreshTime" => 10,
-		],
-		"statistics" => [
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/statistics",
-			"accept" => "application/json",
-			"type" => "info",
-			"refreshTime" => 10,
-		],
-		"tyre" => [
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/tyres",
-			"accept" => "application/json",
-			"type" => "info",
-			"refreshTime" => 5,
-		],
-		"windows" => [
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/windows",
-			"accept" => "application/json",
-			"type" => "info",
-			"refreshTime" => 1,
-		],
-		"warnings" => [
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/warnings",
-			"accept" => "application/json",
-			"type" => "info",
-			"refreshTime" => 10,
-		],
-		"electric_range" => [
-			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status/electric-range",
-			"accept" => "application/vnd.volvocars.api.energy.vehicledata.v1+json",
-			"type" => "info",
-			"refreshTime" => 5,
-		],
-		"charge_time" => [
-			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status/estimated-charging-time",
-			"accept" => "application/vnd.volvocars.api.energy.vehicledata.v1+json",
-			"type" => "info",
-			"refreshTime" => 1,
+			"cmds" => [
+				"odometer" => "odometer",
+			],
 		],
 		"recharge_status" => [
 			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status",
 			"accept" => "application/vnd.volvocars.api.energy.vehicledata.v1+json",
 			"type" => "info",
 			"refreshTime" => 5,
+			"cmds" => [
+				"batteryChargeLevel"        => "batteryLevel",
+            	"chargingSystemStatus"      => "chargingStatus",
+            	"estimatedChargingTime"     => "chargingRemainingTime",
+            	"chargingConnectionStatus"  => "connectorStatus",
+			],
 		],
 		"resources" => [
 			"url" => "https://api.volvocars.com/extended-vehicle/v1/vehicles/%s/resources",
@@ -139,23 +166,80 @@ class endpoints {
 			"type" => "info",
 			"refreshTime" => 0,
 		],
-		"location" => [
-			"url" => "https://api.volvocars.com/location/v1/vehicles/%s/location",
+		"statistics" => [
+			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/statistics",
 			"accept" => "application/json",
 			"type" => "info",
-			"refreshTime" => 1,
+			"refreshTime" => 10,
+			"cmds" => [
+				"averageEnergyConsumption"        => "conso_electric",
+            	"averageFuelConsumption"          => "conso_fuel",
+            	"averageFuelConsumptionAutomatic" => "conso_fuel_trip",
+            	"distanceToEmptyBattery"          => "electricAutonomy",
+            	"distanceToEmptyTank"             => "fuelAutonomy",
+			],
 		],
-		"commands" => [
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands",
+		"tyre" => [
+			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/tyres",
 			"accept" => "application/json",
 			"type" => "info",
-			"refreshTime" => 0,
+			"refreshTime" => 5,
+			"cmds" => [
+				"frontLeft"  => "tyre_fl",
+            	"frontRight" => "tyre_fr",
+            	"rearLeft"   => "tyre_rl",
+            	"rearRight"  => "tyre_rr",
+			],
 		],
 		"vehicles" => [
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles",
 			"accept" => "application/json",
 			"type" => "account_info",
 			"refreshTime" => 0,
+		],
+		"warnings" => [
+			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/warnings",
+			"accept" => "application/json",
+			"type" => "info",
+			"refreshTime" => 10,
+			"cmds" => [
+				"brakeLightCenterWarning"          => "al_brakeLight_c",
+            	"brakeLightLeftWarning"            => "al_brakeLight_l",
+            	"brakeLightRightWarning"           => "al_brakeLight_r",
+            	"daytimeRunningLightLeftWarning"   => "al_daytimeRunningLight_l",
+            	"daytimeRunningLightRightWarning"  => "al_daytimeRunningLight_r",
+            	"fogLightFrontWarning"             => "al_fogLight_f",
+            	"fogLightRearWarning"              => "al_fogLight_r",
+            	"hazardLightsWarning"              => "al_hazardLights",
+            	"highBeamLeftWarning"              => "al_highBeam_l",
+            	"highBeamRightWarning"             => "al_highBeam_r",
+            	"lowBeamLeftWarning"               => "al_lowBeam_l",
+            	"lowBeamRightWarning"              => "al_lowBeam_r",
+            	"positionLightFrontLeftWarning"    => "al_positionLight_fl",
+            	"positionLightFrontRightWarning"   => "al_positionLight_fr",
+            	"positionLightRearLeftWarning"     => "al_positionLight_rl",
+            	"positionLightRearRightWarning"    => "al_positionLight_rr",
+            	"registrationPlateLightWarning"    => "al_registrationPlateLight",
+            	"reverseLightsWarning"             => "al_reverseLights",
+            	"sideMarkLightsWarning"            => "al_sideMarkLights",
+            	"turnIndicationFrontLeftWarning"   => "al_turnIndication_fl",
+            	"turnIndicationFrontRightWarning"  => "al_turnIndication_fr",
+            	"turnIndicationRearLeftWarning"    => "al_turnIndication_rl",
+            	"turnIndicationRearRightWarning"   => "al_turnIndication_rr",
+			],
+		],
+		"windows" => [
+			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/windows",
+			"accept" => "application/json",
+			"type" => "info",
+			"refreshTime" => 1,
+			"cmds" => [
+				"frontLeftWindow"   => "win_fl_state",
+            	"frontRightWindow"  => "win_fr_state",
+            	"rearLeftWindow"    => "win_rl_state",
+            	"rearRightWindow"   => "win_rr_state",
+            	"sunroof"           => "roof_state",
+			],
 		],
 	];
 
@@ -179,6 +263,9 @@ class endpoints {
 				continue;
 			}
 			if ($toRefresh) {
+				if (!isset($value['cmds'])) {
+					continue;
+				}
 				if (!isset($value['refreshTime'])) {
 					continue;
 				}
@@ -189,5 +276,29 @@ class endpoints {
 			$return[$property] = $value;
 		}
 		return $return;
+	}
+
+	static function getLogicalIds ($_endpoint, $_info = null) {
+		if (!isset (self::$_endpoints[$_endpoint])) {
+			return array();
+		}
+		if (!isset (self::$_endpoints[$_endpoint]['cmds'])) {
+			return array();
+		}
+		$infos = self::$_endpoints[$_endpoint]['cmds'];
+		if (count($infos) == 0) {
+			return array();
+		}
+		$logicalIds = array();
+		foreach ($infos as $info => $value) {
+			if ($_info == null or $_info == $info) {
+				if (is_array($value)) {
+					$logicalIds = array_merge($logicalIds,$value);
+				} else {
+					$logicalIds[] = $value;
+				}
+			}
+		}
+		return array_unique($logicalIds);
 	}
 }

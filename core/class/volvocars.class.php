@@ -514,26 +514,6 @@ class volvocars extends eqLogic {
 	}
 
 	/*
-	 * Retourne les commandes associées à un endpoint
-	 */
-	public function getCmdByEndpoint($_endpoint, $_type=null){
-		$values = array(
-			'eqLogic_id' => $this->getId(),
-			'endpoint' => '%"endpoint":"' . $_endpoint . '"%',
-		);
-		$sql = 'SELECT ' . DB::buildField('cmd') . '
-		FROM cmd
-		WHERE configuration like :endpoint
-		  AND eqLogic_id = :eqLogic_id';
-		if ($_type !== null) {
-			$values['type'] = $_type;
-			$sql .= ' AND type = :type';
-		}
-		$sql .= ' ORDER by name';
-		return DB::Prepare($sql, $values, DB::FETCH_TYPE_ALL, PDO::FETCH_CLASS, 'volvocarsCmd');
-	}
-
-	/*
 	 * Mise à jour des détails du véhicule et des valeurs des commandes info
 	 * à partir des infos fournies par les API Volvo
 	 */
@@ -816,100 +796,19 @@ class volvocars extends eqLogic {
 	/*
 	 * Mise à jour des infos retournée par un endpoint des API Volvo
 	 */
-	public function getInfosFromApi($endpoint){
+	public function getInfosFromApi($endpoint_id){
 		if ($this->getConfiguration('fuelEngine') == 0){
-			if ($endpoint == 'engine_diagnostics'){
+			if ($endpoint_id == 'engine_diagnostics'){
 				return;
 			}
 		}
-		log::add("volvocars","info",sprintf("┌Getting infos '%s'...",$endpoint));
+		log::add("volvocars","info",sprintf("┌Getting infos '%s'...",print_r($endpoint_id,true)));
 		$account = $this->getAccount();
-		$infos = $account->getInfos($endpoint,$this->getVin());
+		$infos = $account->getInfos($endpoint_id,$this->getVin());
 
-		$endpoint2cmd = [
-			'accessibility.availabilityStatus' => [ 'availability', 'unavailableReason' ],
-
-			'brakes.brakeFluidLevelWarning'	=>	'brake_fluid_level',
-
-			'diagnostics.serviceWarning'		  => 'service',
-			'diagnostics.washerFluidLevelWarning' => 'washer_fluid_level',
-
-			'doors.centralLock'		=> 'locked',
-			'doors.frontLeftDoor'	=> 'door_fl_state',
-			'doors.frontRightDoor'	=> 'door_fr_state',
-			'doors.rearLeftDoor'	=> 'door_rl_state',
-			'doors.rearRightDoor'	=> 'door_rr_state',
-			'doors.hood'			=> 'hood_state',
-			'doors.tailgate'		=> 'tail_state',
-			'doors.tankLid'			=> 'tank_state',
-
-			'engine_diagnostics.engineCoolantLevelWarning'	=> 'coolant_level',
-			'engine_diagnostics.oilLevelWarning'			=> 'oil_level',
-
-			'fuel.fuelAmount' => 'fuel_amount',
-
-			'location.location' => 'position',
-
-			'odometer.odometer' => 'odometer',
-
-			'recharge_status.batteryChargeLevel'		=> 'batteryLevel',
-			'recharge_status.chargingSystemStatus'		=> 'chargingStatus',
-			'recharge_status.estimatedChargingTime'		=> 'chargingRemainingTime',
-			'recharge_status.chargingConnectionStatus'	=> 'connectorStatus',
-
-			'statistics.averageEnergyConsumption'		 => 'conso_electric',
-			'statistics.averageFuelConsumption'			 => 'conso_fuel',
-			'statistics.averageFuelConsumptionAutomatic' => 'conso_fuel_trip',
-			'statistics.distanceToEmptyBattery'			 => 'electricAutonomy',
-			'statistics.distanceToEmptyTank'			 => 'fuelAutonomy',
-
-			'tyre.frontLeft'  => 'tyre_fl',
-			'tyre.frontRight' => 'tyre_fr',
-			'tyre.rearLeft'   => 'tyre_rl',
-			'tyre.rearRight'  => 'tyre_rr',
-
-			'warnings.brakeLightCenterWarning'			=> 'al_brakeLight_c',
-			'warnings.brakeLightLeftWarning'			=> 'al_brakeLight_l',
-			'warnings.brakeLightRightWarning'			=> 'al_brakeLight_r',
-			'warnings.daytimeRunningLightLeftWarning'	=> 'al_daytimeRunningLight_l',
-			'warnings.daytimeRunningLightRightWarning'	=> 'al_daytimeRunningLight_r',
-			'warnings.fogLightFrontWarning'				=> 'al_fogLight_f',
-			'warnings.fogLightRearWarning'				=> 'al_fogLight_r',
-			'warnings.hazardLightsWarning'				=> 'al_hazardLights',
-			'warnings.highBeamLeftWarning'				=> 'al_highBeam_l',
-			'warnings.highBeamRightWarning'				=> 'al_highBeam_r',
-			'warnings.lowBeamLeftWarning'				=> 'al_lowBeam_l',
-			'warnings.lowBeamRightWarning'				=> 'al_lowBeam_r',
-			'warnings.positionLightFrontLeftWarning'	=> 'al_positionLight_fl',
-			'warnings.positionLightFrontRightWarning'	=> 'al_positionLight_fr',
-			'warnings.positionLightRearLeftWarning'		=> 'al_positionLight_rl',
-			'warnings.positionLightRearRightWarning'	=> 'al_positionLight_rr',
-			'warnings.registrationPlateLightWarning'	=> 'al_registrationPlateLight',
-			'warnings.reverseLightsWarning'				=> 'al_reverseLights',
-			'warnings.sideMarkLightsWarning'			=> 'al_sideMarkLights',
-			'warnings.turnIndicationFrontLeftWarning'	=> 'al_turnIndication_fl',
-			'warnings.turnIndicationFrontRightWarning'	=> 'al_turnIndication_fr',
-			'warnings.turnIndicationRearLeftWarning'	=> 'al_turnIndication_rl',
-			'warnings.turnIndicationRearRightWarning'	=> 'al_turnIndication_rr',
-
-			'windows.frontLeftWindow'	=> 'win_fl_state',
-			'windows.frontRightWindow'	=> 'win_fr_state',
-			'windows.rearLeftWindow'	=> 'win_rl_state',
-			'windows.rearRightWindow'	=> 'win_rr_state',
-			'windows.sunroof'			=> 'roof_state',
-		];
 		foreach (array_keys($infos) as $key) {
 			log::add("volvocars","debug",sprintf("├─key: %s",$key));
-
-			if (!isset($endpoint2cmd[$endpoint.".".$key])) {
-				log::add('volvocars','warning',"│ " . sprintf(__("%s.%s inconnu",__FILE__),$endpoint, $key));
-				continue;
-			}
-			$logicalIds = $endpoint2cmd[$endpoint.".".$key] ;
-			if (!is_array($logicalIds)) {
-				$logicalIds = array($logicalIds);
-			}
-			foreach ($logicalIds as $logicalId) {
+			foreach (endpoints::getLogicalIds($endpoint_id,$key) as $logicalId) {
 				$cmd = $this->getCmd('info',$logicalId);
 				if (!is_object($cmd)) {
 					continue;
@@ -939,10 +838,18 @@ class volvocars extends eqLogic {
 	 * Interrogation de tous les endpoints de l'API pour remonter les infos
 	 */
 	public function refresh() {
-		foreach (array_keys(endpoints::getEndpoints('info',true)) as $endpoint) {
+		foreach (endpoints::getEndpoints('info',true) as $endpoint_id => $endpoint) {
 			try {
-				if (count($this->getCmdByEndpoint($endpoint,'info')) > 0) {
-					$this->getInfosFromApi($endpoint);
+				$cmdExists = false;
+				foreach (endpoints::getLogicalIds($endpoint_id) as $logicalId) {
+					$cmd = $this->getCmd('info',$logicalId);
+					if (is_object($cmd)) {
+						$cmdExists = true;
+						break;
+					}
+				}
+				if ($cmdExists) {
+					$this->getInfosFromApi($endpoint_id);
 				}
 			} catch (volvoApiException $e) {
 				if ($e->getHttpCode() == '403') {
