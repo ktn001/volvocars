@@ -96,7 +96,13 @@ class volvocars extends eqLogic {
 	static public function cron() {
 		foreach (volvocars::byType(__CLASS__, true) as $car) {
 			log::add("volvocars","debug","cron pour : " . $car->getName());
-			$car->refresh();
+			$car->refresh(false);
+		}
+	}
+
+	static public function cronHourly() {
+		foreach(volvoAccount::all() as $account) {
+			$account->logStats();
 		}
 	}
 
@@ -529,7 +535,7 @@ class volvocars extends eqLogic {
 	public function updateDetails() {
 		$changed = false;
 		$account = $this->getAccount();
-		$details = $account->getInfos('details',$this->getVin());
+		$details = $account->getInfos('details',$this->getVin(), true);
 		log::add("volvocars","debug","DETAILS: " . json_encode($details));
 		if (! isset($details['descriptions'])){
 			log::add("volvocars","error",(__("Pas de key 'descriptions' dans les détails[data]",__FILE__)));
@@ -796,19 +802,14 @@ class volvocars extends eqLogic {
 	/*
 	 * Mise à jour des infos retournée par un endpoint des API Volvo
 	 */
-	public function getInfosFromApi($endpoint_id){
-		if ($this->getConfiguration('fuelEngine') == 0){
-			if ($endpoint_id == 'engine_diagnostics'){
-				return;
-			}
-		}
+	public function getInfosFromApi($endpoint_id, $force = false){
 		log::add("volvocars","info",sprintf("┌Getting infos '%s'...",print_r($endpoint_id,true)));
 		$account = $this->getAccount();
-		$infos = $account->getInfos($endpoint_id,$this->getVin());
+		$infos = $account->getInfos($endpoint_id,$this->getVin(), $force);
 
 		foreach (array_keys($infos) as $key) {
 			log::add("volvocars","debug",sprintf("├─key: %s",$key));
-			foreach (endpoints::getLogicalIds($endpoint_id,$key) as $logicalId) {
+			foreach (endpoint::getLogicalIds($endpoint_id,$key) as $logicalId) {
 				$cmd = $this->getCmd('info',$logicalId);
 				if (!is_object($cmd)) {
 					continue;
@@ -837,11 +838,11 @@ class volvocars extends eqLogic {
 	/*
 	 * Interrogation de tous les endpoints de l'API pour remonter les infos
 	 */
-	public function refresh() {
-		foreach (endpoints::getEndpoints('info',true) as $endpoint_id => $endpoint) {
+	public function refresh($force = false) {
+		foreach (endpoint::getEndpoints('info',true) as $endpoint_id => $endpoint) {
 			try {
 				$cmdExists = false;
-				foreach (endpoints::getLogicalIds($endpoint_id) as $logicalId) {
+				foreach (endpoint::getLogicalIds($endpoint_id) as $logicalId) {
 					$cmd = $this->getCmd('info',$logicalId);
 					if (is_object($cmd)) {
 						$cmdExists = true;
@@ -849,7 +850,7 @@ class volvocars extends eqLogic {
 					}
 				}
 				if ($cmdExists) {
-					$this->getInfosFromApi($endpoint_id);
+					$this->getInfosFromApi($endpoint_id, $force);
 				}
 			} catch (volvoApiException $e) {
 				if ($e->getHttpCode() == '403') {
@@ -1264,13 +1265,13 @@ class volvocarsCmd extends cmd {
 		if ($this->getType() == 'action') {
 			switch ($logicalId) {
 				case 'refresh':
-					$car->refresh();
+					$car->refresh(true);
 					break;
 				case 'lock':
 				case 'lock-reduced':
 				case 'unlock':
 					$car->getAccount()->sendCommand($this->getLogicalId(),$car->getVin());
-					$car->getInfosFromApi('doors');
+					$car->getInfosFromApi('doors', true);
 					break;
 				case 'clim_start':
 				case 'clim_stop':

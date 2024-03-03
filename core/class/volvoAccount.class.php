@@ -18,7 +18,7 @@
  */
 
 require_once __DIR__ . '/volvoException.class.php';
-require_once __DIR__ . '/endpoints.class.php';
+require_once __DIR__ . '/endpoint.class.php';
 class volvoAccount {
 
 	const OAUTH_URL = "https://volvoid.eu.volvocars.com/as/token.oauth2";
@@ -163,6 +163,7 @@ class volvoAccount {
 		if (count($cars) > 0) {
 			throw new Exception (sprintf(__("Le compte %s est utilisé pour le véhicule %s",__FILE__), $this->name, $cars[0]->getName()));
 		}
+		cache::remove(__CLASS__ . $this->getId());
 		$key = 'account::' . $this->id;
 		return config::remove($key,'volvocars');
 	}
@@ -261,7 +262,7 @@ class volvoAccount {
 		if ($endpoint === null) {
 			$accept = "application/json";
 		} else {
-			$accept = endpoints::getEndpoint('accept');
+			$accept = endpoint::getEndpoint('accept');
 		}
 		curl_setopt($session, CURLOPT_HTTPHEADER, [
 			"authorization: Bearer " . $this->_token['access_token'],
@@ -293,20 +294,25 @@ class volvoAccount {
 
 	public function getRawDatas($vin) {
 		$return = array();
-		foreach (endpoints::getEndpoints('info') as $key => $endpoint) {
+		foreach (endpoint::getEndpoints('info') as $key => $endpoint) {
 			$return[$key] = $this->getInfos($key, $vin);
 		}
 		return $return;
 	}
 
-	public function getInfos($_endpoint, $vin=null) {
-		$endpoint = endpoints::getEndpoint($_endpoint);
+	public function getInfos($_endpoint_id, $vin=null, $_force = false) {
+		$endpoint = endpoint::getEndpoint($_endpoint_id);
 		if ($endpoint === null) {
 			log::add("volvocars","error",sprintf(__("URL pour le endpoint %s non définie",__FILE__),$endpoint));
+		}
+		if (!$_force and !$this->shouldRequest($_endpoint_id)) {
+			log::add("volvocars","debug","│ " . __("Pas nécessaire",__FILE__));
+			return "";
 		}
 		$url = sprintf($endpoint['url'],$vin);
 		log::add("volvocars","debug","│ URL: " .$url);
 		$session = $this->session($url, $endpoint);
+		$this->incrementEndpointCounter($_endpoint_id, $vin);
 		$content = curl_exec($session);
 		log::add("volvocars","debug","│ ".$content);
 		$content = is_json($content,$content);
@@ -374,6 +380,78 @@ class volvoAccount {
 			throw new Exception (sprintf(__("Erreur de l'envoi d'une commande pour le  véhicule '%s' (http_code: %s)",__FILE__), $vin, $httpCode));
 		}
 	}
+
+	public function shouldRequest($_endpoint_id) {
+		$lastAccess = $this->getCache('lastEndpointAccess');
+		if (!array_key_exists($_endpoint_id,$lastAccess)) {
+			return true;
+		}
+		$lastAccessTime = intval($lastAccess[$_endpoint_id]) -5;
+		$endpoint = new endpoint($_endpoint_id);
+		$refreshDelai = $endpoint->getRefreshDelai();
+		if ($refreshDelai === null) {
+			return false;
+		}
+		if ((intval(date('U')) - $lastAccessTime) <= ($refreshDelai * 60)) {
+			return false;
+		}
+		return true;
+	}
+
+	public function incrementEndpointCounter($_endpoint_id, $_vin) {
+		$cache = $this->getCache();
+		if (!is_array($cache)) {
+			$cache = [];
+		}
+
+		if (!array_key_exists('endpointAccessCount',$cache) or !is_array($cache['endpointAccessCount'])) {
+			log::add("volvocars.stats","debug","3333 ");
+			$cache['endpointAccessCount'] = [];
+		}
+		$counter = $cache['endpointAccessCount'];
+		if (!isset($counter['timestamp']) or (gmdate('dm',$counter['timestamp']) != gmdate('dm'))) {
+			// Réinitialisation du compteur journalier à minuit GMT
+			$counter = array(
+				'timestamp' => date('U')
+			);
+		}
+		if (array_key_exists($_endpoint_id,$counter['endpoint'])) {
+			$counter['endpoint'][$_endpoint_id] ++;
+		} else {
+			$counter['endpoint'][$_endpoint_id] = 1;
+		}
+		$cache['endpointAccessCount'] = $counter;
+
+		if (!array_key_exists('lastEndpointAccess',$cache) or !is_array($cache['lastEndpointAccess'])) {
+			$cache['lastEndpointAccess'] = [];
+		}
+		$cache['lastEndpointAccess'][$_endpoint_id] = date('U');
+		$this->setCache($cache);
+	}
+
+	public function logStats() {
+		$counter = $this->getCache('endpointAccessCount');
+		log::add('volvocars.stats','info',"╔══════ " . __("statistiques",__FILE__) . " ══════════");
+		log::add('volvocars.stats','info',"╟─" . sprintf(__("Appels API depuis: %s",__FILE__),date('d-m-Y H:i:s',$counter['timestamp'])));
+		log::add('volvocars.stats','info',"║  Account:" . $this->getName());
+		$total = 0;
+		foreach ($counter['endpoint'] as $endpoint => $count) {
+			$total += $count;
+			log::add('volvocars.stats','info',"║   " . $endpoint . ": " . $count);
+		}
+			log::add('volvocars.stats','info',"║   ═════════════════");
+			log::add('volvocars.stats','info',"║   TOTAL: " . $total);
+		log::add('volvocars.stats','info',"╚═══════════════════════════════");
+	}
+
+	public function getCache($_key = '', $_default = '') {
+		$cache = cache::byKey(__CLASS__ . $this->getId())->getValue();
+		return utils::getJsonAttr($cache, $_key, $_default);
+	}
+
+	public function setCache($_key, $_value = null) {
+        cache::set(__CLASS__ . $this->getId(), utils::setJsonAttr(cache::byKey(__CLASS__ . $this->getId())->getValue(), $_key, $_value));
+    }
 
 	/* *********************************************** */
 	/* *************** Getters setters *************** */

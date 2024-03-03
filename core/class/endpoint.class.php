@@ -17,13 +17,13 @@
  * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class endpoints {
+class endpoint {
 	private static $_endpoints = [
 		"accessibility" => [
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/command-accessibility",
 			"accept" => "application/json",
 			"type" => "info",
-			"refreshTime" => 1,
+			"refreshDelai" => 1,
 			"cmds" => [
 				"availabilityStatus" => ["availability", "unavailableReason" ],
 			],
@@ -32,13 +32,13 @@ class endpoints {
 			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status/battery-charge-level",
 			"accept" => "application/vnd.volvocars.api.energy.vehicledata.v1+json",
 			"type" => "info",
-			"refreshTime" => 5,
+			"refreshDelai" => 5,
 		],
 		"brakes" => [
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/brakes",
 			"accept" => "application/json",
 			"type" => "info",
-			"refreshTime" => 10,
+			"refreshDelai" => 10,
 			"cmds" => [
 				"brakeFluidLevelWarning" => "brake_fluid_level",
 			],
@@ -47,37 +47,37 @@ class endpoints {
 			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status/charging-connection-status",
 			"accept" => "application/vnd.volvocars.api.energy.vehicledata.v1+json",
 			"type" => "info",
-			"refreshTime" => 1,
+			"refreshDelai" => 1,
 		],
 		"charging_system_status" => [
 			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status/charging-system-status",
 			"accept" => "application/vnd.volvocars.api.energy.vehicledata.v1+json",
 			"type" => "info",
-			"refreshTime" => 1,
+			"refreshDelai" => 1,
 		],
 		"charge_time" => [
 			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status/estimated-charging-time",
 			"accept" => "application/vnd.volvocars.api.energy.vehicledata.v1+json",
 			"type" => "info",
-			"refreshTime" => 1,
+			"refreshDelai" => 1,
 		],
 		"commands" => [
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands",
 			"accept" => "application/json",
 			"type" => "info",
-			"refreshTime" => 0,
+			"refreshDelai" => 0,
 		],
 		"details" => [
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s",
 			"accept" => "application/json",
 			"type" => "info",
-			"refreshTime" => 0,
+			"refreshDelai" => 0,
 		],
 		"diagnostics" => [
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/diagnostics",
 			"accept" => "application/json",
 			"type" => "info",
-			"refreshTime" => 10,
+			"refreshDelai" => 10,
 			"cmds" => [
 				"serviceWarning"          => "service",
             	"washerFluidLevelWarning" => "washer_fluid_level",
@@ -87,7 +87,7 @@ class endpoints {
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/doors",
 			"accept" => "application/json",
 			"type" => "info",
-			"refreshTime" => 1,
+			"refreshDelai" => 1,
 			"cmds" => [
 				"centralLock"     => "locked",
             	"frontLeftDoor"   => "door_fl_state",
@@ -103,13 +103,13 @@ class endpoints {
 			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status/electric-range",
 			"accept" => "application/vnd.volvocars.api.energy.vehicledata.v1+json",
 			"type" => "info",
-			"refreshTime" => 5,
+			"refreshDelai" => 5,
 		],
 		"engine_diagnostics" => [
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/engine",
 			"accept" => "application/json",
 			"type" => "info",
-			"refreshTime" => 10,
+			"refreshDelai" => 10,
 			"cmds" => [
 				"engineCoolantLevelWarning"  => "coolant_level",
         	    "oilLevelWarning"            => "oil_level",
@@ -119,13 +119,13 @@ class endpoints {
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/engine-status",
 			"accept" => "application/json",
 			"type" => "info",
-			"refreshTime" => 1,
+			"refreshDelai" => 1,
 		],
 		"fuel" => [
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/fuel",
 			"accept" => "application/json",
 			"type" => "info",
-			"refreshTime" => 5,
+			"refreshDelai" => 5,
 			"cmds" => [
 				"fuelAmount" => "fuel_amount",
 			],
@@ -134,7 +134,7 @@ class endpoints {
 			"url" => "https://api.volvocars.com/location/v1/vehicles/%s/location",
 			"accept" => "application/json",
 			"type" => "info",
-			"refreshTime" => 1,
+			"refreshDelai" => 1,
 			"cmds" => [
 				"location" => "position",
 			],
@@ -143,7 +143,7 @@ class endpoints {
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/odometer",
 			"accept" => "application/json",
 			"type" => "info",
-			"refreshTime" => 10,
+			"refreshDelai" => 10,
 			"cmds" => [
 				"odometer" => "odometer",
 			],
@@ -152,7 +152,7 @@ class endpoints {
 			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status",
 			"accept" => "application/vnd.volvocars.api.energy.vehicledata.v1+json",
 			"type" => "info",
-			"refreshTime" => 5,
+			"refreshDelai" => 5,
 			"cmds" => [
 				"batteryChargeLevel"        => "batteryLevel",
             	"chargingSystemStatus"      => "chargingStatus",
@@ -164,13 +164,13 @@ class endpoints {
 			"url" => "https://api.volvocars.com/extended-vehicle/v1/vehicles/%s/resources",
 			"accept" => "application/json",
 			"type" => "info",
-			"refreshTime" => 0,
+			"refreshDelai" => 0,
 		],
 		"statistics" => [
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/statistics",
 			"accept" => "application/json",
 			"type" => "info",
-			"refreshTime" => 10,
+			"refreshDelai" => 10,
 			"cmds" => [
 				"averageEnergyConsumption"        => "conso_electric",
             	"averageFuelConsumption"          => "conso_fuel",
@@ -183,7 +183,7 @@ class endpoints {
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/tyres",
 			"accept" => "application/json",
 			"type" => "info",
-			"refreshTime" => 5,
+			"refreshDelai" => 5,
 			"cmds" => [
 				"frontLeft"  => "tyre_fl",
             	"frontRight" => "tyre_fr",
@@ -195,13 +195,13 @@ class endpoints {
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles",
 			"accept" => "application/json",
 			"type" => "account_info",
-			"refreshTime" => 0,
+			"refreshDelai" => 0,
 		],
 		"warnings" => [
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/warnings",
 			"accept" => "application/json",
 			"type" => "info",
-			"refreshTime" => 10,
+			"refreshDelai" => 10,
 			"cmds" => [
 				"brakeLightCenterWarning"          => "al_brakeLight_c",
             	"brakeLightLeftWarning"            => "al_brakeLight_l",
@@ -227,12 +227,13 @@ class endpoints {
             	"turnIndicationRearLeftWarning"    => "al_turnIndication_rl",
             	"turnIndicationRearRightWarning"   => "al_turnIndication_rr",
 			],
+			"refreshDelai" => 30,
 		],
 		"windows" => [
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/windows",
 			"accept" => "application/json",
 			"type" => "info",
-			"refreshTime" => 1,
+			"refreshDelai" => 1,
 			"cmds" => [
 				"frontLeftWindow"   => "win_fl_state",
             	"frontRightWindow"  => "win_fr_state",
@@ -242,6 +243,7 @@ class endpoints {
 			],
 		],
 	];
+	private $endpoint_id;
 
 	static function getEndpoint($_endpoint) {
 		if (!isset (self::$_endpoints[$_endpoint])) {
@@ -266,10 +268,10 @@ class endpoints {
 				if (!isset($value['cmds'])) {
 					continue;
 				}
-				if (!isset($value['refreshTime'])) {
+				if (!isset($value['refreshDelai'])) {
 					continue;
 				}
-				if ($value['refreshTime'] == 0) {
+				if ($value['refreshDelai'] == 0) {
 					continue;
 				}
 			}
@@ -301,4 +303,23 @@ class endpoints {
 		}
 		return array_unique($logicalIds);
 	}
+
+	function __construct ($endpoint_id) {
+		if (array_key_exists($endpoint_id,self::$_endpoints)) {
+			$this->endpoint_id = $endpoint_id;
+		} else {
+			$this->endpoint_id = null;
+		}
+	}
+
+	function getRefreshDelai() {
+		if ($this->endpoint_id === null) {
+			return null;
+		}
+		if (!array_key_exists('refreshDelai',self::$_endpoints[$this->endpoint_id])) {
+			return null;
+		}
+		return self::$_endpoints[$this->endpoint_id]['refreshDelai'];
+	}
 }
+
