@@ -38,7 +38,7 @@ class endpoint {
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/brakes",
 			"accept" => "application/json",
 			"type" => "info",
-			"refreshDelai" => 10,
+			"refreshDelai" => 30,
 			"cmds" => [
 				"brakeFluidLevelWarning" => "brake_fluid_level",
 			],
@@ -47,13 +47,13 @@ class endpoint {
 			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status/charging-connection-status",
 			"accept" => "application/vnd.volvocars.api.energy.vehicledata.v1+json",
 			"type" => "info",
-			"refreshDelai" => 1,
+			"refreshDelai" => 2,
 		],
 		"charging_system_status" => [
 			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status/charging-system-status",
 			"accept" => "application/vnd.volvocars.api.energy.vehicledata.v1+json",
 			"type" => "info",
-			"refreshDelai" => 1,
+			"refreshDelai" => 2,
 		],
 		"charge_time" => [
 			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status/estimated-charging-time",
@@ -87,7 +87,7 @@ class endpoint {
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/doors",
 			"accept" => "application/json",
 			"type" => "info",
-			"refreshDelai" => 1,
+			"refreshDelai" => 2,
 			"cmds" => [
 				"centralLock"     => "locked",
             	"frontLeftDoor"   => "door_fl_state",
@@ -109,7 +109,7 @@ class endpoint {
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/engine",
 			"accept" => "application/json",
 			"type" => "info",
-			"refreshDelai" => 10,
+			"refreshDelai" => 15,
 			"cmds" => [
 				"engineCoolantLevelWarning"  => "coolant_level",
         	    "oilLevelWarning"            => "oil_level",
@@ -143,7 +143,7 @@ class endpoint {
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/odometer",
 			"accept" => "application/json",
 			"type" => "info",
-			"refreshDelai" => 10,
+			"refreshDelai" => 15,
 			"cmds" => [
 				"odometer" => "odometer",
 			],
@@ -201,7 +201,7 @@ class endpoint {
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/warnings",
 			"accept" => "application/json",
 			"type" => "info",
-			"refreshDelai" => 10,
+			"refreshDelai" => 15,
 			"cmds" => [
 				"brakeLightCenterWarning"          => "al_brakeLight_c",
             	"brakeLightLeftWarning"            => "al_brakeLight_l",
@@ -227,13 +227,12 @@ class endpoint {
             	"turnIndicationRearLeftWarning"    => "al_turnIndication_rl",
             	"turnIndicationRearRightWarning"   => "al_turnIndication_rr",
 			],
-			"refreshDelai" => 30,
 		],
 		"windows" => [
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/windows",
 			"accept" => "application/json",
 			"type" => "info",
-			"refreshDelai" => 1,
+			"refreshDelai" => 2,
 			"cmds" => [
 				"frontLeftWindow"   => "win_fl_state",
             	"frontRightWindow"  => "win_fr_state",
