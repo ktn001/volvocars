@@ -525,20 +525,25 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"dependencies": "al_brake_fluid"
+			"dependencies": "al_brake_fluid",
+			"listener": "1"
 		}
 	},{
 		"logicalId": "al_brake_fluid",
 		"name": "{{alerte liquide de frein}}",
 		"type": "info",
-		"subType": "binary"
+		"subType": "binary",
+		"configuration": {
+			"listener": "1"
+		}
 	},{
 		"logicalId": "coolant_level",
 		"name": "{{niveau liquide refroidissement}}",
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"dependencies": "al_coolant"
+			"dependencies": "al_coolant",
+			"listener": "1"
 		}
 	},{
 		"logicalId": "al_coolant",
@@ -547,6 +552,7 @@
 		"subType": "binary",
 		"configuration": {
 			"dependTo": "coolant_level"
+			"listener": "1"
 		}
 	},{
 		"logicalId": "oil_level",
@@ -554,7 +560,8 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"dependencies": "al_oil"
+			"dependencies": "al_oil",
+			"listener": "1"
 		}
 	},{
 		"logicalId": "al_oil",
@@ -562,7 +569,8 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"dependTo": "oil_level"
+			"dependTo": "oil_level",
+			"listener": "1"
 		}
 	},{
 		"logicalId": "washer_fluid_level",
@@ -570,7 +578,8 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"dependencies": "al_washer_fluid"
+			"dependencies": "al_washer_fluid",
+			"listener": "1"
 		}
 	},{
 		"logicalId": "al_washer_fluid",
@@ -578,7 +587,8 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"dependTo": "washer_fluid_level"
+			"dependTo": "washer_fluid_level",
+			"listener": "1"
 		}
 	},{
 		"logicalId": "al_light",
@@ -610,7 +620,8 @@
                     "al_turnIndication_fr",
                     "al_turnIndication_rl",
                     "al_turnIndication_rr"
-			]
+			],
+			"listener": "1"
 		}
 	},{
 		"logicalId": "al_brakeLight_l",
@@ -618,7 +629,8 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"dependencies": "al_light"
+			"dependencies": "al_light",
+			"listener": "1"
 		}
 	},{
 		"logicalId": "al_brakeLight_r",
@@ -626,7 +638,8 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"dependencies": "al_light"
+			"dependencies": "al_light",
+			"listener": "1"
 		}
 	},{
 		"logicalId": "al_brakeLight_c",
@@ -634,7 +647,8 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"dependencies": "al_light"
+			"dependencies": "al_light",
+			"listener": "1"
 		}
 	},{
 		"logicalId": "al_daytimeRunningLight_l",
@@ -642,7 +656,8 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"dependencies": "al_light"
+			"dependencies": "al_light",
+			"listener": "1"
 		}
 	},{
 		"logicalId": "al_daytimeRunningLight_r",
@@ -650,7 +665,8 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"dependencies": "al_light"
+			"dependencies": "al_light",
+			"listener": "1"
 		}
 	},{
 		"logicalId": "al_fogLight_f",
@@ -658,7 +674,8 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"dependencies": "al_light"
+			"dependencies": "al_light",
+			"listener": "1"
 		}
 	},{
 		"logicalId": "al_fogLight_r",
@@ -666,7 +683,8 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"dependencies": "al_light"
+			"dependencies": "al_light",
+			"listener": "1"
 		}
 	},{
 		"logicalId": "al_hazardLights",
@@ -674,7 +692,8 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"dependencies": "al_light"
+			"dependencies": "al_light",
+			"listener": "1"
 		}
 	},{
 		"logicalId": "al_highBeam_l",
@@ -682,7 +701,8 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"dependencies": "al_light"
+			"dependencies": "al_light",
+			"listener": "1"
 		}
 	},{
 		"logicalId": "al_highBeam_r",
@@ -690,7 +710,8 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"dependencies": "al_light"
+			"dependencies": "al_light",
+			"listener": "1"
 		}
 	},{
 		"logicalId": "al_lowBeam_l",
@@ -698,7 +719,8 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"dependencies": "al_light"
+			"dependencies": "al_light",
+			"listener": "1"
 		}
 	},{
 		"logicalId": "al_lowBeam_r",
@@ -706,7 +728,8 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"dependencies": "al_light"
+			"dependencies": "al_light",
+			"listener": "1"
 		}
 	},{
 		"logicalId": "al_positionLight_fl",
@@ -714,7 +737,8 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"dependencies": "al_light"
+			"dependencies": "al_light",
+			"listener": "1"
 		}
 	},{
 		"logicalId": "al_positionLight_fr",
@@ -722,7 +746,8 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"dependencies": "al_light"
+			"dependencies": "al_light",
+			"listener": "1"
 		}
 	},{
 		"logicalId": "al_positionLight_rl",
@@ -730,7 +755,8 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"dependencies": "al_light"
+			"dependencies": "al_light",
+			"listener": "1"
 		}
 	},{
 		"logicalId": "al_positionLight_rr",
@@ -738,7 +764,8 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"dependencies": "al_light"
+			"dependencies": "al_light",
+			"listener": "1"
 		}
 	},{
 		"logicalId": "al_registrationPlateLight",
@@ -746,7 +773,8 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"dependencies": "al_light"
+			"dependencies": "al_light",
+			"listener": "1"
 		}
 	},{
 		"logicalId": "al_reverseLights",
@@ -754,7 +782,8 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"dependencies": "al_light"
+			"dependencies": "al_light",
+			"listener": "1"
 		}
 	},{
 		"logicalId": "al_sideMarkLights",
@@ -762,7 +791,8 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"dependencies": "al_light"
+			"dependencies": "al_light",
+			"listener": "1"
 		}
 	},{
 		"logicalId": "al_turnIndication_fl",
@@ -770,7 +800,8 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"dependencies": "al_light"
+			"dependencies": "al_light",
+			"listener": "1"
 		}
 	},{
 		"logicalId": "al_turnIndication_fr",
@@ -778,7 +809,8 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"dependencies": "al_light"
+			"dependencies": "al_light",
+			"listener": "1"
 		}
 	},{
 		"logicalId": "al_turnIndication_rl",
@@ -786,7 +818,8 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"dependencies": "al_light"
+			"dependencies": "al_light",
+			"listener": "1"
 		}
 	},{
 		"logicalId": "al_turnIndication_rr",
@@ -794,13 +827,15 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"dependencies": "al_light"
+			"dependencies": "al_light",
+			"listener": "1"
 		}
 	},{
 		"logicalId": "position",
 		"name": "{{position}}",
 		"configuration": {
-			"dependencies": "al_light"
+			"dependencies": "al_light",
+			"listener": "1"
 		},
 		"type": "info",
 		"subType": "string"
@@ -875,7 +910,8 @@
 		"subType": "numeric",
 		"unite": "Km",
 		"configuration": {
-			"dependencies" : "al_electricAutonomy"
+			"dependencies" : "al_electricAutonomy",
+			"listener": "1"
 		}
 	},{
 		"logicalId": "al_electricAutonomy",
@@ -913,7 +949,8 @@
 				"tyre_fr",
 				"tyre_rl",
 				"tyre_rr"
-			]
+			],
+			"listener": "1"
 		}
 	},{
 		"logicalId": "tyre_fl",
@@ -921,7 +958,8 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"dependencies": "al_tyre"
+			"dependencies": "al_tyre",
+			"listener": "1"
 		},
 		"template": {
 			"dashboard": "core::badge",
@@ -933,7 +971,8 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"dependencies": "al_tyre"
+			"dependencies": "al_tyre",
+			"listener": "1"
 		},
 		"template": {
 			"dashboard": "core::badge",
@@ -945,7 +984,8 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"dependencies": "al_tyre"
+			"dependencies": "al_tyre",
+			"listener": "1"
 		},
 		"template": {
 			"dashboard": "core::badge",
@@ -957,7 +997,8 @@
 		"type": "info",
 		"subType": "string",
 		"configuration": {
-			"dependencies": "al_tyre"
+			"dependencies": "al_tyre",
+			"listener": "1"
 		},
 		"template": {
 			"dashboard": "core::badge",
