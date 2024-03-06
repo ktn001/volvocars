@@ -24,21 +24,6 @@ require_once __DIR__ . '/volvoAccount.class.php';
 class volvocars extends eqLogic {
 	/*	 * *************************Attributs****************************** */
 
-	static $_endpoints = [
-		"accessibility",
-		"brakes",
-		"diagnostics",
-		"doors",
-		"engine_diagnostics",
-		"fuel",
-		"location",
-		"odometer",
-		"recharge_status",
-		"statistics",
-		"tyre",
-		"warnings",
-		"windows",
-	];
 
 	/*
 	 * Permet de définir les possibilités de personnalisation du widget (en cas d'utilisation de la
@@ -120,19 +105,6 @@ class volvocars extends eqLogic {
 	 * Fonctions appelée par le listener en cas de changement de valeur d'une commande de type 'info'
 	 */
 	public static function updateMessages($_options) {
-		log::add ("volvocars","info","updateMessages called: " . print_r($_options,true));
-		$car = volvocars::byId($_options['carId']);
-		if (!is_object($car)){
-			log::add("volvocars","error","lh_diagnostics: " . sprintf(__("Véhicule %s introuvable",__FILE__),$_options['event_id']));
-			return;
-		}
-		$cmd = volvocarsCmd::byId($_options['event_id']);
-		if (!is_object($cmd)){
-			log::add("volvocars","error","lh_diagnostics: " . sprintf(__("Commande %s introuvable",__FILE__),$_options['event_id']));
-			return;
-		}
-		$logicalId = $cmd->getLogicalId();
-
 		$mapping = [
 			'div_al_brake' => [
 				'al_brake_fluid' => [
@@ -230,8 +202,20 @@ class volvocars extends eqLogic {
 				"al_turnIndication_rr"      => [ 'FAILURE' => __("Défaut clignotant arrière droit",__FILE__) ],
 			],
 		];
+		log::add ("volvocars","info","updateMessages called: " . print_r($_options,true));
+		$car = volvocars::byId($_options['carId']);
+		if (!is_object($car)){
+			log::add("volvocars","error","lh_diagnostics: " . sprintf(__("Véhicule %s introuvable",__FILE__),$_options['event_id']));
+			return;
+		}
+		$cmd = volvocarsCmd::byId($_options['event_id']);
+		if (!is_object($cmd)){
+			log::add("volvocars","error","lh_diagnostics: " . sprintf(__("Commande %s introuvable",__FILE__),$_options['event_id']));
+			return;
+		}
+		$logicalId = $cmd->getLogicalId();
 
-		foreach (array_keys($mapping) as $cible) {
+		foreach (array_keys(self::$_tooltips_mapping) as $cible) {
 			if (isset($mapping[$cible][$logicalId])) {
 				if (isset($mapping[$cible][$logicalId][$_options['value']])) {
 					$txt = $mapping[$cible][$logicalId][$_options['value']];
@@ -250,6 +234,7 @@ class volvocars extends eqLogic {
 	 *   un handler par endpoint car il y a trop de commandes pour l'enregistrement d'un seul
 	 *   handler pour toutes les commandes (contrainte de la DB)
 	 */
+	public static function lh_accessibility($_options)		{ self::updateMessages($_options); }
 	public static function lh_brakes($_options)				{ self::updateMessages($_options); }
 	public static function lh_diagnostics($_options)		{ self::updateMessages($_options); }
 	public static function lh_doors($_options)				{ self::updateMessages($_options); }
@@ -470,40 +455,63 @@ class volvocars extends eqLogic {
 		}
 
 		log::add("volvocars","info",$this->getName() . ": " . __("mise à jour des listeners",__FILE__));
+		$cmdsFile = realpath(__DIR__ . '/../config/cmds.json');
+		$cmd2listeners = [];
+	 	foreach (json_decode(file_get_contents($cmdsFile),true) as $command) {
+			if (!isset($command['configuration']['listener'])){
+				continue;
+			}
+			$cmd2listeners[$command['logicalId']] = 1;
+		}
 		$listeners = $this->getCarListeners();
-		foreach (array_merge(self::$_endpoints, ['plugin']) as $endpoint) {
-			$function = "lh_" . $endpoint;
-			if (! isset($listeners[$function])) {
+		foreach (endpoint::all('info') as $endpoint) {
+			$logicalIds = $endpoint->getLogicalIds();
+			if (count($logicalIds) == 0) {
+				continue;
+			}
+			$function = "lh_" . $endpoint->getId();
+			if (! method_exists($this, $function)) {
+				log::add("volvocars","error",sprintf(__("handler pour le listener du endpoint %s introuvable",__FILE__),$endpoint->getId()));
+				continue;
+			}
+			log::add("volvocars","debug",array('carId'=>$this->getId()));
+			$listener = listener::byClassAndFunction(__CLASS__,$function,array('carId'=>$this->getId()));
+			if (!is_object($listener)) {
 				$listener = new listener();
 				$listener->setClass(__CLASS__);
 				$listener->setFunction($function);
 				$listener->setOption('carId',$this->getId());
-				$listeners[$function] = $listener;
 			}
-			if (! method_exists($this, $function)) {
-				log::add("volvocars","error",sprintf(__("handler pour le listener du endpoint %s introuvable",__FILE__),$endpoint));
+			$listener->emptyEvent();
+			foreach ($logicalIds as $logicalId) {
+				$cmd = $this->getCmd('info',$logicalId);
+				if (!is_object($cmd)) {
+					continue;
+				}
+				log::add("volvocars","debug", sprintf(__("Ajout de la commande '%s' au listener",__FILE__),$logicalId));
+				$listener->addEvent($cmd->getId());
+				unset ($cmd2listener[$logicalId]);
 			}
-			$listeners[$function]->emptyEvent();
-		}
-		foreach($this->getCmd('info', null, null, true) as $cmd) {
-			if ($cmd->getLogicalId() == 'msg2widget') {
-				continue;
-			}
-			$endpoint = $cmd->getConfiguration('endpoint', '');
-			if ($endpoint == '') {
-				$endpoint='plugin';
-			}
-			log::add("volvocars","debug", sprintf(__("Ajout de la commande '%s' au listener",__FILE__),$cmd->getLogicalId()));
-			$function = 'lh_' . $endpoint;
-			if (!isset($listeners[$function])) {
-				log::add("volvocars","error",sprintf(__("listener pour le endpoint %s introuvable",__FILE__),$endpoint));
-				continue;
-			}
-			$listeners[$function]->addEvent($cmd->getId());
-		}
-		foreach ($listeners as $listener) {
 			$listener->save();
 		}
+		$function = "lh_plugin";
+		$listener = listener::byClassAndFunction(__CLASS__,$function,array('carId'=>$this->getId()));
+		if (!is_object($listener)) {
+			$listener = new listener();
+			$listener->setClass(__CLASS__);
+			$listener->setFunction($function);
+			$listener->setOption('carId',$this->getId());
+		}
+		$listener->emptyEvent();
+		foreach (array_keys($cmd2listener) as $logicalId) {
+			$cmd = $this->getCmd('info',$logicalId);
+			if (!is_object($cmd)) {
+				continue;
+			}
+			log::add("volvocars","debug", sprintf(__("Ajout de la commande '%s' au listener",__FILE__),$logicalId));
+			$listener->addEvent($cmd->getId());
+		}
+		$listener->save();
 	}
 
 	/*
@@ -809,7 +817,7 @@ class volvocars extends eqLogic {
 
 		foreach (array_keys($infos) as $key) {
 			log::add("volvocars","debug",sprintf("├─key: %s",$key));
-			foreach (endpoint::getLogicalIds($endpoint_id,$key) as $logicalId) {
+			foreach (endpoint::byId($endpoint_id)->getLogicalIds($key) as $logicalId) {
 				$cmd = $this->getCmd('info',$logicalId);
 				if (!is_object($cmd)) {
 					continue;
@@ -839,10 +847,10 @@ class volvocars extends eqLogic {
 	 * Interrogation de tous les endpoints de l'API pour remonter les infos
 	 */
 	public function refresh($force = false) {
-		foreach (endpoint::getEndpoints('info',true) as $endpoint_id => $endpoint) {
+		foreach (endpoint::all('info',true) as $endpoint) {
 			try {
 				$cmdExists = false;
-				foreach (endpoint::getLogicalIds($endpoint_id) as $logicalId) {
+				foreach ($endpoint->getLogicalIds() as $logicalId) {
 					$cmd = $this->getCmd('info',$logicalId);
 					if (is_object($cmd)) {
 						$cmdExists = true;
@@ -850,7 +858,7 @@ class volvocars extends eqLogic {
 					}
 				}
 				if ($cmdExists) {
-					$this->getInfosFromApi($endpoint_id, $force);
+					$this->getInfosFromApi($endpoint->getId(), $force);
 				}
 			} catch (volvoApiException $e) {
 				if ($e->getHttpCode() == '403') {

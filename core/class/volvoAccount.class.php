@@ -261,8 +261,8 @@ class volvoAccount {
 		$session = curl_init($url);
 		if ($endpoint === null) {
 			$accept = "application/json";
-		} else {
-			$accept = endpoint::getEndpoint('accept');
+	//	} else {
+	//		$accept = endpoint::getEndpoint('accept');
 		}
 		curl_setopt($session, CURLOPT_HTTPHEADER, [
 			"authorization: Bearer " . $this->_token['access_token'],
@@ -294,14 +294,14 @@ class volvoAccount {
 
 	public function getRawDatas($vin) {
 		$return = array();
-		foreach (endpoint::getEndpoints('info') as $key => $endpoint) {
+		foreach (endpoint::all('info') as $key => $endpoint) {
 			$return[$key] = $this->getInfos($key, $vin);
 		}
 		return $return;
 	}
 
 	public function getInfos($_endpoint_id, $vin=null, $_force = false) {
-		$endpoint = endpoint::getEndpoint($_endpoint_id);
+		$endpoint = endpoint::byId($_endpoint_id);
 		if ($endpoint === null) {
 			log::add("volvocars","error",sprintf(__("URL pour le endpoint %s non définie",__FILE__),$endpoint));
 		}
@@ -309,7 +309,7 @@ class volvoAccount {
 			log::add("volvocars","debug","│ " . __("Pas nécessaire",__FILE__));
 			return "";
 		}
-		$url = sprintf($endpoint['url'],$vin);
+		$url = sprintf($endpoint->getUrl(),$vin);
 		log::add("volvocars","debug","│ URL: " .$url);
 		$session = $this->session($url, $endpoint);
 		$this->incrementEndpointCounter($_endpoint_id, $vin);

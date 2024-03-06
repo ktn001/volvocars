@@ -551,7 +551,7 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"dependTo": "coolant_level"
+			"dependTo": "coolant_level",
 			"listener": "1"
 		}
 	},{

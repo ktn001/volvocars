@@ -136,7 +136,7 @@ class endpoint {
 			"type" => "info",
 			"refreshDelai" => 1,
 			"cmds" => [
-				"location" => "position",
+				"geometry" => "position",
 			],
 		],
 		"odometer" => [
@@ -244,16 +244,20 @@ class endpoint {
 	];
 	private $endpoint_id;
 
-	static function getEndpoint($_endpoint) {
-		if (!isset (self::$_endpoints[$_endpoint])) {
+	static function byId($_endpoint_id) {
+		if (!array_key_exists($_endpoint_id,self::$_endpoints)) {
 			return null;
 		}
-		return self::$_endpoints[$_endpoint];
+		return new endpoint($_endpoint_id);
 	}
 
-	static function getEndpoints($_type = null, $toRefresh = false) {
+	static function getEndpoint_ids() {
+		return array_keys(self::$_endpoints);
+	}
+
+	static function all($_type = null, $toRefresh = false) {
 		$return = array();
-		foreach (self::$_endpoints as $property => $value) {
+		foreach (self::$_endpoints as $endpoint_id => $value) {
 			if (!is_array($value)) {
 				continue;
 			}
@@ -274,19 +278,27 @@ class endpoint {
 					continue;
 				}
 			}
-			$return[$property] = $value;
+			$return[] = self::byId($endpoint_id);
 		}
 		return $return;
 	}
 
-	static function getLogicalIds ($_endpoint, $_info = null) {
-		if (!isset (self::$_endpoints[$_endpoint])) {
+	function __construct ($endpoint_id) {
+		if (array_key_exists($endpoint_id,self::$_endpoints)) {
+			$this->endpoint_id = $endpoint_id;
+		} else {
+			$this->endpoint_id = null;
+		}
+	}
+
+	function getLogicalIds($_info = null) {
+		if ($this->endpoint_id === null) {
 			return array();
 		}
-		if (!isset (self::$_endpoints[$_endpoint]['cmds'])) {
+		if (!array_key_exists('cmds',self::$_endpoints[$this->endpoint_id])) {
 			return array();
 		}
-		$infos = self::$_endpoints[$_endpoint]['cmds'];
+		$infos = self::$_endpoints[$this->endpoint_id]['cmds'];
 		if (count($infos) == 0) {
 			return array();
 		}
@@ -303,14 +315,6 @@ class endpoint {
 		return array_unique($logicalIds);
 	}
 
-	function __construct ($endpoint_id) {
-		if (array_key_exists($endpoint_id,self::$_endpoints)) {
-			$this->endpoint_id = $endpoint_id;
-		} else {
-			$this->endpoint_id = null;
-		}
-	}
-
 	function getRefreshDelai() {
 		if ($this->endpoint_id === null) {
 			return null;
@@ -319,6 +323,20 @@ class endpoint {
 			return null;
 		}
 		return self::$_endpoints[$this->endpoint_id]['refreshDelai'];
+	}
+	
+	function getId() {
+		return $this->endpoint_id;
+	}
+
+	function getUrl() {
+		if ($this->endpoint_id === null) {
+			return null;
+		}
+		if (!array_key_exists('url',self::$_endpoints[$this->endpoint_id])) {
+			return null;
+		}
+	 	return self::$_endpoints[$this->endpoint_id]['url'];
 	}
 }
 
