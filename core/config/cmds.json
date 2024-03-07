@@ -163,8 +163,7 @@
 		"configuration": {
 			"dependencies": [
 				"door_fl_open",
-				"door_fl_closed",
-				"topViewImg"
+				"door_fl_closed"
 			]
 		},
 		"template": {
@@ -179,8 +178,7 @@
 		"configuration": {
 			"dependencies": [
 				"door_fr_open",
-				"door_fr_closed",
-				"topViewImg"
+				"door_fr_closed"
 			]
 		},
 		"template": {
@@ -195,8 +193,7 @@
 		"configuration": {
 			"dependencies": [
 				"door_rl_open",
-				"door_rl_closed",
-				"topViewImg"
+				"door_rl_closed"
 			]
 		},
 		"template": {
@@ -211,8 +208,7 @@
 		"configuration": {
 			"dependencies": [
 				"door_rr_open",
-				"door_rr_closed",
-				"topViewImg"
+				"door_rr_closed"
 			]
 		},
 		"template": {
@@ -433,8 +429,7 @@
 		"configuration": {
 			"dependencies": [
 				"hood_open",
-				"hood_closed",
-				"topViewImg"
+				"hood_closed"
 			]
 		},
 		"template": {
@@ -449,8 +444,7 @@
 		"configuration": {
 			"dependencies": [
 				"tail_open",
-				"tail_closed",
-				"topViewImg"
+				"tail_closed"
 			]
 		},
 		"template": {
@@ -480,8 +474,7 @@
 		"configuration": {
 			"dependencies": [
 				"roof_open",
-				"roof_closed",
-				"topViewImg"
+				"roof_closed"
 			]
 		},
 		"template": {
@@ -534,7 +527,8 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"listener": "1"
+			"listener": "1",
+			"dependTo" : "brake_fluid_level"
 		}
 	},{
 		"logicalId": "coolant_level",
@@ -834,7 +828,6 @@
 		"logicalId": "position",
 		"name": "{{position}}",
 		"configuration": {
-			"dependencies": "al_light",
 			"listener": "1"
 		},
 		"type": "info",

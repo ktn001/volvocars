@@ -89,6 +89,9 @@ class volvocars extends eqLogic {
 		foreach(volvoAccount::all() as $account) {
 			$account->logStats();
 		}
+		foreach (volvocars::byType(__CLASS__, true) as $car) {
+			$car->updateTooltips();
+		}
 	}
 
 	/*
@@ -105,6 +108,7 @@ class volvocars extends eqLogic {
 	 * Fonctions appelée par le listener en cas de changement de valeur d'une commande de type 'info'
 	 */
 	public static function updateMessages($_options) {
+		log::add("volvocars.stats","debug",print_r($_options,true));
 		$mapping = [
 			'div_al_brake' => [
 				'al_brake_fluid' => [
@@ -215,7 +219,7 @@ class volvocars extends eqLogic {
 		}
 		$logicalId = $cmd->getLogicalId();
 
-		foreach (array_keys(self::$_tooltips_mapping) as $cible) {
+		foreach (array_keys($mapping) as $cible) {
 			if (isset($mapping[$cible][$logicalId])) {
 				if (isset($mapping[$cible][$logicalId][$_options['value']])) {
 					$txt = $mapping[$cible][$logicalId][$_options['value']];
@@ -808,6 +812,23 @@ class volvocars extends eqLogic {
 	}
 
 	/*
+	 * Mise à jour des tooltips
+	 */
+	public function updateTooltips(){
+		foreach ($this->getCmd('info') as $cmd) {
+			if ($cmd->getConfiguration('listener') != 1) {
+				continue;
+			}
+			$options = [
+				'carId' => $this->getId(),
+				'event_id' => $cmd->getId(),
+				'value' => $cmd->execCmd(),
+			];
+			self::updateMessages($options);
+		}
+	}
+
+	/*
 	 * Mise à jour des infos retournée par un endpoint des API Volvo
 	 */
 	public function getInfosFromApi($endpoint_id, $force = false){
@@ -882,6 +903,9 @@ class volvocars extends eqLogic {
 				}
 				throw $e;
 			}
+		}
+		if ($force) {
+			$this->updateTooltips();
 		}
 	}
 
