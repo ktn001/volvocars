@@ -490,7 +490,7 @@ class volvocars extends eqLogic {
 				}
 				log::add("volvocars","debug", sprintf(__("Ajout de la commande '%s' au listener",__FILE__),$logicalId));
 				$listener->addEvent($cmd->getId());
-				unset ($cmd2listener[$logicalId]);
+				unset ($cmd2listeners[$logicalId]);
 			}
 			$listener->save();
 		}
@@ -503,7 +503,7 @@ class volvocars extends eqLogic {
 			$listener->setOption('carId',$this->getId());
 		}
 		$listener->emptyEvent();
-		foreach (array_keys($cmd2listener) as $logicalId) {
+		foreach (array_keys($cmd2listeners) as $logicalId) {
 			$cmd = $this->getCmd('info',$logicalId);
 			if (!is_object($cmd)) {
 				continue;
