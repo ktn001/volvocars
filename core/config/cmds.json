@@ -875,6 +875,7 @@
 		"name": "{{Temps de charge restant}}",
 		"type": "info",
 		"subType": "numeric",
+		"unite": "min.",
 		"configuration": {
 			"dependencies" : "chargingEndTime"
 		},

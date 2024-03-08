@@ -125,7 +125,7 @@ class endpoint {
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/fuel",
 			"accept" => "application/json",
 			"type" => "info",
-			"refreshDelai" => 5,
+			"refreshDelai" => 30,
 			"cmds" => [
 				"fuelAmount" => "fuel_amount",
 			],
@@ -183,7 +183,7 @@ class endpoint {
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/tyres",
 			"accept" => "application/json",
 			"type" => "info",
-			"refreshDelai" => 5,
+			"refreshDelai" => 30,
 			"cmds" => [
 				"frontLeft"  => "tyre_fl",
             	"frontRight" => "tyre_fr",
@@ -201,7 +201,7 @@ class endpoint {
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/warnings",
 			"accept" => "application/json",
 			"type" => "info",
-			"refreshDelai" => 15,
+			"refreshDelai" => 30,
 			"cmds" => [
 				"brakeLightCenterWarning"          => "al_brakeLight_c",
             	"brakeLightLeftWarning"            => "al_brakeLight_l",
