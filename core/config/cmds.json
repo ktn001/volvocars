@@ -567,7 +567,7 @@
 			"listener": "1"
 		}
 	},{
-		"logicalId": "washer_fluid_level",
+		"logicalId": "washerFluidLevel",
 		"name": "{{niveau lave-vitres}}",
 		"type": "info",
 		"subType": "string",
@@ -1003,6 +1003,29 @@
 		"name": "{{service}}",
 		"type": "info",
 		"subType": "string"
+	},{
+		"logicalId": "serviceTrigger",
+		"name": "{{Raison du service}}",
+		"type": "info",
+		"subType": "string"
+	},{
+		"logicalId": "engineHoursToService",
+		"name": "{{Heures moteur avant service}}",
+		"type": "info",
+		"subType": "numeric",
+		"unite": "H"
+	},{
+		"logicalId": "distanceToService",
+		"name": "{{Kilomètre avant service}}",
+		"type": "info",
+		"subType": "numeric",
+		"unite": "Km"
+	},{
+		"logicalId": "timeToService",
+		"name": "{{jours avant service}}",
+		"type": "info",
+		"subType": "numeric",
+		"unite": "{{Jours}}"
 	},{
 		"logicalId": "msg2widget",
 		"name": "{{messages pour widget}}",

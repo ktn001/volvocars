@@ -338,7 +338,7 @@ class volvoAccount {
 		if (isset($content['data'])) {
 			$content = $content['data'];
 		}
-		if ($endpoint == 'location'){
+		if ($_endpoint_id == 'location'){
 			if(isset($content['type'])){
 				unset ($content['type']);
 			}
@@ -350,6 +350,20 @@ class volvoAccount {
 				unset ($content['geometry']);
 			}
 		}
+		if ($_endpoint_id == 'diagnostics') {
+			if ($content['timeToService']['unit'] == 'months') {
+				$content['timeToService']['value'] *= 30;
+				$content['timeToService']['unit'] = 'days';
+			}
+		}
+		foreach($endpoint->getDefaults() as $info => $defaultValue) {
+			if (!isset($content[$info])) {
+				$content[$info] = array(
+					"value" => $defaultValue,
+				);
+			}
+		}
+
 		return $content;
 	}
 

@@ -293,8 +293,18 @@
 			<div class="col-xs-12 tile tile3">
 				<div class="col-xs-1 tile-icon"><i class="fas fa-lg fa-wrench"></i></div>
 				<div class="col-xs-11 tile-title">{{Service}}</div>
-				<div class="col-xs-2 info_name">{{Message}}</div>
-				<div class="col-xs-10 info_text Cmd#service_id#id##"></div>
+				<div class="col-xs-4 info_name">{{Message}}</div>
+				<div class="col-xs-8 info_text Cmd#service_id#id##"></div>
+				<div class="col-xs-4 info_name">{{Raison de service}}</div>
+				<div class="col-xs-8 info_text Cmd#serviceTrigger_id#id##"></div>
+				<div class="col-xs-1 tile-icon"><i class="fas fa-lg fa-clock"></i></div>
+				<div class="col-xs-11 tile-title">{{Délai avant service}}</div>
+				<div class="col-xs-9 info_name">{{Temps moteur}}</div>
+				<div class="col-xs-3 info_text Cmd#engineHoursToService_id#id##"></div>
+				<div class="col-xs-9 info_name">{{Distance}}</div>
+				<div class="col-xs-3 info_text Cmd#distanceToService_id#id##"></div>
+				<div class="col-xs-9 info_name">{{Temps}}</div>
+				<div class="col-xs-3 info_text Cmd#timeToService_id#id##"></div>
 			</div>
 
 			<div class="col-xs-12 tile">
@@ -778,7 +788,6 @@ if (!"#win_rr_state_id#id##".startsWith('#')) {
 	jeedom.cmd.refreshValue([{cmd_id: '#win_rr_state_id#id##', display_value: "#win_rr_state_display_value#id##"}])
 }
 
-
 if (!"#hood_state_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#hood_state_id#id##'] = function(_options) {
 		show_opening('hood', _options.value)
@@ -800,12 +809,37 @@ if (!"#tail_state_id#id##".startsWith('#')) {
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#tail_state_id#id##', value: "#tail_state#id##", display_value: "#tail_state_display_value#id##"}])
 }
+
 // SERVICE
 if (!"#service_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#service_id#id##'] = function(_options) {
 		$('.Cmd#service_id#id##').html(_options.display_value)
 	}
-	jeedom.cmd.refreshValue([{cmd_id: '#service_id#id##', value: '#service#id##', display_value: '#service_display_value#id##'}])
+	jeedom.cmd.refreshValue([{cmd_id: '#service_id#id##', value: '#service_state#id##', display_value: '#service_display_value#id##'}])
+}
+if (!"#engineHoursToService_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#engineHoursToService_id#id##'] = function(_options) {
+		$('.Cmd#engineHoursToService_id#id##').html(_options.display_value + " " +_options.unit)
+	}
+	jeedom.cmd.refreshValue([{cmd_id: '#engineHoursToService_id#id##', value: '#engineHoursToService_state#id##', display_value: '#engineHoursToService_display_value#id##', unit: '#engineHoursToService_unit#id##'}])
+}
+if (!"#distanceToService_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#distanceToService_id#id##'] = function(_options) {
+		$('.Cmd#distanceToService_id#id##').html(_options.display_value + " " +_options.unit)
+	}
+	jeedom.cmd.refreshValue([{cmd_id: '#distanceToService_id#id##', value: '#distanceToService_state#id##', display_value: '#distanceToService_display_value#id##', unit: '#distanceToService_unit#id##'}])
+}
+if (!"#timeToService_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#timeToService_id#id##'] = function(_options) {
+		$('.Cmd#timeToService_id#id##').html(_options.display_value + " " +_options.unit)
+	}
+	jeedom.cmd.refreshValue([{cmd_id: '#timeToService_id#id##', value: '#timeToService_state#id##', display_value: '#timeToService_display_value#id##', unit: '#timeToService_unit#id##'}])
+}
+if (!"#serviceTrigger_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#serviceTrigger_id#id##'] = function(_options) {
+		$('.Cmd#serviceTrigger_id#id##').html(_options.display_value + "&nbsp;")
+	}
+	jeedom.cmd.refreshValue([{cmd_id: '#serviceTrigger_id#id##', value: '#serviceTrigger_state#id##', display_value: '#serviceTrigger_display_value#id##'}])
 }
 
 // MISE A JOUR DES TEXTES INFO

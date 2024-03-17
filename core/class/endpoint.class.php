@@ -80,8 +80,18 @@ class endpoint {
 			"refreshDelai" => 10,
 			"cmds" => [
 				"serviceWarning"          => "service",
-            	"washerFluidLevelWarning" => "washer_fluid_level",
+				"serviceTrigger"          => "serviceTrigger",
+				"engineHoursToService"    => "engineHoursToService",
+				"distanceToService"       => "distanceToService",
+				"timeToService"           => "timeToService",
+            	"washerFluidLevelWarning" => "washerFluidLevel",
 			],
+			"defaults" => [
+				"serviceTrigger" => "&nbsp;",
+			],
+			"options" => [
+				"timeToService" => "convertToDays",
+			]
 		],
 		"doors" => [
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/doors",
@@ -337,6 +347,26 @@ class endpoint {
 			return null;
 		}
 	 	return self::$_endpoints[$this->endpoint_id]['url'];
+	}
+	
+	function getDefaults() {
+		if ($this->endpoint_id === null) {
+			return array();
+		}
+		if (!array_key_exists('defaults',self::$_endpoints[$this->endpoint_id])) {
+			return array();
+		}
+		return self::$_endpoints[$this->endpoint_id]['defaults'];
+	}
+	
+	function getOptions() {
+		if ($this->endpoint_id === null) {
+			return array();
+		}
+		if (!array_key_exists('options',self::$_endpoints[$this->endpoint_id])) {
+			return array();
+		}
+		return self::$_endpoints[$this->endpoint_id]['options'];
 	}
 }
 

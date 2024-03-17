@@ -140,7 +140,7 @@ class volvocars extends eqLogic {
 				'al_washer_fluid' => [
 					'0' => __("Niveau lave-vitres OK", __FILE__),
 				],
-				'washer_fluid_level' => [
+				'washerFluidLevel' => [
 					'TOO_LOW' => __("Niveau liquide lave-vitres bas",__FILE__),
 				],
 			],
@@ -729,7 +729,7 @@ class volvocars extends eqLogic {
 		$createCmdOpen = config::byKey("create_cmd_open","volvocars", '0');
 		$createCmdState = config::byKey("create_cmd_state","volvocars", '0');
 		$cmdsFile = realpath(__DIR__ . '/../config/cmds.json');
-		$commands = json_decode(file_get_contents($cmdsFile),true);
+		$commands = json_decode(translate::exec(file_get_contents($cmdsFile),$cmdsFile),true);
 		if (!is_array($commands)) {
 			throw new Exception (sprintf(__("Erreur lors de la lecture de %s",__FILE__),$cmdsFile));
 		}
@@ -766,7 +766,6 @@ class volvocars extends eqLogic {
 			if (! isset($command['name']) || trim($command['name']) == '') {
 				$command['name'] = $command['logicalId'];
 			}
-			$command['name'] = translate::exec($command['name'],$cmdsFile);
 			$cmd = $this->getCmd($command['type'],$command['logicalId']);
 			if (!is_object($cmd)) {
 				$cmd = new volvocarsCmd();
@@ -1076,6 +1075,7 @@ class volvocars extends eqLogic {
 			'conso_electric',
 			'conso_fuel',
 			'conso_fuel_trip',
+			'distanceToService',
 			'distance_site1',
 			'distance_site2',
 			'door_fl_state',
@@ -1083,6 +1083,7 @@ class volvocars extends eqLogic {
 			'door_rl_state',
 			'door_rr_state',
 			'electricAutonomy',
+			'engineHoursToService',
 			'fuel_amount',
 			'fuelAutonomy',
 			'hood_state',
@@ -1094,7 +1095,9 @@ class volvocars extends eqLogic {
 			'refresh',
 			'roof_state',
 			'service',
+			'serviceTrigger',
 			'tail_state',
+			'timeToService',
 			'tyre_fl',
 			'tyre_fr',
 			'tyre_rl',
@@ -1472,7 +1475,7 @@ class volvocarsCmd extends cmd {
 					return 0;
 					break;
 				case 'al_washer_fluid':
-					$cmd = $this->getEqLogic()->getCmd('info','washer_fluid_level');
+					$cmd = $this->getEqLogic()->getCmd('info','washerFluidLevel');
 					if (is_object($cmd)) {
 						switch ($cmd->execCmd()) {
 							case 'TOO_LOW':
@@ -1668,7 +1671,12 @@ class volvocarsCmd extends cmd {
 			"DISTANCE_DRIVEN_TIME_FOR_SERVICE"				=> __("Service suite kilométrage à faire",__FILE__),
 			"DISTANCE_DRIVEN_OVERDUE_FOR_SERVICE"			=> __("Service suite kilométrage en retard",__FILE__),
 
-			"UNSPECIFIED"	=> __("inconnu",__FILE__),
+			"CALENDAR_TIME"	=> __("Temps depuis dernier service",__FILE__),
+			"DISTANCE"		=> __("Kilomètres parcourus",__FILE__),
+			"ENGINE_HOURS"	=> __("Temps de fonctionnement du moteur",__FILE__),
+
+			"UNSPECIFIED"	=> __("Indéfini",__FILE__),
+			"UNKNOWN"		=> __("Inconnu",__FILE__),
 			"NO_WARNING"	=> __("OK",__FILE__),
 		];
 
