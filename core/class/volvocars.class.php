@@ -853,6 +853,9 @@ class volvocars extends eqLogic {
 							$value = "";
 						}
 						break;
+					case 'engineON':
+						$value = $infos[$key]['value'] == 'RUNNING' ? '1' : '0';
+						break;
 					default:
 						$value = $infos[$key]['value'];
 				}
@@ -1084,6 +1087,7 @@ class volvocars extends eqLogic {
 			'door_rr_state',
 			'electricAutonomy',
 			'engineHoursToService',
+			'engineON',
 			'fuel_amount',
 			'fuelAutonomy',
 			'hood_state',

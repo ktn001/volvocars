@@ -130,6 +130,9 @@ class endpoint {
 			"accept" => "application/json",
 			"type" => "info",
 			"refreshDelai" => 1,
+			"cmds" => [
+				"engineStatus" => "engineON",
+			],
 		],
 		"fuel" => [
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/fuel",

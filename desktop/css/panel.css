@@ -209,12 +209,13 @@ img.volvo_logo_black {
 	color: var(--link-color) !important;
 }
 
-#div_alertes {
+.div_alertes {
 	height: 50px;
 	cursor:default !important;
 }
 
-#div_alertes img {
+.div_status img,
+.div_alertes img {
 	height: 32px;
 	margin: 9px 5px;
 }
@@ -228,6 +229,10 @@ img.volvo_logo_black {
 /* ************ */
 
 /* image cantrale */
+
+.eqLogic-widget .tile-topview {
+	min-height: 371px !important;
+}
 
 .tile-topview .topView {
 	height: 230px;

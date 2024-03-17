@@ -54,6 +54,11 @@
 			"forceReturnLineAfter" : "1"
 		}
 	},{
+		"logicalId": "engineON",
+		"name": "{{moteur en service}}",
+		"type": "info",
+		"subType": "binary"
+	},{
 		"logicalId": "door_fl_closed",
 		"name": "{{porte avant gauche fermée}}",
 		"type": "info",
