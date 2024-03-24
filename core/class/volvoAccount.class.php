@@ -163,7 +163,7 @@ class volvoAccount {
 		if (count($cars) > 0) {
 			throw new Exception (sprintf(__("Le compte %s est utilisé pour le véhicule %s",__FILE__), $this->name, $cars[0]->getName()));
 		}
-		cache::remove(__CLASS__ . $this->getId());
+		cache::delete($this->cacheKey());
 		$key = 'account::' . $this->id;
 		return config::remove($key,'volvocars');
 	}
