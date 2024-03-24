@@ -419,7 +419,6 @@ class volvoAccount {
 		}
 
 		if (!array_key_exists('endpointAccessCount',$cache) or !is_array($cache['endpointAccessCount'])) {
-			log::add("volvocars.stats","debug","3333 ");
 			$cache['endpointAccessCount'] = [];
 		}
 		$counter = $cache['endpointAccessCount'];

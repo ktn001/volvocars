@@ -108,7 +108,6 @@ class volvocars extends eqLogic {
 	 * Fonctions appelée par le listener en cas de changement de valeur d'une commande de type 'info'
 	 */
 	public static function updateMessages($_options) {
-		log::add("volvocars.stats","debug",print_r($_options,true));
 		$mapping = [
 			'div_al_brake' => [
 				'al_brake_fluid' => [
@@ -727,7 +726,7 @@ class volvocars extends eqLogic {
 	 */
 	public function createOrUpdateCmds($createOnly = false) {
 		$createCmdOpen = config::byKey("create_cmd_open","volvocars", '0');
-		$createCmdState = config::byKey("create_cmd_state","volvocars", '0');
+		$createCmdClosed = config::byKey("create_cmd_closed","volvocars", '0');
 		$cmdsFile = realpath(__DIR__ . '/../config/cmds.json');
 		$commands = json_decode(translate::exec(file_get_contents($cmdsFile),$cmdsFile),true);
 		if (!is_array($commands)) {
@@ -735,25 +734,18 @@ class volvocars extends eqLogic {
 		}
 		foreach ($commands as $command) {
 			if (!is_array($command)) {
-				log::add("volvocars","erro","createCmd called with wrong argument");
+				log::add("volvocars","error","createCmd called with wrong argument");
 				return false;
 			}
 			if (! isset($command['logicalId'])) {
 				log::add("volvocars","error","createCmd called with no logicalId");
 				return false;
 			}
-			if (isset($command['configuration']['endpoint'])) {
-				$endpoint = $command['configuration']['endpoint'];
-			} else {
-				$endpoint = '';
+			if ( (! $createCmdOpen == 1)  && (substr_compare($command['logicalId'], '_open',-5) == 0)) {
+				continue;
 			}
-			if ($endpoint == 'windows' || $endpoint == 'doors') {
-				if (! $createCmdOpen == 1 && substr_compare($command['logicalId'], '_open',-5) == 0) {
-					continue;
-				}
-				if (! $createCmdClosed == 1 && substr_compare($command['logicalId'], '_closed',-7) == 0) {
-					continue;
-				}
+			if ( (! $createCmdClosed == 1) && (substr_compare($command['logicalId'], '_closed',-7) == 0)) {
+				continue;
 			}
 			if (! isset($command['type'])) {
 				log::add("volvocars","error","createCmd called with no type");
