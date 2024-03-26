@@ -149,7 +149,7 @@ class endpoint {
 			"type" => "info",
 			"refreshDelai" => 1,
 			"cmds" => [
-				"geometry" => "position",
+				"location" => "position",
 			],
 		],
 		"odometer" => [
