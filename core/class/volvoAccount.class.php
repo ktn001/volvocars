@@ -209,6 +209,7 @@ class volvoAccount {
 
 	private function refreshToken() {
 		log::add("volvocars","debug",sprintf(__("Rafraîchissement du token du compte %s",__FILE__). "...", $this->getName()));
+		log::add("volvocars","debug","URL: " . self::OAUTH_URL);
 		$session = curl_init(self::OAUTH_URL);
 		curl_setopt($session, CURLOPT_HTTPHEADER, [
 			"authorization: Basic aDRZZjBiOlU4WWtTYlZsNnh3c2c1WVFxWmZyZ1ZtSWFEcGhPc3kxUENhVXNpY1F0bzNUUjVrd2FKc2U0QVpkZ2ZJZmNMeXc=",
@@ -216,16 +217,27 @@ class volvoAccount {
 			"accept: application/json"
 		]);
 		$data = http_build_query([
-			"grant_type" => "refesh_token",
+			"grant_type" => "refresh_token",
 			"refresh_token" => $this->_token["refresh_token"]
 		]);
 		curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($session, CURLOPT_POST, true);
 		curl_setopt($session, CURLOPT_POSTFIELDS, $data);
 		$content = curl_exec($session);
+		log::add("volvocars","debug","content: " . $content);
 		$httpCode = curl_getinfo($session,CURLINFO_HTTP_CODE);
 		if ( $httpCode != 200) {
-			throw new Exception (sprintf(__("Erreur lors du refraîchissement du token pour le compte %s. (httpcode: %s)",__FILE__), $this->getName(), $httpCode));
+			$detail = $content;
+			$content = is_json($content,$content);
+			$message = null;
+			if (isset($content['error'])) {
+				$message = $content['error'];
+			}
+			$description = null;
+			if (isset($content['error_description'])) {
+				$description = $content['error_description'];
+			}
+			throw new volvoApiException (self::OAUTH_URL, $httpCode, $message, $description, $detail);
 		}
 		$this->_token = is_json($content,$content);
 		$this->_token['expires_at'] = time() + $this->_token['expires_in'] - 90;
@@ -252,7 +264,7 @@ class volvoAccount {
 				// ----------------------------------------
 				try {
 					$this->refreshToken();
-				} catch (Exception $e) {
+				} catch (volvoApiException $e) {
 					log::add("volvocars","warning",$e->getMessage());
 					$this->_token = $this->login();
 				}

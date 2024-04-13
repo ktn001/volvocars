@@ -28,12 +28,6 @@ class endpoint {
 				"availabilityStatus" => ["availability", "unavailableReason" ],
 			],
 		],
-		"battery_level" => [
-			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status/battery-charge-level",
-			"accept" => "application/vnd.volvocars.api.energy.vehicledata.v1+json",
-			"type" => "info",
-			"refreshDelai" => 5,
-		],
 		"brakes" => [
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/brakes",
 			"accept" => "application/json",
@@ -42,24 +36,6 @@ class endpoint {
 			"cmds" => [
 				"brakeFluidLevelWarning" => "brake_fluid_level",
 			],
-		],
-		"charging_connection_status" => [
-			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status/charging-connection-status",
-			"accept" => "application/vnd.volvocars.api.energy.vehicledata.v1+json",
-			"type" => "info",
-			"refreshDelai" => 2,
-		],
-		"charging_system_status" => [
-			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status/charging-system-status",
-			"accept" => "application/vnd.volvocars.api.energy.vehicledata.v1+json",
-			"type" => "info",
-			"refreshDelai" => 2,
-		],
-		"charge_time" => [
-			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status/estimated-charging-time",
-			"accept" => "application/vnd.volvocars.api.energy.vehicledata.v1+json",
-			"type" => "info",
-			"refreshDelai" => 1,
 		],
 		"commands" => [
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands",
@@ -108,12 +84,6 @@ class endpoint {
             	"tailgate"        => "tail_state",
             	"tankLid"         => "tank_state",
 			],
-		],
-		"electric_range" => [
-			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status/electric-range",
-			"accept" => "application/vnd.volvocars.api.energy.vehicledata.v1+json",
-			"type" => "info",
-			"refreshDelai" => 5,
 		],
 		"engine_diagnostics" => [
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/engine",
@@ -172,12 +142,6 @@ class endpoint {
             	"estimatedChargingTime"     => "chargingRemainingTime",
             	"chargingConnectionStatus"  => "connectorStatus",
 			],
-		],
-		"resources" => [
-			"url" => "https://api.volvocars.com/extended-vehicle/v1/vehicles/%s/resources",
-			"accept" => "application/json",
-			"type" => "info",
-			"refreshDelai" => 0,
 		],
 		"statistics" => [
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/statistics",

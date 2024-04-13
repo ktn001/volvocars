@@ -46,4 +46,25 @@ class volvoApiException extends Exception {
 	final public function getDetail() {
 		return $this->detail;
 	}
+
+	public function __toString() {
+		$msg = '';
+		$sep = '';
+		if ($this->getEndpoint() != null) {
+			$mesg = "Endpoint: " . $this->getEndpoint();
+			$sep = '; ';
+		}
+		if ($this->getHttpCode() != null) {
+			$mesg = $sep . "HttpCode: " . $this->getHttpCode();
+			$sep = '; ';
+		}
+		if ($this->getDescription() != null) {
+			$mesg = $sep . "Description: " . $this->getDescription();
+			$sep = '; ';
+		}
+		if ($this->getDetail() != null) {
+			$mesg = $sep . "Detail: " . $this->getDetail();
+			$sep = '; ';
+		}
+	}
 }
