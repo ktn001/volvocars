@@ -318,7 +318,13 @@ $('[data-l1key=configuration][data-l2key$=_active]').trigger('change')
  */
 $('.eqLogicAction[data-action=get_pos]').off('click').on('click', function() {
 	site = $(this).data('site')
-	id = $('.eqLogicAttr[data-l1key=id]').value()
+	source = $(this).data('src')
+	if (source == 'car') {
+		id = $('.eqLogicAttr[data-l1key=id]').value()
+	}
+	if (source == 'jeedom') {
+		id = 'jeedom'
+	}
 	$.ajax({
 		type: 'POST',
 		url: 'plugins/volvocars/core/ajax/volvocars.ajax.php',
@@ -341,51 +347,6 @@ $('.eqLogicAction[data-action=get_pos]').off('click').on('click', function() {
 		}
 	})
 })
-
-/*
- * Changement de source d'un site
- */
-$('.eqLogicAttr[data-l2key$=_source]').off('change')
-	.on('focus', function() {
-		site = $(this).data('site')
-		switch ($(this).value()) {
-			case 'manual':
-				$(this).data('old_manual_lat', $('[data-l2key='+site+'_lat]').value())
-				$(this).data('old_manual_long', $('[data-l2key='+site+'_long]').value())
-				break
-			case 'manual':
-				$(this).data('old_vehicle_lat', $('[data-l2key='+site+'_lat]').value())
-				$(this).data('old_vehicle_long', $('[data-l2key='+site+'_long]').value())
-				break
-		}
-	})
-	.on( 'change', function() {
-		site = $(this).data('site')
-		switch ($(this).value()){
-			case 'jeedom':
-				$('input[data-l2key='+site+'_lat], input[data-l2key='+site+'_long]').addClass('hidden')
-				$('.'+site+' .btn[data-action=get_pos]').addClass('hidden')
-				break
-			case 'vehicle':
-				$('[data-l2key='+site+'_lat').value($(this).data('old_vehicle_lat'))
-				$('[data-l2key='+site+'_long').value($(this).data('old_vehicle_long'))
-				$('input[data-l2key='+site+'_lat], input[data-l2key='+site+'_long]').removeClass('hidden')
-				$('input[data-l2key='+site+'_lat], input[data-l2key='+site+'_long]').addClass('disabled')
-				$('.'+site+' .btn[data-action=get_pos]').removeClass('hidden')
-				// getPosition(site)
-				break
-			case 'manual':
-				$('[data-l2key='+site+'_lat').value($(this).data('old_manual_lat'))
-				$('[data-l2key='+site+'_long').value($(this).data('old_manual_long'))
-				$('input[data-l2key='+site+'_lat], input[data-l2key='+site+'_long]').removeClass('hidden')
-				$('input[data-l2key='+site+'_lat], input[data-l2key='+site+'_long]').removeClass('disabled')
-				$('.'+site+' .btn[data-action=get_pos]').addClass('hidden')
-				break
-			default:
-				$('input[data-l2key='+site+'_lat], input[data-l2key='+site+'_long]').addClass('hidden')
-				$('.'+site+' .btn[data-action=get_pos]').addClass('hidden')
-		}
-	})
 
 /*
  * Suppression d'une liste de commandes

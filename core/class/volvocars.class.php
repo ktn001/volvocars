@@ -823,7 +823,7 @@ class volvocars extends eqLogic {
 	 * Mise à jour des infos retournée par un endpoint des API Volvo
 	 */
 	public function getInfosFromApi($endpoint_id, $force = false){
-		log::add("volvocars","info",sprintf("┌Getting infos '%s'...",print_r($endpoint_id,true)));
+		log::add("volvocars","info",sprintf("┌Getting infos '%s'...",$endpoint_id));
 		$account = $this->getAccount();
 		$infos = $account->getInfos($endpoint_id,$this->getVin(), $force);
 
@@ -1323,47 +1323,15 @@ class volvocarsCmd extends cmd {
 							if ($car->getConfiguration('site1_active') != 1) {
 								return '-1';
 							}
-							switch ($car->getConfiguration('site1_source')) {
-								case 'jeedom':
-									$siteLat = config::byKey('info::latitude','core',0);
-									$siteLong = config::byKey('info::longitude','core',0);
-									break;
-								case 'manual':
-								case 'vehicle':
-									$siteLat = $car->getConfiguration('site1_lat');
-									$siteLong = $car->getConfiguration('site1_long');
-									break;
-								default:
-									$siteLat = 0;
-									$siteLong = 0;
-							}
-							if ($siteLat == 0 && $siteLong == 0) {
-								log::add("volvocars","warning",__("Les coordonées GPS du site 1 ne sont pas définies",__FILE__));
-								return '-1';
-							}
+							$siteLat = $car->getConfiguration('site1_lat');
+							$siteLong = $car->getConfiguration('site1_long');
 							break;
 						case 'distance_site2':
 							if ($car->getConfiguration('site2_active') != 1) {
 								return '-1';
 							}
-							switch ($car->getConfiguration('site2_source')) {
-								case 'jeedom':
-									$siteLat = config::byKey('info::latitude','core',0);
-									$siteLong = config::byKey('info::longitude','core',0);
-									break;
-								case 'manual':
-								case 'vehicle':
-									$siteLat = $car->getConfiguration('site2_lat');
-									$siteLong = $car->getConfiguration('site2_long');
-									break;
-								default:
-									$siteLat = 0;
-									$siteLong = 0;
-							}
-							if ($siteLat == 0 && $siteLong == 0) {
-								log::add("volvocars","warning",__("Les coordonées GPS du site 2 ne sont pas définies",__FILE__));
-								return '-1';
-							}
+							$siteLat = $car->getConfiguration('site2_lat');
+							$siteLong = $car->getConfiguration('site2_long');
 							break;
 					}
 					$position = $car->getPosition();

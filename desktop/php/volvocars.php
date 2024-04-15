@@ -339,33 +339,6 @@ $accounts = volvoAccount::all();
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-4 control-label">{{Méthode de configuration}}</label>
-								<div class="col-sm-4 site1">
-									<select class="eqLogicAttr form-control" data-site="site1" data-l1key="configuration" data-l2key="site1_source">
-										<option value="" disabled selected hidden>{{Choisir dans la liste}}</options>
-										<?php
-										if ( (config::byKey('info::latitude','core','0') != '0') && (config::byKey('info::longitude','core','0') != '0') ) {
-											echo '<option value="jeedom">{{Configuration Jeedom}}</option>';
-										}
-										?>
-										<option value="vehicle">{{Position actuelle du véhicule}}</option>
-										<option value="manual">{{Saisie manuelle}}</option>
-									</select>
-								</div>
-								<div class="col-sm-4 site2">
-									<select class="eqLogicAttr form-control" data-site="site2" data-l1key="configuration" data-l2key="site2_source">
-										<option value="" disabled selected hidden>{{Choisir dans la liste}}</options>
-										<?php
-										if ( (config::byKey('info::latitude','core','0') != '0') && (config::byKey('info::longitude','core','0') != '0') ) {
-											echo '<option value="jeedom">{{Configuration Jeedom}}</option>';
-										}
-										?>
-										<option value="vehicle">{{Position actuelle du véhicule}}</option>
-										<option value="manual">{{Saisie manuelle}}</option>
-									</select>
-								</div>
-							</div>
-							<div class="form-group">
 								<label class="col-sm-4 control-label help" data-help="{{Coordonnées GPS au format xx.xxxxxx  et pas xx°xx'xx.x''N}}">{{Coordonnées GPS}}</label>
 								<div class="col-sm-4 site1" style="padding-left: 0px !important; padding-right: 0px !important">
 									<div class="col-sm-6" style="padding-right: 1px !important">
@@ -394,11 +367,14 @@ $accounts = volvoAccount::all();
 								</div>
 							</div>
 							<div class="form-group">
-								<div class="col-sm-offset-4 col-sm-4 site1">
-									<a class="btn btn-sm btn-primary eqLogicAction pull-right" data-site="site1" data-action="get_pos"><i class="fas fa-location-arrow"></i> {{Récupérer position véhicule}}</a>
+								<label class="col-sm-4 control-label help">{{Récupérer coordonnées GPS}}</label>
+								<div class="col-sm-4 site1">
+									<a class="btn btn-sm btn-primary eqLogicAction pull-right" data-site="site1" data-action="get_pos" data-src="car"><i class="fas fa-location-arrow"></i> {{Véhicule}}</a>
+									<a class="btn btn-sm btn-primary eqLogicAction pull-right" data-site="site1" data-action="get_pos" data-src="jeedom"><i class="fas fa-location-arrow"></i> {{Jeedom}}</a>
 								</div>
 								<div class="col-sm-4 site2">
-									<a class="btn btn-sm btn-primary eqLogicAction pull-right" data-site="site2" data-action="get_pos"><i class="fas fa-location-arrow"></i> {{Récupérer position véhicule}}</a>
+									<a class="btn btn-sm btn-primary eqLogicAction pull-right" data-site="site2" data-action="get_pos" data-src="car"><i class="fas fa-location-arrow"></i> {{Véhicule}}</a>
+									<a class="btn btn-sm btn-primary eqLogicAction pull-right" data-site="site2" data-action="get_pos" data-src="jeedom"><i class="fas fa-location-arrow"></i> {{Jeedom}}</a>
 								</div>
 							</div>
 						</div>

@@ -316,6 +316,10 @@ class endpoint {
 	 	return self::$_endpoints[$this->endpoint_id]['url'];
 	}
 	
+	function getAccept() {
+		return self::$_endpoints[$this->endpoint_id]['accept'];
+	}
+
 	function getDefaults() {
 		if ($this->endpoint_id === null) {
 			return array();

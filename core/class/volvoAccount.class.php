@@ -273,8 +273,8 @@ class volvoAccount {
 		$session = curl_init($url);
 		if ($endpoint === null) {
 			$accept = "application/json";
-	//	} else {
-	//		$accept = endpoint::getEndpoint('accept');
+		} else {
+			$accept = $endpoint->getAccept();
 		}
 		curl_setopt($session, CURLOPT_HTTPHEADER, [
 			"authorization: Bearer " . $this->_token['access_token'],
@@ -319,7 +319,7 @@ class volvoAccount {
 		}
 		if (!$_force and !$this->shouldRequest($_endpoint_id)) {
 			log::add("volvocars","debug","│ " . __("Pas nécessaire",__FILE__));
-			return "";
+			return array();
 		}
 		$url = sprintf($endpoint->getUrl(),$vin);
 		log::add("volvocars","debug","│ URL: " .$url);
