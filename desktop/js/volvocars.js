@@ -531,6 +531,7 @@ function addCmdToTable(_cmd) {
 	var tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">'
 	tr += '<td class="hidden-xs">'
 	tr += '<span class="cmdAttr" data-l1key="id"></span>'
+	tr += '<span class="cmdAttr hidden" data-l1key="configuration" data-l2key="onlyFor"></span>'
 	tr += '</td>'
 	tr += '<td>'
 	tr += '<div class="input-group">'

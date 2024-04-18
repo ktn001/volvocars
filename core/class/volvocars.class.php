@@ -722,7 +722,7 @@ class volvocars extends eqLogic {
 	}
 
 	/*
-	 * Création de mise à jour des commandes sur la base du fichier de configuration
+	 * Création ou mise à jour des commandes sur la base du fichier de configuration
 	 */
 	public function createOrUpdateCmds($createOnly = false) {
 		$createCmdOpen = config::byKey("create_cmd_open","volvocars", '0');
@@ -734,11 +734,11 @@ class volvocars extends eqLogic {
 		}
 		foreach ($commands as $command) {
 			if (!is_array($command)) {
-				log::add("volvocars","error","createCmd called with wrong argument");
+				log::add("volvocars","error",sprintf(__("Commande mal définie dans %s",__FILE__),$cmdsFile));
 				return false;
 			}
 			if (! isset($command['logicalId'])) {
-				log::add("volvocars","error","createCmd called with no logicalId");
+				log::add("volvocars","error",sprintf(__("Commande définie sans logicalId dans %s",__FILE__),$cmdsFile));
 				return false;
 			}
 			if ( (! $createCmdOpen == 1)  && (substr_compare($command['logicalId'], '_open',-5) == 0)) {
@@ -747,13 +747,37 @@ class volvocars extends eqLogic {
 			if ( (! $createCmdClosed == 1) && (substr_compare($command['logicalId'], '_closed',-7) == 0)) {
 				continue;
 			}
+			if (isset ($command['configuration']['onlyFor'])) {
+				switch ($command['configuration']['onlyFor']) {
+					case 'fuelEngine':
+						if ($this->getConfiguration('fuelEngine') != 1) {
+							continue 2;
+						}
+						break;
+					case 'electricEngine':
+						if ($this->getConfiguration('electricEngine') != 1) {
+							continue 2;
+						}
+						break;
+					case 'site1':
+						if ($this->getConfiguration('site1_active') != 1) {
+							continue 2;
+						}
+						break;
+					case 'site2':
+						if ($this->getConfiguration('site2_active') != 1) {
+							continue 2;
+						}
+						break;
+				}
+			}
 			if (! isset($command['type'])) {
 				log::add("volvocars","error","createCmd called with no type");
-				return false;
+				continue;
 			}
 			if (! isset($command['subType'])) {
 				log::add("volvocars","error","createCmd called with no subType");
-				return false;
+				continue;
 			}
 			if (! isset($command['name']) || trim($command['name']) == '') {
 				$command['name'] = $command['logicalId'];
@@ -768,6 +792,7 @@ class volvocars extends eqLogic {
 			utils::a2o($cmd,$command);
 			$cmd->save();
 		}
+		$this->sortCmds();
 	}
 
 	/*

@@ -57,108 +57,9 @@
 		"logicalId": "engineON",
 		"name": "{{moteur en service}}",
 		"type": "info",
-		"subType": "binary"
-	},{
-		"logicalId": "door_fl_closed",
-		"name": "{{porte avant gauche fermée}}",
-		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"dependTo": "door_fl_state"
-		},
-		"template": {
-			"dashboard":"volvocars::DoorClosed",
-			"mobile":"volvocars::DoorClosed"
-		}
-	},{
-		"logicalId": "door_fr_closed",
-		"name": "{{porte avant droite fermée}}",
-		"type": "info",
-		"subType": "binary",
-		"configuration": {
-			"dependTo": "door_fr_state"
-		},
-		"template": {
-			"dashboard":"volvocars::DoorClosed",
-			"mobile":"volvocars::DoorClosed"
-		}
-	},{
-		"logicalId": "door_rl_closed",
-		"name": "{{porte arrière gauche fermée}}",
-		"type": "info",
-		"subType": "binary",
-		"configuration": {
-			"dependTo": "door_rl_state"
-		},
-		"template": {
-			"dashboard":"volvocars::DoorClosed",
-			"mobile":"volvocars::DoorClosed"
-		}
-	},{
-		"logicalId": "door_rr_closed",
-		"name": "{{porte arrière droite fermée}}",
-		"type": "info",
-		"subType": "binary",
-		"configuration": {
-			"dependTo": "door_rr_state"
-		},
-		"template": {
-			"dashboard":"volvocars::DoorClosed",
-			"mobile":"volvocars::DoorClosed"
-		},
-		"display": {
-			"forceReturnLineAfter" : "1"
-		}
-	},{
-		"logicalId": "door_fl_open",
-		"name": "{{porte avant gauche ouverte}}",
-		"type": "info",
-		"subType": "binary",
-		"configuration": {
-			"dependTo": "door_fl_state"
-		},
-		"template": {
-			"dashboard":"volvocars::DoorOpen",
-			"mobile":"volvocars::DoorOpen"
-		}
-	},{
-		"logicalId": "door_fr_open",
-		"name": "{{porte avant droite ouverte}}",
-		"type": "info",
-		"subType": "binary",
-		"configuration": {
-			"dependTo": "door_fr_state"
-		},
-		"template": {
-			"dashboard":"volvocars::DoorOpen",
-			"mobile":"volvocars::DoorOpen"
-		}
-	},{
-		"logicalId": "door_rl_open",
-		"name": "{{porte arrière gauche ouverte}}",
-		"type": "info",
-		"subType": "binary",
-		"configuration": {
-			"dependTo": "door_rl_state"
-		},
-		"template": {
-			"dashboard":"volvocars::DoorOpen",
-			"mobile":"volvocars::DoorOpen"
-		}
-	},{
-		"logicalId": "door_rr_open",
-		"name": "{{porte arrière droite ouverte}}",
-		"type": "info",
-		"subType": "binary",
-		"configuration": {
-			"dependTo": "door_rr_state"
-		},
-		"template": {
-			"dashboard":"volvocars::DoorOpen",
-			"mobile":"volvocars::DoorOpen"
-		},
-		"display": {
-			"forceReturnLineAfter" : "1"
+			"onlyFor" : "fuelEngine"
 		}
 	},{
 		"logicalId": "door_fl_state",
@@ -219,76 +120,6 @@
 		"template": {
 			"dashboard": "core::badge",
 			"mobile": "core::badge"
-		},
-		"display": {
-			"forceReturnLineAfter" : "1"
-		}
-	},{
-		"logicalId": "win_fl_closed",
-		"name": "{{vitre avant gauche fermée}}",
-		"type": "info",
-		"subType": "binary",
-		"configuration": {
-			"dependTo": "win_fl_state"
-		}
-	},{
-		"logicalId": "win_fr_closed",
-		"name": "{{vitre avant droite fermée}}",
-		"type": "info",
-		"subType": "binary",
-		"configuration": {
-			"dependTo": "win_fr_state"
-		}
-	},{
-		"logicalId": "win_rl_closed",
-		"name": "{{vitre arrière gauche fermée}}",
-		"type": "info",
-		"subType": "binary",
-		"configuration": {
-			"dependTo": "win_rl_state"
-		}
-	},{
-		"logicalId": "win_rr_closed",
-		"name": "{{vitre arrière droite fermée}}",
-		"type": "info",
-		"subType": "binary",
-		"configuration": {
-			"dependTo": "win_rr_state"
-		},
-		"display": {
-			"forceReturnLineAfter" : "1"
-		}
-	},{
-		"logicalId": "win_fl_open",
-		"name": "{{vitre avant gauche ouverte}}",
-		"type": "info",
-		"subType": "binary",
-		"configuration": {
-			"dependTo": "win_fl_state"
-		}
-	},{
-		"logicalId": "win_fr_open",
-		"name": "{{vitre avant droite ouverte}}",
-		"type": "info",
-		"subType": "binary",
-		"configuration": {
-			"dependTo": "win_fr_state"
-		}
-	},{
-		"logicalId": "win_rl_open",
-		"name": "{{vitre arrière gauche ouverte}}",
-		"type": "info",
-		"subType": "binary",
-		"configuration": {
-			"dependTo": "win_rl_state"
-		}
-	},{
-		"logicalId": "win_rr_open",
-		"name": "{{vitre arrière droite ouverte}}",
-		"type": "info",
-		"subType": "binary",
-		"configuration": {
-			"dependTo": "win_rr_state"
 		},
 		"display": {
 			"forceReturnLineAfter" : "1"
@@ -357,76 +188,6 @@
 			"forceReturnLineAfter" : "1"
 		}
 	},{
-		"logicalId": "hood_closed",
-		"name": "{{capot fermé}}",
-		"type": "info",
-		"subType": "binary",
-		"configuration": {
-			"dependTo": "hood_state"
-		}
-	},{
-		"logicalId": "tail_closed",
-		"name": "{{hayon fermé}}",
-		"type": "info",
-		"subType": "binary",
-		"configuration": {
-			"dependTo": "tail_state"
-		}
-	},{
-		"logicalId": "tank_closed",
-		"name": "{{trappe fermée}}",
-		"type": "info",
-		"subType": "binary",
-		"configuration": {
-			"dependTo": "tank_state"
-		}
-	},{
-		"logicalId": "roof_closed",
-		"name": "{{toit fermé}}",
-		"type": "info",
-		"subType": "binary",
-		"configuration": {
-			"dependTo": "roof_state"
-		},
-		"display": {
-			"forceReturnLineAfter" : "1"
-		}
-	},{
-		"logicalId": "hood_open",
-		"name": "{{capot ouvert}}",
-		"type": "info",
-		"subType": "binary",
-		"configuration": {
-			"dependTo": "hood_state"
-		}
-	},{
-		"logicalId": "tail_open",
-		"name": "{{hayon ouvert}}",
-		"type": "info",
-		"subType": "binary",
-		"configuration": {
-			"dependTo": "tail_state"
-		}
-	},{
-		"logicalId": "tank_open",
-		"name": "{{trappe ouverte}}",
-		"type": "info",
-		"subType": "binary",
-		"configuration": {
-			"dependTo": "tank_state"
-		}
-	},{
-		"logicalId": "roof_open",
-		"name": "{{toit ouvert}}",
-		"type": "info",
-		"subType": "binary",
-		"configuration": {
-			"dependTo": "roof_state"
-		},
-		"display": {
-			"forceReturnLineAfter" : "1"
-		}
-	},{
 		"logicalId": "hood_state",
 		"name": "{{état capot}}",
 		"type": "info",
@@ -490,6 +251,248 @@
 			"forceReturnLineAfter" : "1"
 		}
 	},{
+		"logicalId": "door_fl_closed",
+		"name": "{{porte avant gauche fermée}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"dependTo": "door_fl_state"
+		},
+		"template": {
+			"dashboard":"volvocars::DoorClosed",
+			"mobile":"volvocars::DoorClosed"
+		}
+	},{
+		"logicalId": "door_fr_closed",
+		"name": "{{porte avant droite fermée}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"dependTo": "door_fr_state"
+		},
+		"template": {
+			"dashboard":"volvocars::DoorClosed",
+			"mobile":"volvocars::DoorClosed"
+		}
+	},{
+		"logicalId": "door_rl_closed",
+		"name": "{{porte arrière gauche fermée}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"dependTo": "door_rl_state"
+		},
+		"template": {
+			"dashboard":"volvocars::DoorClosed",
+			"mobile":"volvocars::DoorClosed"
+		}
+	},{
+		"logicalId": "door_rr_closed",
+		"name": "{{porte arrière droite fermée}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"dependTo": "door_rr_state"
+		},
+		"template": {
+			"dashboard":"volvocars::DoorClosed",
+			"mobile":"volvocars::DoorClosed"
+		},
+		"display": {
+			"forceReturnLineAfter" : "1"
+		}
+	},{
+		"logicalId": "win_fl_closed",
+		"name": "{{vitre avant gauche fermée}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"dependTo": "win_fl_state"
+		}
+	},{
+		"logicalId": "win_fr_closed",
+		"name": "{{vitre avant droite fermée}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"dependTo": "win_fr_state"
+		}
+	},{
+		"logicalId": "win_rl_closed",
+		"name": "{{vitre arrière gauche fermée}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"dependTo": "win_rl_state"
+		}
+	},{
+		"logicalId": "win_rr_closed",
+		"name": "{{vitre arrière droite fermée}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"dependTo": "win_rr_state"
+		},
+		"display": {
+			"forceReturnLineAfter" : "1"
+		}
+	},{
+		"logicalId": "hood_closed",
+		"name": "{{capot fermé}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"dependTo": "hood_state"
+		}
+	},{
+		"logicalId": "tail_closed",
+		"name": "{{hayon fermé}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"dependTo": "tail_state"
+		}
+	},{
+		"logicalId": "tank_closed",
+		"name": "{{trappe fermée}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"dependTo": "tank_state"
+		}
+	},{
+		"logicalId": "roof_closed",
+		"name": "{{toit fermé}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"dependTo": "roof_state"
+		},
+		"display": {
+			"forceReturnLineAfter" : "1"
+		}
+	},{
+		"logicalId": "door_fl_open",
+		"name": "{{porte avant gauche ouverte}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"dependTo": "door_fl_state"
+		},
+		"template": {
+			"dashboard":"volvocars::DoorOpen",
+			"mobile":"volvocars::DoorOpen"
+		}
+	},{
+		"logicalId": "door_fr_open",
+		"name": "{{porte avant droite ouverte}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"dependTo": "door_fr_state"
+		},
+		"template": {
+			"dashboard":"volvocars::DoorOpen",
+			"mobile":"volvocars::DoorOpen"
+		}
+	},{
+		"logicalId": "door_rl_open",
+		"name": "{{porte arrière gauche ouverte}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"dependTo": "door_rl_state"
+		},
+		"template": {
+			"dashboard":"volvocars::DoorOpen",
+			"mobile":"volvocars::DoorOpen"
+		}
+	},{
+		"logicalId": "door_rr_open",
+		"name": "{{porte arrière droite ouverte}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"dependTo": "door_rr_state"
+		},
+		"template": {
+			"dashboard":"volvocars::DoorOpen",
+			"mobile":"volvocars::DoorOpen"
+		},
+		"display": {
+			"forceReturnLineAfter" : "1"
+		}
+	},{
+		"logicalId": "win_fl_open",
+		"name": "{{vitre avant gauche ouverte}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"dependTo": "win_fl_state"
+		}
+	},{
+		"logicalId": "win_fr_open",
+		"name": "{{vitre avant droite ouverte}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"dependTo": "win_fr_state"
+		}
+	},{
+		"logicalId": "win_rl_open",
+		"name": "{{vitre arrière gauche ouverte}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"dependTo": "win_rl_state"
+		}
+	},{
+		"logicalId": "win_rr_open",
+		"name": "{{vitre arrière droite ouverte}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"dependTo": "win_rr_state"
+		},
+		"display": {
+			"forceReturnLineAfter" : "1"
+		}
+	},{
+		"logicalId": "hood_open",
+		"name": "{{capot ouvert}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"dependTo": "hood_state"
+		}
+	},{
+		"logicalId": "tail_open",
+		"name": "{{hayon ouvert}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"dependTo": "tail_state"
+		}
+	},{
+		"logicalId": "tank_open",
+		"name": "{{trappe ouverte}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"dependTo": "tank_state"
+		}
+	},{
+		"logicalId": "roof_open",
+		"name": "{{toit ouvert}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"dependTo": "roof_state"
+		},
+		"display": {
+			"forceReturnLineAfter" : "1"
+		}
+	},{
 		"logicalId": "odometer",
 		"name": "{{odomètre}}",
 		"type": "info",
@@ -498,25 +501,136 @@
 		"template": {
 			"dashboard": "core::badge",
 			"mobile": "core::badge"
+		},
+		"display": {
+			"forceReturnLineAfter" : "1"
 		}
 	},{
 		"logicalId": "fuel_amount",
 		"name": "{{carburant}}",
 		"type": "info",
 		"subType": "numeric",
-		"unite": "l"
+		"unite": "l",
+		"configuration": {
+			"onlyFor" : "fuelEngine"
+		}
+	},{
+		"logicalId": "fuelAutonomy",
+		"name": "{{autonomie thermique}}",
+		"type": "info",
+		"subType": "numeric",
+		"unite": "Km",
+		"configuration": {
+			"dependencies" : "al_fuelAutonomy",
+			"onlyFor": "fuelEngine"
+		}
+	},{
+		"logicalId": "al_fuelAutonomy",
+		"name": "{{Autonomie thermique faible}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"dependTo": "fuelAutonomy",
+			"onlyFor": "fuelEngine"
+		}
 	},{
 		"logicalId": "conso_fuel",
 		"name": "{{consommation carburant}}",
 		"type": "info",
 		"subType": "numeric",
-		"unite": "l/100km"
+		"unite": "l/100km",
+		"configuration": {
+			"onlyFor" : "fuelEngine"
+		}
 	},{
 		"logicalId": "conso_fuel_trip",
 		"name": "{{consommation carburant (trajet)}}",
 		"type": "info",
 		"subType": "numeric",
-		"unite": "l/100km"
+		"unite": "l/100km",
+		"configuration": {
+			"onlyFor" : "fuelEngine"
+		},
+		"display": {
+			"forceReturnLineAfter" : "1"
+		}
+	},{
+		"logicalId": "batteryLevel",
+		"name": "{{niveau charge batterie}}",
+		"type": "info",
+		"subType": "numeric",
+		"unite": "%",
+		"configuration": {
+			"onlyFor": "electricEngine"
+		}
+	},{
+		"logicalId": "electricAutonomy",
+		"name": "{{Autonomie électrique}}",
+		"type": "info",
+		"subType": "numeric",
+		"unite": "Km",
+		"configuration": {
+			"dependencies" : "al_electricAutonomy",
+			"listener": "1",
+			"onlyFor": "electricEngine"
+		}
+	},{
+		"logicalId": "al_electricAutonomy",
+		"name": "{{Autonomie électrique faible}}",
+		"type": "info",
+		"subType": "binary",
+		"configuration": {
+			"dependTo": "electricAutonomy",
+			"onlyFor": "electricEngine"
+		}
+	},{
+		"logicalId": "conso_electric",
+		"name": "{{consommation électrique}}",
+		"type": "info",
+		"subType": "numeric",
+		"unite": "kWh/100km",
+		"configuration": {
+			"onlyFor": "electricEngine"
+		}
+	},{
+		"logicalId": "chargingStatus",
+		"name": "{{Etat de la charge}}",
+		"type": "info",
+		"subType": "string",
+		"configuration": {
+			"onlyFor": "electricEngine"
+		}
+	},{
+		"logicalId": "chargingRemainingTime",
+		"name": "{{Temps de charge restant}}",
+		"type": "info",
+		"subType": "numeric",
+		"unite": "min.",
+		"configuration": {
+			"dependencies" : "chargingEndTime",
+			"onlyFor": "electricEngine"
+		},
+		"template": {
+			"dashboard": "core::badge",
+			"mobile": "core::badge"
+		}
+	},{
+		"logicalId": "chargingEndTime",
+		"name": "{{Heure fin de charge}}",
+		"type": "info",
+		"subType": "string",
+		"configuration": {
+			"dependTo": "chargingRemainingTime",
+			"onlyFor": "electricEngine"
+		}
+	},{
+		"logicalId": "connectorStatus",
+		"name": "{{Etat de la prise}}",
+		"type": "info",
+		"subType": "string",
+		"configuration": {
+			"onlyFor": "electricEngine"
+		}
 	},{
 		"logicalId": "brake_fluid_level",
 		"name": "{{niveau liquide de frein}}",
@@ -542,7 +656,8 @@
 		"subType": "string",
 		"configuration": {
 			"dependencies": "al_coolant",
-			"listener": "1"
+			"listener": "1",
+			"onlyFor" : "fuelEngine"
 		}
 	},{
 		"logicalId": "al_coolant",
@@ -551,7 +666,8 @@
 		"subType": "binary",
 		"configuration": {
 			"dependTo": "coolant_level",
-			"listener": "1"
+			"listener": "1",
+			"onlyFor" : "fuelEngine"
 		}
 	},{
 		"logicalId": "oil_level",
@@ -560,7 +676,8 @@
 		"subType": "string",
 		"configuration": {
 			"dependencies": "al_oil",
-			"listener": "1"
+			"listener": "1",
+			"onlyFor" : "fuelEngine"
 		}
 	},{
 		"logicalId": "al_oil",
@@ -569,7 +686,8 @@
 		"subType": "binary",
 		"configuration": {
 			"dependTo": "oil_level",
-			"listener": "1"
+			"listener": "1",
+			"onlyFor" : "fuelEngine"
 		}
 	},{
 		"logicalId": "washerFluidLevel",
@@ -860,84 +978,6 @@
 		"type": "info",
 		"subType": "numeric"
 	},{
-		"logicalId": "batteryLevel",
-		"name": "{{niveau charge batterie}}",
-		"type": "info",
-		"subType": "numeric",
-		"unite": "%"
-	},{
-		"logicalId": "connectorStatus",
-		"name": "{{Etat de la prise}}",
-		"type": "info",
-		"subType": "string"
-	},{
-		"logicalId": "chargingStatus",
-		"name": "{{Etat de la charge}}",
-		"type": "info",
-		"subType": "string"
-	},{
-		"logicalId": "chargingRemainingTime",
-		"name": "{{Temps de charge restant}}",
-		"type": "info",
-		"subType": "numeric",
-		"unite": "min.",
-		"configuration": {
-			"dependencies" : "chargingEndTime"
-		},
-		"template": {
-			"dashboard": "core::badge",
-			"mobile": "core::badge"
-		}
-	},{
-		"logicalId": "chargingEndTime",
-		"name": "{{Heure fin de charge}}",
-		"type": "info",
-		"subType": "string",
-		"configuration": {
-			"dependTo": "chargingRemainingTime"
-		}
-	},{
-		"logicalId": "conso_electric",
-		"name": "{{consommation électrique}}",
-		"type": "info",
-		"subType": "numeric",
-		"unite": "kWh/100km"
-	},{
-		"logicalId": "electricAutonomy",
-		"name": "{{Autonomie électrique}}",
-		"type": "info",
-		"subType": "numeric",
-		"unite": "Km",
-		"configuration": {
-			"dependencies" : "al_electricAutonomy",
-			"listener": "1"
-		}
-	},{
-		"logicalId": "al_electricAutonomy",
-		"name": "{{Autonomie électrique faible}}",
-		"type": "info",
-		"subType": "binary",
-		"configuration": {
-			"dependTo": "electricAutonomy"
-		}
-	},{
-		"logicalId": "fuelAutonomy",
-		"name": "{{autonomie thermique}}",
-		"type": "info",
-		"subType": "numeric",
-		"unite": "Km",
-		"configuration": {
-			"dependencies" : "al_fuelAutonomy"
-		}
-	},{
-		"logicalId": "al_fuelAutonomy",
-		"name": "{{Autonomie thermique faible}}",
-		"type": "info",
-		"subType": "binary",
-		"configuration": {
-			"dependTo": "fuelAutonomy"
-		}
-	},{
 		"logicalId": "al_tyre",
 		"name": "{{alerte pneus}}",
 		"type": "info",
@@ -1039,26 +1079,3 @@
 		"isVisible" : 0
 	}
 ]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
