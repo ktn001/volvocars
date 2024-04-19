@@ -1049,11 +1049,7 @@ class volvocars extends eqLogic {
 
 		// $this->emptyCacheWidget();
 
-		$panel = false;
-		if ($_version == 'panel') {
-			$panel = true;
-			$_version = 'dashboard';
-		} else {
+		if ($_version !== 'panel') {
 			return parent::toHtml($_version);
 		}
 
@@ -1172,8 +1168,8 @@ class volvocars extends eqLogic {
 			$replace['#msg2widget' . $id . '#'] = addslashes($cmd->execCmd());
 		}
 
-		if ($panel == true) {
-			$widgetFile = realpath( __DIR__ . '/../template/' . $_version . '/volvocars_panel.html');
+		if ($_version === 'panel') {
+			$widgetFile = realpath( __DIR__ . '/../template/dashboard/volvocars_panel.html');
 		}
 		$html = template_replace($replace, file_get_contents($widgetFile));
 		return translate::exec($html,$widgetFile);
