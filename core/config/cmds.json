@@ -959,24 +959,36 @@
 		"logicalId": "presence_site1",
 		"name": "{{présence site1}}",
 		"type": "info",
-		"subType": "binary"
+		"subType": "binary",
+		"configuration": {
+			"onlyFor": "site1"
+		}
 	},{
 		"logicalId": "distance_site1",
 		"name": "{{distance site1}}",
 		"unite": "m",
 		"type": "info",
-		"subType": "numeric"
+		"subType": "numeric",
+		"configuration": {
+			"onlyFor": "site1"
+		}
 	},{
 		"logicalId": "presence_site2",
 		"name": "{{présence site2}}",
 		"type": "info",
-		"subType": "binary"
+		"subType": "binary",
+		"configuration": {
+			"onlyFor": "site2"
+		}
 	},{
 		"logicalId": "distance_site2",
 		"name": "{{distance site2}}",
 		"unite": "m",
 		"type": "info",
-		"subType": "numeric"
+		"subType": "numeric",
+		"configuration": {
+			"onlyFor": "site2"
+		}
 	},{
 		"logicalId": "al_tyre",
 		"name": "{{alerte pneus}}",

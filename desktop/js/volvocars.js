@@ -301,17 +301,35 @@ function printEqLogic(data) {
 /*
  * Activation / désactivation d'un site
  */
-$('[data-l1key=configuration][data-l2key$=_active]').off('change').on('change', function(){
+$('[data-l1key=configuration][data-l2key^=site][data-l2key$=_active]').off('change').on('change', function(){
 	site = $(this).data('site')
 	if ($(this).value() == 1) {
 		$('div.'+site+' *').removeClass('hidden')
-		$('div.'+site+' select').trigger('change')
 	} else {
 		$('div.'+site+' *').addClass('hidden')
+		var cmds = []
+		$('#table_cmd span[data-l1key=configuration][data-l2key=onlyFor]').filter(function(){
+			return $(this).text() == site
+		}).each(function(){
+			name = $(this).closest('tr').find('.cmdAttr[data-l1key=name]').val()
+			logicalId = $(this).closest('tr').find('.cmdAttr[data-l1key=logicalId]').val()
+			id = $(this).closest('tr').find('.cmdAttr[data-l1key=id]').text()
+			cmds.push({id:id, name:name, logicalId,logicalId})
+		})
+		console.log(cmds)
+		if (cmds.length) {
+			message = "{{Les commandes suivantes seront supprimées lors de la sauvegarde}}" +":<br>"
+			message += '<ul>'
+			cmds.forEach(function(cmd){
+				message += "<li>" + cmd.name + " (logicalId: " + cmd.logicalId + ")</li>"
+			})
+			message += '</ul>'
+			bootbox.alert({
+				message: message,
+			})
+		}
 	}
-
 })
-$('[data-l1key=configuration][data-l2key$=_active]').trigger('change')
 
 /*
  * Action bouton de récupération position véhicule
