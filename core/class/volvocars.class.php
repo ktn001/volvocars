@@ -288,7 +288,23 @@ class volvocars extends eqLogic {
 		return $return;
 	}
 
+	private static function getCmdsConfig() {
+		$cmdsFile = realpath(__DIR__ . '/../config/cmds.json');
+		return json_decode(translate::exec(file_get_contents($cmdsFile),$cmdsFile),true);
+	}
+
 	/*	 * *********************Méthodes d'instance************************* */
+
+	public function getCmdByConfiguration($_configuration) {
+		$values = array(
+			'eqLogic_id' => $this->getId(),
+			'configuration' => '%' . $_configuration . '%',
+		);
+		$sql = 'SELECT ' . DB::buildField(__CLASS__ . 'Cmd') . '
+		FROM cmd
+		WHERE eqLogic_id = :eqLogic_id AND configuration LIKE :configuration';
+		return DB::Prepare($sql, $values, DB::FETCH_TYPE_ALL, PDO::FETCH_CLASS, __CLASS__ . 'Cmd');
+	}
 
 	/*
 	 * Fonction exécutée automatiquement avant la création de l'équipement
@@ -302,6 +318,10 @@ class volvocars extends eqLogic {
 		}
 		$this->setDisplay('width','832px');
 		$this->setDisplay('height','1292px');
+		$this->_oldSiteState = array(
+			"site1" => $this->getConfiguration('site1_active'),
+			"site2" => $this->getConfiguration('site2_active'),
+		);
 	}
 
 	/*
@@ -348,6 +368,12 @@ class volvocars extends eqLogic {
 			$this->setConfiguration('old_site1_name',$car->getConfiguration('site1_name'));
 			$this->setConfiguration('old_site2_name',$car->getConfiguration('site2_name'));
 		}
+
+		$car = self::byId($this->getId());
+		$this->_oldSiteState = array(
+			"site1" => $car->getConfiguration('site1_active'),
+			"site2" => $car->getConfiguration('site2_active'),
+		);
 	}
 
 	/*
@@ -361,6 +387,38 @@ class volvocars extends eqLogic {
 	 * Fonction appelée après la sauvegarde de l'eqLogic et des commandes via l'interface WEB
 	 */
 	public function postAjax() {
+		$cmdsConfig = null;
+		$created = false;
+		foreach (['site1','site2'] as $site){
+			if ($this->getConfiguration($site . '_active') == 1) {
+				if ($this->$oldSiteState[$site] != 1) {
+					if ($cmdsConfig == null) {
+						$cmdsConfig = self::getCmdsConfig();
+					}
+					foreach ($cmdsConfig as $cmdConfig) {
+						if (isset($cmdConfig['configuration']['onlyFor']) and $cmdConfig['configuration']['onlyFor'] == $site) {
+							$cmd = $this->getCmd($cmdConfig['type'],$cmdConfig['logicalId']);
+							if (!is_object($cmd)) {
+								$cmd = new volvocarsCmd();
+								$cmd->setEqLogic_id($this->getId());
+								utils::a2o($cmd,$cmdConfig);
+								$cmd->save();
+								$created = true;
+							}
+						}
+					}
+				}
+			} else {
+				$cmds = $this->getCmdByConfiguration('"onlyFor":"' . $site .'"');
+				foreach ($cmds as $cmd) {
+					$cmd->remove();
+				}
+			}
+		}
+		if ($created) {
+			$this->sortCmds();
+		}
+
 		foreach (['distance_site1','distance_site2'] as $logicalId){
 			$cmd = $this->getCmd('info',$logicalId);
 			if (is_object($cmd)) {
@@ -460,9 +518,8 @@ class volvocars extends eqLogic {
 		}
 
 		log::add("volvocars","info",$this->getName() . ": " . __("mise à jour des listeners",__FILE__));
-		$cmdsFile = realpath(__DIR__ . '/../config/cmds.json');
 		$cmd2listeners = [];
-	 	foreach (json_decode(file_get_contents($cmdsFile),true) as $command) {
+	 	foreach (self::getCmdsConfig() as $command) {
 			if (!isset($command['configuration']['listener'])){
 				continue;
 			}
@@ -729,8 +786,7 @@ class volvocars extends eqLogic {
 	public function createOrUpdateCmds($createOnly = false) {
 		$createCmdOpen = config::byKey("create_cmd_open","volvocars", '0');
 		$createCmdClosed = config::byKey("create_cmd_closed","volvocars", '0');
-		$cmdsFile = realpath(__DIR__ . '/../config/cmds.json');
-		$commands = json_decode(translate::exec(file_get_contents($cmdsFile),$cmdsFile),true);
+		$commands = self::getCmdsConfig();
 		if (!is_array($commands)) {
 			throw new Exception (sprintf(__("Erreur lors de la lecture de %s",__FILE__),$cmdsFile));
 		}
@@ -801,8 +857,7 @@ class volvocars extends eqLogic {
 	 * Tri des commandes sur la base du fichier de configuration
 	 */
 	public function sortCmds() {
-		$cmdsFile = realpath(__DIR__ . '/../config/cmds.json');
-		$commands = json_decode(file_get_contents($cmdsFile),true);
+		$commands = self::getCmdsConfig();
 		$pos = 1;
 		foreach ($commands as $command) {
 			$cmds = volvocarsCmd::byLogicalId($command['logicalId']);
