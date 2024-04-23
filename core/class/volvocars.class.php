@@ -288,12 +288,17 @@ class volvocars extends eqLogic {
 		return $return;
 	}
 
-	private static function getCmdsConfig() {
-		$cmdsFile = realpath(__DIR__ . '/../config/cmds.json');
-		return json_decode(translate::exec(file_get_contents($cmdsFile),$cmdsFile),true);
-	}
-
 	/*	 * *********************Méthodes d'instance************************* */
+
+	private function getCmdsConfig() {
+		$cmdsFile = realpath(__DIR__ . '/../config/cmds.json');
+		$cmds = json_decode(translate::exec(file_get_contents($cmdsFile),$cmdsFile),true);
+		foreach ($cmds as $cmd) {
+			$cmd['name'] = str_replace('#site1#',$this->getConfiguration('site1_name'),$cmd['name']);
+			$cmd['name'] = str_replace('#site2#',$this->getConfiguration('site2_name'),$cmd['name']);
+		}
+		return $cmds;
+	}
 
 	public function getCmdByConfiguration($_configuration) {
 		$values = array(
@@ -393,7 +398,7 @@ class volvocars extends eqLogic {
 			if ($this->getConfiguration($site . '_active') == 1) {
 				if ($this->$oldSiteState[$site] != 1) {
 					if ($cmdsConfig == null) {
-						$cmdsConfig = self::getCmdsConfig();
+						$cmdsConfig = $this->getCmdsConfig();
 					}
 					foreach ($cmdsConfig as $cmdConfig) {
 						if (isset($cmdConfig['configuration']['onlyFor']) and $cmdConfig['configuration']['onlyFor'] == $site) {
@@ -519,7 +524,7 @@ class volvocars extends eqLogic {
 
 		log::add("volvocars","info",$this->getName() . ": " . __("mise à jour des listeners",__FILE__));
 		$cmd2listeners = [];
-	 	foreach (self::getCmdsConfig() as $command) {
+	 	foreach ($this->getCmdsConfig() as $command) {
 			if (!isset($command['configuration']['listener'])){
 				continue;
 			}
@@ -786,7 +791,7 @@ class volvocars extends eqLogic {
 	public function createOrUpdateCmds($createOnly = false) {
 		$createCmdOpen = config::byKey("create_cmd_open","volvocars", '0');
 		$createCmdClosed = config::byKey("create_cmd_closed","volvocars", '0');
-		$commands = self::getCmdsConfig();
+		$commands = $this->getCmdsConfig();
 		if (!is_array($commands)) {
 			throw new Exception (sprintf(__("Erreur lors de la lecture de %s",__FILE__),$cmdsFile));
 		}
@@ -857,7 +862,7 @@ class volvocars extends eqLogic {
 	 * Tri des commandes sur la base du fichier de configuration
 	 */
 	public function sortCmds() {
-		$commands = self::getCmdsConfig();
+		$commands = $this->getCmdsConfig();
 		$pos = 1;
 		foreach ($commands as $command) {
 			$cmds = volvocarsCmd::byLogicalId($command['logicalId']);
@@ -1164,6 +1169,7 @@ class volvocars extends eqLogic {
 			'locked',
 			'lock',
 			'odometer',
+			'position',
 			'presence_site1',
 			'presence_site2',
 			'refresh',

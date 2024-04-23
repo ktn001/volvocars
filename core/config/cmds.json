@@ -957,7 +957,7 @@
 		"subType": "string"
 	},{
 		"logicalId": "presence_site1",
-		"name": "{{présence site1}}",
+		"name": "{{présence #site1#}}",
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
@@ -965,7 +965,7 @@
 		}
 	},{
 		"logicalId": "distance_site1",
-		"name": "{{distance site1}}",
+		"name": "{{distance #site1#}}",
 		"unite": "m",
 		"type": "info",
 		"subType": "numeric",
@@ -974,7 +974,7 @@
 		}
 	},{
 		"logicalId": "presence_site2",
-		"name": "{{présence site2}}",
+		"name": "{{présence #site2#}}",
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
@@ -982,7 +982,7 @@
 		}
 	},{
 		"logicalId": "distance_site2",
-		"name": "{{distance site2}}",
+		"name": "{{distance #site2#}}",
 		"unite": "m",
 		"type": "info",
 		"subType": "numeric",

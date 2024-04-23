@@ -325,3 +325,12 @@ img.volvo_logo_black {
 	margin-top: 15px;
 }
 
+/* *** */
+/* MAP */
+/* *** */
+
+.map {
+	height: 280px;
+	width: 425px;
+	margin-bottom: 15px;
+}
