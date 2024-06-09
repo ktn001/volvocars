@@ -766,12 +766,14 @@ class volvocars extends eqLogic {
 				// file_put_contents($imgPath, file_get_contents($url));
 				$session = curl_init($url);
 				$image = fopen($imgPath, 'wb');
+				curl_setopt($session,CURLOPT_USERAGENT, "Mozilla/5.0 (Linux x86_64) ");
 				curl_setopt($session,CURLOPT_FILE, $image);
-				curl_setopt($session,CURLOPT_HEADER,0);
+				curl_setopt($session,CURLOPT_HTTPHEADER,["Accept-Encoding: gzip"]);
 				curl_exec($session);
 				$httpCode = curl_getinfo($session,CURLINFO_HTTP_CODE);
+				log::add("volvocars","debug","httpCode: " . $httpCode);
 				if ($httpCode != 200) {
-					log::add("volvocars","info",sprintf(__("Erreur lors du téléchargement de l'image. HTTPCODE: %s",__FILE__) . $httpCode));
+					log::add("volvocars","error",sprintf(__("Erreur lors du téléchargement de l'image. HTTPCODE: %s",__FILE__), $httpCode));
 				}
 				curl_close($session);
 				fclose($image);
