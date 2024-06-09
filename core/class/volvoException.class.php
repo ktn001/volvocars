@@ -51,20 +51,21 @@ class volvoApiException extends Exception {
 		$msg = '';
 		$sep = '';
 		if ($this->getEndpoint() != null) {
-			$mesg = "Endpoint: " . $this->getEndpoint();
+			$msg .= "Endpoint: " . $this->getEndpoint();
 			$sep = '; ';
 		}
 		if ($this->getHttpCode() != null) {
-			$mesg = $sep . "HttpCode: " . $this->getHttpCode();
+			$msg .= $sep . "HttpCode: " . $this->getHttpCode();
 			$sep = '; ';
 		}
 		if ($this->getDescription() != null) {
-			$mesg = $sep . "Description: " . $this->getDescription();
+			$msg .= $sep . "Description: " . $this->getDescription();
 			$sep = '; ';
 		}
 		if ($this->getDetail() != null) {
-			$mesg = $sep . "Detail: " . $this->getDetail();
+			$msg .= $sep . "Detail: " . $this->getDetail();
 			$sep = '; ';
 		}
+		return $msg;
 	}
 }
