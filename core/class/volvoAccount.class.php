@@ -153,6 +153,7 @@ class volvoAccount {
 		$value = json_encode($value);
 		$key = 'account::' . $this->id;
 		config::save($key, $value, 'volvocars');
+		cache::delete($this->cacheKey());
 	}
 
 	/*
@@ -193,13 +194,24 @@ class volvoAccount {
 					 . " energy:charging_connection_status energy:charging_system_status energy:electric_range energy:estimated_charging_time"
 					 . " energy:recharge_status vehicle:attributes"
 		]);
+					 //. " energy:recharge_status energy:target_battery_level energy:charging_current_limit vehicle:attributes"
 		curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($session, CURLOPT_POST, true);
 		curl_setopt($session, CURLOPT_POSTFIELDS, $data);
 		$content = curl_exec($session);
 		$httpCode = curl_getinfo($session,CURLINFO_HTTP_CODE);
 		if ( $httpCode != 200) {
-			throw new Exception (sprintf(__("Erreur lors de l'authentification du compte %s. (httpcode: %s)",__FILE__), $this->getName(), $httpCode));
+			$detail = $content;
+			$content = is_json($content,$content);
+			$message = null;
+			if (isset($content['error'])) {
+				$message = $content['error'];
+			}
+			$description = null;
+			if (isset($content['error_description'])) {
+				$description = $content['error_description'];
+			}
+			throw new volvoApiException (self::OAUTH_URL, $httpCode, $message, $description, $detail);
 		}
 		$this->_token = is_json($content,$content);
 		$this->_token['expires_at'] = time() + $this->_token['expires_in'] - 90;
@@ -247,27 +259,33 @@ class volvoAccount {
 
 	public function session($url, $endpoint = null) {
 		if ($this->_token == null or $this->_token['expires_at'] <= time()) {
-			// Il n'y a pas de token ou il a expiré
-			$this->_token = null;
-
-			if (! cache::exist($this->cacheKey())) {
-				// Il n'y a pas/plus de token en cache. Il faut se loguer pour en obtenir un
-				$this->login();
-			} else {
-				// Il y a un token en cache, on le récupère
-				$token = cache::byKey($this->cacheKey())->getValue();
-				$this->_token = is_json($token,$token);
-			}
-
-			if ($this->_token['expires_at'] <= time()) {
-				// Le token a expiré. Il faut le rafraîchir
-				// ----------------------------------------
-				try {
-					$this->refreshToken();
-				} catch (volvoApiException $e) {
-					log::add("volvocars","warning",$e->getMessage());
-					$this->_token = $this->login();
+			try {
+				// Il n'y a pas de token ou il a expiré
+				$this->_token = null;
+	
+				if (! cache::exist($this->cacheKey())) {
+					// Il n'y a pas/plus de token en cache. Il faut se loguer pour en obtenir un
+					$this->login();
+				} else {
+					// Il y a un token en cache, on le récupère
+					$token = cache::byKey($this->cacheKey())->getValue();
+					$this->_token = is_json($token,$token);
 				}
+	
+				if ($this->_token['expires_at'] <= time()) {
+					// Le token a expiré. Il faut le rafraîchir
+					// ----------------------------------------
+					try{
+						$this->refreshToken();
+					} catch (volvoApiException $e) {
+						log::add("volvocars","warning",$e->getMessage());
+						$this->_token = $this->login();
+					}
+				}
+			} catch (volvoApiException $e) {
+				log::add("volvocars","warning",$e->getMessage());
+				log::add("volvocars","debug",$e);
+				$this->_token = $this->login();
 			}
 		}
 		$session = curl_init($url);
@@ -323,7 +341,12 @@ class volvoAccount {
 		}
 		$url = sprintf($endpoint->getUrl(),$vin);
 		log::add("volvocars","debug","│ URL: " .$url);
-		$session = $this->session($url, $endpoint);
+		try {
+			$session = $this->session($url, $endpoint);
+		} catch (volvocarApiException $e){
+			log::add("volvocars","error",$e->getMessage());
+			return array();
+		}
 		$this->incrementEndpointCounter($_endpoint_id, $vin);
 		$content = curl_exec($session);
 		log::add("volvocars","debug","│ ".$content);
@@ -409,6 +432,9 @@ class volvoAccount {
 
 	public function shouldRequest($_endpoint_id) {
 		$lastAccess = $this->getCache('lastEndpointAccess');
+		if (!is_array($lastAccess)) {
+			$lastAccess = array();
+		}
 		if (!array_key_exists($_endpoint_id,$lastAccess)) {
 			return true;
 		}
