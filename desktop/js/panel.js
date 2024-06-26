@@ -1,48 +1,13 @@
 // vim: tabstop=4 autoindent
 
+"use strict"
+
 if(jeedomUtils){jeedomUtils.positionEqLogic();}else{positionEqLogic();}
-
-//----- Theme colors
-
-//$('body').on('changeThemeEvent', function (event,theme) {
-//	timedSetTheme(0);
-//});
-
-//function timedSetTheme(occurence = 0){
-//
-//	if ( $('body')[0].hasAttribute('data-theme') != true )  {
-//		occurence++;
-//		if (occurence > 40){
-//			return;
-//		}
-//		setTimeout( () => { timedSetTheme(occurence); }, 500 );
-//		return;
-//	}
-//
-//	var bckgd_color;
-//	var font_color;
-//
-//	if ($('body').attr('data-theme') == 'core2019_Dark') {
-//	bckgd_color = 'black';
-//	font_color = 'white';
-//	}
-//	else if ($('body').attr('data-theme') == 'core2019_Light') {
-//		bckgd_color = 'white';
-//		font_color = 'black';
-//	}
-//	var bckgd = document.getElementById("bckgd");
-//	var title = document.getElementById("title");
-//	bckgd.style.backgroundColor = bckgd_color;
-//	title.style.backgroundColor = bckgd_color;
-//	title.style.color = font_color;
-//}
-//
-//timedSetTheme(0);
 
 //----- Affichage du véhicule slectionné
 function displaySelectedEqLogic () {
 	$.showLoading()
-	id = $('#div_display_eqLogicList .active[data-eqLogic_id]').attr('data-eqLogic_id')
+	let id = $('#div_display_eqLogicList .active[data-eqLogic_id]').attr('data-eqLogic_id')
 	$.ajax({
 		type: 'POST',
 		url: 'plugins/volvocars/core/ajax/volvocars.ajax.php',

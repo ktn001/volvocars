@@ -15,6 +15,8 @@
 * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
 */
 
+"use strict"
+
 $('.show_values').off('click').on('click', function() {
 	$(this).addClass('hidden')
 	$(this).closest('.rawData').find('.hidde_values').removeClass('hidden')

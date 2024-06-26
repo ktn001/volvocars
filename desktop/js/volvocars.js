@@ -15,8 +15,12 @@
 * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
 */
 
-volvocars = {
-	accountNeedReload : false
+"use strict"
+
+if (!volvocars) {
+	var volvocars = {
+		accountNeedReload : false
+	}
 }
 
 /* Permet la réorganisation des commandes dans l'équipement */
@@ -171,7 +175,7 @@ $('.accountAction[data-action=add]').off('click').on('click',function() {
  * Action du bouton Synchronisation
  */
 $('.accountAction[data-action=sync]').off('click').on('click',function() {
-	options = []
+	let options = []
 	$('.accountDisplayCard').each(function() {
 		option = {
 			'value': $(this).data('account_id'),
@@ -285,7 +289,7 @@ $('[data-l2key=fuelEngine]').off('change').on('change', function() {
  * Action du bouton Données brutes
  */
 $('.eqLogicAction[data-action=get_raw-datas]').off('click').on('click', function() {
-	id = $('.eqLogicAttr[data-l1key=id]').value()
+	let id = $('.eqLogicAttr[data-l1key=id]').value()
 	$('#md_modal').dialog({title:"{{Données brute}}"})
 	$('#md_modal').load('index.php?v=d&plugin=volvocars&modal=rawData&eqLogicId=' + id).dialog('open')
 })
@@ -294,7 +298,7 @@ $('.eqLogicAction[data-action=get_raw-datas]').off('click').on('click', function
  * function appelée lors du chargement d'un eqLogic
  */
 function printEqLogic(data) {
-	img = $('.eqLogicDisplayCard[data-eqLogic_id=' + data.id + '] img').attr('src')
+	let img = $('.eqLogicDisplayCard[data-eqLogic_id=' + data.id + '] img').attr('src')
 	$('#img_car').attr('src',img)
 }
 
@@ -302,12 +306,12 @@ function printEqLogic(data) {
  * Activation / désactivation d'un site
  */
 $('[data-l1key=configuration][data-l2key^=site][data-l2key$=_active]').off('change').on('change', function(){
-	site = $(this).data('site')
+	let site = $(this).data('site')
 	if ($(this).value() == 1) {
 		$('div.'+site+' *').removeClass('hidden')
 	} else {
 		$('div.'+site+' *').addClass('hidden')
-		var cmds = []
+		let cmds = []
 		$('#table_cmd span[data-l1key=configuration][data-l2key=onlyFor]').filter(function(){
 			return $(this).text() == site
 		}).each(function(){
@@ -335,8 +339,9 @@ $('[data-l1key=configuration][data-l2key^=site][data-l2key$=_active]').off('chan
  * Action bouton de récupération position véhicule
  */
 $('.eqLogicAction[data-action=get_pos]').off('click').on('click', function() {
-	site = $(this).data('site')
-	source = $(this).data('src')
+	let site = $(this).data('site')
+	let source = $(this).data('src')
+	let id = ''
 	if (source == 'car') {
 		id = $('.eqLogicAttr[data-l1key=id]').value()
 	}
@@ -370,7 +375,7 @@ $('.eqLogicAction[data-action=get_pos]').off('click').on('click', function() {
  * Suppression d'une liste de commandes
  */
 function removeCmds (ids) {
-	var id = $('.eqLogicAttr[data-l1key=id]').value()
+	let id = $('.eqLogicAttr[data-l1key=id]').value()
 	$.ajax({
 		type: 'POST',
 		url: '/plugins/volvocars/core/ajax/volvocars.ajax.php',
@@ -389,11 +394,11 @@ function removeCmds (ids) {
 				return
 			}
 			uses = json_decode(data.result)
-			var text ='{{Êtes-vous sûr de vouloir supprimer les commandes}}' + "?<br>"
+			let text ='{{Êtes-vous sûr de vouloir supprimer les commandes}}' + "?<br>"
 			for (id in uses) {
-				var name = $('#table_cmd tr[data-cmd_id=' + id + ']').find('.cmdAttr[data-l1key=name]').val()
+				let name = $('#table_cmd tr[data-cmd_id=' + id + ']').find('.cmdAttr[data-l1key=name]').val()
 				text += '- <b>' + name + '</b><br>'
-				var usageText = ''
+				let usageText = ''
 				for (composant in uses[id]) {
 					switch (composant) {
 						case 'cmd':         display_composant = '{{Commande}}';    break
@@ -533,7 +538,7 @@ $('.cmdAction[data-action=sort]').off('click').on('click',function() {
 /* Fonction permettant l'affichage des commandes dans l'équipement */
 function addCmdToTable(_cmd) {
 	if (!isset(_cmd)) {
-		var _cmd = { configuration: {} }
+		let _cmd = { configuration: {} }
 	}
 	if (!isset(_cmd.configuration)) {
 		_cmd.configuration = {}
@@ -546,7 +551,7 @@ function addCmdToTable(_cmd) {
 			$('.cmdAction[data-action=removeClosed]').removeClass('hidden')
 		}
 	}
-	var tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">'
+	let tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">'
 	tr += '<td class="hidden-xs">'
 	tr += '<span class="cmdAttr" data-l1key="id"></span>'
 	tr += '<span class="cmdAttr hidden" data-l1key="configuration" data-l2key="onlyFor"></span>'
@@ -591,7 +596,7 @@ function addCmdToTable(_cmd) {
 	tr += '<i class="fas fa-minus-circle pull-right cmdAction cursor" data-action="remove" title="{{Supprimer la commande}}"></i></td>'
 	tr += '</tr>'
 	$('#table_cmd tbody').append(tr)
-	var tr = $('#table_cmd tbody tr').last()
+	tr = $('#table_cmd tbody tr').last()
 	jeedom.eqLogic.buildSelectCmd({
 		id: $('.eqLogicAttr[data-l1key=id]').value(),
 		filter: { type: 'info' },

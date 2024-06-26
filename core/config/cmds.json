@@ -704,7 +704,7 @@
 		"type": "info",
 		"subType": "binary",
 		"configuration": {
-			"dependTo": "washer_fluid_level",
+			"dependTo": "washerFluidLevel",
 			"listener": "1"
 		}
 	},{
