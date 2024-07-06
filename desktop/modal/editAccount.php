@@ -20,44 +20,56 @@ if (!isConnect('admin')) {
         throw new Exception('{{401 - Accès non autorisé}}');
 }
 ?>
-<div id="editAccount">
-	<h4>Compte VolvoId</h4>
-	<form class="form-horizontal">
-		<fieldset>
-			<input type="text" class="accountAttr form-control col-sm-7" data-l1key="id" style="display:none"/>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">{{Nom}}:</label>
-				<input type="text" class="accountAttr form-control col-sm-7" data-l1key="name"/>
+<h4>{{Compte VolvoId}} :</h4>
+<form class="form-horizontal">
+	<fieldset>
+		<span class="accountAttr hidden" data-l1key='id'></span>
+		<input type="text" class="accountAttr form-control col-sm-7" data-l1key="id" style="display:none"/>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">{{Nom}}:</label>
+			<input type="text" class="accountAttr form-control col-sm-7" data-l1key="name"/>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">{{Compte}}:</label>
+			<input type="text" class="accountAttr form-control col-sm-7" data-l1key="login"/>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">{{Password}}:</label>
+			<div class="input-group col-sm-7" style="padding-right:0px !important; padding-left:0px !important">
+				<input class="accountAttr form-control inputPassword rouddedLeft" type="text" data-l1key="password">
+				<span class="input-group-btn">
+					<a class="btn btn-default form-control bt_showPass roundedRight"><i class="fas fa-eye"></i></a>
+				</span>
 			</div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">{{Compte}}:</label>
-				<input type="text" class="accountAttr form-control col-sm-7" data-l1key="login"/>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">{{Password}}:</label>
-				<div class="input-group col-sm-7" style="display:flex; padding-right:0px !important; padding-left:0px !important">
-					<input type="password" class="accountAttr form-control" data-l1key="password"/>
-					<button class="btn btn-outline-secondary show-txt" type="button"><i class="fas fa-eye"></i></button>
-					<button class="btn btn-outline-secondary hide-txt" type="button" style="display:none"><i class="fas fa-eye-slash"></i></button>
-				</div>
-			</div>
-		</fieldset>
-	</form>
-</div>
+		</div>
+	</fieldset>
+</form>
 
 <script>
+"use strict"
 
-$('#editAccount .show-txt').off().on('click', function() {
-	$(this).closest('.input-group').find('input[type=password]').attr('type','text');
-	$(this).hide();
-	$(this).closest('.input-group').find('button.hide-txt').show();
-})
-
-$('#editAccount .hide-txt').off().on('click', function() {
-	$(this).closest('.input-group').find('input[type=text]').attr('type','password');
-	$(this).hide();
-	$(this).closest('.input-group').find('button.show-txt').show();
-})
-
+if (!jeeFrontEnd.editVolvocarsAccount) {
+	jeeFrontEnd.editVolvocarsAccount = {
+		init: function(account) {
+			let modal = document.getElementById(jeeFrontEnd.volvocars.mdId_editAccount)
+			modal.querySelector('.accountAttr[data-l1key=id]').value=account.id
+			modal.querySelector('.accountAttr[data-l1key=name]').value=account.name
+			modal.querySelector('.accountAttr[data-l1key=login]').value=account.login
+			modal.querySelector('.accountAttr[data-l1key=password]').value=account.password
+		},
+		getAccount: function(mdId) {
+			let modal = document.getElementById(jeeFrontEnd.volvocars.mdId_editAccount)
+			let account = {}
+			account.id = modal.querySelector('.accountAttr[data-l1key=id]').value
+			account.name = modal.querySelector('.accountAttr[data-l1key=name]').value
+			account.login = modal.querySelector('.accountAttr[data-l1key=login]').value
+			account.password = modal.querySelector('.accountAttr[data-l1key=password]').value
+			return account
+		},
+		close: function() {
+			document.getElementById(jeeFrontEnd.volvocars.mdId_editAccount)._jeeDialog.close()
+		}
+	}
+}
 </script>
 
