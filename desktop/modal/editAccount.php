@@ -23,8 +23,7 @@ if (!isConnect('admin')) {
 <h4>{{Compte VolvoId}} :</h4>
 <form class="form-horizontal">
 	<fieldset>
-		<span class="accountAttr hidden" data-l1key='id'></span>
-		<input type="text" class="accountAttr form-control col-sm-7" data-l1key="id" style="display:none"/>
+		<span class="accountAttr xhidden" data-l1key='id'></span>
 		<div class="form-group">
 			<label class="col-sm-3 control-label">{{Nom}}:</label>
 			<input type="text" class="accountAttr form-control col-sm-7" data-l1key="name"/>
@@ -48,27 +47,19 @@ if (!isConnect('admin')) {
 <script>
 "use strict"
 
-if (!jeeFrontEnd.editVolvocarsAccount) {
-	jeeFrontEnd.editVolvocarsAccount = {
-		init: function(account) {
-			let modal = document.getElementById(jeeFrontEnd.volvocars.mdId_editAccount)
-			modal.querySelector('.accountAttr[data-l1key=id]').value=account.id
-			modal.querySelector('.accountAttr[data-l1key=name]').value=account.name
-			modal.querySelector('.accountAttr[data-l1key=login]').value=account.login
-			modal.querySelector('.accountAttr[data-l1key=password]').value=account.password
-		},
-		getAccount: function(mdId) {
-			let modal = document.getElementById(jeeFrontEnd.volvocars.mdId_editAccount)
-			let account = {}
-			account.id = modal.querySelector('.accountAttr[data-l1key=id]').value
-			account.name = modal.querySelector('.accountAttr[data-l1key=name]').value
-			account.login = modal.querySelector('.accountAttr[data-l1key=login]').value
-			account.password = modal.querySelector('.accountAttr[data-l1key=password]').value
-			return account
-		},
-		close: function() {
-			document.getElementById(jeeFrontEnd.volvocars.mdId_editAccount)._jeeDialog.close()
-		}
+if (typeof editvolvocarsAccount === "undefined") {
+	var editVolvocarsAccount = {}
+	editVolvocarsAccount.init = function(account) {
+		let modal = document.getElementById(volvocarsFrontEnd.mdId_editAccount)
+		modal.setJeeValues(account,'.accountAttr')
+	},
+	editVolvocarsAccount.getAccount = function(mdId) {
+		let modal = document.getElementById(volvocarsFrontEnd.mdId_editAccount)
+		let account=modal.getJeeValues('.accountAttr')
+		return account
+	},
+	editVolvocarsAccount.close = function() {
+		document.getElementById(volvocarsFrontEnd.mdId_editAccount)._jeeDialog.close()
 	}
 }
 </script>

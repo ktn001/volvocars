@@ -51,7 +51,11 @@ try {
 		if ($id == '') {
 			throw new Exception(__("L'id du compte n'est pas défini",__FILE__));
 		}
-		$account = volvoAccount::byId($id);
+		if ($id == 0) {
+			$account=[];
+		} else {
+			$account = volvoAccount::byId($id);
+		}
 		if (!is_object($account)) {
 			throw new Exception(sprintf(__("Le compte %s est introuvable",__FILE__),$id));
 		}
