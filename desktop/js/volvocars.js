@@ -63,7 +63,6 @@ if (typeof volvocarsFrontEnd === "undefined") {
             }
             let account = json_decode(data.result)
             volvocarsFrontEnd.editAccount(account.id)
-            jeedomUtils.loadPage(document.URL)
           }
         })
       }
@@ -90,7 +89,6 @@ if (typeof volvocarsFrontEnd === "undefined") {
           return
         }
         let account = json_decode(data.result)
-        console.log(account)
         jeeDialog.dialog({
           id: volvocarsFrontEnd.mdId_editAccount,
           title: '{{Compte}}: ' + account.name,
@@ -101,6 +99,11 @@ if (typeof volvocarsFrontEnd === "undefined") {
             cancel: {
               callback: {
                 click: function(event) {
+                  let account = editVolvocarsAccount.getAccount()
+                  let card = document.querySelector('.accountDisplayCard[data-account_id="' + account.id + '"]')
+                  if (! card) {
+                    jeedomUtils.loadPage(document.URL)
+                  }
                   editVolvocarsAccount.close()
                 }
               },
@@ -110,6 +113,7 @@ if (typeof volvocarsFrontEnd === "undefined") {
               className: 'danger',
               callback: {
                 click: function(event) {
+                  let account = editVolvocarsAccount.getAccount()
                   domUtils.ajax({
                     type: 'POST',
                     async: false,
@@ -143,7 +147,6 @@ if (typeof volvocarsFrontEnd === "undefined") {
               callback: {
                 click: function(event) {
                   let account = editVolvocarsAccount.getAccount()
-                  console.log(account)
                   domUtils.ajax({
                     url: volvocarsFrontEnd.ajaxUrl,
                     data: {
@@ -157,16 +160,24 @@ if (typeof volvocarsFrontEnd === "undefined") {
                         return
                       }
                       let card = document.querySelector('.accountDisplayCard[data-account_id="' + account.id + '"]')
+                      let reload = false
                       if (card) {
                         card.getElementsByClassName('name')[0].innerText = account.name
+                      } else {
+                        reload = true
                       }
                       let option = document.querySelector('#sel_account option[value="' + account.id + '"]')
                       if (option) {
                         option.text = account.name
+                      } else {
+                        reload = true
                       }
+                      if (reload) {
+                        jeedomUtils.loadPage(document.URL)
+                      }
+                      editVolvocarsAccount.close()
                     }
                   })
-                  editVolvocarsAccount.close()
                 }
               }
             }
@@ -324,7 +335,6 @@ $('[data-l1key=configuration][data-l2key^=site][data-l2key$=_active]').off('chan
       let id = $(this).closest('tr').find('.cmdAttr[data-l1key=id]').text()
       cmds.push({id:id, name:name, logicalId,logicalId})
     })
-    console.log(cmds)
     if (cmds.length) {
       let message = "{{Les commandes suivantes seront supprimées lors de la sauvegarde}}" +":<br>"
       message += '<ul>'

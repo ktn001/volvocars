@@ -56,7 +56,7 @@ if (typeof editvolvocarsAccount === "undefined") {
 	editVolvocarsAccount.getAccount = function(mdId) {
 		let modal = document.getElementById(volvocarsFrontEnd.mdId_editAccount)
 		let account=modal.getJeeValues('.accountAttr')
-		return account
+		return account[0]
 	},
 	editVolvocarsAccount.close = function() {
 		document.getElementById(volvocarsFrontEnd.mdId_editAccount)._jeeDialog.close()
