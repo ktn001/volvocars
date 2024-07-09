@@ -1,4 +1,4 @@
-// vim: tabstop=4 autoindent
+// vim: tabstop=2 autoindent expandtab
 /* This file is part of Jeedom.
 *
 * Jeedom is free software: you can redistribute it and/or modify
@@ -17,16 +17,33 @@
 
 "use strict"
 
-$('.show_values').off('click').on('click', function() {
-	$(this).addClass('hidden')
-	$(this).closest('.rawData').find('.hidde_values').removeClass('hidden')
-	$(this).closest('.rawData').find('.rawData-body').removeClass('hidden')
-})
+if (typeof volvocarsRawData === "undefined") {
+  var volvocarsRawData ={}
 
-$('.hidde_values').off('click').on('click', function() {
-	$(this).addClass('hidden')
-	$(this).closest('.rawData').find('.show_values').removeClass('hidden')
-	$(this).closest('.rawData').find('.rawData-body').addClass('hidden')
-})
+  volvocarsRawData.init = function() {
+    document.getElementById('rawData').addEventListener('click', function(event) {
+      let _target = null
 
-$('.hidde_values').trigger('click')
+      if (_target = event.target.closest('.endpointEntry')) {
+        if (_target.getElementsByClassName('show_values')[0].isHidden()) {
+          _target.getElementsByClassName('show_values')[0].seen()
+          _target.getElementsByClassName('hidde_values')[0].unseen()
+          _target.getElementsByClassName('endpointValue')[0].unseen()
+        } else {
+          _target.getElementsByClassName('show_values')[0].unseen()
+          _target.getElementsByClassName('hidde_values')[0].seen()
+          _target.getElementsByClassName('endpointValue')[0].seen()
+        }
+        return
+      }
+
+    })
+
+    document.querySelectorAll('.endpointHeader .show_values').forEach(function(node) {
+       node.unseen()
+       node.click()
+    })
+  }
+
+}
+volvocarsRawData.init()

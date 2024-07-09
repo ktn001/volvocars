@@ -20,55 +20,31 @@ $accounts = volvoAccount::all();
 	<!-- ======================== -->
 	<div class="col-xs-12 eqLogicThumbnailDisplay">
 
-		<div class="row">
-			<div class="col-sm-10">
-				<legend><i class="fas fa-cog"></i> {{Gestion}}</legend>
-				<!-- Boutons de gestion du plugin -->
-				<!-- ============================= -->
-				<div class="eqLogicThumbnailContainer">
-					<div class="cursor accountAction logoPrimary" data-action="add">
-						<i class="fas fa-user-plus"></i>
-						<br>
-						<span>{{Ajouter}}</span>
-					</div>
-					<?php
-					if (count($accounts) > 0) {
-						?>
-						<div class="cursor accountAction" data-action="sync">
-							<i class="fas fa-sync-alt logoPrimary"></i>
-							<br>
-							<span>{{Synchronisation}}</span>
-						</div>
-						<?php
-					}
-					?>
-					<div class="cursor eqLogicAction logoSecondary" data-action="gotoPluginConf">
-						<i class="fas fa-wrench"></i>
-						<br>
-						<span>{{Configuration}}</span>
-					</div>
-				</div> <!-- Boutons de gestion du plugin -->
+		<legend><i class="fas fa-cog"></i> {{Gestion}}</legend>
+		<!-- Boutons de gestion du plugin -->
+		<!-- ============================= -->
+		<div class="eqLogicThumbnailContainer">
+			<div class="cursor accountAction logoPrimary" data-action="add">
+				<i class="fas fa-user-plus"></i>
+				<br>
+				<span>{{Ajouter}}</span>
 			</div>
 			<?php
-			// à conserver
-			// sera afficher uniquement si l'utilisateur est en version 4.4 ou supérieur
-			$jeedomVersion  = jeedom::version() ?? '0';
-			$displayInfoValue = version_compare($jeedomVersion, '4.4.0', '>=');
-			if ($displayInfoValue) {
-			?>
-				<div class="col-sm-2">
-					<legend><i class=" fas fa-comments"></i> {{Community}}</legend>
-					<div class="eqLogicThumbnailContainer">
-						<div class="cursor eqLogicAction logoSecondary" data-action="createCommunityPost">
-							<i class="fas fa-ambulance"></i>
-							<br>
-							<span style="color:var(--txt-color)">{{Créer un post Community}}</span>
-						</div>
-					</div>
+			if (count($accounts) > 0) {
+				?>
+				<div class="cursor accountAction" data-action="sync">
+					<i class="fas fa-sync-alt logoPrimary"></i>
+					<br>
+					<span>{{Synchronisation}}</span>
 				</div>
-			<?php
+				<?php
 			}
 			?>
+			<div class="cursor eqLogicAction logoSecondary" data-action="gotoPluginConf">
+				<i class="fas fa-wrench"></i>
+				<br>
+				<span>{{Configuration}}</span>
+			</div>
 		</div> <!-- Boutons de gestion du plugin -->
 
 		<!-- Les comptes -->

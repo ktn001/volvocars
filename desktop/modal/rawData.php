@@ -32,20 +32,23 @@ if (!is_object($car)) {
 
 $vin = $car->getVin();
 $data = $car->getRawDatas();
-echo "<span class='hidden full_json'>" , json_encode($data,JSON_PRETTY_PRINT) , "</span>";
+?>
+<div id="rawData">
+<?php
 foreach ($data as $endpoint => $values) {
 	?>
-	<div class="rawData">
-		<div class="rawData-heading">
+	<div class="endpointEntry">
+		<div class="endpointHeader">
 			<span class="show_values"> <i class="fas fa-caret-right"></i> </span>
 			<span class="hidde_values"> <i class="fas fa-caret-down"></i> </span>
-			Endpoint: <span class="endpointName"><?=$endpoint?></span>
+			Endpoint: <span class="endpointName"><?=$endpoint?>
 		</div>
-		<div class="rawData-body">
+		<div class="endpointValue">
 			<pre><?= str_replace($vin, "{VIN}", json_encode($values,JSON_PRETTY_PRINT)) ?></pre>
 		</div>
 	</div>
 	<?php
 }
 ?>
+</div>
 <?php include_file('desktop', 'rawData', 'js', 'volvocars'); ?>

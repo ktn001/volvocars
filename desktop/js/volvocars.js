@@ -40,9 +40,77 @@ if (typeof volvocarsFrontEnd === "undefined") {
         volvocarsFrontEnd.createAccount()
         return
       }
+
+      if (_target = event.target.closest('.accountAction[data-action=sync]')) {
+        volvocarsFrontEnd.synchronizeAccount()
+        return
+      }
+
+      if (_target = event.target.closest('.eqLogicAction[data-action=edit]')) {
+        volvocarsFrontEnd.toggleEditVehicle(true)
+        return
+      }
+
+      if (_target = event.target.closest('.eqLogicAction[data-action=protect]')) {
+        volvocarsFrontEnd.toggleEditVehicle(false)
+        return
+      }
+
+      if (_target = event.target.closest('.eqLogicAction[data-action=get_raw-datas]')) {
+        volvocarsFrontEnd.showRawData()
+        return
+      }
+    })
+
+    document.getElementById('div_pageContainer').addEventListener('change', function(event) {
+      let _target = null
+
+      if (_target = event.target.closest('.eqLogicAttr[data-l2key=electricEngine]')) {
+        console.log(_target)
+        volvocarsFrontEnd.toggleElectricEngine(_target.checked)
+        return
+      }
+
+      if (_target = event.target.closest('.eqLogicAttr[data-l2key=fuelEngine]')) {
+        console.log(_target)
+        volvocarsFrontEnd.toggleFuelEngine(_target.checked)
+        return
+      }
     })
   },
 
+  /*
+   * Création d'un account
+   */
+  volvocarsFrontEnd.createAccount = function () {
+    jeeDialog.prompt({title: "{{Nom de l'account}}:"}, function(name) {
+      if (name !== null) {
+        domUtils.ajax({
+          type: 'POST',
+          async: false,
+          global: false,
+          url: volvocarsFrontEnd.ajaxUrl,
+          data: {
+            action: 'createAccount',
+            name: name
+          },
+          dataType: 'json',
+          success: function(data) {
+            if (data.state != 'ok') {
+              jeedomUtils.showAlert({message: data.result, level: 'danger'})
+              return
+            }
+            let account = json_decode(data.result)
+            volvocarsFrontEnd.editAccount(account.id)
+          }
+        })
+      }
+    })
+  },
+
+  /*
+   * Création d'un account
+   */
   volvocarsFrontEnd.createAccount = function () {
     jeeDialog.prompt({title: "{{Nom de l'account}}:"}, function(name) {
       if (name !== null) {
@@ -189,132 +257,129 @@ if (typeof volvocarsFrontEnd === "undefined") {
       },
     })
   }
+
+  /*
+   * Synchronisation d'un account
+   */
+  volvocarsFrontEnd.synchronizeAccount = function () {
+    let options = []
+    let accountCards = document.getElementsByClassName('accountDisplayCard')
+    for (let i=0; i < accountCards.length; i++) {
+      let option = {
+        'value': accountCards[i].getAttribute('data-account_id'),
+        'text': accountCards[i].getAttribute('data-account_name')
+      }
+      options.push(option)
+    }
+    jeeDialog.prompt({
+      title: '{{Compte à synchronyser}}',
+      message: "{{Compte}}:",
+      inputType: 'select',
+      inputOptions: options,
+    }, function (accountId){
+      if (!accountId) {
+        return
+      }
+      domUtils.showLoading()
+        setTimeout(function(){
+        domUtils.ajax({
+          type: 'POST',
+          async: false,
+          global: false,
+          url: volvocarsFrontEnd.ajaxUrl,
+          data: {
+            action: 'synchronizeAccount',
+            accountId: accountId
+          },
+          dataType: 'json',
+          success: function(data) {
+            if (data.state != 'ok') {
+              jeedomUtils.showAlert({message: data.result, level: 'danger'})
+              domUtils.hideLoading()
+              return
+            }
+            jeedomUtils.loadPage(document.URL)
+          }
+        })
+      })
+    })
+  }
+
+  /*
+   * togggle edit vehicle
+   */
+  volvocarsFrontEnd.toggleEditVehicle = function (edit) {
+    if (edit) {
+      jeeDialog.alert('{{Les données modifiées seront remises à jour lors de la prochaine synchronisation!}}')
+      document.querySelector('.eqLogicAction[data-action=edit]').addClass('hide')
+      document.querySelector('.eqLogicAction[data-action=protect]').removeClass('hide')
+      document.querySelectorAll('.eqLogicAttr.sensible').removeClass('disabled')
+      let checkboxes = document.querySelectorAll('input.eqLogicAttr.sensible[type=checkbox]')
+      for (let i = 0; i < checkboxes.length; i++) {
+        checkboxes[i].closest('label').removeClass('disabled')
+      }
+    } else {
+      document.querySelector('.eqLogicAction[data-action=edit]').removeClass('hide')
+      document.querySelector('.eqLogicAction[data-action=protect]').addClass('hide')
+      document.querySelectorAll('.eqLogicAttr.sensible').addClass('disabled')
+      let checkboxes = document.querySelectorAll('input.eqLogicAttr.sensible[type=checkbox]')
+      for (let i = 0; i < checkboxes.length; i++) {
+        checkboxes[i].closest('label').addClass('disabled')
+      }
+    }
+  }
+  
+  /*
+   * Action sur changement moteur électrique
+   */
+  volvocarsFrontEnd.toggleElectricEngine = function(checked) {
+    if (checked) {
+      document.getElementById('electricAutonomy').removeClass('hide')
+      document.querySelector('.eqLogicAttr[data-l2key=batteryCapacityKWH]').closest('div.form-group').removeClass('hide')
+    } else  {
+      document.getElementById('electricAutonomy').addClass('hide')
+      document.querySelector('.eqLogicAttr[data-l2key=batteryCapacityKWH]').closest('div.form-group').addClass('hide')
+    }
+  }
+  
+  /*
+   * Action sur changement moteur thermique
+   */
+  volvocarsFrontEnd.toggleFuelEngine = function(checked) {
+    if (checked) {
+      document.getElementById('fuelAutonomy').removeClass('hide')
+    } else  {
+      document.getElementById('fuelAutonomy').addClass('hide')
+    }
+  }
+
+ /*
+  * Action du bouton Données brutes
+  */
+ volvocarsFrontEnd.showRawData = function() {
+  let carId = document.querySelector('.eqLogicAttr[data-l1key=id]').value
+  console.log(carId)
+  jeeDialog.dialog({
+    id: volvocarsFrontEnd.mdId_editAccount,
+    title: '{{Compte}}: ',
+    height: '90vh',
+    width: '75vW',
+    top: '5vh',
+    contentUrl: 'index.php?v=d&plugin=volvocars&modal=rawData&eqLogicId=' + carId,
+  })
+ }
+
 }
 
 volvocarsFrontEnd.init()
-
-/*
- * Action du bouton Synchronisation
- */
-$('.accountAction[data-action=sync]').off('click').on('click',function() {
-  let options = []
-  $('.accountDisplayCard').each(function() {
-    option = {
-      'value': $(this).data('account_id'),
-      'text': $(this).data('account_name')
-    }
-    options.push(option)
-  })
-  bootbox.prompt({
-    'title': '{{Compte à synchroniser}}',
-    'inputType': 'select',
-    'inputOptions': options,
-    'value': options[0]['value'],
-    'callback': function(accountId){
-      if (accountId == null) {
-        return
-      }
-      $.showLoading()
-      $.ajax({
-        type: 'POST',
-        url: 'plugins/volvocars/core/ajax/volvocars.ajax.php',
-        data: {
-          action: 'synchronizeAccount',
-          accountId: accountId
-        },
-        dataType: 'json',
-        global: false,
-        error: function (request, status, error) {
-          $.hideLoading()
-          handleAjaxError(request, status, error)
-        },
-        success: function(data) {
-          if (data.state != 'ok') {
-            $.hideLoading()
-            $.fn.showAlert({message: data.result, level:'danger'})
-            return
-          }
-          location.reload()
-        }
-      })
-    }
-  })
-})
-
-/*
- * Sur modification de "moteur électrique"
- */
-$('.eqLogicAttr[data-l2key=electricEngine]').off('change').on('change',function(){
-  if ($(this).value() == 1){
-    $('.eqLogicAttr[data-l2key=batteryCapacityKWH]').closest('div.form-group').removeClass('hidden')
-  } else {
-    $('.eqLogicAttr[data-l2key=batteryCapacityKWH]').closest('div.form-group').addClass('hidden')
-  }
-})
-
-/*
- * Action du bouton Editer
- */
-$('.eqLogicAction[data-action=edit]').off('click').on('click',function() {
-  bootbox.alert({
-    message: '{{Les données modifiées seront remises à jour lors de la prochaine synchronisation!}}',
-    callback : function(){
-      $('.eqLogicAction[data-action=edit]').addClass('hidden')
-      $('.eqLogicAction[data-action=protect]').removeClass('hidden')
-      $('.eqLogicAttr.sensible').removeClass('disabled')
-      $('label.checkbox-inline:has(.eqLogicAttr.sensible)').removeClass('disabled')
-    }
-  })
-})
-
-/*
- * Action du bouton Protéger
- */
-$('.eqLogicAction[data-action=protect]').off('click').on('click',function() {
-  $(this).addClass('hidden')
-  $('.eqLogicAction[data-action=edit]').removeClass('hidden')
-  $('.eqLogicAttr.sensible').addClass('disabled')
-  $('label.checkbox-inline:has(.eqLogicAttr.sensible)').addClass('disabled')
-})
-$('.eqLogicAction[data-action=protect]').trigger('click')
-
-/*
- * Action sur changement moteur électrique
- */
-$('[data-l2key=electricEngine]').off('change').on('change', function() {
-  if ($(this).value() == 1) {
-    $('#electricAutonomy').removeClass('hidden')
-  } else {
-    $('#electricAutonomy').addClass('hidden')
-  }
-})
-
-/*
- * Action sur changement moteur thermique
- */
-$('[data-l2key=fuelEngine]').off('change').on('change', function() {
-  if ($(this).value() == 1) {
-    $('#fuelAutonomy').removeClass('hidden')
-  } else {
-    $('#fuelAutonomy').addClass('hidden')
-  }
-})
-
-/*
- * Action du bouton Données brutes
- */
-$('.eqLogicAction[data-action=get_raw-datas]').off('click').on('click', function() {
-  let id = $('.eqLogicAttr[data-l1key=id]').value()
-  $('#md_modal').dialog({title:"{{Données brute}}"})
-  $('#md_modal').load('index.php?v=d&plugin=volvocars&modal=rawData&eqLogicId=' + id).dialog('open')
-})
+volvocarsFrontEnd.toggleEditVehicle(false)
 
 /*
  * function appelée lors du chargement d'un eqLogic
  */
 function printEqLogic(data) {
-  let img = $('.eqLogicDisplayCard[data-eqLogic_id=' + data.id + '] img').attr('src')
-  $('#img_car').attr('src',img)
+  let img = document.querySelector('.eqLogicDisplayCard[data-eqLogic_id="' + data.id + '"] img').getAttribute('src')
+  document.querySelector('#img_car').setAttribute('src',img)
 }
 
 /*
