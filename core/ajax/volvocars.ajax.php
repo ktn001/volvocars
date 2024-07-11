@@ -144,7 +144,7 @@ try {
 
 	if ($action == 'getCmdsUse'){
 		$return = array();
-		foreach (init('ids') as $id) {
+		foreach (json_decode(init('ids'),true) as $id) {
 			$cmd = cmd::byId($id);
 			if (is_object($cmd)){
 				$return[$id] = array();

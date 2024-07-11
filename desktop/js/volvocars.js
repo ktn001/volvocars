@@ -28,6 +28,9 @@ if (typeof volvocarsFrontEnd === "undefined") {
      * Initialisation après chergement de la page
      */
   volvocarsFrontEnd.init = function() {
+    /*
+     * Click
+     */
     document.getElementById('div_pageContainer').addEventListener('click', function(event) {
       let _target = null
 
@@ -60,20 +63,41 @@ if (typeof volvocarsFrontEnd === "undefined") {
         volvocarsFrontEnd.showRawData()
         return
       }
+
+      if (_target = event.target.closest('.eqLogicAction[data-action=get_pos]')) {
+        volvocarsFrontEnd.setSitePosition(_target)
+        return
+      }
+
+      if (_target = event.target.closest('.cmdAction[data-action=removeOpen]')){
+        volvocarsFrontEnd.removeOpenOrClosedCmds('open')
+        return
+      }
+
+      if (_target = event.target.closest('.cmdAction[data-action=removeClosed]')){
+        volvocarsFrontEnd.removeOpenOrClosedCmds('closed')
+        return
+      }
     })
 
+    /*
+     * Change
+     */
     document.getElementById('div_pageContainer').addEventListener('change', function(event) {
       let _target = null
 
       if (_target = event.target.closest('.eqLogicAttr[data-l2key=electricEngine]')) {
-        console.log(_target)
         volvocarsFrontEnd.toggleElectricEngine(_target.checked)
         return
       }
 
       if (_target = event.target.closest('.eqLogicAttr[data-l2key=fuelEngine]')) {
-        console.log(_target)
         volvocarsFrontEnd.toggleFuelEngine(_target.checked)
+        return
+      }
+
+      if (_target = event.target.closest('[data-l1key=configuration][data-l2key^=site][data-l2key$=_active]')) {
+        volvocarsFrontEnd.siteActivation(_target)
         return
       }
     })
@@ -107,35 +131,6 @@ if (typeof volvocarsFrontEnd === "undefined") {
       }
     })
   },
-
-  /*
-   * Création d'un account
-   */
-  volvocarsFrontEnd.createAccount = function () {
-    jeeDialog.prompt({title: "{{Nom de l'account}}:"}, function(name) {
-      if (name !== null) {
-        domUtils.ajax({
-          type: 'POST',
-          async: false,
-          global: false,
-          url: volvocarsFrontEnd.ajaxUrl,
-          data: {
-            action: 'createAccount',
-            name: name
-          },
-          dataType: 'json',
-          success: function(data) {
-            if (data.state != 'ok') {
-              jeedomUtils.showAlert({message: data.result, level: 'danger'})
-              return
-            }
-            let account = json_decode(data.result)
-            volvocarsFrontEnd.editAccount(account.id)
-          }
-        })
-      }
-    })
-  }
 
   /*
    * Edition d'un account
@@ -353,26 +348,166 @@ if (typeof volvocarsFrontEnd === "undefined") {
     }
   }
 
- /*
-  * Action du bouton Données brutes
-  */
- volvocarsFrontEnd.showRawData = function() {
-  let carId = document.querySelector('.eqLogicAttr[data-l1key=id]').value
-  console.log(carId)
-  jeeDialog.dialog({
-    id: volvocarsFrontEnd.mdId_editAccount,
-    title: '{{Compte}}: ',
-    height: '90vh',
-    width: '75vW',
-    top: '5vh',
-    contentUrl: 'index.php?v=d&plugin=volvocars&modal=rawData&eqLogicId=' + carId,
-  })
- }
+  /*
+   * Action du bouton Données brutes
+   */
+  volvocarsFrontEnd.showRawData = function() {
+    let carId = document.querySelector('.eqLogicAttr[data-l1key=id]').value
+    jeeDialog.dialog({
+      id: volvocarsFrontEnd.mdId_editAccount,
+      title: '{{Compte}}: ',
+      height: '90vh',
+      width: '75vW',
+      top: '5vh',
+      contentUrl: 'index.php?v=d&plugin=volvocars&modal=rawData&eqLogicId=' + carId,
+    })
+  }
 
+  /*
+   * Action sur (dés)activation d'un site
+   */
+  volvocarsFrontEnd.siteActivation = function(_checkbox) {
+    let site = _checkbox.getAttribute('data-site')
+    if (_checkbox.checked) {
+      document.querySelectorAll('div.' + site + ' *').seen()
+    } else {
+      document.querySelectorAll('div.' + site + ' *').unseen()
+      let cmds = []
+      document.querySelectorAll('#table_cmd span[data-l1key=configuration][data-l2key=onlyFor]').forEach(function(node){
+        if (node.textContent != site) {
+          return
+        }
+        let name = node.closest('tr').querySelector('.cmdAttr[data-l1key=name]').value
+        let logicalId = node.closest('tr').querySelector('.cmdAttr[data-l1key=logicalId]').value
+        cmds.push({name:name, logicalId: logicalId})
+      })
+      if (cmds.length) {
+        let message = "{{Les commandes suivantes seront supprimées lors de la sauvegarde}}" +":<br>"
+        message += '<ul>'
+        cmds.forEach(function(cmd){
+          message += "<li>" + cmd.name + " (logicalId: " + cmd.logicalId + ")</li>"
+        })
+        message += '</ul>'
+        jeeDialog.alert(message)
+      }
+    }
+  }
+
+  /*
+   * Action bouton de récupération position pour un site
+   */
+  volvocarsFrontEnd.setSitePosition = function(button) {
+    let site = button.getAttribute('data-site')
+    let source = button.getAttribute('data-src')
+    let id = ''
+    if (source == 'car') {
+      id = document.querySelector('.eqLogicAttr[data-l1key=id]').value
+    }
+    if (source == 'jeedom') {
+      id = 'jeedom'
+    }
+    domUtils.showLoading()
+    domUtils.ajax({
+      type: 'POST',
+      async: false,
+      global: false,
+      url: volvocarsFrontEnd.ajaxUrl,
+      data: {
+        action: 'getPosition',
+        id: id
+      },
+      dataType: 'json',
+      success: function(data) {
+        if (data.state != 'ok') {
+          jeedomUtils.showAlert({message: data.result, level: 'danger'})
+          domUtils.hideLoading()
+          return
+        }
+        document.querySelector('[data-l2key='+site+'_lat').value = data.result.lat
+        document.querySelector('[data-l2key='+site+'_long').value = data.result.long
+        domUtils.hideLoading()
+      }
+    })
+  }
+
+  /*
+   * Suppression d'une liste de commandes
+   */
+  volvocarsFrontEnd.removeCmds = function(cmdIds) {
+    let carId = document.querySelector('.eqLogicAttr[data-l1key=id]').value
+    domUtils.ajax({
+      type: 'POST',
+      async: false,
+      global: false,
+      url: volvocarsFrontEnd.ajaxUrl,
+      data: {
+        action: 'getCmdsUse',
+        ids: JSON.stringify(cmdIds),
+      },
+      dataType: 'json',
+      success: function(data) {
+        if (data.state != 'ok') {
+          jeedomUtils.showAlert({message: data.result, level: 'danger'})
+          return
+        }
+        let uses = json_decode(data.result)
+        let text ='{{Êtes-vous sûr de vouloir supprimer les commandes}}' + "?<br>"
+        for (let id in uses) {
+          let name = document.querySelector('#table_cmd tr[data-cmd_id="' + id + '"]' + ' .cmdAttr[data-l1key=name]').value
+          text += '- <b>' + name + '</b><br>'
+          let usageText = ''
+          for (composant in uses[id]) {
+            switch (composant) {
+              case 'cmd':         display_composant = '{{Commande}}';    break
+              case 'eqLogic':     display_composant = '{{Equipement}}';  break
+              case 'interactDef': display_composant = '{{Intéraction}}'; break
+              case 'object':      display_composant = '{{Objet}}';       break
+              case 'plan':        display_composant = '{{Plan}}';        break
+              case 'plan3d':      display_composant = '{{Plan3d}}';      break
+              case 'plugin':      display_composant = '{{Plugin}}';      break
+              case 'scenario':    display_composant = '{{Scénario}}';    break
+              case 'view':        display_composant = '{{Vue}}';         break
+              default:
+                display_composant = composant
+            }
+            for (entry in uses[id][composant]) {
+              usageText += '&nbsp;&nbsp;&nbsp;&nbsp;• ' + display_composant + ' :  <b>' + uses[id][composant][entry].name + '</b><br>'
+            }
+          }
+          if (usageText.length > 0) {
+            text += "&nbsp;&nbsp;&nbsp;&nbsp;" + '{{Utilisé par:}}' + '<br>' + usageText
+          }
+        }
+        jeeDialog.confirm(text, function(response) {
+          if (response) {
+            modifyWithoutSave = true
+            cmdIds.forEach(function(id) {
+              document.querySelector('#table_cmd tr.cmd[data-cmd_id="' + id + '"]').remove()
+            })
+          }
+        })
+      }
+    })
+  }
+
+  /*
+   * Supression des comandes *_open on *_closed
+   */
+  volvocarsFrontEnd.removeOpenOrClosedCmds = function(state) {
+    let ids = []
+    document.querySelectorAll('#table_cmd .cmdAttr[data-l1key=logicalId]').forEach(function(logicalIdEl) {
+      if (logicalIdEl.value.endsWith('_' + state)) {
+        let id = logicalIdEl.closest('tr').querySelector('.cmdAttr[data-l1key=id]').textContent
+        ids.push(id)
+      }
+    })
+    volvocarsFrontEnd.removeCmds(ids)
+  }
+
+  volvocarsFrontEnd.toggleEditVehicle(false)
 }
 
 volvocarsFrontEnd.init()
-volvocarsFrontEnd.toggleEditVehicle(false)
 
 /*
  * function appelée lors du chargement d'un eqLogic
@@ -381,170 +516,6 @@ function printEqLogic(data) {
   let img = document.querySelector('.eqLogicDisplayCard[data-eqLogic_id="' + data.id + '"] img').getAttribute('src')
   document.querySelector('#img_car').setAttribute('src',img)
 }
-
-/*
- * Activation / désactivation d'un site
- */
-$('[data-l1key=configuration][data-l2key^=site][data-l2key$=_active]').off('change').on('change', function(){
-  let site = $(this).data('site')
-  if ($(this).value() == 1) {
-    $('div.'+site+' *').removeClass('hidden')
-  } else {
-    $('div.'+site+' *').addClass('hidden')
-    let cmds = []
-    $('#table_cmd span[data-l1key=configuration][data-l2key=onlyFor]').filter(function(){
-      return $(this).text() == site
-    }).each(function(){
-      name = $(this).closest('tr').find('.cmdAttr[data-l1key=name]').val()
-      let logicalId = $(this).closest('tr').find('.cmdAttr[data-l1key=logicalId]').val()
-      let id = $(this).closest('tr').find('.cmdAttr[data-l1key=id]').text()
-      cmds.push({id:id, name:name, logicalId,logicalId})
-    })
-    if (cmds.length) {
-      let message = "{{Les commandes suivantes seront supprimées lors de la sauvegarde}}" +":<br>"
-      message += '<ul>'
-      cmds.forEach(function(cmd){
-        message += "<li>" + cmd.name + " (logicalId: " + cmd.logicalId + ")</li>"
-      })
-      message += '</ul>'
-      bootbox.alert({
-        message: message,
-      })
-    }
-  }
-})
-
-/*
- * Action bouton de récupération position véhicule
- */
-$('.eqLogicAction[data-action=get_pos]').off('click').on('click', function() {
-  let site = $(this).data('site')
-  let source = $(this).data('src')
-  let id = ''
-  if (source == 'car') {
-    id = $('.eqLogicAttr[data-l1key=id]').value()
-  }
-  if (source == 'jeedom') {
-    id = 'jeedom'
-  }
-  $.ajax({
-    type: 'POST',
-    url: 'plugins/volvocars/core/ajax/volvocars.ajax.php',
-    data: {
-      action: 'getPosition',
-      id: id
-    },
-    dataType: 'json',
-    global: false,
-    error: function (request, status, error) {
-      handleAjaxError(request, status, error)
-    },
-    success: function (data) {
-      if (data.state != 'ok') {
-        $.fn.showAlert({message: data.result, level:'danger'})
-        return
-      }
-      $('[data-l2key='+site+'_lat').value(data.result.lat)
-      $('[data-l2key='+site+'_long').value(data.result.long)
-    }
-  })
-})
-
-/*
- * Suppression d'une liste de commandes
- */
-function removeCmds (ids) {
-  let id = $('.eqLogicAttr[data-l1key=id]').value()
-  $.ajax({
-    type: 'POST',
-    url: '/plugins/volvocars/core/ajax/volvocars.ajax.php',
-    data: {
-      action: 'getCmdsUse',
-      ids: ids,
-    },
-    dataType: 'json',
-    global: false,
-    error: function (request, status, error) {
-      handleAjaxError(request, status, error)
-    },
-    success: function (data) {
-      if (data.state != 'ok') {
-        $.fn.showAlert({message: data.result, level:'danger'})
-        return
-      }
-      uses = json_decode(data.result)
-      let text ='{{Êtes-vous sûr de vouloir supprimer les commandes}}' + "?<br>"
-      for (id in uses) {
-        let name = $('#table_cmd tr[data-cmd_id=' + id + ']').find('.cmdAttr[data-l1key=name]').val()
-        text += '- <b>' + name + '</b><br>'
-        let usageText = ''
-        for (composant in uses[id]) {
-          switch (composant) {
-            case 'cmd':         display_composant = '{{Commande}}';    break
-            case 'eqLogic':     display_composant = '{{Equipement}}';  break
-            case 'interactDef': display_composant = '{{Intéraction}}'; break
-            case 'object':      display_composant = '{{Objet}}';       break
-            case 'plan':        display_composant = '{{Plan}}';        break
-            case 'plan3d':      display_composant = '{{Plan3d}}';      break
-            case 'plugin':      display_composant = '{{Plugin}}';      break
-            case 'scenario':    display_composant = '{{Scénario}}';    break
-            case 'view':        display_composant = '{{Vue}}';         break
-            default:
-              display_composant = composant
-          }
-          for (entry in uses[id][composant]) {
-            usageText += '&nbsp;&nbsp;&nbsp;&nbsp;• ' + display_composant + ' :  <b>' + uses[id][composant][entry].name + '</b><br>'
-          }
-        }
-        if (usageText.length > 0) {
-          text += "&nbsp;&nbsp;&nbsp;&nbsp;" + '{{Utilisé par:}}' + '<br>' + usageText
-        }
-      }
-      bootbox.confirm(text, function(result) {
-        if (result) {
-          modifyWithoutSave = true
-          ids.forEach(function(id) {
-            $('#table_cmd tr.cmd[data-cmd_id=' + id + ']').remove()
-          })
-        }
-      })
-    }
-  })
-}
-
-/*
- * Action sur bouton de suppression des commandes OPEN
- */
-$('.cmdAction[data-action=removeOpen]').off('click').on('click', function() {
-  removeCmds(
-    $('#table_cmd .cmdAttr[data-l1key=logicalId]')
-    .filter(function() {
-      return this.value.endsWith('_open')
-    })
-    .closest('tr')
-    .map(function(){
-      return $(this).attr('data-cmd_id')
-    })
-    .get()
-  )
-})
-
-/*
- * Action sur bouton de suppression des commandes CLOSED
- */
-$('.cmdAction[data-action=removeClosed]').off('click').on('click', function() {
-  removeCmds(
-    $('#table_cmd .cmdAttr[data-l1key=logicalId]')
-    .filter(function() {
-      return this.value.endsWith('_closed')
-    })
-    .closest('tr')
-    .map(function(){
-      return $(this).attr('data-cmd_id')
-    })
-    .get()
-  )
-})
 
 /*
  * Action sur bouton de recréation des commandes manquantes
