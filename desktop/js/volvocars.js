@@ -25,7 +25,7 @@ if (typeof volvocarsFrontEnd === "undefined") {
   }
 
     /*
-     * Initialisation après chergement de la page
+     * Initialisation après chargement de la page
      */
   volvocarsFrontEnd.init = function() {
     /*
@@ -78,6 +78,17 @@ if (typeof volvocarsFrontEnd === "undefined") {
         volvocarsFrontEnd.removeOpenOrClosedCmds('closed')
         return
       }
+
+      if (_target = event.target.closest('.cmdAction[data-action=recreate]')) {
+        volvocarsFrontEnd.recreateMissingsCmds()
+        return
+      }
+
+      if (_target = event.target.closest('.cmdAction[data-action=sort]')) {
+        volvocarsFrontEnd.sortCmds()
+        return
+      }
+
     })
 
     /*
@@ -434,7 +445,6 @@ if (typeof volvocarsFrontEnd === "undefined") {
    * Suppression d'une liste de commandes
    */
   volvocarsFrontEnd.removeCmds = function(cmdIds) {
-    let carId = document.querySelector('.eqLogicAttr[data-l1key=id]').value
     domUtils.ajax({
       type: 'POST',
       async: false,
@@ -480,7 +490,7 @@ if (typeof volvocarsFrontEnd === "undefined") {
         }
         jeeDialog.confirm(text, function(response) {
           if (response) {
-            modifyWithoutSave = true
+            jeeFrontEnd.modifyWithoutSave = true
             cmdIds.forEach(function(id) {
               document.querySelector('#table_cmd tr.cmd[data-cmd_id="' + id + '"]').remove()
             })
@@ -491,7 +501,7 @@ if (typeof volvocarsFrontEnd === "undefined") {
   }
 
   /*
-   * Supression des comandes *_open on *_closed
+   * Supression des commandes *_open on *_closed
    */
   volvocarsFrontEnd.removeOpenOrClosedCmds = function(state) {
     let ids = []
@@ -502,6 +512,152 @@ if (typeof volvocarsFrontEnd === "undefined") {
       }
     })
     volvocarsFrontEnd.removeCmds(ids)
+  }
+
+  /*
+   * Recréation des commandes manquantes
+   */
+  volvocarsFrontEnd.recreateMissingsCmds = function() {
+    if (jeeFrontEnd.modifyWithoutSave) {
+      jeeDialog.alert("{{Vous devez sauvegarder vos modifications en cours avant de lancer cette opération!}}")
+      return
+    }
+    domUtils.showLoading()
+    let carId = document.querySelector('.eqLogicAttr[data-l1key=id]').value
+    domUtils.ajax({
+      type: 'POST',
+      async: false,
+      global: false,
+      url: volvocarsFrontEnd.ajaxUrl,
+      data: {
+        action: 'recreateCmds',
+        id: carId,
+      },
+      dataType: 'json',
+      success: function(data) {
+        if (data.state != 'ok') {
+          jeedomUtils.showAlert({message: data.result, level: 'danger'})
+          return
+        }
+        jeedomUtils.loadPage(document.URL)
+      }
+    })
+  }
+
+  volvocarsFrontEnd.sortCmds = function() {
+    if (jeeFrontEnd.modifyWithoutSave) {
+      jeeDialog.alert("{{Vous devez sauvegarder vos modifications en cours avant de lancer cette opération!}}")
+      return
+    }
+    domUtils.showLoading()
+    let carId = document.querySelector('.eqLogicAttr[data-l1key=id]').value
+    domUtils.ajax({
+      type: 'POST',
+      async: false,
+      global: false,
+      url: volvocarsFrontEnd.ajaxUrl,
+      data: {
+        action: 'sortCmds',
+        id: carId,
+      },
+      dataType: 'json',
+      success: function(data) {
+        if (data.state != 'ok') {
+          jeedomUtils.showAlert({message: data.result, level: 'danger'})
+          return
+        }
+        jeedomUtils.loadPage(document.URL)
+      }
+    })
+  }
+
+  volvocarsFrontEnd.addCmdToTable = function(_cmd) {
+    if (!isset(_cmd)) {
+      let _cmd = { configuration: {} }
+    }
+    if (!isset(_cmd.configuration)) {
+      _cmd.configuration = {}
+    }
+    if (isset(_cmd.logicalId)) {
+      if (_cmd.logicalId.endsWith("_open")) {
+        document.querySelector('.cmdAction[data-action=removeOpen]').removeClass('hidden')
+      }
+      if (_cmd.logicalId.endsWith("_closed")) {
+        document.querySelector('.cmdAction[data-action=removeClosed]').removeClass('hidden')
+      }
+    }
+    let tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">'
+    // ID
+    tr += '<td class="hidden-xs">'
+    tr += '<span class="cmdAttr" data-l1key="id"></span>'
+    tr += '<span class="cmdAttr hidden" data-l1key="configuration" data-l2key="onlyFor"></span>'
+    tr += '</td>'
+    // Nom
+    tr += '<td>'
+    tr += '<div class="input-group">'
+    tr += '<input class="cmdAttr form-control input-sm roundedLeft" data-l1key="name" placeholder="{{Nom de la commande}}">'
+    tr += '<span class="input-group-btn"><a class="cmdAction btn btn-sm btn-default" data-l1key="chooseIcon" title="{{Choisir une icône}}"><i class="fas fa-icons"></i></a></span>'
+    tr += '<span class="cmdAttr input-group-addon roundedRight" data-l1key="display" data-l2key="icon" style="font-size:19px;padding:0 5px 0 0!important;"></span>'
+    tr += '</div>'
+    tr += '<select class="cmdAttr form-control input-sm" data-l1key="value" style="display:none;margin-top:5px;" title="{{Commande info liée}}">'
+    tr += '<option value="">{{Aucune}}</option>'
+    tr += '</select>'
+    // Type
+    tr += '</td>'
+    tr += '<td>'
+    tr += '<span class="type" type="' + init(_cmd.type) + '">' + jeedom.cmd.availableType() + '</span>'
+    tr += '<span class="subType" subType="' + init(_cmd.subType) + '"></span>'
+    tr += '</td>'
+    // LogicalId
+    tr += '<td>'
+    tr += '<input class="cmdAttr form-control input-sm" data-l1key="logicalId" placeholder="LogicalId">'
+    tr += '</td>'
+    // Paramètres
+    tr += '<td>'
+    tr += '</td>'
+    // Options
+    tr += '<td>'
+    tr += '<label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="isVisible" checked/>{{Afficher}}</label> '
+    tr += '<label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="isHistorized" checked/>{{Historiser}}</label> '
+    tr += '<label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="display" data-l2key="invertBinary"/>{{Inverser}}</label> '
+    tr += '<div style="margin-top:7px;">'
+    tr += '<input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="minValue" placeholder="{{Min}}" title="{{Min}}" style="width:30%;max-width:80px;display:inline-block;margin-right:2px;">'
+    tr += '<input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="maxValue" placeholder="{{Max}}" title="{{Max}}" style="width:30%;max-width:80px;display:inline-block;margin-right:2px;">'
+    tr += '<input class="tooltips cmdAttr form-control input-sm" data-l1key="unite" placeholder="Unité" title="{{Unité}}" style="width:30%;max-width:80px;display:inline-block;margin-right:2px;">'
+    tr += '</div>'
+    tr += '</td>'
+    // Etat
+    tr += '<td>';
+    tr += '<span class="cmdAttr" data-l1key="htmlstate"></span>';
+    tr += '</td>';
+    // Actions
+    tr += '<td>'
+    if (is_numeric(_cmd.id)) {
+      tr += '<a class="btn btn-default btn-xs cmdAction" data-action="configure"><i class="fas fa-cogs"></i></a> '
+      tr += '<a class="btn btn-default btn-xs cmdAction" data-action="test"><i class="fas fa-rss"></i> {{Tester}}</a>'
+    }
+    tr += '<i class="fas fa-minus-circle pull-right cmdAction cursor" data-action="remove" title="{{Supprimer la commande}}"></i>'
+    tr += '</td>'
+    tr += '</tr>'
+
+    let newRow = document.createElement('tr')
+    newRow.innerHTML = tr
+    newRow.addClass('cmd')
+    newRow.setAttribute('data-cmd_id', init(_cmd.id))
+    document.getElementById('table_cmd').querySelector('tbody').appendChild(newRow)
+    jeedom.eqLogic.buildSelectCmd({
+      id: document.querySelector('.eqLogicAttr[data-l1key="id"]').jeeValue(),
+      filter: { type: 'info' },
+      error: function(error) {
+        jeedomUtils.showAlert({ message: error.message, level: 'danger' })
+      },
+      success: function(result) {
+        newRow.querySelector('.cmdAttr[data-l1key="value"]').insertAdjacentHTML('beforeend', result)
+        newRow.setJeeValues(_cmd, '.cmdAttr')
+        jeedom.cmd.changeType(newRow, init(_cmd.subType))
+      }
+    })
+
   }
 
   volvocarsFrontEnd.toggleEditVehicle(false)
@@ -517,146 +673,7 @@ function printEqLogic(data) {
   document.querySelector('#img_car').setAttribute('src',img)
 }
 
-/*
- * Action sur bouton de recréation des commandes manquantes
- */
-$('.cmdAction[data-action=recreate]').off('click').on('click',function() {
-  if (modifyWithoutSave) {
-    bootbox.alert("{{Vous devez sauvegarder vos modifications en cours avant de lancer cette opération!}}")
-    return
-  }
-  id = $('.eqLogicAttr[data-l1key=id]').value()
-  $.showLoading()
-  $.ajax({
-    type: 'POST',
-    url: 'plugins/volvocars/core/ajax/volvocars.ajax.php',
-    data: {
-      action: 'recreateCmds',
-      id: id
-    },
-    dataType: 'json',
-    global: false,
-    error: function (request, status, error) {
-      $.hideLoading()
-      handleAjaxError(request, status, error)
-    },
-    success: function (data) {
-      if (data.state != 'ok') {
-        $.hideLoading()
-        $.fn.showAlert({message: data.result, level:'danger'})
-        return
-      }
-      location.reload()
-    }
-  })
-})
-
-/*
- * Action sur le bouton de tri des commandes
- */
-$('.cmdAction[data-action=sort]').off('click').on('click',function() {
-  if (modifyWithoutSave) {
-    bootbox.alert("{{Vous devez sauvegarder vos modifications en cours avant de lancer cette opération!}}")
-    return
-  }
-  id = $('.eqLogicAttr[data-l1key=id]').value()
-  $.showLoading()
-  $.ajax({
-    type: 'POST',
-    url: 'plugins/volvocars/core/ajax/volvocars.ajax.php',
-    data: {
-      action: 'sortCmds',
-      id: id
-    },
-    dataType: 'json',
-    global: false,
-    error: function (request, status, error) {
-      $.hideLoading()
-      handleAjaxError(request, status, error)
-    },
-    success: function (data) {
-      if (data.state != 'ok') {
-        $.hideLoading()
-        $.fn.showAlert({message: data.result, level:'danger'})
-        return
-      }
-      location.reload()
-    }
-  })
-})
-
 /* Fonction permettant l'affichage des commandes dans l'équipement */
 function addCmdToTable(_cmd) {
-  if (!isset(_cmd)) {
-    let _cmd = { configuration: {} }
-  }
-  if (!isset(_cmd.configuration)) {
-    _cmd.configuration = {}
-  }
-  if (isset(_cmd.logicalId)) {
-    if (_cmd.logicalId.endsWith("_open")) {
-      $('.cmdAction[data-action=removeOpen]').removeClass('hidden')
-    }
-    if (_cmd.logicalId.endsWith("_closed")) {
-      $('.cmdAction[data-action=removeClosed]').removeClass('hidden')
-    }
-  }
-  let tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">'
-  tr += '<td class="hidden-xs">'
-  tr += '<span class="cmdAttr" data-l1key="id"></span>'
-  tr += '<span class="cmdAttr hidden" data-l1key="configuration" data-l2key="onlyFor"></span>'
-  tr += '</td>'
-  tr += '<td>'
-  tr += '<div class="input-group">'
-  tr += '<input class="cmdAttr form-control input-sm roundedLeft" data-l1key="name" placeholder="{{Nom de la commande}}">'
-  tr += '<span class="input-group-btn"><a class="cmdAction btn btn-sm btn-default" data-l1key="chooseIcon" title="{{Choisir une icône}}"><i class="fas fa-icons"></i></a></span>'
-  tr += '<span class="cmdAttr input-group-addon roundedRight" data-l1key="display" data-l2key="icon" style="font-size:19px;padding:0 5px 0 0!important;"></span>'
-  tr += '</div>'
-  tr += '<select class="cmdAttr form-control input-sm" data-l1key="value" style="display:none;margin-top:5px;" title="{{Commande info liée}}">'
-  tr += '<option value="">{{Aucune}}</option>'
-  tr += '</select>'
-  tr += '</td>'
-  tr += '<td>'
-  tr += '<span class="type" type="' + init(_cmd.type) + '">' + jeedom.cmd.availableType() + '</span>'
-  tr += '<span class="subType" subType="' + init(_cmd.subType) + '"></span>'
-  tr += '</td>'
-  tr += '<td>'
-  tr += '<input class="cmdAttr form-control input-sm" data-l1key="logicalId" placeholder="LogicalId">'
-  tr += '</td>'
-  tr += '<td>'
-  tr += '</td>'
-  tr += '<td>'
-  tr += '<label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="isVisible" checked/>{{Afficher}}</label> '
-  tr += '<label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="isHistorized" checked/>{{Historiser}}</label> '
-  tr += '<label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="display" data-l2key="invertBinary"/>{{Inverser}}</label> '
-  tr += '<div style="margin-top:7px;">'
-  tr += '<input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="minValue" placeholder="{{Min}}" title="{{Min}}" style="width:30%;max-width:80px;display:inline-block;margin-right:2px;">'
-  tr += '<input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="maxValue" placeholder="{{Max}}" title="{{Max}}" style="width:30%;max-width:80px;display:inline-block;margin-right:2px;">'
-  tr += '<input class="tooltips cmdAttr form-control input-sm" data-l1key="unite" placeholder="Unité" title="{{Unité}}" style="width:30%;max-width:80px;display:inline-block;margin-right:2px;">'
-  tr += '</div>'
-  tr += '</td>'
-  tr += '<td>';
-  tr += '<span class="cmdAttr" data-l1key="htmlstate"></span>';
-  tr += '</td>';
-  tr += '<td>'
-  if (is_numeric(_cmd.id)) {
-    tr += '<a class="btn btn-default btn-xs cmdAction" data-action="configure"><i class="fas fa-cogs"></i></a> '
-    tr += '<a class="btn btn-default btn-xs cmdAction" data-action="test"><i class="fas fa-rss"></i> {{Tester}}</a>'
-  }
-  tr += '<i class="fas fa-minus-circle pull-right cmdAction cursor" data-action="remove" title="{{Supprimer la commande}}"></i></td>'
-  tr += '</tr>'
-  $('#table_cmd tbody').append(tr)
-  tr = $('#table_cmd tbody tr').last()
-  jeedom.eqLogic.buildSelectCmd({
-    id: $('.eqLogicAttr[data-l1key=id]').value(),
-    filter: { type: 'info' },
-    error: function (error) {
-      $('#div_alert').showAlert({ message: error.message, level: 'danger' })
-    },
-    success: function (result) {
-      tr.find('.cmdAttr[data-l1key=value]').append(result)
-      tr.setValues(_cmd, '.cmdAttr')
-      jeedom.cmd.changeType(tr, init(_cmd.subType))
-    }
-  })
+  volvocarsFrontEnd.addCmdToTable(_cmd)
 }
