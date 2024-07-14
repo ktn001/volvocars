@@ -352,13 +352,13 @@ if (!"#al_oil_id#id##".startsWith('#')) {
 		if (_options.value != 0) {
 			img = 'oil_red.svg'
 		} else {
-			if ($('body').data('theme').endsWith('Dark')) {
+			if (document.body.getAttribute('data-theme').endsWith('Dark')) {
 				img = 'oil_grey_dark.svg'
 			} else {
 				img = 'oil_grey_light.svg'
 			}
 		}
-		$('#div_al_oil#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+		document.querySelector('#div_al_oil#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#al_oil_id#id##', value: "#al_oil#id##"}])
 }
@@ -370,13 +370,13 @@ if (!"#al_coolant_id#id##".startsWith('#')) {
 		if (_options.value == 1) {
 			img = 'coolant_red.svg'
 		} else {
-			if ($('body').data('theme').endsWith('Dark')) {
+			if (document.body.getAttribute('data-theme').endsWith('Dark')) {
 				img = 'coolant_grey_dark.svg'
 			} else {
 				img = 'coolant_grey_light.svg'
 			}
 		}
-		$('#div_al_coolant#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+		document.querySelector('#div_al_coolant#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#al_coolant_id#id##', value: "#al_coolant#id##"}])
 }
@@ -388,13 +388,13 @@ if (!"#al_brake_fluid_id#id##".startsWith('#')) {
 		if (_options.value == 1) {
 			img = 'brake_red.svg'
 		} else {
-			if ($('body').data('theme').endsWith('Dark')) {
+			if (document.body.getAttribute('data-theme').endsWith('Dark')) {
 				img = 'brake_grey_dark.svg'
 			} else {
 				img = 'brake_grey_light.svg'
 			}
 		}
-		$('#div_al_brake#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+		document.querySelector('#div_al_brake#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#al_brake_fluid_id#id##', value: "#al_brake_fluid#id##"}])
 }
@@ -406,13 +406,13 @@ if (!"#al_washer_fluid_id#id##".startsWith('#')) {
 		if (_options.value == 1) {
 			img = 'wash_red.svg'
 		} else {
-			if ($('body').data('theme').endsWith('Dark')) {
+			if (document.body.getAttribute('data-theme').endsWith('Dark')) {
 				img = 'wash_grey_dark.svg'
 			} else {
 				img = 'wash_grey_light.svg'
 			}
 		}
-		$('#div_al_wash#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+		document.querySelector('#div_al_wash#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#al_washer_fluid_id#id##', value: "#al_washer_fluid#id##"}])
 }
@@ -424,13 +424,13 @@ if (!"#al_fuelautonomy_id#id##".startsWith('#')) {
 		if (_options.value == 1) {
 			img = 'station_gas_red.svg'
 		} else {
-			if ($('body').data('theme').endsWith('Dark')) {
+			if (document.body.getAttribute('data-theme').endsWith('Dark')) {
 				img = 'station_gas_grey_dark.svg'
 			} else {
 				img = 'station_gas_grey_light.svg'
 			}
 		}
-		$('#div_al_fuelautonomy#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+		document.querySelector('#div_al_fuelautonomy#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#al_fuelautonomy_id#id##', value: "#al_fuelautonomy#id##"}])
 }
@@ -442,13 +442,13 @@ if (!"#al_electricautonomy_id#id##".startsWith('#')) {
 		if (_options.value == 1) {
 			img = 'station_recharge_red.svg'
 		} else {
-			if ($('body').data('theme').endsWith('Dark')) {
+			if (document.body.getAttribute('data-theme').endsWith('Dark')) {
 				img = 'station_recharge_grey_dark.svg'
 			} else {
 				img = 'station_recharge_grey_light.svg'
 			}
 		}
-		$('#div_al_electricautonomy#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+		document.querySelector('#div_al_electricautonomy#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#al_electricautonomy_id#id##', value: "#al_electricautonomy#id##"}])
 }
@@ -460,13 +460,13 @@ if (!"#al_tyre_id#id##".startsWith('#')) {
 		if (_options.value >= 1) {
 			img = 'tyre_red.svg'
 		} else {
-			if ($('body').data('theme').endsWith('Dark')) {
+			if (document.body.getAttribute('data-theme').endsWith('Dark')) {
 				img = 'tyre_grey_dark.svg'
 			} else {
 				img = 'tyre_grey_light.svg'
 			}
 		}
-		$('#div_al_tyre#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+		document.querySelector('#div_al_tyre#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#al_tyre_id#id##', value: "#al_tyre#id##"}])
 }
@@ -478,13 +478,13 @@ if (!"#al_light_id#id##".startsWith('#')) {
 		if (_options.value == 1) {
 			img = 'light_red.svg'
 		} else {
-			if ($('body').data('theme').endsWith('Dark')) {
+			if (document.body.getAttribute('data-theme').endsWith('Dark')) {
 				img = 'light_grey_dark.svg'
 			} else {
 				img = 'light_grey_light.svg'
 			}
 		}
-		$('#div_al_light#id# img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+		document.querySelector('#div_al_light#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#al_light_id#id##', value: "#al_light#id##"}])
 }
@@ -493,11 +493,11 @@ if (!"#al_light_id#id##".startsWith('#')) {
 // =========
 function updatePresence(presence_id, site_name, _options) {
 	if (_options.value == 1) {
-		$('.Cmd' + presence_id).empty().append('<i class="fas fa-house-user color_on" style="font-size:1.75em;"></i>');
+		document.querySelector('.Cmd' + presence_id).empty().append('<i class="fas fa-house-user color_on" style="font-size:1.75em;"></i>');
 	} else if (_options.value == 0) {
-		$('.Cmd' + presence_id).empty().append('<i class="fas fa-home color_off" style="font-size:1.75em;"></i>');
+		document.querySelector('.Cmd' + presence_id).empty().append('<i class="fas fa-home color_off" style="font-size:1.75em;"></i>');
 	} else {
-		$('.Cmd' + presence_id).empty().append('<i class="fas fa-house-damage" style="font-size:1.75em;"></i>');
+		document.querySelector('.Cmd' + presence_id).empty().append('<i class="fas fa-house-damage" style="font-size:1.75em;"></i>');
 	}
 }
 if (!"#presence_site1_id#id##".startsWith('#')) {
@@ -530,7 +530,7 @@ function updateDistance(distance_id, color_class, _options) {
 			unit = 'Km'
 		}
 	}
-	$('.Cmd' + distance_id).empty().append('<span class="' + color_class + '">' + value + ' ' + unit + '</span>')
+	document.querySelector('.Cmd' + distance_id).empty().append('<span class="' + color_class + '">' + value + ' ' + unit + '</span>')
 }
 if (!"#distance_site1_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#distance_site1_id#id##'] = function(_options) {
@@ -549,10 +549,9 @@ if (!"#distance_site1_id#id##".startsWith('#')) {
 }
 if (!"#distance_site2_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#distance_site2_id#id##'] = function(_options) {
+		let color_class = 'color_off'
 		if (_options.value <= #site2_limit#id##) {
 			color_class = 'color_on'
-		} else {
-			color_class = 'color_off'
 		}
 		updateDistance('#distance_site2_id#id##', color_class, _options)
 	}
@@ -569,8 +568,8 @@ if (!"#distance_site2_id#id##".startsWith('#')) {
 // ========
 if (!"#odometer_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#odometer_id#id##'] = function(_options) {
-		$('.value#odometer_id#id##').html(_options.display_value)
-		$('.unit#odometer_id#id##').html(_options.unit)
+		document.querySelector('.value#odometer_id#id##').html(_options.display_value)
+		document.querySelector('.unit#odometer_id#id##').html(_options.unit)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#odometer_id#id##', display_value: "#odometer_display_value#id##", unit: "#odometer_unit#id##"}])
 }
@@ -579,8 +578,8 @@ if (!"#odometer_id#id##".startsWith('#')) {
 // ====
 if (!"#fuel_amount_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#fuel_amount_id#id##'] = function(_options) {
-		$('.value#fuel_amount_id#id##').html(_options.display_value)
-		$('.unit#fuel_amount_id#id##').html(_options.unit)
+		document.querySelector('.value#fuel_amount_id#id##').html(_options.display_value)
+		document.querySelector('.unit#fuel_amount_id#id##').html(_options.unit)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#fuel_amount_id#id##', display_value: "#fuel_amount_display_value#id##", unit: "#fuel_amount_unit#id##"}])
 }
@@ -589,8 +588,8 @@ if (!"#fuel_amount_id#id##".startsWith('#')) {
 //======================
 if (!"#fuelAutonomy_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#fuelAutonomy_id#id##'] = function(_options) {
-		$('.value#fuelAutonomy_id#id##').html(_options.display_value)
-		$('.unit#fuelAutonomy_id#id##').html(_options.unit)
+		document.querySelector('.value#fuelAutonomy_id#id##').html(_options.display_value)
+		document.querySelector('.unit#fuelAutonomy_id#id##').html(_options.unit)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#fuelAutonomy_id#id##', display_value: "#fuelAutonomy_display_value#id##", unit: "#fuelAutonomy_unit#id##"}])
 }
@@ -599,8 +598,8 @@ if (!"#fuelAutonomy_id#id##".startsWith('#')) {
 //===========
 if (!"#conso_fuel_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#conso_fuel_id#id##'] = function(_options) {
-		$('.value#conso_fuel_id#id##').html(_options.display_value)
-		$('.unit#conso_fuel_id#id##').html(_options.unit)
+		document.querySelector('.value#conso_fuel_id#id##').html(_options.display_value)
+		document.querySelector('.unit#conso_fuel_id#id##').html(_options.unit)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#conso_fuel_id#id##', display_value: "#conso_fuel_display_value#id##", unit: "#conso_fuel_unit#id##"}])
 }
@@ -609,8 +608,8 @@ if (!"#conso_fuel_id#id##".startsWith('#')) {
 //====================
 if (!"#conso_fuel_trip_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#conso_fuel_trip_id#id##'] = function(_options) {
-		$('.value#conso_fuel_trip_id#id##').html(_options.display_value)
-		$('.unit#conso_fuel_trip_id#id##').html(_options.unit)
+		document.querySelector('.value#conso_fuel_trip_id#id##').html(_options.display_value)
+		document.querySelector('.unit#conso_fuel_trip_id#id##').html(_options.unit)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#conso_fuel_trip_id#id##', display_value: "#conso_fuel_trip_display_value#id##", unit: "#conso_fuel_trip_unit#id##"}])
 }
@@ -619,8 +618,8 @@ if (!"#conso_fuel_trip_id#id##".startsWith('#')) {
 // =============
 if (!"#batteryLevel_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#batteryLevel_id#id##'] = function(_options) {
-		$('.value#batteryLevel_id#id##').html(_options.display_value)
-		$('.unit#batteryLevel_id#id##').html(_options.unit)
+		document.querySelector('.value#batteryLevel_id#id##').html(_options.display_value)
+		document.querySelector('.unit#batteryLevel_id#id##').html(_options.unit)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#batteryLevel_id#id##', display_value: "#batteryLevel_display_value#id##", unit: "#batteryLevel_unit#id##"}])
 }
@@ -629,8 +628,8 @@ if (!"#batteryLevel_id#id##".startsWith('#')) {
 // ======================
 if (!"#electricAutonomy_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#electricAutonomy_id#id##'] = function(_options) {
-		$('.value#electricAutonomy_id#id##').html(_options.display_value)
-		$('.unit#electricAutonomy_id#id##').html(_options.unit)
+		document.querySelector('.value#electricAutonomy_id#id##').html(_options.display_value)
+		document.querySelector('.unit#electricAutonomy_id#id##').html(_options.unit)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#electricAutonomy_id#id##', display_value: "#electricAutonomy_display_value#id##", unit: "#electricAutonomy_unit#id##"}])
 }
@@ -639,8 +638,8 @@ if (!"#electricAutonomy_id#id##".startsWith('#')) {
 //=================
 if (!"#conso_electric_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#conso_electric_id#id##'] = function(_options) {
-		$('.value#conso_electric_id#id##').html(_options.display_value)
-		$('.unit#conso_electric_id#id##').html(_options.unit)
+		document.querySelector('.value#conso_electric_id#id##').html(_options.display_value)
+		document.querySelector('.unit#conso_electric_id#id##').html(_options.unit)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#conso_electric_id#id##', display_value: "#conso_electric_display_value#id##", unit: "#conso_electric_unit#id##"}])
 }
@@ -649,7 +648,7 @@ if (!"#conso_electric_id#id##".startsWith('#')) {
 // =====
 if (!"#connectorStatus_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#connectorStatus_id#id##'] = function(_options) {
-		$('.value#connectorStatus_id#id##').html(_options.display_value)
+		document.querySelector('.value#connectorStatus_id#id##').html(_options.display_value)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#connectorStatus_id#id##', display_value: "#connectorStatus_display_value#id##"}])
 }
@@ -658,7 +657,7 @@ if (!"#connectorStatus_id#id##".startsWith('#')) {
 // ========
 if (!"#chargingStatus_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#chargingStatus_id#id##'] = function(_options) {
-		$('.value#chargingStatus_id#id##').html(_options.display_value)
+		document.querySelector('.value#chargingStatus_id#id##').html(_options.display_value)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#chargingStatus_id#id##', display_value: "#chargingStatus_display_value#id##"}])
 }
@@ -668,10 +667,10 @@ if (!"#chargingStatus_id#id##".startsWith('#')) {
 if (!"#chargingEndTime_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#chargingEndTime_id#id##'] = function(_options) {
 		if (_options.display_value == '') {
-			$(".value#chargingEndTime_id#id##").closest('div').addClass('hidden')
+			document.querySelector(".value#chargingEndTime_id#id##").closest('div').addClass('hidden')
 		} else {
-			$(".value#chargingEndTime_id#id##").closest('div').removeClass('hidden')
-			$('.value#chargingEndTime_id#id##').html(_options.display_value)
+			document.querySelector(".value#chargingEndTime_id#id##").closest('div').removeClass('hidden')
+			document.querySelector('.value#chargingEndTime_id#id##').html(_options.display_value)
 		}
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#chargingEndTime_id#id##', display_value: "#chargingEndTime_display_value#id##", unit: "#chargingEndTime_unit#id##"}])
@@ -681,7 +680,7 @@ if (!"#chargingEndTime_id#id##".startsWith('#')) {
 // ============
 if (!"#locked_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#locked_id#id##'] = function(_options) {
-		$('.value#locked_id#id##').html(_options.display_value)
+		document.querySelector('.value#locked_id#id##').html(_options.display_value)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#locked_id#id##', display_value: "#locked_display_value#id##"}])
 }
@@ -690,13 +689,13 @@ if (!"#locked_id#id##".startsWith('#')) {
 // =============
 if (!"#availability_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#availability_id#id##'] = function(_options) {
-		$('.value#availability_id#id##').html(_options.display_value)
+		document.querySelector('.value#availability_id#id##').html(_options.display_value)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#availability_id#id##', display_value: "#availability_display_value#id##"}])
 }
 if (!"#unavailableReason_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#unavailableReason_id#id##'] = function(_options) {
-		$('.value#unavailableReason_id#id##').html(_options.display_value)
+		document.querySelector('.value#unavailableReason_id#id##').html(_options.display_value)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#unavailableReason_id#id##', display_value: "#unavailableReason_display_value#id##"}])
 }
@@ -705,25 +704,25 @@ if (!"#unavailableReason_id#id##".startsWith('#')) {
 // ====
 if (!"#tyre_fl_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#tyre_fl_id#id##'] = function(_options) {
-		$('.Cmd#tyre_fl_id#id## .info_text').html(_options.display_value)
+		document.querySelector('.Cmd#tyre_fl_id#id## .info_text').html(_options.display_value)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#tyre_fl_id#id##', display_value: "#tyre_fl_display_value#id##"}])
 }
 if (!"#tyre_fr_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#tyre_fr_id#id##'] = function(_options) {
-		$('.Cmd#tyre_fr_id#id## .info_text').html(_options.display_value)
+		document.querySelector('.Cmd#tyre_fr_id#id## .info_text').html(_options.display_value)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#tyre_fr_id#id##', display_value: "#tyre_fr_display_value#id##"}])
 }
 if (!"#tyre_rl_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#tyre_rl_id#id##'] = function(_options) {
-		$('.Cmd#tyre_rl_id#id## .info_text').html(_options.display_value)
+		document.querySelector('.Cmd#tyre_rl_id#id## .info_text').html(_options.display_value)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#tyre_rl_id#id##', display_value: "#tyre_rl_display_value#id##"}])
 }
 if (!"#tyre_rr_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#tyre_rr_id#id##'] = function(_options) {
-		$('.Cmd#tyre_rr_id#id## .info_text').html(_options.display_value)
+		document.querySelector('.Cmd#tyre_rr_id#id## .info_text').html(_options.display_value)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#tyre_rr_id#id##', display_value: "#tyre_rr_display_value#id##"}])
 }
@@ -733,44 +732,44 @@ if (!"#tyre_rr_id#id##".startsWith('#')) {
 function show_opening (name, value) {
 	switch(value) {
 		case 'CLOSED':
-			$('#topView#id# .' + name + '_o').addClass('hidden') 
-			$('#topView#id# .' + name + '_c').removeClass('hidden') 
+			document.querySelector('#topView#id# .' + name + '_o').addClass('hidden') 
+			document.querySelector('#topView#id# .' + name + '_c').removeClass('hidden') 
 			break
 		case 'OPEN':
 		case 'AJAR':
-			$('#topView#id# .' + name + '_c').addClass('hidden') 
-			$('#topView#id# .' + name + '_o').removeClass('hidden') 
+			document.querySelector('#topView#id# .' + name + '_c').addClass('hidden') 
+			document.querySelector('#topView#id# .' + name + '_o').removeClass('hidden') 
 			break
 		default:
-			$('#topView#id# .' + name + '_o').addClass('hidden') 
-			$('#topView#id# .' + name + '_c').addClass('hidden') 
+			document.querySelector('#topView#id# .' + name + '_o').addClass('hidden') 
+			document.querySelector('#topView#id# .' + name + '_c').addClass('hidden') 
 	}
 }
 if (!"#door_fl_state_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#door_fl_state_id#id##'] = function(_options) {
 		show_opening('door_fl', _options.value)
-		$('.Cmd#door_fl_state_id#id## .info_text').html(_options.display_value)
+		document.querySelector('.Cmd#door_fl_state_id#id## .info_text').html(_options.display_value)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#door_fl_state_id#id##', value: "#door_fl_state#id##", display_value: "#door_fl_state_display_value#id##"}])
 }
 if (!"#door_fr_state_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#door_fr_state_id#id##'] = function(_options) {
 		show_opening('door_fr', _options.value)
-		$('.Cmd#door_fr_state_id#id## .info_text').html(_options.display_value)
+		document.querySelector('.Cmd#door_fr_state_id#id## .info_text').html(_options.display_value)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#door_fr_state_id#id##', value: "#door_fr_state#id##", display_value: "#door_fr_state_display_value#id##"}])
 }
 if (!"#door_rl_state_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#door_rl_state_id#id##'] = function(_options) {
 		show_opening('door_rl', _options.value)
-		$('.Cmd#door_rl_state_id#id## .info_text').html(_options.display_value)
+		document.querySelector('.Cmd#door_rl_state_id#id## .info_text').html(_options.display_value)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#door_rl_state_id#id##', value: "#door_rl_state#id##", display_value: "#door_rl_state_display_value#id##"}])
 }
 if (!"#door_rr_state_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#door_rr_state_id#id##'] = function(_options) {
 		show_opening('door_rr', _options.value)
-		$('.Cmd#door_rr_state_id#id## .info_text').html(_options.display_value)
+		document.querySelector('.Cmd#door_rr_state_id#id## .info_text').html(_options.display_value)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#door_rr_state_id#id##', value: "#door_rr_state#id##", display_value: "#door_rr_state_display_value#id##"}])
 }
@@ -779,25 +778,25 @@ if (!"#door_rr_state_id#id##".startsWith('#')) {
 // =======
 if (!"#win_fl_state_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#win_fl_state_id#id##'] = function(_options) {
-		$('.Cmd#win_fl_state_id#id## .info_text').html(_options.display_value)
+		document.querySelector('.Cmd#win_fl_state_id#id## .info_text').html(_options.display_value)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#win_fl_state_id#id##', display_value: "#win_fl_state_display_value#id##"}])
 }
 if (!"#win_fr_state_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#win_fr_state_id#id##'] = function(_options) {
-		$('.Cmd#win_fr_state_id#id## .info_text').html(_options.display_value)
+		document.querySelector('.Cmd#win_fr_state_id#id## .info_text').html(_options.display_value)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#win_fr_state_id#id##', display_value: "#win_fr_state_display_value#id##"}])
 }
 if (!"#win_rl_state_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#win_rl_state_id#id##'] = function(_options) {
-		$('.Cmd#win_rl_state_id#id## .info_text').html(_options.display_value)
+		document.querySelector('.Cmd#win_rl_state_id#id## .info_text').html(_options.display_value)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#win_rl_state_id#id##', display_value: "#win_rl_state_display_value#id##"}])
 }
 if (!"#win_rr_state_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#win_rr_state_id#id##'] = function(_options) {
-		$('.Cmd#win_rr_state_id#id## .info_text').html(_options.display_value)
+		document.querySelector('.Cmd#win_rr_state_id#id## .info_text').html(_options.display_value)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#win_rr_state_id#id##', display_value: "#win_rr_state_display_value#id##"}])
 }
@@ -805,21 +804,21 @@ if (!"#win_rr_state_id#id##".startsWith('#')) {
 if (!"#hood_state_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#hood_state_id#id##'] = function(_options) {
 		show_opening('hood', _options.value)
-		$('.Cmd#hood_state_id#id## .info_text').html(_options.display_value)
+		document.querySelector('.Cmd#hood_state_id#id## .info_text').html(_options.display_value)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#hood_state_id#id##', value: "#hood_state#id##", display_value: "#hood_state_display_value#id##"}])
 }
 if (!"#roof_state_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#roof_state_id#id##'] = function(_options) {
 		show_opening('roof', _options.value)
-		$('.Cmd#roof_state_id#id## .info_text').html(_options.display_value)
+		document.querySelector('.Cmd#roof_state_id#id## .info_text').html(_options.display_value)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#roof_state_id#id##', value: "#roof_state#id##", display_value: "#roof_state_display_value#id##"}])
 }
 if (!"#tail_state_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#tail_state_id#id##'] = function(_options) {
 		show_opening('tail', _options.value)
-		$('.Cmd#tail_state_id#id## .info_text').html(_options.display_value)
+		document.querySelector('.Cmd#tail_state_id#id## .info_text').html(_options.display_value)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#tail_state_id#id##', value: "#tail_state#id##", display_value: "#tail_state_display_value#id##"}])
 }
@@ -830,13 +829,13 @@ if (!"#engineON_id#id##".startsWith('#')) {
 		if (_options.value == 1) {
 			img = 'engine_green.svg'
 		} else {
-			if ($('body').data('theme').endsWith('Dark')) {
+			if (document.querySelector('body').data('theme').endsWith('Dark')) {
 				img = 'engine_grey_dark.svg'
 			} else {
 				img = 'engine_grey_light.svg'
 			}
 		}
-		$('.Cmd#engineON_id#id## img').attr('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+		document.querySelector('.Cmd#engineON_id#id## img').setAttribute('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#engineON_id#id##', value: "#engineON#id##"}])
 }
@@ -845,31 +844,31 @@ if (!"#engineON_id#id##".startsWith('#')) {
 // SERVICE
 if (!"#service_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#service_id#id##'] = function(_options) {
-		$('.Cmd#service_id#id##').html(_options.display_value)
+		document.querySelector('.Cmd#service_id#id##').html(_options.display_value)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#service_id#id##', value: '#service_state#id##', display_value: '#service_display_value#id##'}])
 }
 if (!"#engineHoursToService_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#engineHoursToService_id#id##'] = function(_options) {
-		$('.Cmd#engineHoursToService_id#id##').html(_options.display_value + " " +_options.unit)
+		document.querySelector('.Cmd#engineHoursToService_id#id##').html(_options.display_value + " " +_options.unit)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#engineHoursToService_id#id##', value: '#engineHoursToService_state#id##', display_value: '#engineHoursToService_display_value#id##', unit: '#engineHoursToService_unit#id##'}])
 }
 if (!"#distanceToService_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#distanceToService_id#id##'] = function(_options) {
-		$('.Cmd#distanceToService_id#id##').html(_options.display_value + " " +_options.unit)
+		document.querySelector('.Cmd#distanceToService_id#id##').html(_options.display_value + " " +_options.unit)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#distanceToService_id#id##', value: '#distanceToService_state#id##', display_value: '#distanceToService_display_value#id##', unit: '#distanceToService_unit#id##'}])
 }
 if (!"#timeToService_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#timeToService_id#id##'] = function(_options) {
-		$('.Cmd#timeToService_id#id##').html(_options.display_value + " " +_options.unit)
+		document.querySelector('.Cmd#timeToService_id#id##').html(_options.display_value + " " +_options.unit)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#timeToService_id#id##', value: '#timeToService_state#id##', display_value: '#timeToService_display_value#id##', unit: '#timeToService_unit#id##'}])
 }
 if (!"#serviceTrigger_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#serviceTrigger_id#id##'] = function(_options) {
-		$('.Cmd#serviceTrigger_id#id##').html(_options.display_value + "&nbsp;")
+		document.querySelector('.Cmd#serviceTrigger_id#id##').html(_options.display_value + "&nbsp;")
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#serviceTrigger_id#id##', value: '#serviceTrigger_state#id##', display_value: '#serviceTrigger_display_value#id##'}])
 }
@@ -877,7 +876,7 @@ if (!"#serviceTrigger_id#id##".startsWith('#')) {
 // POSITION
 if (!"#position_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#position_id#id##'] = function(_options) {
-		$('iframe.Cmd#position_id#id##').attr('src',"http://map.google.com/maps?hl=fr&ie=utf8&output=embed&q=" + _options.display_value)
+		document.querySelector('iframe.Cmd#position_id#id##').setAttribute('src',"http://map.google.com/maps?hl=fr&ie=utf8&output=embed&q=" + _options.display_value)
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#position_id#id##', value: '#position_state#id##', display_value: '#position_display_value#id##'}])
 }
@@ -894,7 +893,7 @@ if (!"#msg2widget_id#id##".startsWith('#')) {
 				msg += sep + messages[cible][id]
 				sep = '<br>'
 			}
-			$('#'+cible + '#id#').attr('title',msg)
+			document.querySelector('#'+cible + '#id#').setAttribute('title',msg)
 		}
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#msg2widget_id#id##', value: "#msg2widget#id##"}])
