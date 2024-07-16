@@ -1206,7 +1206,7 @@ class volvocars extends eqLogic {
 					$replace['#' . $logicalId . $carId . '#'] = $value;
 					$replace['#' . $logicalId . '_display_value' . $carId . '#'] = $display_value;
 					$replace['#' . $logicalId . '_unit' . $carId . '#'] = $unit;
-					$replace['#' . $logicalId . '_history' . $carId . '#'] = $cmd->isHistorized() ? 'history cursor' : '';
+					$replace['#' . $logicalId . '_history' . $carId . '#'] = $cmd->getIsHistorized() ? 'history cursor' : '';
 				}
 				$replace['#' . $logicalId . '_id' . $carId . '#'] = $cmd->getId();
 				log::add("volvocars","info",print_r($replace,true));
