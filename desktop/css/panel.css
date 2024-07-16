@@ -276,12 +276,12 @@ img.volvo_logo_black {
 	width: 95px;
 }
 
-.tyre_f,
-.door_f,
-.win_f,
-.door_r,
-.win_r,
-.tyre_r {
+.tyreF,
+.doorF,
+.winF,
+.doorR,
+.winR,
+.tyreR {
 	margin-right: -5px;
 }
 
@@ -289,28 +289,28 @@ img.volvo_logo_black {
 	margin-left: -20px;
 }
 
-.tyre_f + div,
-.tyre_f {
+.tyreF + div,
+.tyreF {
 	margin-top: 35px;
 }
 
-.door_f + div,
-.door_f {
+.doorF + div,
+.doorF {
 	margin-top: 25px;
 	margin-bottom: 0px !important;
 }
 
-.win_f + div,
-.win_f,
-.win_r + div,
-.win_r,
+.winF + div,
+.winF,
+.winR + div,
+.winR,
 .tail,
 .tail + div{
 	margin-top: -5px;
 }
 
-.door_r + div,
-.door_r {
+.doorR + div,
+.doorR {
 	margin-top: 5px;
 	margin-bottom: 0px !important;
 }
@@ -320,8 +320,8 @@ img.volvo_logo_black {
 	margin-bottom: 0px !important;
 }
 
-.tyre_r + div,
-.tyre_r {
+.tyreR + div,
+.tyreR {
 	margin-top: 15px;
 }
 

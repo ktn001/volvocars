@@ -60,5 +60,6 @@ include_file('desktop', 'panel', 'css', 'volvocars');
 </div>
 
 <?php
+include_file('desktop/common', 'ui', 'js');
 include_file('desktop', 'panel', 'js', 'volvocars');
 ?>

@@ -112,10 +112,10 @@ class volvocars extends eqLogic {
 	public static function updateMessages($_options) {
 		$mapping = [
 			'div_al_brake' => [
-				'al_brake_fluid' => [
+				'al_brakeFluid' => [
 					'0' => __("Niveau liquide de frein OK",__FILE__),
 				],
-				'brake_fluid_level' => [
+				'brakeFluidLevel' => [
 					'TOO_LOW' => __("Niveau liquide de freins bas",__FILE__),
 				],
 			],
@@ -123,7 +123,7 @@ class volvocars extends eqLogic {
 				'al_coolant' => [
 					'0' => __("Niveau liquide refroidissement OK",__FILE__),
 				],
-				'coolant_level' => [
+				'coolantLevel' => [
 					'TOO_LOW' => __("Niveau liquide refroidissement bas",__FILE__),
 				],
 			],
@@ -131,14 +131,14 @@ class volvocars extends eqLogic {
 				'al_oil' => [
 					'0' => __("Niveau d'huile OK",__FILE__),
 				],
-				'oil_level' => [
+				'oilLevel' => [
 					'SERVICE_REQUIRED' => __("Service à effectuer",__FILE__),
 					"TOO_LOW" => __("Niveau d'huile bas",__FILE__),
 					"TOO_HIGH" => __("Niveau d'huile haut",__FILE__),
 				],
 			],
 			'div_al_wash' => [
-				'al_washer_fluid' => [
+				'al_washerFluid' => [
 					'0' => __("Niveau lave-vitres OK", __FILE__),
 				],
 				'washerFluidLevel' => [
@@ -159,52 +159,52 @@ class volvocars extends eqLogic {
 				'al_tyre' => [
 					'0' => __("Pression pneus OK",__FILE__),
 				],
-				'tyre_fl' => [
+				'tyreFl' => [
 					"VERY_LOW_PRESSURE"	=> __("Pression pneu avant gauche très basse",__FILE__),
 					"LOW_PRESSURE"		=> __("Pression pneu avant gauche basse",__FILE__),
 					"HIGH_PRESSURE"		=> __("Pression pneu avant gauche élevée",__FILE__),
 				],
-				'tyre_fr' => [
+				'tyreFr' => [
 					"VERY_LOW_PRESSURE" => __("Pression pneu avant droit très basse",__FILE__),
 					"LOW_PRESSURE"		=> __("Pression pneu avant droit basse",__FILE__),
 					"HIGH_PRESSURE"		=> __("Pression pneu avant droit élevée",__FILE__),
 				],
-				'tyre_rl' => [
+				'tyreRl' => [
 					"VERY_LOW_PRESSURE"	=> __("Pression pneu arrière gauche très basse",__FILE__),
 					"LOW_PRESSURE"		=> __("Pression pneu arrière gauche basse",__FILE__),
 					"HIGH_PRESSURE"		=> __("Pression pneu arrière gauche élevée",__FILE__),
 				],
-				'tyre_rr' => [
+				'tyreRr' => [
 					"VERY_LOW_PRESSURE" => __("Pression pneu arrière droit très basse",__FILE__),
 					"LOW_PRESSURE"		=> __("Pression pneu arrière droit basse",__FILE__),
 					"HIGH_PRESSURE"		=> __("Pression pneu arrière droit élevée",__FILE__),
 				],
 			],
 			'div_al_light' => [
-				'al_light'					=> [ '0' => __("Feux OK",__FILE__) ],
-				"al_brakeLight_l"           => [ 'FAILURE' => __("Défaut feu frein gauche",__FILE__) ],
-				"al_brakeLight_r"           => [ 'FAILURE' => __("Défaut feu frein droite",__FILE__) ],
-				"al_brakeLight_c"           => [ 'FAILURE' => __("Défaut feu frein central",__FILE__) ],
-				"al_daytimeRunningLight_l"  => [ 'FAILURE' => __("Défaut feu jour gauche",__FILE__) ],
-				"al_daytimeRunningLight_r"  => [ 'FAILURE' => __("Défaut feu jour droit",__FILE__) ],
-				"al_fogLight_f"             => [ 'FAILURE' => __("Défaut feux brouillard avant",__FILE__) ],
-				"al_fogLight_r"             => [ 'FAILURE' => __("Défaut feux brouillard arrière",__FILE__) ],
-				"al_hazardLights"           => [ 'FAILURE' => __("Défaut feux détresse",__FILE__) ],
-				"al_highBeam_l"             => [ 'FAILURE' => __("Défaut feu route gauche",__FILE__) ],
-				"al_highBeam_r"             => [ 'FAILURE' => __("Défaut feu route droite",__FILE__) ],
-				"al_lowBeam_l"              => [ 'FAILURE' => __("Défaut feu croisement gauche",__FILE__) ],
-				"al_lowBeam_r"              => [ 'FAILURE' => __("Défaut feu croisement droite",__FILE__) ],
-				"al_positionLight_fl"       => [ 'FAILURE' => __("Défaut feu position avant gauche",__FILE__) ],
-				"al_positionLight_fr"       => [ 'FAILURE' => __("Défaut feu position avant droite",__FILE__) ],
-				"al_positionLight_rl"       => [ 'FAILURE' => __("Défaut feu position arrière gauche",__FILE__) ],
-				"al_positionLight_rr"       => [ 'FAILURE' => __("Défaut feu position arrière droit",__FILE__) ],
-				"al_registrationPlateLight" => [ 'FAILURE' => __("Défaut feu plaque",__FILE__) ],
-				"al_reverseLights"          => [ 'FAILURE' => __("Défaut feu recule",__FILE__) ],
-				"al_sideMarkLights"         => [ 'FAILURE' => __("Défaut feux latéraux",__FILE__) ],
-				"al_turnIndication_fl"      => [ 'FAILURE' => __("Défaut clignotant avant gauche",__FILE__) ],
-				"al_turnIndication_fr"      => [ 'FAILURE' => __("Défaut clignotant avant droit",__FILE__) ],
-				"al_turnIndication_rl"      => [ 'FAILURE' => __("Défaut clignotant arrière gauche",__FILE__) ],
-				"al_turnIndication_rr"      => [ 'FAILURE' => __("Défaut clignotant arrière droit",__FILE__) ],
+				'al_light'				   => [ '0' => __("Feux OK",__FILE__) ],
+				"al_brakeLightL"           => [ 'FAILURE' => __("Défaut feu frein gauche",__FILE__) ],
+				"al_brakeLightR"           => [ 'FAILURE' => __("Défaut feu frein droite",__FILE__) ],
+				"al_brakeLightC"           => [ 'FAILURE' => __("Défaut feu frein central",__FILE__) ],
+				"al_daytimeRunningLightL"  => [ 'FAILURE' => __("Défaut feu jour gauche",__FILE__) ],
+				"al_daytimeRunningLightR"  => [ 'FAILURE' => __("Défaut feu jour droit",__FILE__) ],
+				"al_fogLightF"             => [ 'FAILURE' => __("Défaut feux brouillard avant",__FILE__) ],
+				"al_fogLightR"             => [ 'FAILURE' => __("Défaut feux brouillard arrière",__FILE__) ],
+				"al_hazardLights"          => [ 'FAILURE' => __("Défaut feux détresse",__FILE__) ],
+				"al_highBeamL"             => [ 'FAILURE' => __("Défaut feu route gauche",__FILE__) ],
+				"al_highBeamR"             => [ 'FAILURE' => __("Défaut feu route droite",__FILE__) ],
+				"al_lowBeamL"              => [ 'FAILURE' => __("Défaut feu croisement gauche",__FILE__) ],
+				"al_lowBeamR"              => [ 'FAILURE' => __("Défaut feu croisement droite",__FILE__) ],
+				"al_positionLightFl"       => [ 'FAILURE' => __("Défaut feu position avant gauche",__FILE__) ],
+				"al_positionLightFr"       => [ 'FAILURE' => __("Défaut feu position avant droite",__FILE__) ],
+				"al_positionLightRl"       => [ 'FAILURE' => __("Défaut feu position arrière gauche",__FILE__) ],
+				"al_positionLightRr"       => [ 'FAILURE' => __("Défaut feu position arrière droit",__FILE__) ],
+				"al_registrationPlateLight"=> [ 'FAILURE' => __("Défaut feu plaque",__FILE__) ],
+				"al_reverseLights"         => [ 'FAILURE' => __("Défaut feu recule",__FILE__) ],
+				"al_sideMarkLights"        => [ 'FAILURE' => __("Défaut feux latéraux",__FILE__) ],
+				"al_turnIndicationFl"      => [ 'FAILURE' => __("Défaut clignotant avant gauche",__FILE__) ],
+				"al_turnIndicationFr"      => [ 'FAILURE' => __("Défaut clignotant avant droit",__FILE__) ],
+				"al_turnIndicationRl"      => [ 'FAILURE' => __("Défaut clignotant arrière gauche",__FILE__) ],
+				"al_turnIndicationRr"      => [ 'FAILURE' => __("Défaut clignotant arrière droit",__FILE__) ],
 			],
 		];
 		log::add ("volvocars","info","updateMessages called: " . print_r($_options,true));
@@ -424,18 +424,18 @@ class volvocars extends eqLogic {
 			$this->sortCmds();
 		}
 
-		foreach (['distance_site1','distance_site2'] as $logicalId){
+		foreach (['distanceSite1','distanceSite2'] as $logicalId){
 			$cmd = $this->getCmd('info',$logicalId);
 			if (is_object($cmd)) {
 				$cmd->event($cmd->execute());
 				$cmdName = $cmd->getName();
 				switch ($logicalId) {
-					case 'distance_site1':
+					case 'distanceSite1':
 						$siteName = $this->getConfiguration('site1_name');
 						$oldSiteName = $this->getConfiguration('old_site1_name');
 						$site = 'site1';
 						break;
-					case 'distance_site2':
+					case 'distanceSite2':
 						$siteName = $this->getConfiguration('site2_name');
 						$oldSiteName = $this->getConfiguration('old_site2_name');
 						$site = 'site2';
@@ -448,17 +448,17 @@ class volvocars extends eqLogic {
 				}
 			}
 		}
-		foreach (['presence_site1','presence_site2'] as $logicalId){
+		foreach (['presenceSite1','presenceSite2'] as $logicalId){
 			$cmd = $this->getCmd('info',$logicalId);
 			if (is_object($cmd)) {
 				$cmdName = $cmd->getName();
 				switch ($logicalId) {
-					case 'presence_site1':
+					case 'presenceSite1':
 						$siteName = $this->getConfiguration('site1_name');
 						$oldSiteName = $this->getConfiguration('old_site1_name');
 						$site = 'site1';
 						break;
-					case 'presence_site2':
+					case 'presenceSite2':
 						$siteName = $this->getConfiguration('site2_name');
 						$oldSiteName = $this->getConfiguration('old_site2_name');
 						$site = 'site2';
@@ -1120,11 +1120,11 @@ class volvocars extends eqLogic {
 			return $replace;
 		}
 
-		$id = $this->getId();
-		$replace['#id#'] = $id;
+		$carId = $this->getId();
+		$replace['#id#'] = $carId;
 
 		//---- IMAGE
-		$replace['#vehicle_img'.$id.'#'] = $this->getImage();
+		$replace['#vehicle_img'.$carId.'#'] = $this->getImage();
 
 		//---- SITES
 		$replace['#site1_name'.$this->getId().'#'] = ucfirst($this->getConfiguration('site1_name'));
@@ -1138,57 +1138,57 @@ class volvocars extends eqLogic {
 		$logicalIds = array(
 			'availability',
 			'unavailableReason',
-			'al_brake_fluid',
+			'al_brakeFluid',
 			'al_coolant',
 			'al_electricautonomy',
 			'al_fuelautonomy',
 			'al_light',
 			'al_oil',
 			'al_tyre',
-			'al_washer_fluid',
+			'al_washerFluid',
 			'batteryLevel',
 			'chargingEndTime',
 			'chargingStatus',
-			'clim_start',
-			'clim_stop',
+			'climStart',
+			'climStop',
 			'connectorStatus',
-			'conso_electric',
-			'conso_fuel',
-			'conso_fuel_trip',
+			'consoElectric',
+			'consoFuel',
+			'consoFuelTrip',
 			'distanceToService',
-			'distance_site1',
-			'distance_site2',
-			'door_fl_state',
-			'door_fr_state',
-			'door_rl_state',
-			'door_rr_state',
+			'distanceSite1',
+			'distanceSite2',
+			'doorFlState',
+			'doorFrState',
+			'doorRlState',
+			'doorRrState',
 			'electricAutonomy',
 			'engineHoursToService',
 			'engineON',
-			'fuel_amount',
+			'fuelAmount',
 			'fuelAutonomy',
-			'hood_state',
+			'hoodState',
 			'locked',
 			'lock',
 			'odometer',
 			'position',
-			'presence_site1',
-			'presence_site2',
+			'presenceSite1',
+			'presenceSite2',
 			'refresh',
-			'roof_state',
+			'roofState',
 			'service',
 			'serviceTrigger',
-			'tail_state',
+			'tailState',
 			'timeToService',
-			'tyre_fl',
-			'tyre_fr',
-			'tyre_rl',
-			'tyre_rr',
+			'tyreFl',
+			'tyreFr',
+			'tyreRl',
+			'tyreRr',
 			'unlock',
-			'win_fl_state',
-			'win_fr_state',
-			'win_rl_state',
-			'win_rr_state',
+			'winFlState',
+			'winFrState',
+			'winRlState',
+			'winRsState',
 		);
 		foreach ($logicalIds as $logicalId) {
 			$cmd = $this->getCmd(null,$logicalId);
@@ -1202,33 +1202,35 @@ class volvocars extends eqLogic {
 						$display_value = $valueInfo[0];
 						$unit = $valueInfo[1];
 					}
-					$replace['#' . $logicalId . '_id' . $id . '#'] = $cmd->getId();
-					$replace['#' . $logicalId . $id . '#'] = $value;
-					$replace['#' . $logicalId . '_display_value' . $id . '#'] = $display_value;
-					$replace['#' . $logicalId . '_unit' . $id . '#'] = $unit;
+					$replace['#' . $logicalId . '_id' . $carId . '#'] = $cmd->getId();
+					$replace['#' . $logicalId . $carId . '#'] = $value;
+					$replace['#' . $logicalId . '_display_value' . $carId . '#'] = $display_value;
+					$replace['#' . $logicalId . '_unit' . $carId . '#'] = $unit;
+					$replace['#' . $logicalId . '_history' . $carId . '#'] = $cmd->isHistorized() ? 'history cursor' : '';
 				}
-				$replace['#' . $logicalId . '_id' . $id . '#'] = $cmd->getId();
+				$replace['#' . $logicalId . '_id' . $carId . '#'] = $cmd->getId();
+				log::add("volvocars","info",print_r($replace,true));
 			}
 		}
 
 		//---- WIDGETS UNIQUEMENT POUR MOTEUR THERMIQUE
 		if ($this->getConfiguration('fuelEngine') == 0) {
-			$replace['#fuelEngineOnly'.$id.'#'] = 'hidden';
+			$replace['#fuelEngineOnly'.$carId.'#'] = 'hidden';
 		} else {
-			$replace['#fuelEngineOnly'.$id.'#'] = '';
+			$replace['#fuelEngineOnly'.$carId.'#'] = '';
 		}
 
 		//---- WIDGETS UNIQUEMENT POUR MOTEUR ELECTRIQUE
 		if ($this->getConfiguration('electricEngine') == 0) {
-			$replace['#electricEngineOnly'.$id.'#'] = 'hidden';
+			$replace['#electricEngineOnly'.$carId.'#'] = 'hidden';
 		} else {
-			$replace['#electricEngineOnly'.$id.'#'] = '';
+			$replace['#electricEngineOnly'.$carId.'#'] = '';
 		}
 
 		$cmd = $this->getCmd('info','msg2widget');
 		if (is_object($cmd)) {
-			$replace['#msg2widget_id' . $id . '#'] = $cmd->getId();
-			$replace['#msg2widget' . $id . '#'] = addslashes($cmd->execCmd());
+			$replace['#msg2widget_id' . $carId . '#'] = $cmd->getId();
+			$replace['#msg2widget' . $carId . '#'] = addslashes($cmd->execCmd());
 		}
 
 		if ($_version === 'panel') {
@@ -1319,21 +1321,21 @@ class volvocarsCmd extends cmd {
 		$this->setValue($value);
 
 		switch ($this->getLogicalId()) {
-			case 'distance_site1':
-			case 'distance_site2':
+			case 'distanceSite1':
+			case 'distanceSite2':
 				$locationCmd = $this->getEqLogic()->getCmd('info','position');
 				if (is_object($locationCmd)) {
 					$this->setValue("#" . $locationCmd->getId() . '#');
 				}
 				break;
-			case 'presence_site1':
-				$distanceCmd = $this->getEqLogic()->getCmd('info','distance_site1');
+			case 'presenceSite1':
+				$distanceCmd = $this->getEqLogic()->getCmd('info','distanceSite1');
 				if (is_object($distanceCmd)) {
 					$this->setValue("#" . $distanceCmd->getId() . '#');
 				}
 				break;
-			case 'presence_site2':
-				$distanceCmd = $this->getEqLogic()->getCmd('info','distance_site2');
+			case 'presenceSite2':
+				$distanceCmd = $this->getEqLogic()->getCmd('info','distanceSite2');
 				if (is_object($distanceCmd)) {
 					$this->setValue("#" . $distanceCmd->getId() . '#');
 				}
@@ -1353,21 +1355,21 @@ class volvocarsCmd extends cmd {
 		}
 		switch ($this->getLogicalId()) {
 			case 'position':
-				foreach (['distance_site1', 'distance_site2'] as $logicalId) {
+				foreach (['distanceSite1', 'distanceSite2'] as $logicalId) {
 					$cmd = $this->getEqLogic()->getCmd('info',$logicalId);
 					if (is_object($cmd)) {
 						$cmd->save();
 					}
 				}
 				break;
-			case 'distance_site1':
-				$cmd = $this->getEqLogic()->getCmd('info','presence_site1');
+			case 'distanceSite1':
+				$cmd = $this->getEqLogic()->getCmd('info','presenceSite1');
 				if (is_object($cmd)) {
 					$cmd->save();
 				}
 				break;
-			case 'distance_site2':
-				$cmd = $this->getEqLogic()->getCmd('info','presence_site2');
+			case 'distanceSite2':
+				$cmd = $this->getEqLogic()->getCmd('info','presenceSite2');
 				if (is_object($cmd)) {
 					$cmd->save();
 				}
@@ -1390,8 +1392,8 @@ class volvocarsCmd extends cmd {
 					$car->getAccount()->sendCommand($this->getLogicalId(),$car->getVin());
 					$car->getInfosFromApi('doors', true);
 					break;
-				case 'clim_start':
-				case 'clim_stop':
+				case 'climStart':
+				case 'climStop':
 					$car->getAccount()->sendCommand($this->getLogicalId(),$car->getVin());
 					break;
 				default:
@@ -1402,17 +1404,17 @@ class volvocarsCmd extends cmd {
 		}
 		if ($this->getType() == 'info') {
 			switch ($logicalId) {
-				case 'distance_site1':
-				case 'distance_site2':
+				case 'distanceSite1':
+				case 'distanceSite2':
 					switch($logicalId) {
-						case 'distance_site1':
+						case 'distanceSite1':
 							if ($car->getConfiguration('site1_active') != 1) {
 								return '-1';
 							}
 							$siteLat = $car->getConfiguration('site1_lat');
 							$siteLong = $car->getConfiguration('site1_long');
 							break;
-						case 'distance_site2':
+						case 'distanceSite2':
 							if ($car->getConfiguration('site2_active') != 1) {
 								return '-1';
 							}
@@ -1442,11 +1444,11 @@ class volvocarsCmd extends cmd {
 					$d = 2 * atan2(sqrt($a), sqrt(1 - $a));
 					return round(($earth_radius * $d * 1000), 1);
 					break;
-				case 'presence_site1':
+				case 'presenceSite1':
 					if ($car->getConfiguration('site1_active') != 1) {
 						return '';
 					}
-					$distanceCmd = $car->getCmd('info','distance_site1');
+					$distanceCmd = $car->getCmd('info','distanceSite1');
 					if (! is_object($distanceCmd)) {
 						log::add("volvocars","error",__("La commande de distance pour le site 1 est introuvable",__FILE__));
 						return '';
@@ -1467,11 +1469,11 @@ class volvocarsCmd extends cmd {
 						return 0;
 					}
 					break;
-				case 'presence_site2':
+				case 'presenceSite2':
 					if ($car->getConfiguration('site2_active') != 1) {
 						return '';
 					}
-					$distanceCmd = $car->getCmd('info','distance_site2');
+					$distanceCmd = $car->getCmd('info','distanceSite2');
 					if (! is_object($distanceCmd)) {
 						log::add("volvocars","error",__("La commande de distance pour le site 2 est introuvable",__FILE__));
 						return '';
@@ -1492,8 +1494,8 @@ class volvocarsCmd extends cmd {
 						return 0;
 					}
 					break;
-				case 'al_brake_fluid':
-					$cmd = $this->getEqLogic()->getCmd('info','brake_fluid_level');
+				case 'al_brakeFluid':
+					$cmd = $this->getEqLogic()->getCmd('info','brakeFluidLevel');
 					if (is_object($cmd)) {
 						switch ($cmd->execCmd()) {
 							case 'TOO_LOW':
@@ -1503,7 +1505,7 @@ class volvocarsCmd extends cmd {
 					return 0;
 					break;
 				case 'al_coolant':
-					$cmd = $this->getEqLogic()->getCmd('info','coolant_level');
+					$cmd = $this->getEqLogic()->getCmd('info','coolantLevel');
 					if (is_object($cmd)) {
 						switch ($cmd->execCmd()) {
 							case 'TOO_LOW':
@@ -1513,7 +1515,7 @@ class volvocarsCmd extends cmd {
 					return 0;
 					break;
 				case 'al_oil':
-					$cmd = $this->getEqLogic()->getCmd('info','oil_level');
+					$cmd = $this->getEqLogic()->getCmd('info','oilLevel');
 					if (is_object($cmd)) {
 						switch ($cmd->execCmd()) {
 							case 'SERVICE_REQUIRED':
@@ -1524,7 +1526,7 @@ class volvocarsCmd extends cmd {
 					}
 					return 0;
 					break;
-				case 'al_washer_fluid':
+				case 'al_washerFluid':
 					$cmd = $this->getEqLogic()->getCmd('info','washerFluidLevel');
 					if (is_object($cmd)) {
 						switch ($cmd->execCmd()) {
@@ -1564,7 +1566,7 @@ class volvocarsCmd extends cmd {
 					break;
 				case 'al_tyre':
 					$value = 0;
-					foreach (['tyre_fl', 'tyre_fr', 'tyre_rl', 'tyre_rr'] as $tyre) {
+					foreach (['tyreFl', 'tyreFr', 'tyreRl', 'tyreRr'] as $tyre) {
 						$tyreCmd = $this->getEqLogic()->getCmd('info', $tyre);
 						if (is_object($tyreCmd)) {
 							switch ($tyreCmd->execCmd()) {
@@ -1583,29 +1585,29 @@ class volvocarsCmd extends cmd {
 				case 'al_light':
 					$value = 0;
 					foreach ([
-						'al_brakeLight_c',
-						'al_brakeLight_l',
-						'al_brakeLight_r',
-						'al_daytimeRunningLight_l',
-						'al_daytimeRunningLight_r',
-						'al_fogLight_f',
-						'al_fogLight_r',
+						'al_brakeLightC',
+						'al_brakeLightL',
+						'al_brakeLightR',
+						'al_daytimeRunningLightL',
+						'al_daytimeRunningLightR',
+						'al_fogLightF',
+						'al_fogLightR',
 						'al_hazardLights',
-						'al_highBeam_l',
-						'al_highBeam_r',
-						'al_lowBeam_l',
-						'al_lowBeam_r',
-						'al_positionLight_fl',
-						'al_positionLight_fr',
-						'al_positionLight_rl',
-						'al_positionLight_rr',
+						'al_highBeamL',
+						'al_highBeamR',
+						'al_lowBeamL',
+						'al_lowBeamR',
+						'al_positionLightFl',
+						'al_positionLightFr',
+						'al_positionLightRl',
+						'al_positionLightRr',
 						'al_registrationPlateLight',
 						'al_reverseLights',
 						'al_sideMarkLights',
-						'al_turnIndication_fl',
-						'al_turnIndication_fr',
-						'al_turnIndication_rl',
-						'al_turnIndication_rr'
+						'al_turnIndicationFl',
+						'al_turnIndicationFr',
+						'al_turnIndicationRl',
+						'al_turnIndicationRr'
 					] as $light) {
 						$lightCmd = $this->getEqLogic()->getCmd('info', $light);
 						if (is_object($lightCmd)) {
@@ -1617,18 +1619,18 @@ class volvocarsCmd extends cmd {
 					}
 					return $value;
 					break;
-				case 'door_fl_open':
-				case 'door_fr_open':
-				case 'door_rl_open':
-				case 'door_rr_open':
-				case 'win_fl_open':
-				case 'win_fr_open':
-				case 'win_rl_open':
-				case 'win_rr_open':
-				case 'hood_open':
-				case 'tail_open':
-				case 'tank_open':
-				case 'roof_open':
+				case 'doorFlOpen':
+				case 'doorFrOpen':
+				case 'doorRlOpen':
+				case 'doorRrOpen':
+				case 'winFlOpen':
+				case 'winFrOpen':
+				case 'winRlOpen':
+				case 'winRrOpen':
+				case 'hoodOpen':
+				case 'tailOpen':
+				case 'tankOpen':
+				case 'roofOpen':
 					$stateCmd = $car->getCmd('info',str_replace('open','state',$logicalId));
 					if (is_object($stateCmd)) {
 						switch ($stateCmd->execCmd()) {
@@ -1640,18 +1642,18 @@ class volvocarsCmd extends cmd {
 						}
 						return $this->execCmd();
 					}
-				case 'door_fl_closed':
-				case 'door_fr_closed':
-				case 'door_rl_closed':
-				case 'door_rr_closed':
-				case 'win_fl_closed':
-				case 'win_fr_closed':
-				case 'win_rl_closed':
-				case 'win_rr_closed':
-				case 'hood_closed':
-				case 'tail_closed':
-				case 'tank_closed':
-				case 'roof_closed':
+				case 'doorFlClosed':
+				case 'doorFrClosed':
+				case 'doorRlClosed':
+				case 'doorRrClosed':
+				case 'winFlClosed':
+				case 'winFrClosed':
+				case 'winRlClosed':
+				case 'winRrClosed':
+				case 'hoodClosed':
+				case 'tailClosed':
+				case 'tankClosed':
+				case 'roofClosed':
 					$stateCmd = $car->getCmd('info',str_replace('closed','state',$logicalId));
 					if (is_object($stateCmd)) {
 						switch ($stateCmd->execCmd()) {

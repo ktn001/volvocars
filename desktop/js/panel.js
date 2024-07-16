@@ -24,6 +24,7 @@ if (typeof volvocarsPanel === 'undefined') {
         volvocarsPanel.displaySelectedEqLogic()
       }
     })
+    jeedomUI.setHistoryModalHandler()
   }
 
   /*

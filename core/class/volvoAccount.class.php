@@ -413,10 +413,10 @@ class volvoAccount {
 			case 'unlock':
 				$url = sprintf(self::CAR_UNLOCK_URL,$vin);
 				break;
-			case 'clim_start':
+			case 'climStart':
 				$url = sprintf(self::CLIMATE_START_URL,$vin);
 				break;
-			case 'clim_stop':
+			case 'climStop':
 				$url = sprintf(self::CLIMATE_STOP_URL,$vin);
 				break;
 		}
