@@ -230,20 +230,20 @@
         <div id="topView#id#" class="topView col-xs-4">
           <img src="/plugins/volvocars/desktop/img/car-top/car-top.png"/>
           <img class="hidden" src="/plugins/volvocars/desktop/img/car-top/door_fl_o.png"/>
-          <img class="hidden doorFl_c" src="/plugins/volvocars/desktop/img/car-top/door_fl_c.png"/>
-          <img class="hidden doorFl_o" src="/plugins/volvocars/desktop/img/car-top/door_fl_o.png"/>
-          <img class="hidden doorFr_c" src="/plugins/volvocars/desktop/img/car-top/door_fr_c.png"/>
-          <img class="hidden doorFr_o" src="/plugins/volvocars/desktop/img/car-top/door_fr_o.png"/>
-          <img class="hidden doorRl_c" src="/plugins/volvocars/desktop/img/car-top/door_rl_c.png"/>
-          <img class="hidden doorRl_o" src="/plugins/volvocars/desktop/img/car-top/door_rl_o.png"/>
-          <img class="hidden doorRr_c" src="/plugins/volvocars/desktop/img/car-top/door_rr_c.png"/>
-          <img class="hidden doorRr_o" src="/plugins/volvocars/desktop/img/car-top/door_rr_o.png"/>
-          <img class="hidden hood_c" src="/plugins/volvocars/desktop/img/car-top/hood_c.png"/>
-          <img class="hidden hood_o" src="/plugins/volvocars/desktop/img/car-top/hood_o.png"/>
-          <img class="hidden roof_c" src="/plugins/volvocars/desktop/img/car-top/roof_c.png"/>
-          <img class="hidden roof_o" src="/plugins/volvocars/desktop/img/car-top/roof_o.png"/>
-          <img class="hidden tail_c" src="/plugins/volvocars/desktop/img/car-top/tail_c.png"/>
-          <img class="hidden tail_o" src="/plugins/volvocars/desktop/img/car-top/tail_o.png"/>
+          <img class="hidden doorFlClosed" src="/plugins/volvocars/desktop/img/car-top/door_fl_c.png"/>
+          <img class="hidden doorFlOpen" src="/plugins/volvocars/desktop/img/car-top/door_fl_o.png"/>
+          <img class="hidden doorFrClosed" src="/plugins/volvocars/desktop/img/car-top/door_fr_c.png"/>
+          <img class="hidden doorFrOpen" src="/plugins/volvocars/desktop/img/car-top/door_fr_o.png"/>
+          <img class="hidden doorRlClosed" src="/plugins/volvocars/desktop/img/car-top/door_rl_c.png"/>
+          <img class="hidden doorRlOpen" src="/plugins/volvocars/desktop/img/car-top/door_rl_o.png"/>
+          <img class="hidden doorRrClosed" src="/plugins/volvocars/desktop/img/car-top/door_rr_c.png"/>
+          <img class="hidden doorRrOpen" src="/plugins/volvocars/desktop/img/car-top/door_rr_o.png"/>
+          <img class="hidden hoodClosed" src="/plugins/volvocars/desktop/img/car-top/hood_c.png"/>
+          <img class="hidden hoodOpen" src="/plugins/volvocars/desktop/img/car-top/hood_o.png"/>
+          <img class="hidden roofClosed" src="/plugins/volvocars/desktop/img/car-top/roof_c.png"/>
+          <img class="hidden roofOpen" src="/plugins/volvocars/desktop/img/car-top/roof_o.png"/>
+          <img class="hidden tailClosed" src="/plugins/volvocars/desktop/img/car-top/tail_c.png"/>
+          <img class="hidden tailOpen" src="/plugins/volvocars/desktop/img/car-top/tail_o.png"/>
         </div>
         <div class="col-xs-4 info_right">
           <div class="col-xs-6 info_name tyreF">{{Pression}}</div>
@@ -740,17 +740,17 @@ if (!"#tyreRr_id#id##".startsWith('#')) {
 function show_opening (name, value) {
   switch(value) {
     case 'CLOSED':
-      document.querySelector('#topView#id# .' + name + '_o').addClass('hidden')
-      document.querySelector('#topView#id# .' + name + '_c').removeClass('hidden')
+      document.querySelector('#topView#id# .' + name + 'Open').addClass('hidden')
+      document.querySelector('#topView#id# .' + name + 'Closed').removeClass('hidden')
       break
     case 'OPEN':
     case 'AJAR':
-      document.querySelector('#topView#id# .' + name + '_c').addClass('hidden')
-      document.querySelector('#topView#id# .' + name + '_o').removeClass('hidden')
+      document.querySelector('#topView#id# .' + name + 'Closed').addClass('hidden')
+      document.querySelector('#topView#id# .' + name + 'Open').removeClass('hidden')
       break
     default:
-      document.querySelector('#topView#id# .' + name + '_o').addClass('hidden')
-      document.querySelector('#topView#id# .' + name + '_c').addClass('hidden')
+      document.querySelector('#topView#id# .' + name + 'Closed').addClass('hidden')
+      document.querySelector('#topView#id# .' + name + 'Open').addClass('hidden')
   }
 }
 if (!"#doorFlState_id#id##".startsWith('#')) {
