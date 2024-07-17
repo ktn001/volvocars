@@ -20,6 +20,7 @@
 if (typeof volvocarsFrontEnd === "undefined") {
   var volvocarsFrontEnd = {
     mdId_editAccount : 'mod_editVolvocarsAccount',
+    mdId_rawDatas: 'mod_rawDatas',
     accountNeedReload : false,
     ajaxUrl : 'plugins/volvocars/core/ajax/volvocars.ajax.php',
   }
@@ -365,12 +366,24 @@ if (typeof volvocarsFrontEnd === "undefined") {
   volvocarsFrontEnd.showRawData = function() {
     let carId = document.querySelector('.eqLogicAttr[data-l1key=id]').value
     jeeDialog.dialog({
-      id: volvocarsFrontEnd.mdId_editAccount,
-      title: '{{Compte}}: ',
+      id: volvocarsFrontEnd.mdId_rawDatas,
+      title: '{{RawData}}: ',
       height: '90vh',
       width: '75vW',
       top: '5vh',
       contentUrl: 'index.php?v=d&plugin=volvocars&modal=rawData&eqLogicId=' + carId,
+      buttons: {
+        'cancel': {
+          className: 'hidden'
+        },
+        'confirm': {
+          callback: { 
+            click: function() {
+              document.getElementById('mod_rawDatas')._jeeDialog.close()
+            },
+          },
+        },
+      },
     })
   }
 

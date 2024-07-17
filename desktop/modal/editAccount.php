@@ -23,7 +23,7 @@ if (!isConnect('admin')) {
 <h4>{{Compte VolvoId}} :</h4>
 <form class="form-horizontal">
 	<fieldset>
-		<span class="accountAttr xhidden" data-l1key='id'></span>
+		<span class="accountAttr hidden" data-l1key='id'></span>
 		<div class="form-group">
 			<label class="col-sm-3 control-label">{{Nom}}:</label>
 			<input type="text" class="accountAttr form-control col-sm-7" data-l1key="name"/>

@@ -33,6 +33,14 @@ if (!is_object($car)) {
 $vin = $car->getVin();
 $data = $car->getRawDatas();
 ?>
+<div class="input-group pull-right" style="display:inline-flex">
+	<a class="btn btn-sm btn-default rawDataAction roundleft" data-action="plie">
+		<i class="fas fa-caret-right"></i> <span>{{Plie tout}}</span>
+	</a>
+	<a class="btn btn-sm btn-default rawDataAction roundleft" data-action="deplie">
+		<i class="fas fa-caret-down"></i> <span>{{Déplie tout}}</span>
+	</a>
+</div>
 <div id="rawData">
 <?php
 foreach ($data as $endpoint => $values) {

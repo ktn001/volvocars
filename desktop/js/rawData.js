@@ -21,7 +21,8 @@ if (typeof volvocarsRawData === "undefined") {
   var volvocarsRawData ={}
 
   volvocarsRawData.init = function() {
-    document.getElementById('rawData').addEventListener('click', function(event) {
+    console.log(volvocarsFrontEnd.mdId_rawDatas)
+    document.getElementById(volvocarsFrontEnd.mdId_rawDatas).addEventListener('click', function(event) {
       let _target = null
 
       if (_target = event.target.closest('.endpointEntry')) {
@@ -35,6 +36,21 @@ if (typeof volvocarsRawData === "undefined") {
           _target.getElementsByClassName('endpointValue')[0].seen()
         }
         return
+      }
+
+      if (_target = event.target.closest('.rawDataAction[data-action=plie]')) {
+        console.log("PLIE")
+        document.querySelectorAll('.endpointHeader .show_values').forEach(function(node) {
+          node.unseen()
+          node.click()
+        })
+      }
+      if (_target = event.target.closest('.rawDataAction[data-action=deplie]')) {
+        console.log("DEPLIE")
+        document.querySelectorAll('.endpointHeader .show_values').forEach(function(node) {
+          node.seen()
+          node.click()
+        })
       }
 
     })
