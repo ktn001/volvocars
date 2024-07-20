@@ -170,7 +170,7 @@
 			"mobile": "core::badge"
 		}
 	},{
-		"logicalId": "winRsState",
+		"logicalId": "winRrState",
 		"name": "{{état vitre arrière droite}}",
 		"type": "info",
 		"subType": "string",
