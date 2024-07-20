@@ -263,7 +263,7 @@
             <div class="info_text"></div>
           </div>
           <div class="col-xs-6 info_name winR">{{Vitre}}</div>
-          <div class="col-xs-6 Cmd#winRsState_id#id##">
+          <div class="col-xs-6 Cmd#winRrState_id#id##">
             <div class="info_text"></div>
           </div>
           <div class="col-xs-6 info_name tyreR">{{Pression}}</div>
@@ -802,11 +802,11 @@ if (!"#winRlState_id#id##".startsWith('#')) {
   }
   jeedom.cmd.refreshValue([{cmd_id: '#winRlState_id#id##', display_value: "#winRlState_display_value#id##"}])
 }
-if (!"#winRsState_id#id##".startsWith('#')) {
-  jeedom.cmd.update['#winRsState_id#id##'] = function(_options) {
-    document.querySelector('.Cmd#winRsState_id#id## .info_text').html(_options.display_value)
+if (!"#winRrState_id#id##".startsWith('#')) {
+  jeedom.cmd.update['#winRrState_id#id##'] = function(_options) {
+    document.querySelector('.Cmd#winRrState_id#id## .info_text').html(_options.display_value)
   }
-  jeedom.cmd.refreshValue([{cmd_id: '#winRsState_id#id##', display_value: "#winRsState_display_value#id##"}])
+  jeedom.cmd.refreshValue([{cmd_id: '#winRrState_id#id##', display_value: "#winRrState_display_value#id##"}])
 }
 
 if (!"#hoodState_id#id##".startsWith('#')) {

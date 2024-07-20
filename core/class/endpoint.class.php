@@ -214,7 +214,7 @@ class endpoint {
 				"frontLeftWindow"   => "winFlState",
             	"frontRightWindow"  => "winFrState",
             	"rearLeftWindow"    => "winRlState",
-            	"rearRightWindow"   => "winRsState",
+            	"rearRightWindow"   => "winRrState",
             	"sunroof"           => "roofState",
 			],
 		],

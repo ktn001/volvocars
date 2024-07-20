@@ -1188,7 +1188,7 @@ class volvocars extends eqLogic {
 			'winFlState',
 			'winFrState',
 			'winRlState',
-			'winRsState',
+			'winRrState',
 		);
 		foreach ($logicalIds as $logicalId) {
 			$cmd = $this->getCmd(null,$logicalId);
