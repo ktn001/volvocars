@@ -6,7 +6,7 @@
 	},
 	"licence" : "AGPL",
 	"author" : "ktn",
-	"require" : "4.4.8",
+	"require" : "4.4.9",
 	"category" : "devicecommunication",
 	"display" : "panel",
 	"hasDependency" : false,
