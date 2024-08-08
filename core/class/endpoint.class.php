@@ -24,7 +24,7 @@ class endpoint {
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/command-accessibility",
 			"accept" => "application/json",
 			"type" => "info",
-			"refreshDelai" => 1,
+			"refreshDelai" => 5,
 			"cmds" => [
 				"availabilityStatus" => ["availability", "unavailableReason" ],
 			],
@@ -34,7 +34,7 @@ class endpoint {
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/brakes",
 			"accept" => "application/json",
 			"type" => "info",
-			"refreshDelai" => 30,
+			"refreshDelai" => 60,
 			"cmds" => [
 				"brakeFluidLevelWarning" => "brakeFluidLevel",
 			],
@@ -107,7 +107,7 @@ class endpoint {
 			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/engine-status",
 			"accept" => "application/json",
 			"type" => "info",
-			"refreshDelai" => 1,
+			"refreshDelai" => 5,
 			"cmds" => [
 				"engineStatus" => "engineON",
 			],
