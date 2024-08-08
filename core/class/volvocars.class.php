@@ -85,6 +85,9 @@ class volvocars extends eqLogic {
 			log::add("volvocars","debug","cron pour : " . $car->getName());
 			$car->refresh(false);
 		}
+	//	foreach(volvoAccount::all() as $account) {
+	//		$account->logStats();
+	//	}
 	}
 
 	static public function cronHourly() {

@@ -39,6 +39,7 @@ class volvoAccount {
 	private $login = '';
 	private $password = '';
 	private $_token = null;
+	private $_fd = null;
 
 	/* *********************************************** */
 	/* *************** Méthodes Static *************** */
@@ -335,7 +336,7 @@ class volvoAccount {
 		if ($endpoint === null) {
 			log::add("volvocars","error",sprintf(__("URL pour le endpoint %s non définie",__FILE__),$endpoint));
 		}
-		if (!$_force and !$this->shouldRequest($_endpoint_id)) {
+		if (!$_force and !$this->shouldRequest($_endpoint_id, $vin)) {
 			log::add("volvocars","debug","│ " . __("Pas nécessaire",__FILE__));
 			return array();
 		}
@@ -430,69 +431,129 @@ class volvoAccount {
 		}
 	}
 
-	public function shouldRequest($_endpoint_id) {
+	public function shouldRequest($_endpoint_id, $_vin) {
 		$lastAccess = $this->getCache('lastEndpointAccess');
 		if (!is_array($lastAccess)) {
 			$lastAccess = array();
 		}
-		if (!array_key_exists($_endpoint_id,$lastAccess)) {
-			return true;
+		if (!isset($lastAccess[$_endpoint_id])) {
+			$lastAccess[$_endpoint_id] = array();
 		}
-		$lastAccessTime = intval($lastAccess[$_endpoint_id]) -5;
+		if (!isset($lastAccess[$_endpoint_id][$_vin])) {
+			$lastAccess[$_endpoint_id][$_vin] = 0;
+		}
+		$lastAccessTime = intval($lastAccess[$_endpoint_id][$_vin]);
 		$endpoint = new endpoint($_endpoint_id);
 		$refreshDelai = $endpoint->getRefreshDelai();
 		if ($refreshDelai === null) {
 			return false;
 		}
-		if ((intval(date('U')) - $lastAccessTime) <= ($refreshDelai * 60)) {
+		if ((intval(date('U')) - $lastAccessTime) <= (($refreshDelai * 60)-20)) {
 			return false;
 		}
 		return true;
 	}
 
+	public function getFileDescriptorLock() {
+		if ($this->_fd === null) {
+			$fileName = jeedom::getTmpFolder() . '/volvocars_cache_account_' . $this->getId() . '.lock';
+			@chmod($fileName, 0777);
+			$this->_fd = fopen($fileName, 'w');
+		}
+		return $this->_fd;
+	}
+
 	public function incrementEndpointCounter($_endpoint_id, $_vin) {
-		$cache = $this->getCache();
-		if (!is_array($cache)) {
-			$cache = [];
-		}
+		$fd = $this->getFileDescriptorLock();
+		$waitIfLocked = true;
+		if (@flock($fd, LOCK_EX, $waitIfLocked)) {
+			$cache = $this->getCache();
+			if (!is_array($cache)) {
+				$cache = [];
+			}
 
-		if (!array_key_exists('endpointAccessCount',$cache) or !is_array($cache['endpointAccessCount'])) {
-			$cache['endpointAccessCount'] = [];
-		}
-		$counter = $cache['endpointAccessCount'];
-		if (!isset($counter['timestamp']) or (gmdate('dm',$counter['timestamp']) != gmdate('dm'))) {
-			// Réinitialisation du compteur journalier à minuit GMT
-			$counter = array(
-				'timestamp' => date('U')
-			);
-		}
-		if (array_key_exists($_endpoint_id,$counter['endpoint'])) {
-			$counter['endpoint'][$_endpoint_id] ++;
+			if (!isset($cache['endpointAccessCount'])) {
+				$cache['endpointAccessCount'] = array();
+			}
+
+			if (!isset($cache['endpointAccessCount']['countFrom']) or (gmdate('d',$cache['endpointAccessCount']['countFrom']) != gmdate('d'))) {
+				$this->logStats();
+				$cache['endpointAccessCount'] = array();
+				$cache['endpointAccessCount']['countFrom'] = date('U');
+			}
+
+			if (!isset($cache['endpointAccessCount'][$_endpoint_id])) {
+				$cache['endpointAccessCount'][$_endpoint_id] = array();
+			}
+
+			if (!isset($cache['endpointAccessCount'][$_endpoint_id][$_vin])) {
+				$cache['endpointAccessCount'][$_endpoint_id][$_vin] = 1;
+			} else {
+				$cache['endpointAccessCount'][$_endpoint_id][$_vin]++;
+			}
+
+			if (!isset($cache['lastEndpointAccess']) or !is_array($cache['lastEndpointAccess'])) {
+				$cache['lastEndpointAccess'] = array();
+			}
+
+			if (!isset($cache['lastEndpointAccess'][$_endpoint_id]) or !is_array($cache['lastEndpointAccess'][$_endpoint_id])) {
+				$cache['lastEndpointAccess'][$_endpoint_id] = array();
+			}
+
+			$cache['lastEndpointAccess'][$_endpoint_id][$_vin] = date('U');
+
+			$this->setCache($cache);
+			@flock($fd, LOCK_UN);
 		} else {
-			$counter['endpoint'][$_endpoint_id] = 1;
+			log::add('volvocars','warn',__('Erreur de prise de lock',__FILE__));
 		}
-		$cache['endpointAccessCount'] = $counter;
-
-		if (!array_key_exists('lastEndpointAccess',$cache) or !is_array($cache['lastEndpointAccess'])) {
-			$cache['lastEndpointAccess'] = [];
-		}
-		$cache['lastEndpointAccess'][$_endpoint_id] = date('U');
-		$this->setCache($cache);
 	}
 
 	public function logStats() {
 		$counter = $this->getCache('endpointAccessCount');
-		log::add('volvocars.stats','info',"╔══════ " . __("statistiques",__FILE__) . " ══════════");
-		log::add('volvocars.stats','info',"╟─" . sprintf(__("Appels API depuis: %s",__FILE__),date('d-m-Y H:i:s',$counter['timestamp'])));
-		log::add('volvocars.stats','info',"║  Account:" . $this->getName());
-		$total = 0;
-		foreach ($counter['endpoint'] as $endpoint => $count) {
-			$total += $count;
-			log::add('volvocars.stats','info',"║   " . $endpoint . ": " . $count);
+		if (!is_array($counter)) return;
+
+		$carStats = array('total' => 0);
+		$endpointStats = array();
+		$apiStats = array();
+
+		$endpoints = array();
+		foreach ($counter as $endpoint_id => $values) {
+			if ($endpoint_id == 'countFrom') continue;
+
+			if (!isset ($endpoints[$endpoint_id])) $endpoints[$endpoint_id] = new endpoint($endpoint_id);
+			if (!is_object ($endpoints[$endpoint_id])) continue;
+			$api = $endpoints[$endpoint_id]->getApi();
+
+			foreach ($values as $vin => $count) {
+				if (!isset ($carStats[$vin])) $carStats[$vin] = array('total' => 0);
+				if (!isset ($carStats[$vin][$api])) $carStats[$vin][$api] = array('total' => 0);
+				$carStats['total'] += $count;
+				$carStats[$vin]['total'] += $count;
+				$carStats[$vin][$api]['total'] += $count;
+				$carStats[$vin][$api][$endpoint_id] = $count;
+			}
 		}
-			log::add('volvocars.stats','info',"║   ═════════════════");
-			log::add('volvocars.stats','info',"║   TOTAL: " . $total);
-		log::add('volvocars.stats','info',"╚═══════════════════════════════");
+
+		log::add('volvocars.stats','info',"╔════════════════ ".__("statistiques",__FILE__)." ═════════════════");
+		log::add('volvocars.stats','info',"╟─".sprintf(__("Appels API depuis: %s",__FILE__),date('d-m-Y H:i:s',$counter['countFrom'])));
+		log::add('volvocars.stats','info',sprintf("║  %-42s %5d", __("Account",__FILE__) . ": " .$this->getName(), $carStats['total']));
+		foreach (array_keys($carStats) as $vin) {
+			if ($vin == 'total') continue;
+			$car = volvocars::byVin($vin);
+			log::add('volvocars.stats','info',sprintf("║    %-37s %5d", __("Véhicule",__FILE__).": " . $car->getName() , $carStats[$vin]['total']));
+			foreach (array_keys($carStats[$vin]) as $api) {
+				if ($api == 'total') continue;
+				log::add('volvocars.stats','info',sprintf("║      %-30s %5d", "API: " . $api, $carStats[$vin][$api]['total']));
+				foreach (array_keys($carStats[$vin][$api]) as $endpoint) {
+					if ($endpoint == 'total') continue;
+					log::add('volvocars.stats','info',sprintf("║        %-24s %5d", "Endpoint: " . $endpoint, $carStats[$vin][$api][$endpoint]));
+				}
+			}
+
+
+		}
+		log::add('volvocars.stats','info',"╚══════════════════════════════════════════════");
 	}
 
 	public function getCache($_key = '', $_default = '') {
