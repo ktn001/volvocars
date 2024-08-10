@@ -436,7 +436,7 @@ class volvoAccount {
 		if (!is_array($lastAccess)) {
 			$lastAccess = array();
 		}
-		if (!isset($lastAccess[$_endpoint_id])) {
+		if (!isset($lastAccess[$_endpoint_id]) or !is_array($lastAccess[$_endpoint_id])) {
 			$lastAccess[$_endpoint_id] = array();
 		}
 		if (!isset($lastAccess[$_endpoint_id][$_vin])) {
