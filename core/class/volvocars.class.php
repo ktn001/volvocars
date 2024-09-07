@@ -85,9 +85,6 @@ class volvocars extends eqLogic {
 			log::add("volvocars","debug","cron pour : " . $car->getName());
 			$car->refresh(false);
 		}
-	//	foreach(volvoAccount::all() as $account) {
-	//		$account->logStats();
-	//	}
 	}
 
 	static public function cronHourly() {
@@ -585,15 +582,28 @@ class volvocars extends eqLogic {
 	}
 
 	/*
-	 * Retourne l'image du véhicule
+	 * Vérifie si une image du véhicule est disponible
 	 */
-	public function getImage() {
+	public function imageOK() {
 		$img = $this->getVin() .'.png';
 		$imgPath = __DIR__ . '/../../data/' . $img;
 		if (file_exists($imgPath)){
-			return '/plugins/volvocars/data/' . $img;
+			$fileInfo = getimagesize($imgPath);
+			if ($fileInfo !== false) {
+				return true;
+			}
 		}
 		$plugin = plugin::byId($this->getEqType_name());
+		return false;
+	}
+
+	/*
+	 * Retourne l'image du véhicule
+	 */
+	public function getImage() {
+		if ($this->imageOK()) {
+			return '/plugins/volvocars/data/' . $this->getVin() . '.png';
+		}
 		return $plugin->getPathImgIcon();
 	}
 
@@ -766,19 +776,30 @@ class volvocars extends eqLogic {
 				}
 				$imgPath .= '/'.$this->getVin() . ".png";
 				log::add("volvocars","debug",$imgPath);
-				// file_put_contents($imgPath, file_get_contents($url));
-				$session = curl_init($url);
-				$image = fopen($imgPath, 'wb');
-				curl_setopt($session,CURLOPT_USERAGENT, "Mozilla/5.0 (Linux x86_64) ");
-				curl_setopt($session,CURLOPT_FILE, $image);
-				curl_setopt($session,CURLOPT_HTTPHEADER,["Accept-Encoding: gzip"]);
-				curl_exec($session);
+				log::add("volvocars","debug",print_r(get_headers($url,1),true));
+				$session = curl_init();
+				curl_setopt($session, CURLOPT_URL, $url);
+				curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'GET');
+				curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
+				curl_setopt($session, CURLOPT_HTTPHEADER, [
+					"Accept: image/avif,image/webp,image/png,image/svg+xml,*/*;q=0.8",
+			  		"Accept-Language: fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
+					"Connection: keep-alive",
+				  	"Access-Control-Allow-Origin: *",
+				  	"Pragma: no-cache",
+					"Host: cas.volvocars.com",
+					"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0",
+				]);
+
+				$data = curl_exec($session);
 				$httpCode = curl_getinfo($session,CURLINFO_HTTP_CODE);
 				log::add("volvocars","debug","httpCode: " . $httpCode);
 				if ($httpCode != 200) {
 					log::add("volvocars","error",sprintf(__("Erreur lors du téléchargement de l'image. HTTPCODE: %s",__FILE__), $httpCode));
 				}
 				curl_close($session);
+				$image = fopen($imgPath, 'wb');
+				fwrite($image,$data);
 				fclose($image);
 			}
 			if (isset($details['images']['internalImageUrl'])){

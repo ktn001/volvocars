@@ -541,7 +541,12 @@ class volvoAccount {
 		foreach (array_keys($carStats) as $vin) {
 			if ($vin == 'total') continue;
 			$car = volvocars::byVin($vin);
-			log::add('volvocars.stats','info',sprintf("║    %-37s %5d", __("Véhicule",__FILE__).": " . $car->getName() , $carStats[$vin]['total']));
+			if (is_object($car)) {
+				$carName = $car->getName();
+			} else {
+				$carName = $vin;
+			}
+			log::add('volvocars.stats','info',sprintf("║    %-37s %5d", __("Véhicule",__FILE__).": " . $carName , $carStats[$vin]['total']));
 			foreach (array_keys($carStats[$vin]) as $api) {
 				if ($api == 'total') continue;
 				log::add('volvocars.stats','info',sprintf("║      %-30s %5d", "API: " . $api, $carStats[$vin][$api]['total']));
