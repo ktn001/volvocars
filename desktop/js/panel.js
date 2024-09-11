@@ -48,7 +48,6 @@ if (typeof volvocarsPanel === 'undefined') {
           jeedomUtils.showAlert({message: data.result, level: 'danger'})
           return
         }
-        console.log(data.result)
         setTimeout (function() {
           document.getElementById('div_display_eqLogic').empty().html(data.result)
           domUtils.hideLoading()

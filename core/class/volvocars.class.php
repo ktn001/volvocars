@@ -604,7 +604,36 @@ class volvocars extends eqLogic {
 		if ($this->imageOK()) {
 			return '/plugins/volvocars/data/' . $this->getVin() . '.png';
 		}
+		$plugin = plugin::byId(__CLASS__);
 		return $plugin->getPathImgIcon();
+	}
+
+	/*
+	 * Retourne l'URL pour obtenir une image du véhicule
+	 */
+	public function getImageUrl() {
+		$account = $this->getAccount();
+		$details = $account->getInfos('details',$this->getVin(), true);
+		if (isset($details['images'])){
+			if (isset($details['images']['exteriorImageUrl'])){
+				$url = $details['images']['exteriorImageUrl'];
+				$parsedURL = parse_url($url);
+				parse_str($parsedURL['query'],$params);
+				$params['bg'] = 'ffffff00';
+				$params['w'] = '1200';
+				$parsedURL['query'] = http_build_query($params);
+				$url = ((isset($parsedURL['scheme'])) ? $parsedURL['scheme'] . '://' : '')
+					  .((isset($parsedURL['user'])) ? $parsedURL['user'] . ((isset($parsedURL['pass'])) ? ':' . $parsedURL['pass'] : '') .'@' : '')
+					  .((isset($parsedURL['host'])) ? $parsedURL['host'] : '')
+					  .((isset($parsedURL['port'])) ? ':' . $parsedURL['port'] : '')
+					  .((isset($parsedURL['path'])) ? $parsedURL['path'] : '')
+					  .((isset($parsedURL['query'])) ? '?' . $parsedURL['query'] : '')
+					  .((isset($parsedURL['fragment'])) ? '#' . $parsedURL['fragment'] : '');
+				log::add("volvocars","debug","IMAGE: " . $url);
+				return $url;
+			}
+		}
+		return "";
 	}
 
 	/*

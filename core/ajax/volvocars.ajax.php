@@ -196,6 +196,36 @@ try {
 		ajax::success();
 	}
 
+	if ($action == 'getImageUrl'){
+		$car_id = init('id');
+		if ($car_id == '') {
+			throw new Exception(__("L'id du véhicule n'est pas défini",__FILE__));
+		}
+		$car = volvocars::byId($car_id);
+		if (!is_object($car)){
+			throw new Exception(sprintf(__("Le véhicule %s est introuvable",__FILE__),$car_id));
+		}
+		$url = $car->getImageUrl();
+		ajax::success($url);
+	}
+
+	if ($action == 'saveImage'){
+		$car_id = init('id');
+		if ($car_id == '') {
+			throw new Exception(__("L'id du véhicule n'est pas défini",__FILE__));
+		}
+		$car = volvocars::byId($car_id);
+		$vin = $car->getVin();
+		if (!is_object($car)){
+			throw new Exception(sprintf(__("Le véhicule %s est introuvable",__FILE__),$car_id));
+		}
+		$image = base64_decode(init('image'));
+		$image=init('image');
+		$imagePath = __DIR__ . './../../data/' . $vin . '.png';
+		file_put_contents($imagePath, $image);
+		ajax::success($url);
+	}
+
 	throw new Exception(__('Aucune méthode correspondante à', __FILE__) . ' : ' . init('action'));
 	/*     * *********Catch exeption*************** */
 }

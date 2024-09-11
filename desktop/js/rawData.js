@@ -21,7 +21,6 @@ if (typeof volvocarsRawData === "undefined") {
   var volvocarsRawData ={}
 
   volvocarsRawData.init = function() {
-    console.log(volvocarsFrontEnd.mdId_rawDatas)
     document.getElementById(volvocarsFrontEnd.mdId_rawDatas).addEventListener('click', function(event) {
       let _target = null
 
@@ -39,14 +38,12 @@ if (typeof volvocarsRawData === "undefined") {
       }
 
       if (_target = event.target.closest('.rawDataAction[data-action=plie]')) {
-        console.log("PLIE")
         document.querySelectorAll('.endpointHeader .show_values').forEach(function(node) {
           node.unseen()
           node.click()
         })
       }
       if (_target = event.target.closest('.rawDataAction[data-action=deplie]')) {
-        console.log("DEPLIE")
         document.querySelectorAll('.endpointHeader .show_values').forEach(function(node) {
           node.seen()
           node.click()

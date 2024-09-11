@@ -6,6 +6,7 @@ if (!isConnect('admin')) {
 	throw new Exception('{{401 - Accès non autorisé}}');
 }
 // Déclaration des variables obligatoires
+include_file('desktop', 'volvocars', 'css', 'volvocars');
 $plugin = plugin::byId('volvocars');
 sendVarToJS([
 	'eqType' => $plugin->getId(),
@@ -356,7 +357,6 @@ $accounts = volvoAccount::all();
 						</div>
 
 						<!-- Partie droite de l'onglet "Équipement" -->
-						<!-- Affiche un champ de commentaire par défaut mais vous pouvez y mettre ce que vous voulez -->
 						<div class="col-lg-6">
 							<legend><i class="fas fa-info"></i> {{Informations}}</legend>
 							<div class="form-group">
@@ -365,11 +365,33 @@ $accounts = volvoAccount::all();
 									<textarea class="form-control eqLogicAttr autogrow" data-l1key="comment"></textarea>
 								</div>
 							</div>
+							<?php
+								$carId = init('id');
+								$imageOK = false;
+								if ($carId) {
+									$car = volvocars::byId($carId);
+									if (is_object($car)) {
+										$imageOK = $car->imageOK();
+									}
+								}
+								sendVarToJS([
+									'imageOK' => $imageOK,
+								]);
+							?>
 							<div class='col-sm-12'>
-								<img id="img_car" class="img-responsive">
+								<img id="img_car" class="img-responsive" style="margin-left:auto;margin-right:auto;margin-top:30px">
+							</div>
+							<div id="div-get_image" class="col-sm-12 hidden" style="text-align:center;margin-bottom:5px">
+								<a id="btn-get_image" class="btn btn-sm btn-primary"><i class="fas fa-image"></i> {{Récupérer une image du véhicule}}</a>
 							</div>
 							<div class="col-sm-12" style="text-align:center;">
 								<a class="btn btn-sm btn-primary eqLogicAction" data-action="get_raw-datas"><i class="fas fa-file-alt"></i> {{Données brutes}}</a>
+							</div>
+							<div class="col-sm-12" style="text-align:center;">
+								<div id="drop-area">
+									{{Coller l'image ici}}
+								</div>
+								<input type="file" id="img_input" class="multiple xhidden">
 							</div>
 						</div>
 					</fieldset>
