@@ -387,11 +387,8 @@ $accounts = volvoAccount::all();
 							<div class="col-sm-12" style="text-align:center;">
 								<a class="btn btn-sm btn-primary eqLogicAction" data-action="get_raw-datas"><i class="fas fa-file-alt"></i> {{Données brutes}}</a>
 							</div>
-							<div class="col-sm-12" style="text-align:center;">
-								<div id="drop-area">
-									{{Coller l'image ici}}
-								</div>
-								<input type="file" id="img_input" class="multiple xhidden">
+							<div id="drop-area" class="col-sm-12 hidden" contenteditable="true">
+								{{Coller l'image ici}}
 							</div>
 						</div>
 					</fieldset>

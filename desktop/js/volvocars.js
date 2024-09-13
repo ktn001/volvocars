@@ -53,7 +53,7 @@ if (typeof volvocarsFrontEnd === "undefined") {
           volvocarsFrontEnd.toggleEditVehicle(true)
           return
         }
-  
+
         if (_target = event.target.closest('.eqLogicAction[data-action=protect]')) {
           volvocarsFrontEnd.toggleEditVehicle(false)
           return
@@ -73,7 +73,7 @@ if (typeof volvocarsFrontEnd === "undefined") {
           volvocarsFrontEnd.removeOpenOrClosedCmds('Open')
           return
         }
-  
+
         if (_target = event.target.closest('.cmdAction[data-action=removeClosed]')){
           volvocarsFrontEnd.removeOpenOrClosedCmds('Closed')
           return
@@ -83,34 +83,34 @@ if (typeof volvocarsFrontEnd === "undefined") {
           volvocarsFrontEnd.recreateMissingsCmds()
           return
         }
- 
+
         if (_target = event.target.closest('.cmdAction[data-action=sort]')) {
           volvocarsFrontEnd.sortCmds()
           return
         }
- 
+
         if (_target = event.target.closest('#btn-get_image')) {
           volvocarsFrontEnd.GetImage()
           return
         }
       })
- 
+
       /*
        * Event Change
        */
       document.getElementById('div_pageContainer').addEventListener('change', function(event) {
         let _target = null
- 
+
         if (_target = event.target.closest('.eqLogicAttr[data-l2key=electricEngine]')) {
           volvocarsFrontEnd.toggleElectricEngine(_target.checked)
           return
         }
-  
+
         if (_target = event.target.closest('.eqLogicAttr[data-l2key=fuelEngine]')) {
           volvocarsFrontEnd.toggleFuelEngine(_target.checked)
           return
         }
- 
+
         if (_target = event.target.closest('[data-l1key=configuration][data-l2key^=site][data-l2key$=_active]')) {
           volvocarsFrontEnd.siteActivation(_target)
           return
@@ -120,8 +120,14 @@ if (typeof volvocarsFrontEnd === "undefined") {
       /*
        * Event Load
        */
-      document.getElementById('img_car').addEventListener('load', volvocarsFrontEnd.carImageLoaded)
-  
+      document.getElementById('img_car').addEventListener('load', function () {
+        volvocarsFrontEnd.carImageLoaded()
+      })
+
+      /*
+       * Event Paste
+       */
+      document.getElementById('drop-area').addEventListener('paste', volvocarsFrontEnd.pasteImage)
     },
 
     /*
@@ -344,7 +350,7 @@ if (typeof volvocarsFrontEnd === "undefined") {
         }
       }
     },
-  
+
     /*
      * Action du bouton Données brutes
      */
@@ -362,7 +368,7 @@ if (typeof volvocarsFrontEnd === "undefined") {
             className: 'hidden'
           },
           'confirm': {
-            callback: { 
+            callback: {
               click: function() {
                 document.getElementById('mod_rawDatas')._jeeDialog.close()
               },
@@ -408,7 +414,7 @@ if (typeof volvocarsFrontEnd === "undefined") {
         }
       })
     },
-  
+
     /*
      * Supression des commandes *_open on *_closed
      */
@@ -494,7 +500,7 @@ if (typeof volvocarsFrontEnd === "undefined") {
       tr += '<i class="fas fa-minus-circle pull-right cmdAction cursor" data-action="remove" title="{{Supprimer la commande}}"></i>'
       tr += '</td>'
       tr += '</tr>'
-  
+
       let newRow = document.createElement('tr')
       newRow.innerHTML = tr
       newRow.addClass('cmd')
@@ -513,7 +519,7 @@ if (typeof volvocarsFrontEnd === "undefined") {
         }
       })
     },
- 
+
     /*
      * Suppression d'une liste de commandes
      */
@@ -572,7 +578,7 @@ if (typeof volvocarsFrontEnd === "undefined") {
         }
       })
     },
-  
+
     /*
      * Recréation des commandes manquantes
      */
@@ -602,7 +608,10 @@ if (typeof volvocarsFrontEnd === "undefined") {
         }
       })
     },
-  
+
+    /*
+     * Tri des commandes
+     */
     sortCmds: function() {
       if (jeeFrontEnd.modifyWithoutSave) {
         jeeDialog.alert("{{Vous devez sauvegarder vos modifications en cours avant de lancer cette opération!}}")
@@ -629,7 +638,7 @@ if (typeof volvocarsFrontEnd === "undefined") {
         }
       })
     },
-  
+
     /*
      * Action sur changement moteur électrique
      */
@@ -642,7 +651,7 @@ if (typeof volvocarsFrontEnd === "undefined") {
         document.querySelector('.eqLogicAttr[data-l2key=batteryCapacityKWH]').closest('div.form-group').addClass('hide')
       }
     },
-    
+
     /*
      * Action sur changement moteur thermique
      */
@@ -653,7 +662,7 @@ if (typeof volvocarsFrontEnd === "undefined") {
         document.getElementById('fuelAutonomy').addClass('hide')
       }
     },
- 
+
     /*
      * Action sur (dés)activation d'un site
      */
@@ -691,7 +700,7 @@ if (typeof volvocarsFrontEnd === "undefined") {
       let img = document.querySelector('.eqLogicDisplayCard[data-eqLogic_id="' + data.id + '"] img').getAttribute('src')
       document.querySelector('#img_car').setAttribute('src',img)
     },
- 
+
     /*
      * Image Chargée
      */
@@ -708,7 +717,7 @@ if (typeof volvocarsFrontEnd === "undefined") {
         },100)
         return
       }
-  
+
       if (!imageOK) {
         let el_img = document.querySelector('#img_car')
         let url = el_img.getAttribute('src')
@@ -717,12 +726,14 @@ if (typeof volvocarsFrontEnd === "undefined") {
             el_img.style.filter = 'invert(100%)'
           }
           document.getElementById('div-get_image').removeClass('hidden')
+          document.getElementById('drop-area').addClass('hidden')
         } else {
           document.getElementById('div-get_image').addClass('hidden')
+          document.getElementById('drop-area').removeClass('hidden')
         }
       }
     },
- 
+
     /*
      * Récupération image véhicule
      */
@@ -746,13 +757,48 @@ if (typeof volvocarsFrontEnd === "undefined") {
           if (data.state != 'ok') {
             jeedomUtils.showAlert({message: data.result, level: 'danger'})
             return
-          } 
+          }
           let url = data.result
           let el_img = document.getElementById('img_car')
           el_img.src = url
           el_img.style.filter = 'invert(0%)'
         }
       })
+    },
+
+    pasteImage: function (e) {
+      let data = e.clipboardData.items
+      for (let i = 0; i < data.length; i += 1) {
+        if (data[i].kind === 'file' && data[i].type === 'image/png') {
+          let image = data[i].getAsFile()
+          console.log(image)
+          let reader = new FileReader()
+          reader.addEventListener('load',function() {
+            let id = getUrlVars('id')
+            domUtils.ajax({
+              type: 'POST',
+              async: false,
+              global: false,
+              url: volvocarsFrontEnd.ajaxUrl,
+              data: {
+                action: 'saveImage',
+                id: id,
+                image: reader.result,
+              },
+              dataType: 'json',
+              success: function(data) {
+                if (data.state != 'ok') {
+                  jeedomUtils.showAlert({message: data.result, level: 'danger'})
+                  return
+                }
+                document.getElementById('drop-area').addClass('hidden')
+              },
+            })
+          })
+          reader.readAsDataURL(image)
+          break
+        }
+      }
     },
 
   }
@@ -764,12 +810,9 @@ window.onload = volvocarsFrontEnd.init()
 
 //   volvocarsFrontEnd.init = function() {
 //     document.getElementById('drop-area').addEventListener('drop',volvocarsFrontEnd.dropImage)
-// 
+//
 //   }
-// 
-//   volvocarsFrontEnd.dropImage = function() {
-//     console.log("DROP")
-//   }
-// 
+//
 //   // volvocarsFrontEnd.toggleEditVehicle(false)
 // }
+// https://uploadcare.com/blog/how-to-make-a-drag-and-drop-file-uploader/

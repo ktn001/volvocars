@@ -219,10 +219,11 @@ try {
 		if (!is_object($car)){
 			throw new Exception(sprintf(__("Le véhicule %s est introuvable",__FILE__),$car_id));
 		}
-		$image = base64_decode(init('image'));
-		$image=init('image');
+		$image = str_replace(' ','+',init('image'));
+		$content = explode(',',$image);
+		$imageData = base64_decode(array_pop($content));
 		$imagePath = __DIR__ . './../../data/' . $vin . '.png';
-		file_put_contents($imagePath, $image);
+		file_put_contents($imagePath, $imageData);
 		ajax::success($url);
 	}
 
