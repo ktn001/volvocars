@@ -1,24 +1,34 @@
 {
-	"id" : "volvocars",
-	"name" : "Volvo",
-	"description" : {
-		"fr_FR": "Plugin pour l'intégration de véhicules Volvo dans Jeedom"
+	"id": "volvocars",
+	"name": "Volvo",
+	"description": {
+		"fr_FR": "Plugin pour l'intégration de véhicules Volvo dans Jeedom",
+		"en_US": "Plugin for integrating Volvo vehicles in Jeedom",
+		"es_ES": "Plugin para integrar vehículos Volvo en Jeedom",
+		"de_DE": "Plugin für die Integration von Volvo-Fahrzeugen in Jeedom",
+		"it_IT": "Plugin per integrare i veicoli Volvo in Jeedom",
+		"pt_PT": "Plugin para integrar os veículos Volvo no Jeedom"
 	},
-	"licence" : "AGPL",
-	"author" : "ktn",
-	"require" : "4.4.9",
-	"category" : "devicecommunication",
-	"display" : "panel",
-	"hasDependency" : false,
-	"hasOwnDeamon" : false,
-	"maxDependancyInstallTime" : 0,
-	"changelog" :          "https://ktn001.github.io/fr_FR/volvocars/changelog.html",
-	"documentation" :      "https://ktn001.github.io/fr_FR/volvocars/index.html",
-	"link" : {
-		"forum":"https://community.jeedom.com/tag/plugin-volvocars"
+	"licence": "AGPL",
+	"author": "ktn",
+	"require": "4.4.9",
+	"category": "devicecommunication",
+	"display": "panel",
+	"hasDependency": false,
+	"hasOwnDeamon": false,
+	"maxDependancyInstallTime": 0,
+	"changelog": "https://ktn001.github.io/fr_FR/volvocars/changelog.html",
+	"documentation": "https://ktn001.github.io/fr_FR/volvocars/index.html",
+	"link": {
+		"forum": "https://community.jeedom.com/tag/plugin-volvocars"
 	},
 	"language": [
-		"fr_FR"
+		"de_DE",
+		"en_US",
+		"es_ES",
+		"fr_FR",
+		"it_IT",
+		"pt_PT"
 	],
 	"compatibility": [
 		"miniplus",
