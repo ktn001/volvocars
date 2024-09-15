@@ -2,23 +2,23 @@
  * vim: tabstop=4 autoindent
  */
 
-body[data-theme=core2019_Dark] {
-	--vlv-endpointName-color: #FFFFFF;
+body[data-theme="core2019_Dark"] {
+  --vlv-endpointName-color: #ffffff;
 }
 
-body[data-theme=core2019_Light] {
-	--vlv-endpointName-color: #000000;
+body[data-theme="core2019_Light"] {
+  --vlv-endpointName-color: #000000;
 }
 
 .rawData .endpointName {
-	color: var(--vlv-endpointName-color);
+  color: var(--vlv-endpointName-color);
 }
 
 .hidde_values,
 .show_values {
-	font-size: 1.5em;
+  font-size: 1.5em;
 }
 
 .rawData pre {
-	margin: 0px;
+  margin: 0px;
 }

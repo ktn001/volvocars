@@ -3,11 +3,11 @@
  */
 
 .blur {
-	filter: blur(3px);
+  filter: blur(3px);
 }
 
 .blur:hover {
-	filter: blur(0);
+  filter: blur(0);
 }
 
 #drop-area {
@@ -17,5 +17,3 @@
   border: 2px dashed #ccc;
   cursor: pointer;
 }
-
-
