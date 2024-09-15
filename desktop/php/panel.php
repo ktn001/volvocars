@@ -9,7 +9,7 @@ $pluginName = init('m');
 
 $eqLogics = eqLogic::byType($pluginName, true);
 if (!$eqLogics) {
-	throw new Exception('{{Aucun Véhicule trouvé. Pour en créer un, allez dans Plungins -> Objets connectés -> Volvo cars.}}');
+	throw new Exception('{{Aucun véhicule trouvé. Pour en créer un, allez dans Plugins -> Objets connectés -> Volvo cars.}}');
 }
 include_file('desktop', 'panel', 'css', 'volvocars');
 ?>

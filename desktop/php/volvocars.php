@@ -90,7 +90,7 @@ $accounts = volvoAccount::all();
 			if (count($accounts) == 0) {
 				echo '<br><div class="text-center" style="font-size:1.2em;font-weight:bold;">{{Vous devez créer un compte volvoId avant de pouvoir créer un véhicule}}</div>';
 			} else {
-				echo '<br><div class="text-center" style="font-size:1.2em;font-weight:bold;">{{Aucun véhicule trouvé, cliquer sur "Ajouter" pour commencer}}</div>';
+				echo '<br><div class="text-center" style="font-size:1.2em;font-weight:bold;">{{Aucun véhicule trouvé, cliquer sur "Synchronisation" pour commencer}}</div>';
 			}
 		} else {
 			// Champ de recherche
@@ -199,7 +199,7 @@ $accounts = volvoAccount::all();
 								<label class="col-sm-4 control-label">vin
 									<sup><i class="fas fa-question-circle tooltips" title="{{vin du véhicule}}"></i></sup>
 								</label>
-								<div class="col-sm-6">
+								<div class="col-sm-6 blur">
 									<input type="text" class="eqLogicAttr form-control sensible" data-l1key="logicalId" placeholder="{{vin}}">
 								</div>
 							</div>
@@ -275,7 +275,7 @@ $accounts = volvoAccount::all();
 
 							<!-- PARAMETRES ALERTES -->
 
-							<legend><i class="fas fa-exclamation-triangle"></i> {{Paramètres d'alertes)}}</legend>
+							<legend><i class="fas fa-exclamation-triangle"></i> {{Paramètres d'alertes}}</legend>
 							<div id="electricAutonomy" class="form-group">
 								<label class="col-sm-4 control-label">{{Autonomie électrique (Km)}}</label>
 								<div class="col-sm-6">
