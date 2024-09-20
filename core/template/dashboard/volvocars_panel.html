@@ -1089,7 +1089,7 @@
   // POSITION
   if (!"#position_id#id##".startsWith('#')) {
     jeedom.cmd.update['#position_id#id##'] = function(_options) {
-      document.querySelector('iframe.Cmd#position_id#id##').setAttribute('src',"http://map.google.com/maps?hl=fr&ie=utf8&output=embed&q=" + _options.display_value)
+      document.querySelector('iframe.Cmd#position_id#id##').setAttribute('src',"https://map.google.com/maps?hl=fr&ie=utf8&output=embed&q=" + _options.display_value)
     }
     jeedom.cmd.refreshValue([{cmd_id: '#position_id#id##', value: '#position_state#id##', display_value: '#position_display_value#id##'}])
   }
