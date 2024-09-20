@@ -33,9 +33,11 @@ if (typeof volvocarsPanel === "undefined") {
    */
   volvocarsPanel.displaySelectedEqLogic = function () {
     domUtils.showLoading();
-    let id = document
-      .querySelector("#div_display_eqLogicList .active[data-eqLogic_id]")
-      .getAttribute("data-eqLogic_id");
+    let el = document.querySelector("#div_display_eqLogicList .active[data-eqLogic_id]")
+    if (! el) {
+      return
+    }
+    let id = el.getAttribute("data-eqLogic_id");
     domUtils.ajax({
       type: "POST",
       url: "plugins/volvocars/core/ajax/volvocars.ajax.php",
@@ -63,4 +65,4 @@ if (typeof volvocarsPanel === "undefined") {
   };
 }
 volvocarsPanel.init();
-volvocarsPanel.displaySelectedEqLogic();
+setTimeout (volvocarsPanel.displaySelectedEqLogic, 500)
