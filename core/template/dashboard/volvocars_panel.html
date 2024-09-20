@@ -496,7 +496,7 @@
       </div>
 
       <!-- Status -->
-      <div class="div_status col-xs-12 tile tile3">
+      <div class="div_status #fuelEngineOnly#id## col-xs-12 tile tile3">
         <div class="col-xs-1 tile-icon"><i class="fas fa-lg fa-car"></i></div>
         <div class="col-xs-11 tile-title">{{Status}}</div>
         <span class="Cmd#engineON_id#id##"><img /></span>
@@ -514,6 +514,8 @@
         <div class="col-xs-8 info_text Cmd#service_id#id##"></div>
         <div class="col-xs-4 info_name">{{Raison du service}}</div>
         <div class="col-xs-8 info_text Cmd#serviceTrigger_id#id##"></div>
+      </div>
+      <div class="col-xs-12 tile tile3">
         <div class="col-xs-1 tile-icon"><i class="fas fa-lg fa-clock"></i></div>
         <div class="col-xs-11 tile-title">{{Délai avant service}}</div>
         <div class="col-xs-9 info_name">{{Temps moteur}}</div>
@@ -1084,14 +1086,14 @@
     jeedom.cmd.refreshValue([{cmd_id: '#serviceTrigger_id#id##', value: '#serviceTrigger_state#id##', display_value: '#serviceTrigger_display_value#id##'}])
   }
 
-  //  // POSITION
-  //  if (!"#position_id#id##".startsWith('#')) {
-  //    jeedom.cmd.update['#position_id#id##'] = function(_options) {
-  //      document.querySelector('iframe.Cmd#position_id#id##').setAttribute('src',"http://map.google.com/maps?hl=fr&ie=utf8&output=embed&q=" + _options.display_value)
-  //    }
-  //    jeedom.cmd.refreshValue([{cmd_id: '#position_id#id##', value: '#position_state#id##', display_value: '#position_display_value#id##'}])
-  //  }
-  //
+  // POSITION
+  if (!"#position_id#id##".startsWith('#')) {
+    jeedom.cmd.update['#position_id#id##'] = function(_options) {
+      document.querySelector('iframe.Cmd#position_id#id##').setAttribute('src',"http://map.google.com/maps?hl=fr&ie=utf8&output=embed&q=" + _options.display_value)
+    }
+    jeedom.cmd.refreshValue([{cmd_id: '#position_id#id##', value: '#position_state#id##', display_value: '#position_display_value#id##'}])
+  }
+  
   // MISE A JOUR DES TEXTES INFO
   // ===========================
   if (!"#msg2widget_id#id##".startsWith('#')) {
