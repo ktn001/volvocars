@@ -538,6 +538,7 @@ if (typeof volvocarsFrontEnd === "undefined") {
      * Ajout d'une commande dans la table
      */
     addCmdToTable: function (_cmd) {
+      blur = ''
       if (!isset(_cmd)) {
         let _cmd = { configuration: {} };
       }
@@ -554,6 +555,9 @@ if (typeof volvocarsFrontEnd === "undefined") {
           document
             .querySelector(".cmdAction[data-action=removeClosed]")
             .removeClass("hidden");
+        }
+        if (_cmd.logicalId == 'position') {
+          blur = 'blur'
         }
       }
       let tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">';
@@ -616,7 +620,7 @@ if (typeof volvocarsFrontEnd === "undefined") {
       tr += "</td>";
       // Etat
       tr += "<td>";
-      tr += '<span class="cmdAttr" data-l1key="htmlstate"></span>';
+      tr += '<span class="cmdAttr ' + blur + '" data-l1key="htmlstate"></span>';
       tr += "</td>";
       // Actions
       tr += "<td>";

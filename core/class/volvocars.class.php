@@ -45,6 +45,12 @@ class volvocars extends eqLogic {
 	 */
 
 	/*
+	 * Anonymisation d'un VIN
+	 */
+	public static function anonymizedVIN ($_vin) {
+		return str_repeat("x",10) . substr($_vin,10);
+	}
+	/*
 	 * Retourne tous les eqLogics de véhicule associés à un compte
 	 */
 	public static function byAccount_id($_account_id, $_onlyEnable = false) {
@@ -82,8 +88,10 @@ class volvocars extends eqLogic {
 	 */
 	static public function cron() {
 		foreach (volvocars::byType(__CLASS__, true) as $car) {
-			log::add("volvocars","debug","cron pour : " . $car->getName());
-			$car->refresh(false);
+			if ($car->getIsEnable() == 1) {
+				log::add("volvocars","debug","cron pour : " . $car->getName());
+				$car->refresh(false);
+			}
 		}
 	}
 
@@ -207,7 +215,6 @@ class volvocars extends eqLogic {
 				"al_turnIndicationRr"      => [ 'FAILURE' => __("Défaut clignotant arrière droit",__FILE__) ],
 			],
 		];
-		log::add ("volvocars","info","updateMessages called: " . print_r($_options,true));
 		$car = volvocars::byId($_options['carId']);
 		if (!is_object($car)){
 			log::add("volvocars","error","lh_diagnostics: " . sprintf(__("Véhicule %s introuvable",__FILE__),$_options['event_id']));
@@ -244,6 +251,7 @@ class volvocars extends eqLogic {
 	public static function lh_diagnostics($_options)		{ self::updateMessages($_options); }
 	public static function lh_doors($_options)				{ self::updateMessages($_options); }
 	public static function lh_engine_diagnostics($_options)	{ self::updateMessages($_options); }
+	public static function lh_engine_status($_options)		{ self::updateMessages($_options); }
 	public static function lh_fuel($_options)				{ self::updateMessages($_options); }
 	public static function lh_location($_options)			{ self::updateMessages($_options); }
 	public static function lh_odometer($_options)			{ self::updateMessages($_options); }
@@ -312,6 +320,16 @@ class volvocars extends eqLogic {
 	}
 
 	/*
+	 * Fonction appelée automatiquement avant la sauvegarde
+	 */
+	public function preSave() {
+		$this_wasEnable = $this->getIsEnable();
+		$this->_oldSiteState = array(
+			"site1" => $this->getConfiguration('site1_active',0),
+			"site2" => $this->getConfiguration('site2_active',0),
+		);
+	}
+	/*
 	 * Fonction exécutée automatiquement avant la création de l'équipement
 	 */
 	public function preInsert() {
@@ -323,10 +341,6 @@ class volvocars extends eqLogic {
 		}
 		$this->setDisplay('width','832px');
 		$this->setDisplay('height','1292px');
-		$this->_oldSiteState = array(
-			"site1" => $this->getConfiguration('site1_active'),
-			"site2" => $this->getConfiguration('site2_active'),
-		);
 	}
 
 	/*
@@ -335,6 +349,20 @@ class volvocars extends eqLogic {
 	public function preUpdate() {
 		if ($this->getVin() == '') {
 			throw new Exception (__("Le vin n'est pas défini",__FILE__));
+		}
+		$car = self::byVin($this->getVin());
+		if (is_object($car) and ($car->getId() != $this->getId())){
+			throw new Exception (__("Il y a un autre véhicule avec ce vin!",__FILE__));
+		}
+		if ($this->getConfiguration('site1_active') == 1 && $this->getConfiguration('site1_name') == '') {
+			$this->setConfiguration('site1_name',__('Domicile',__FILE__));
+		}
+		if ($this->getConfiguration('site2_active') == 1 && $this->getConfiguration('site2_name') == '') {
+			$this->setConfiguration('site2_name',__('Autre',__FILE__));
+		}
+		if (is_object($car)) {
+			$this->setConfiguration('old_site1_name',$car->getConfiguration('site1_name'));
+			$this->setConfiguration('old_site2_name',$car->getConfiguration('site2_name'));
 		}
 
 		if ($this->getConfiguration('electricEngine')){
@@ -359,130 +387,103 @@ class volvocars extends eqLogic {
 			$this->setConfiguration('fuelAutonomyLimit', $limit);
 		}
 
-		$car = self::byVin($this->getVin());
-		if (is_object($car) and ($car->getId() != $this->getId())){
-			throw new Exception (__("Il y a un autre véhicule avec ce vin!",__FILE__));
-		}
-		if ($this->getConfiguration('site1_active') == 1 && $this->getConfiguration('site1_name') == '') {
-			$this->setConfiguration('site1_name',__('Domicile',__FILE__));
-		}
-		if ($this->getConfiguration('site2_active') == 1 && $this->getConfiguration('site2_name') == '') {
-			$this->setConfiguration('site2_name',__('Autre',__FILE__));
-		}
-		if (is_object($car)) {
-			$this->setConfiguration('old_site1_name',$car->getConfiguration('site1_name'));
-			$this->setConfiguration('old_site2_name',$car->getConfiguration('site2_name'));
-		}
-
 		$car = self::byId($this->getId());
-		$this->_oldSiteState = array(
-			"site1" => $car->getConfiguration('site1_active'),
-			"site2" => $car->getConfiguration('site2_active'),
-		);
 	}
 
 	/*
-	 * Fonction appelée après la création d'un véhicule
+	 * Fonction appelée automatiquement après la création de l'équipement
 	 */
 	public function postInsert() {
-		$this->createOrUpdateCmds();
+		$this->createCmd("refresh");
+		$this->createCmd("lock");
+		$this->createCmd("msg2widget");
 	}
 
 	/*
 	 * Fonction appelée après la sauvegarde de l'eqLogic et des commandes via l'interface WEB
 	 */
 	public function postAjax() {
-		$cmdsConfig = null;
-		$created = false;
-		foreach (['site1','site2'] as $site){
-			if ($this->getConfiguration($site . '_active') == 1) {
-				if ($this->$oldSiteState[$site] != 1) {
-					if ($cmdsConfig == null) {
-						$cmdsConfig = $this->getCmdsConfig();
-					}
-					foreach ($cmdsConfig as $cmdConfig) {
-						if (isset($cmdConfig['configuration']['onlyFor']) and $cmdConfig['configuration']['onlyFor'] == $site) {
-							$cmd = $this->getCmd($cmdConfig['type'],$cmdConfig['logicalId']);
-							if (!is_object($cmd)) {
-								$cmd = new volvocarsCmd();
-								$cmd->setEqLogic_id($this->getId());
-								utils::a2o($cmd,$cmdConfig);
-								$cmd->save();
-								$created = true;
+		if ($this->getIsEnable()) {
+			foreach (['site1','site2'] as $site){
+				if ($this->getConfiguration($site . '_active') == 1) {
+					if ($this->_oldSiteState[$site] != 1) {
+						if ($cmdsConfig == null) {
+							$cmdsConfig = $this->getCmdsConfig();
+						}
+						foreach ($cmdsConfig as $cmdConfig) {
+							if (isset($cmdConfig['configuration']['onlyFor']) and $cmdConfig['configuration']['onlyFor'] == $site) {
+								$this->createCmd($cmdConfig['type'],$cmdConfig['logicalId']);
 							}
 						}
 					}
-				}
-			} else {
-				$cmds = $this->getCmdByConfiguration('"onlyFor":"' . $site .'"');
-				foreach ($cmds as $cmd) {
-					$cmd->remove();
+				} else {
+					$cmds = $this->getCmdByConfiguration('"onlyFor":"' . $site .'"');
+					foreach ($cmds as $cmd) {
+						$cmd->remove();
+					}
 				}
 			}
-		}
-		if ($created) {
-			$this->sortCmds();
-		}
 
-		foreach (['distanceSite1','distanceSite2'] as $logicalId){
-			$cmd = $this->getCmd('info',$logicalId);
-			if (is_object($cmd)) {
-				$cmd->event($cmd->execute());
-				$cmdName = $cmd->getName();
-				switch ($logicalId) {
-					case 'distanceSite1':
-						$siteName = $this->getConfiguration('site1_name');
-						$oldSiteName = $this->getConfiguration('old_site1_name');
-						$site = 'site1';
-						break;
-					case 'distanceSite2':
-						$siteName = $this->getConfiguration('site2_name');
-						$oldSiteName = $this->getConfiguration('old_site2_name');
-						$site = 'site2';
-						break;
-				}
-				$distance = __('distance',__FILE__);
-				if (($cmdName != $oldSiteName) && (($cmdName == $distance . ' ' . $site) || $cmdName == ($distance . ' ' . $oldSiteName))) {
-					$cmd->setName($distance . ' ' . $siteName);
-					$cmd->save();
+			foreach (['distanceSite1','distanceSite2'] as $logicalId){
+				$cmd = $this->getCmd('info',$logicalId);
+				if (is_object($cmd)) {
+					$cmd->event($cmd->execute());
+					$cmdName = $cmd->getName();
+					switch ($logicalId) {
+						case 'distanceSite1':
+							$siteName = $this->getConfiguration('site1_name');
+							$oldSiteName = $this->getConfiguration('old_site1_name');
+							$site = 'site1';
+							break;
+						case 'distanceSite2':
+							$siteName = $this->getConfiguration('site2_name');
+							$oldSiteName = $this->getConfiguration('old_site2_name');
+							$site = 'site2';
+							break;
+					}
+					$distance = __('distance',__FILE__);
+					if (($cmdName != $oldSiteName) && (($cmdName == $distance . ' ' . $site) || $cmdName == ($distance . ' ' . $oldSiteName))) {
+						$cmd->setName($distance . ' ' . $siteName);
+						$cmd->save();
+					}
 				}
 			}
-		}
-		foreach (['presenceSite1','presenceSite2'] as $logicalId){
-			$cmd = $this->getCmd('info',$logicalId);
-			if (is_object($cmd)) {
-				$cmdName = $cmd->getName();
-				switch ($logicalId) {
-					case 'presenceSite1':
-						$siteName = $this->getConfiguration('site1_name');
-						$oldSiteName = $this->getConfiguration('old_site1_name');
-						$site = 'site1';
-						break;
-					case 'presenceSite2':
-						$siteName = $this->getConfiguration('site2_name');
-						$oldSiteName = $this->getConfiguration('old_site2_name');
-						$site = 'site2';
-						break;
+			foreach (['presenceSite1','presenceSite2'] as $logicalId){
+				$cmd = $this->getCmd('info',$logicalId);
+				if (is_object($cmd)) {
+					$cmdName = $cmd->getName();
+					switch ($logicalId) {
+						case 'presenceSite1':
+							$siteName = $this->getConfiguration('site1_name');
+							$oldSiteName = $this->getConfiguration('old_site1_name');
+							$site = 'site1';
+							break;
+						case 'presenceSite2':
+							$siteName = $this->getConfiguration('site2_name');
+							$oldSiteName = $this->getConfiguration('old_site2_name');
+							$site = 'site2';
+							break;
+					}
+					$presence = __('présence',__FILE__);
+					if (($cmdName != $oldSiteName) && (($cmdName == $presence . ' ' . $site) || $cmdName == ($presence . ' ' . $oldSiteName))) {
+						$cmd->setName($presence . ' ' . $siteName);
+						$cmd->save();
+					}
+					$cmd->event($cmd->execute());
 				}
-				$presence = __('présence',__FILE__);
-				if (($cmdName != $oldSiteName) && (($cmdName == $presence . ' ' . $site) || $cmdName == ($presence . ' ' . $oldSiteName))) {
-					$cmd->setName($presence . ' ' . $siteName);
-					$cmd->save();
+			}
+			foreach ([
+				'al_electricAutonomy',
+				'al_fuelAutonomy'
+			] as $logicalId) {
+				$cmd = $this->getCmd('info',$logicalId);
+				if (is_object($cmd)){
+					$cmd->event($cmd->execute());
 				}
-				$cmd->event($cmd->execute());
 			}
+			$this->setCarListeners();
+			$this->cleanWidgetMessages();
 		}
-		foreach ([
-			'al_electricAutonomy',
-			'al_fuelAutonomy'
-		] as $logicalId) {
-			$cmd = $this->getCmd('info',$logicalId);
-			if (is_object($cmd)){
-				$cmd->event($cmd->execute());
-			}
-		}
-		$this->setCarListeners();
-		$this->cleanWidgetMessages();
 	}
 
 	/*
@@ -642,7 +643,48 @@ class volvocars extends eqLogic {
 	 */
 	public function synchronize() {
 		$this->updateDetails();
-		$this->refresh(true);
+		$this->setActions();
+	}
+
+	public function setActions() {
+		$created = false;
+		$account = $this->getAccount();
+		$payload = $account->getInfos('commands',$this->getVin(), true);
+		if (!isset($payload['status']) || $payload['status'] !== 'ok') {
+			$httpCode = isset($payload['httpCode']) ? $payload['httpCode'] : '';
+			$message = isset($payload['message']) ? $payload['message'] : null;
+			$description = isset($payload['description']) ? $payload['description'] : null;
+			$detail = isset($payload['detail']) ? $payload['detail'] : null;
+			log::add("volvocars","error","└" . sprintf(__("Echec de la synchonisation de l'account %s",__FILE__),$this->getName()));
+			throw new volvoApiException('details',$httpCode,$message,$description,$detail);
+		}
+		if (!isset($payload['data'])) {
+			log::add("volvocars","error","└" . __("Le payload %s n'a pas de 'data'", __FILE__));
+			throw new Exception("no data");
+		}
+		$commands = $payload['data'];
+
+		$cmdsConfig = $this->getCmdsConfig();
+		foreach ($commands as $command) {
+			$cmdOk = false;
+			foreach($cmdsConfig as $cmdConfig){
+				if (!isset($cmdConfig['_volvoName']) || $cmdConfig['_volvoName'] !== $command['command']) {
+					continue;
+				}
+				$cmd = $this->getCmd(null,$cmdConfig['logicalId']);
+				if (!is_object($cmd)) {
+					$this->createCmd($cmdConfig['logicalId']);
+					$cmd = $this->getCmd(null,$cmdConfig['logicalId']);
+					$cmd->setConfiguration('href',$command['href']);
+					$cmd->save();
+				}
+				$cmdOk = true;
+				break;
+			}
+			if (! $cmdOk) {
+				log::add("volvocars","warning",sprintf(__("Commande Jeedom pour '%s' introuvable",__FILE__),$command['command']));
+			}
+		}
 	}
 
 	/*
@@ -652,17 +694,31 @@ class volvocars extends eqLogic {
 	public function updateDetails() {
 		$changed = false;
 		$account = $this->getAccount();
-		$details = $account->getInfos('details',$this->getVin(), true);
-		log::add("volvocars","debug","DETAILS: " . json_encode($details));
+		$payload = $account->getInfos('details',$this->getVin(), true);
+		if (!isset($payload['status']) || $payload['status'] !== 'ok') {
+			$httpCode = isset($payload['httpCode']) ? $payload['httpCode'] : '';
+			$message = isset($payload['message']) ? $payload['message'] : null;
+			$description = isset($payload['description']) ? $payload['description'] : null;
+			$detail = isset($payload['detail']) ? $payload['detail'] : null;
+			log::add("volvocars","error","└" . sprintf(__("Echec de la synchonisation de l'account %s",__FILE__),$this->getName()));
+			throw new volvoApiException('details',$httpCode,$message,$description,$detail);
+		}
+		if (!isset($payload['data'])) {
+			log::add("volvocars","error","└" . __("Le payload %s n'a pas de 'data'", __FILE__));
+			throw new Exception("no data");
+		}
+		$details = $payload['data'];
+
+		log::add("volvocars","debug","│ " . "DETAILS: " . json_encode($details));
 		if (! isset($details['descriptions'])){
-			log::add("volvocars","error",(__("Pas de key 'descriptions' dans les détails[data]",__FILE__)));
+			log::add("volvocars","error","│ " . (__("Pas de key 'descriptions' dans les détails[data]",__FILE__)));
 		} else {
 
 			// Le modèle
 			// ---------
 			if (isset($details['descriptions']['model'])) {
 				if ($details['descriptions']['model'] != $this->getConfiguration('model')) {
-					log::add("volvocars","info",sprintf(__("Mise à jour du modèle pour le véhicule %s",__FILE__),$this->getVin()));
+					log::add("volvocars","info","│ " . sprintf(__("Mise à jour du modèle pour le véhicule %s",__FILE__),$this->getVin()));
 					$this->setConfiguration('model',$details['descriptions']['model']);
 					$changed = true;
 					if ($this->getName() == $this->getVin()) {
@@ -685,10 +741,10 @@ class volvocars extends eqLogic {
 		// L'année
 		// -------
 		if (! isset($details['modelYear'])) {
-			log::add("volvocars","warning",sprintf(__("L'année de construction du le véhicule %s indéninie",__FILE__),$this->getVin()));
+			log::add("volvocars","warning","│ " . sprintf(__("L'année de construction du le véhicule %s indéninie",__FILE__),$this->getVin()));
 		} else {
 			if ($details['modelYear'] != $this->getConfiguration('modelYear')){
-				log::add("volvocars","info",sprintf(__("Mise à jour de l'année pour le véhicule %s",__FILE__),$this->getVin()));
+				log::add("volvocars","info","│ " . sprintf(__("Mise à jour de l'année pour le véhicule %s",__FILE__),$this->getVin()));
 				$this->setConfiguration('modelYear',$details['modelYear']);
 				$changed = true;
 			}
@@ -697,10 +753,10 @@ class volvocars extends eqLogic {
 		// Couleur
 		// -------
 		if (! isset($details['externalColour'])) {
-			log::add("volvocars","warning",sprintf(__("la couleur du véhicule %s n'est pas définie",__FILE__),$this->getVin()));
+			log::add("volvocars","warning","│ " . sprintf(__("la couleur du véhicule %s n'est pas définie",__FILE__),$this->getVin()));
 		} else {
 			if ($details['externalColour'] != $this->getConfiguration('externalColour')){
-				log::add("volvocars","info",sprintf(__("Mise à jour de la couleur pour le véhicule %s",__FILE__),$this->getVin()));
+				log::add("volvocars","info","│ " . sprintf(__("Mise à jour de la couleur pour le véhicule %s",__FILE__),$this->getVin()));
 				$this->setConfiguration('externalColour',$details['externalColour']);
 				$changed = true;
 			}
@@ -709,7 +765,7 @@ class volvocars extends eqLogic {
 		// Boîte à vitesse
 		// ---------------
 		if (! isset($details['gearbox'])) {
-			log::add("volvocars","warning",sprintf(__("Le type de boîte à vitesse n'est pas défini pour le véhicule %s",__FILE__),$this->getVin()));
+			log::add("volvocars","warning","│ " . sprintf(__("Le type de boîte à vitesse n'est pas défini pour le véhicule %s",__FILE__),$this->getVin()));
 		} else {
 			switch ($details['gearbox']) {
 				case 'AUTOMATIC':
@@ -722,7 +778,7 @@ class volvocars extends eqLogic {
 					$gearbox = $details['gearbox'];
 			}
 			if ($gearbox != $this->getConfiguration('gearbox')){
-				log::add("volvocars","info",sprintf(__("Mise à jour du type de boîte à vitesse pour le véhicule %s",__FILE__),$this->getVin()));
+				log::add("volvocars","info","│ " . sprintf(__("Mise à jour du type de boîte à vitesse pour le véhicule %s",__FILE__),$this->getVin()));
 				$this->setConfiguration('gearbox',$gearbox);
 				$changed = true;
 			}
@@ -731,7 +787,7 @@ class volvocars extends eqLogic {
 		// Carburant
 		// ---------
 		if (! isset($details['fuelType'])) {
-			log::add("volvocars","warning",sprintf(__("Le carburant n'est pas défini pour le véicule %s",__FILE__),$this->getVin()));
+			log::add("volvocars","warning","│ " . sprintf(__("Le carburant n'est pas défini pour le véicule %s",__FILE__),$this->getVin()));
 		} else {
 			switch ($details['fuelType']) {
 				case 'DIESEL':
@@ -763,7 +819,7 @@ class volvocars extends eqLogic {
 					$fuelType = $details['fuelType'];
 			}
 			if ($fuelType != $this->getConfiguration('fuelType')){
-				log::add("volvocars","info",sprintf(__("Mise à jour du carburant pour le véhicule %s",__FILE__),$this->getVin()));
+				log::add("volvocars","info","│ " . sprintf(__("Mise à jour du carburant pour le véhicule %s",__FILE__),$this->getVin()));
 				$this->setConfiguration('fuelType',$fuelType);
 				$this->setConfiguration('fuelEngine',$combustion);
 				$this->setConfiguration('electricEngine',$electric);
@@ -775,7 +831,7 @@ class volvocars extends eqLogic {
 		// -----------------
 		if (isset($details['batteryCapacityKWH'])){
 			if ($details['batteryCapacityKWH'] != $this->getConfiguration('batteryCapacityKWH')){
-				log::add("volvocars","info",sprintf(__("Mise à jour da capacité de la batterie pour le véhicule %s",__FILE__),$this->getVin()));
+				log::add("volvocars","info","│ " . sprintf(__("Mise à jour da capacité de la batterie pour le véhicule %s",__FILE__),$this->getVin()));
 				$this->setConfiguration('batteryCapacityKWH',$details['batteryCapacityKWH']);
 				$changed = true;
 			}
@@ -798,14 +854,14 @@ class volvocars extends eqLogic {
 					  .((isset($parsedURL['path'])) ? $parsedURL['path'] : '')
 					  .((isset($parsedURL['query'])) ? '?' . $parsedURL['query'] : '')
 					  .((isset($parsedURL['fragment'])) ? '#' . $parsedURL['fragment'] : '');
-				log::add("volvocars","debug","IMAGE: " . $url);
+				log::add("volvocars","debug","│ IMAGE: " . $url);
 				$imgPath = __DIR__ . '/../../data';
 				if (! is_dir($imgPath)){
 					mkdir($imgPath);
 				}
 				$imgPath .= '/'.$this->getVin() . ".png";
-				log::add("volvocars","debug",$imgPath);
-				log::add("volvocars","debug",print_r(get_headers($url,1),true));
+				log::add("volvocars","debug","│ " . $imgPath);
+				log::add("volvocars","debug","│ " . print_r(get_headers($url,1),true));
 				$session = curl_init();
 				curl_setopt($session, CURLOPT_URL, $url);
 				curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'GET');
@@ -822,9 +878,9 @@ class volvocars extends eqLogic {
 
 				$data = curl_exec($session);
 				$httpCode = curl_getinfo($session,CURLINFO_HTTP_CODE);
-				log::add("volvocars","debug","httpCode: " . $httpCode);
+				log::add("volvocars","debug","│ httpCode: " . $httpCode);
 				if ($httpCode != 200) {
-					log::add("volvocars","error",sprintf(__("Erreur lors du téléchargement de l'image. HTTPCODE: %s",__FILE__), $httpCode));
+					log::add("volvocars","error","│ " . sprintf(__("Erreur lors du téléchargement de l'image. HTTPCODE: %s",__FILE__), $httpCode));
 				}
 				curl_close($session);
 				$image = fopen($imgPath, 'wb');
@@ -841,76 +897,85 @@ class volvocars extends eqLogic {
 	}
 
 	/*
-	 * Création ou mise à jour des commandes sur la base du fichier de configuration
+	 * Création d'une commande
 	 */
-	public function createOrUpdateCmds($createOnly = false) {
-		$createCmdOpen = config::byKey("create_cmd_open","volvocars", '0');
-		$createCmdClosed = config::byKey("create_cmd_closed","volvocars", '0');
-		$commands = $this->getCmdsConfig();
-		if (!is_array($commands)) {
-			throw new Exception (sprintf(__("Erreur lors de la lecture de %s",__FILE__),$cmdsFile));
-		}
-		foreach ($commands as $command) {
-			if (!is_array($command)) {
-				log::add("volvocars","error",sprintf(__("Commande mal définie dans %s",__FILE__),$cmdsFile));
-				return false;
-			}
-			if (! isset($command['logicalId'])) {
-				log::add("volvocars","error",sprintf(__("Commande définie sans logicalId dans %s",__FILE__),$cmdsFile));
-				return false;
-			}
-			if ( (! $createCmdOpen == 1)  && (substr_compare($command['logicalId'], '_open',-5) == 0)) {
+	public function createCmd($_logicalId, $sort=true) {
+		$created = false;
+		$cmdsConfig = $this->getCmdsConfig();
+		foreach ($cmdsConfig as $cmdConfig) {
+			if ($cmdConfig['logicalId'] !== $_logicalId) {
 				continue;
 			}
-			if ( (! $createCmdClosed == 1) && (substr_compare($command['logicalId'], '_closed',-7) == 0)) {
-				continue;
-			}
-			if (isset ($command['configuration']['onlyFor'])) {
-				switch ($command['configuration']['onlyFor']) {
-					case 'fuelEngine':
-						if ($this->getConfiguration('fuelEngine') != 1) {
-							continue 2;
+			if (isset($cmdConfig['configuration']) && isset($cmdConfig['configuration']['onlyFor'])) {
+				switch ($cmdConfig['configuration']['onlyFor']) {
+					case 'fuelEngine' :
+						if ($this->getConfiguration('fuelEngine',0) == 0) {
+							return;
 						}
 						break;
-					case 'electricEngine':
-						if ($this->getConfiguration('electricEngine') != 1) {
-							continue 2;
+					case 'electricEngine' :
+						if ($this->getConfiguration('electricEngine',0) == 0) {
+							return;
 						}
 						break;
-					case 'site1':
-						if ($this->getConfiguration('site1_active') != 1) {
-							continue 2;
+					case 'site1' :
+						if ($this->getConfiguration('site1_active',0) == 0) {
+							return;
 						}
 						break;
-					case 'site2':
-						if ($this->getConfiguration('site2_active') != 1) {
-							continue 2;
+					case 'site2' :
+						if ($this->getConfiguration('site2_active',0) == 0) {
+							return;
 						}
 						break;
 				}
 			}
-			if (! isset($command['type'])) {
-				log::add("volvocars","error","createCmd called with no type");
-				continue;
+			if (substr_compare($_logicalId,'Open',-4) == 0) {
+				if (config::byKey("create_cmd_open","volvocars", "0") == 0) {
+					return;
+				}
 			}
-			if (! isset($command['subType'])) {
-				log::add("volvocars","error","createCmd called with no subType");
-				continue;
+			if (substr_compare($_logicalId,'Closed',-6) == 0) {
+				if (config::byKey("create_cmd_closed","volvocars", "0") == 0) {
+					return;
+				}
 			}
-			if (! isset($command['name']) || trim($command['name']) == '') {
-				$command['name'] = $command['logicalId'];
+			if (isset($cmdConfig['configuration']) && isset($cmdConfig['configuration']['dependTo'])) {
+				$depends = $cmdConfig['configuration']['dependTo'];
+				if (!is_array($depends)) {
+					$depends = array($depends);
+				}
+				foreach ($depends as $depend) {
+					$dependCmd = $this->getCmd(null,$depend);
+					if (is_object($dependCmd)) {
+						break;
+					}
+					return;
+				}
 			}
-			$cmd = $this->getCmd($command['type'],$command['logicalId']);
-			if (!is_object($cmd)) {
+
+			$cmd = $this->getCmd($cmdConfig['type'],$cmdConfig['logicalId']);
+			if (! is_object($cmd)) {
 				$cmd = new volvocarsCmd();
 				$cmd->setEqLogic_id($this->getId());
-			} elseif ($createOnly) {
-				continue;
+				utils::a2o($cmd,$cmdConfig);
+				$cmd->save();
+				$created = true;
 			}
-			utils::a2o($cmd,$command);
-			$cmd->save();
+			if (isset($cmdConfig['configuration']) && isset($cmdConfig['configuration']['dependencies'])) {
+				$dependencies = $cmdConfig['configuration']['dependencies'];
+				if (! is_array($dependencies)) {
+					$dependencies = array($dependencies);
+				}
+				foreach ($dependencies as $dependency) {
+					$this->createCmd($dependency, false);
+				}
+			}
+			if ($created && $sort) {
+				$this->sortCmds();
+			}
+			return;
 		}
-		$this->sortCmds();
 	}
 
 	/*
@@ -938,9 +1003,14 @@ class volvocars extends eqLogic {
 	 */
 	public function getRawDatas() {
 		$data = $this->getAccount()->getRawDatas($this->getVin());
-		$dataFile = __DIR__ . '/../../data/' . $this->getVin() . '.data.json';
-		chmod($dataFile, 0775);
-		file_put_contents($dataFile, json_encode($data, JSON_PRETTY_PRINT));
+		$fileName = __DIR__ . '/../../data/' . $this->getVin() . '.data.json';
+		$file = fopen($fileName, 'w');
+		foreach ($data as $endpoint => $content) {
+			fwrite($file, "====== " . $endpoint . " ======\n");
+			fwrite($file, $content . "\n");
+		}
+		fclose($file);
+		chmod($fileName, 0775);
 		return $data;
 	}
 
@@ -967,11 +1037,32 @@ class volvocars extends eqLogic {
 	public function getInfosFromApi($endpoint_id, $force = false){
 		log::add("volvocars","info",sprintf("┌Getting infos '%s'...",$endpoint_id));
 		$account = $this->getAccount();
-		$infos = $account->getInfos($endpoint_id,$this->getVin(), $force);
+		$payload = $account->getInfos($endpoint_id,$this->getVin(), $force);
+		if ($payload === false) {
+			log::add("volvocars","debug","└end");
+			return;
+		}
+		if (!isset($payload['status']) || $payload['status'] !== 'ok') {
+			$httpCode = isset($payload['httpCode']) ? $payload['httpCode'] : '';
+			$message = isset($payload['message']) ? $payload['message'] : null;
+			$description = isset($payload['description']) ? $payload['description'] : null;
+			$detail = isset($payload['detail']) ? $payload['detail'] : null;
+			log::add("volvocars","error","└" . sprintf(__("Echec lors de l'appel du endpoint '%s' pour le véhicule %s",__FILE__),$endpoint_id,$this->getName()));
+			return;
+		}
+		if (!isset($payload['data'])) {
+			log::add("volvocars","error","└" . __("Le payload %s n'a pas de 'data'", __FILE__));
+			throw new Exception("no data");
+		}
 
+		$infos = $payload['data'];
 		foreach (array_keys($infos) as $key) {
 			log::add("volvocars","debug",sprintf("├─key: %s",$key));
 			foreach (endpoint::byId($endpoint_id)->getLogicalIds($key) as $logicalId) {
+				$cmd = $this->getCmd('info',$logicalId);
+				if (!is_object($cmd)) {
+					$this->createCmd($logicalId);
+				}
 				$cmd = $this->getCmd('info',$logicalId);
 				if (!is_object($cmd)) {
 					continue;
@@ -1004,17 +1095,38 @@ class volvocars extends eqLogic {
 	 * Interrogation de tous les endpoints de l'API pour remonter les infos
 	 */
 	public function refresh($force = false) {
+		$cmdsConfig = volvocars::getCmdsConfig();
 		foreach (endpoint::all('info',true) as $endpoint) {
 			try {
-				$cmdExists = false;
+				$relevant = false;
 				foreach ($endpoint->getLogicalIds() as $logicalId) {
 					$cmd = $this->getCmd('info',$logicalId);
 					if (is_object($cmd)) {
-						$cmdExists = true;
+						$relevant = true;
 						break;
 					}
+					foreach ($cmdsConfig as $cmd) {
+						if ($cmd['logicalId'] === $logicalId) {
+							if (!isset ($cmd['configuration'])) {
+								$relevant = true;
+								break 2;
+							}
+							if (!isset ($cmd['configuration']['onlyFor'])) {
+								$relevant = true;
+								break 2;
+							}
+							if (!isset ($cmd['configuration']['onlyFor'])) {
+								$relevant = true;
+								break 2;
+							}
+							if ($this->getConfiguration($cmd['configuration']['onlyFor']) == 1) {
+								$relevant = true;
+								break 2;
+							}
+						}
+					}
 				}
-				if ($cmdExists) {
+				if ($relevant) {
 					$this->getInfosFromApi($endpoint->getId(), $force);
 				}
 			} catch (volvoApiException $e) {
@@ -1354,10 +1466,13 @@ class volvocarsCmd extends cmd {
 
 	/*
 	* Permet d'empêcher la suppression des commandes même si elles ne sont pas dans la nouvelle configuration de l'équipement envoyé en JS
+	*/
 	public function dontRemoveCmd() {
+		if ($this->getConfiguration('removable',0) == 1) {
+			return false;
+		}
 		return true;
 	}
-	*/
 
 	public function preSave(){
 		$logicalIds = $this->getConfiguration('dependTo');
@@ -1481,11 +1596,6 @@ class volvocarsCmd extends cmd {
 						return '-1';
 					}
 					$earth_radius = 6371;
-					log::add("volvocars","info",$logicalId);
-					log::add("volvocars","info","siteLat:  ". $siteLat);
-					log::add("volvocars","info","siteLong: ". $siteLong);
-					log::add("volvocars","info","PosLat:   ". $position['lat']);
-					log::add("volvocars","info","PosLong:  ". $position['long']);
 
 					$rla1 = deg2rad( floatval($siteLat) );
 					$rlo1 = deg2rad( floatval($siteLong) );

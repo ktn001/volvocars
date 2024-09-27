@@ -319,18 +319,18 @@ $accounts = volvoAccount::all();
 								<label class="col-sm-4 control-label help" data-help="{{Coordonnées GPS au format xx.xxxxxx  et pas xx°xx'xx.x''N}}">{{Coordonnées GPS}}</label>
 								<div class="col-sm-4 site1" style="padding-left: 0px !important; padding-right: 0px !important">
 									<div class="col-sm-6" style="padding-right: 1px !important">
-										<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="site1_lat" placeholder="{{Lat. 1}}"/>
+										<input type="text" class="eqLogicAttr form-control blur" data-l1key="configuration" data-l2key="site1_lat" placeholder="{{Lat. 1}}"/>
 									</div>
 									<div class="col-sm-6" style="padding-left: 1px !important">
-										<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="site1_long" placeholder="{{Long. 1}}"/>
+										<input type="text" class="eqLogicAttr form-control blur" data-l1key="configuration" data-l2key="site1_long" placeholder="{{Long. 1}}"/>
 									</div>
 								</div>
 								<div class="col-sm-4 site2" style="padding-left: 0px !important; padding-right: 0px !important">
 									<div class="col-sm-6" style="padding-right: 1px !important">
-										<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="site2_lat" placeholder="{{Lat. 2}}"/>
+										<input type="text" class="eqLogicAttr form-control blur" data-l1key="configuration" data-l2key="site2_lat" placeholder="{{Lat. 2}}"/>
 									</div>
 									<div class="col-sm-6" style="padding-left: 1px !important">
-										<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="site2_long" placeholder="{{Long. 2}}"/>
+										<input type="text" class="eqLogicAttr form-control blur" data-l1key="configuration" data-l2key="site2_long" placeholder="{{Long. 2}}"/>
 									</div>
 								</div>
 							</div>

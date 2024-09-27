@@ -306,27 +306,44 @@ class volvoAccount {
 	}
 
 	public function synchronize() {
-		$cars_infos = $this->getInfos('vehicles');
-		foreach ($cars_infos as $car_infos) {
-			$vin = $car_infos['vin'];
+		log::add("volvocars","info",sprintf(__("Début de la synchonisation de l'account %s",__FILE__),$this->getName()));
+		log::add("volvocars","debug","┌" . __("Récupération de la liste des véhicules",__FILE__));
+		$payload = $this->getInfos('vehicles');
+		if (!isset($payload['status']) || $payload['status'] !== 'ok') {
+			$httpCode = isset($payload['httpCode']) ? $payload['httpCode'] : '';
+			$message = isset($payload['message']) ? $payload['message'] : null;
+			$description = isset($payload['description']) ? $payload['description'] : null;
+			$detail = isset($payload['detail']) ? $payload['detail'] : null;
+			log::add("volvocars","error","└" . sprintf(__("Echec de la synchonisation de l'account %s",__FILE__),$this->getName()));
+			throw new volvoApiException('vehicles',$httpCode,$message,$description,$detail);
+		}
+		if (!isset($payload['data'])) {
+			log::add("volvocars","error","└" . __("Le payload %s n'a pas de 'data'", __FILE__));
+			throw new Exception("no data");
+		}
+		foreach ($payload['data'] as $car_info) {
+			$vin = $car_info['vin'];
 			$car = volvocars::byVin($vin);
 			if (! is_object($car)) {
-				log::add("volvocars","info",sprintf(__("Créaion du véhicule '%s'",__FILE__),$vin));
+				log::add("volvocars","info","├─" . sprintf(__("Création du véhicule '%s'",__FILE__),$vin));
 				$car = new volvocars();
 				$car->setEqType_name('volvocars');
-				$car->setName($vin);
+				$car->setName(volvocars::anonymizedVIN($vin));
 				$car->setAccount_id($this->getId());
 				$car->setVin($vin);
 				$car->save();
 			}
+			log::add("volvocars","info","├─" . sprintf(__("Début de l'actualisation du véhicule '%s'",__FILE__),$vin));
 			$car->synchronize();
+			log::add("volvocars","info","├─" . sprintf(__("Fin de l'actualisation du véhicule '%s'",__FILE__),$vin));
 		}
+		log::add("volvocars","info", "└" . sprintf(__("Fin de la synchonisation de l'account %s",__FILE__),$this->getName()));
 	}
 
 	public function getRawDatas($vin) {
 		$return = array();
 		foreach (endpoint::all('info') as $endpoint) {
-			$return[$endpoint->getId()] = $this->getInfos($endpoint->getId(), $vin, true);
+			$return[$endpoint->getId()] = $this->getInfos($endpoint->getId(), $vin, true)['rawData'];
 		}
 		return $return;
 	}
@@ -335,10 +352,11 @@ class volvoAccount {
 		$endpoint = endpoint::byId($_endpoint_id);
 		if ($endpoint === null) {
 			log::add("volvocars","error",sprintf(__("URL pour le endpoint %s non définie",__FILE__),$endpoint));
+			return false;
 		}
 		if (!$_force and !$this->shouldRequest($_endpoint_id, $vin)) {
 			log::add("volvocars","debug","│ " . __("Pas nécessaire",__FILE__));
-			return array();
+			return false;
 		}
 		$url = sprintf($endpoint->getUrl(),$vin);
 		log::add("volvocars","debug","│ URL: " .$url);
@@ -350,57 +368,67 @@ class volvoAccount {
 		}
 		$this->incrementEndpointCounter($_endpoint_id, $vin);
 		$content = curl_exec($session);
+		$rawData = str_replace($vin,'{VIN}',$content);
+		if ($_endpoint_id == 'location') {
+			$rawData = preg_replace("/\d+\.\d{4,}/","#.#####",$rawData);
+		}
 		log::add("volvocars","debug","│ ".$content);
+		$return = array(
+			'httpCode' => curl_getinfo($session,CURLINFO_HTTP_CODE),
+			'rawData' => $rawData,
+		);
 		$content = is_json($content,$content);
-		$httpCode = curl_getinfo($session,CURLINFO_HTTP_CODE);
-		if ( $httpCode != 200) {
-			$message = null;
-			if (isset($content['message'])) {
-				$message = $content['message'];
+		if ( $return['httpCode'] == 200) {
+			$return['status'] = 'ok';
+			if (isset($content['data'])) {
+				$content = $content['data'];
 			}
-			if (isset($content['error']['message'])) {
-				$message = $content['error']['message'];
+			if ($_endpoint_id == 'location'){
+				if(isset($content['type'])){
+					unset ($content['type']);
+				}
+				if(isset($content['properties'])){
+					unset ($content['properties']);
+				}
+				if(isset($content['geometry'])){
+					$content['location'] = $content['geometry'];
+					unset ($content['geometry']);
+				}
 			}
-			$description = null;
-			if (isset($content['error']['description'])) {
-				$description = $content['error']['description'];
+			if ($_endpoint_id == 'diagnostics') {
+				if ($content['timeToService']['unit'] == 'months') {
+					$content['timeToService']['value'] *= 30;
+					$content['timeToService']['unit'] = 'days';
+				}
 			}
-			$detail = null;
-			if (isset($content['error']['detail'])) {
-				$detail = $content['error']['detail'];
+			foreach($endpoint->getDefaults() as $info => $defaultValue) {
+				if (!isset($content[$info])) {
+					$content[$info] = array(
+						"value" => $defaultValue,
+					);
+				}
 			}
-			throw new volvoApiException ($endpoint, $httpCode, $message, $description, $detail);
-		}
-		if (isset($content['data'])) {
-			$content = $content['data'];
-		}
-		if ($_endpoint_id == 'location'){
-			if(isset($content['type'])){
-				unset ($content['type']);
-			}
-			if(isset($content['properties'])){
-				unset ($content['properties']);
-			}
-			if(isset($content['geometry'])){
-				$content['location'] = $content['geometry'];
-				unset ($content['geometry']);
-			}
-		}
-		if ($_endpoint_id == 'diagnostics') {
-			if ($content['timeToService']['unit'] == 'months') {
-				$content['timeToService']['value'] *= 30;
-				$content['timeToService']['unit'] = 'days';
-			}
-		}
-		foreach($endpoint->getDefaults() as $info => $defaultValue) {
-			if (!isset($content[$info])) {
-				$content[$info] = array(
-					"value" => $defaultValue,
-				);
+			$return['data'] = $content;
+		} else {
+			$return['status'] = 'ko';
+			if (isset($content['error'])) {
+				if (isset($content['error']['messages'])) {
+					$return['message'] = $content['error']['message'];
+				}
+				if (isset($content['error']['description'])) {
+					$return['description'] = $content['error']['description'];
+				}
+			} else {
+				if (isset($content['messages'])) {
+					$return['message'] = $content['message'];
+				}
+				if (isset($content['description'])) {
+					$return['description'] = $content['description'];
+				}
 			}
 		}
 
-		return $content;
+		return $return;
 	}
 
 	public function sendCommand($command, $vin) {

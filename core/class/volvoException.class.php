@@ -20,52 +20,45 @@ class volvoApiException extends Exception {
 
 	protected $endpoint = null;
 	protected $httpCode = null;
+	protected $msg = null;
 	protected $description = null;
 	protected $detail = null;
 
-	public function __construct ($endpoint, $httpCode, $message, $description = null, $detail = null, $previous = null) {
+	public function __construct ($endpoint, $httpCode, $msg, $description = null, $detail = null, $previous = null) {
+	 	$message = "Endpoint: " . $endpoint . "\n";
+	 	$message .= 'httpCode: ' . $httpCode . "\n";
+	 	$message .= $msg;
+	 	if ($description) {
+	 		$message .= "\n\n" . $description;
+	 	}
+	 	if ($detail) {
+	 		$message .= "\n\n" . $detail;
+	 	}
 		parent::__construct($message, null, $previous);
+		$this->endpoint = $endpoint;
 		$this->httpCode = $httpCode;
+		$this->msg = $msg;
 		$this->description = $description;
 		$this->detail = $detail;
-		$this->endpoint = $endpoint;
 	}
 
-	final public function getEndpoint() {
+	function getEndpoint () {
 		return $this->endpoint;
 	}
 
-	final public function getHttpCode() {
+	function getHttpCode () {
 		return $this->httpCode;
 	}
 
-	final public function getDescription() {
+	function getMsg () {
+		return $this->msg;
+	}
+
+	function getDescription () {
 		return $this->description;
 	}
 
-	final public function getDetail() {
+	function getDetail () {
 		return $this->detail;
-	}
-
-	public function __toString() {
-		$msg = '';
-		$sep = '';
-		if ($this->getEndpoint() != null) {
-			$msg .= "Endpoint: " . $this->getEndpoint();
-			$sep = '; ';
-		}
-		if ($this->getHttpCode() != null) {
-			$msg .= $sep . "HttpCode: " . $this->getHttpCode();
-			$sep = '; ';
-		}
-		if ($this->getDescription() != null) {
-			$msg .= $sep . "Description: " . $this->getDescription();
-			$sep = '; ';
-		}
-		if ($this->getDetail() != null) {
-			$msg .= $sep . "Detail: " . $this->getDetail();
-			$sep = '; ';
-		}
-		return $msg;
 	}
 }

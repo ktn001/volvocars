@@ -30,8 +30,10 @@ if (!is_object($car)) {
 	throw new Exception(sprintf(__("Véhicule %s introuvable",__FILE__),$_GET['eqLogicId']));
 }
 
+log::add("volvocars","debug","┌ " . __("Début de la récupération des données bruts",__FILE__));
 $vin = $car->getVin();
 $data = $car->getRawDatas();
+log::add("volvocars","debug","└ " . __("Fin de la récupération des données bruts",__FILE__));
 ?>
 <div class="input-group pull-right" style="display:inline-flex">
 	<a class="btn btn-sm btn-default rawDataAction roundleft" data-action="plie">
@@ -52,7 +54,7 @@ foreach ($data as $endpoint => $values) {
 			Endpoint: <span class="endpointName"><?=$endpoint?>
 		</div>
 		<div class="endpointValue">
-			<pre><?= str_replace($vin, "{VIN}", json_encode($values,JSON_PRETTY_PRINT)) ?></pre>
+			<pre><?= $values ?></pre>
 		</div>
 	</div>
 	<?php
