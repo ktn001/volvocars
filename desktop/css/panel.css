@@ -25,6 +25,14 @@ body[data-theme="core2019_Light"] {
   background-color: var(--vlv-bg-color);
 }
 
+.blur {
+	filter: blur(3px);
+}
+
+.blur:hover {
+	filter: blur(0);
+}
+
 /* ************* */
 /* Le logo Volvo */
 /* ************* */
