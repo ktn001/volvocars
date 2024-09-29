@@ -59,7 +59,7 @@ function volvocars_goto_1() {
 					if (isset($cmdConfig['configuration'])) {
 						if (isset($cmdConfig['configuration']['volvoApi'])) {
 							$cmd->setConfiguration('volvoApi',$cmdConfig['configuration']['volvoApi']);
-							$cmd->save()
+							$cmd->save();
 						}
 					}
 				}
