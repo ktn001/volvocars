@@ -298,7 +298,7 @@ class volvocars extends eqLogic {
 
 	/*	 * *********************Méthodes d'instance************************* */
 
-	private function getCmdsConfig() {
+	public function getCmdsConfig() {
 		$cmdsFile = realpath(__DIR__ . '/../config/cmds.json');
 		$cmds = json_decode(translate::exec(file_get_contents($cmdsFile),$cmdsFile),true);
 		foreach ($cmds as $cmd) {

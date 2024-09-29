@@ -31,6 +31,9 @@
     "name": "{{Déverrouiller}}",
     "type": "action",
     "subType": "other",
+    "configuration" : {
+      "volvoApi" : "connectedVehicle"
+    },
     "_volvoName": "UNLOCK"
   },
   {
@@ -38,7 +41,10 @@
     "name": "{{Verrouiller}}",
     "type": "action",
     "subType": "other",
-    "_volvoName": "xLOCK"
+    "configuration" : {
+      "volvoApi" : "connectedVehicle"
+    },
+    "_volvoName": "LOCK"
   },
   {
     "logicalId": "lockReduced",
@@ -46,6 +52,9 @@
     "type": "action",
     "subType": "other",
     "display": {
+    "configuration" : {
+      "volvoApi" : "connectedVehicle"
+    },
       "forceReturnLineAfter": "1"
     },
     "_volvoName": "LOCK_REDUCED_GUARD"
@@ -55,6 +64,9 @@
     "name": "{{Climatisation EN}}",
     "type": "action",
     "subType": "other",
+    "configuration" : {
+      "volvoApi" : "connectedVehicle"
+    },
     "_volvoName": "CLIMATIZATION_START"
   },
   {
@@ -64,6 +76,9 @@
     "subType": "other",
     "display": {
       "forceReturnLineAfter": "1"
+    },
+    "configuration" : {
+      "volvoApi" : "connectedVehicle"
     },
     "_volvoName": "CLIMATIZATION_STOP"
   },
