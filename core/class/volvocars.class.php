@@ -1550,6 +1550,7 @@ class volvocarsCmd extends cmd {
 		$car = $this->getEqLogic();
 		$logicalId = $this->getLogicalId();
 		if ($this->getType() == 'action') {
+			log::add("volvocars","info",sprintf(__("Execution de la commande %s pour le véhicule %s",__FILE__),$this->getName(),$car->getName()));
 			switch ($logicalId) {
 				case 'refresh':
 					$car->refresh(true);
@@ -1557,12 +1558,12 @@ class volvocarsCmd extends cmd {
 				case 'lock':
 				case 'lock-reduced':
 				case 'unlock':
-					$car->getAccount()->sendCommand($this->getLogicalId(),$car->getVin());
+					$car->getAccount()->sendCommand($this);
 					$car->getInfosFromApi('doors', true);
 					break;
 				case 'climStart':
 				case 'climStop':
-					$car->getAccount()->sendCommand($this->getLogicalId(),$car->getVin());
+					$car->getAccount()->sendCommand($this);
 					break;
 				default:
 					log::add("volvocars","error",sprintf(__('Exécution de la commande action "%s" non définie',__FILE__),$this->getLogicalId()));

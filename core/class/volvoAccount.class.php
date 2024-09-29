@@ -31,9 +31,6 @@ class volvoAccount {
 	const CLIMATE_START_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands/climatization-start";
 	const CLIMATE_STOP_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands/climatization-stop";
 
-	const ENGINE_STATE_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/engine-status";
-	const API_BACKEND_STATUS = "https://oip-dev-bff.euwest1.production.volvo.care/api/v1/backend-status";
-
 	private $id = -1;
 	private $name = '';
 	private $login = '';
@@ -431,33 +428,40 @@ class volvoAccount {
 		return $return;
 	}
 
-	public function sendCommand($command, $vin) {
-		switch ($command) {
-			case 'lock':
-				$url = sprintf(self::CAR_LOCK_URL,$vin);
-				break;
-			case 'lock-reduced':
-				$url = sprintf(self::CAR_LOCK_REDUCED_URL,$vin);
-				break;
-			case 'unlock':
-				$url = sprintf(self::CAR_UNLOCK_URL,$vin);
-				break;
-			case 'climStart':
-				$url = sprintf(self::CLIMATE_START_URL,$vin);
-				break;
-			case 'climStop':
-				$url = sprintf(self::CLIMATE_STOP_URL,$vin);
-				break;
+	public function sendCommand($cmd) {
+		$href = $cmd->getConfiguration('href');
+		if ($href === '') {
+			log::add('volvocars','error',sprintf(__("href inconnu pour la commande '%s' (%s)",__FILE__),$cmd->getName(), $cmd->getLogicalId()));
 		}
-		log::add("volvocars","debug",sprintf(__('Envoi de la commande %s (%s)',__FILE__),$command,$url));
-		$session = $this->session($url);
-		curl_setopt($session,CURLOPT_POST,1);
-		$content = curl_exec($session);
-		$httpCode = curl_getinfo($session,CURLINFO_HTTP_CODE);
-		if ( $httpCode != 200) {
-			throw new Exception (sprintf(__("Erreur de l'envoi d'une commande pour le  véhicule '%s' (http_code: %s)",__FILE__), $vin, $httpCode));
-		}
+		log::add('volvocars','info',sprintf(__("commande %s (%s)",__FILE__),$cmd->getName(), $cmd->getLogicalId()));
 	}
+	// public function sendCommand($command, $vin) {
+	// 	switch ($command) {
+	// 		case 'lock':
+	// 			$url = sprintf(self::CAR_LOCK_URL,$vin);
+	// 			break;
+	// 		case 'lock-reduced':
+	// 			$url = sprintf(self::CAR_LOCK_REDUCED_URL,$vin);
+	// 			break;
+	// 		case 'unlock':
+	// 			$url = sprintf(self::CAR_UNLOCK_URL,$vin);
+	// 			break;
+	// 		case 'climStart':
+	// 			$url = sprintf(self::CLIMATE_START_URL,$vin);
+	// 			break;
+	// 		case 'climStop':
+	// 			$url = sprintf(self::CLIMATE_STOP_URL,$vin);
+	// 			break;
+	// 	}
+	// 	log::add("volvocars","debug",sprintf(__('Envoi de la commande %s (%s)',__FILE__),$command,$url));
+	// 	$session = $this->session($url);
+	// 	curl_setopt($session,CURLOPT_POST,1);
+	// 	$content = curl_exec($session);
+	// 	$httpCode = curl_getinfo($session,CURLINFO_HTTP_CODE);
+	// 	if ( $httpCode != 200) {
+	// 		throw new Exception (sprintf(__("Erreur de l'envoi d'une commande pour le  véhicule '%s' (http_code: %s)",__FILE__), $vin, $httpCode));
+	// 	}
+	// }
 
 	public function shouldRequest($_endpoint_id, $_vin) {
 		$lastAccess = $this->getCache('lastEndpointAccess');
