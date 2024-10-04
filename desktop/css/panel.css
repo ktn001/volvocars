@@ -160,6 +160,11 @@ img.volvo_logo_black {
   height: 100px;
 }
 
+/* Les tiles rectangulaires de largeur d'une colonne */
+.tile.tile3 {
+  min-height: 100px;
+}
+
 /* Les titre des tiles */
 .tile-title {
   color: var(--link-color) !important;
@@ -330,6 +335,24 @@ img.volvo_logo_black {
 .tyreR + div,
 .tyreR {
   margin-top: 15px;
+}
+
+/* ********** */
+/* lastAnswer */
+/* ********** */
+
+table.lastAnswer {
+  width: calc(100% - 20px);
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+table.lastAnswer th{
+  width: 150px;
+}
+
+table.lastAnswer td{
+  text-align: left;
 }
 
 /* *** */

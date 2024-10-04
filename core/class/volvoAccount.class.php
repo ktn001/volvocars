@@ -303,8 +303,8 @@ class volvoAccount {
 	}
 
 	public function synchronize() {
-		log::add("volvocars","info",sprintf(__("Début de la synchonisation de l'account %s",__FILE__),$this->getName()));
-		log::add("volvocars","debug","┌" . __("Récupération de la liste des véhicules",__FILE__));
+		log::add("volvocars","info","┌" . sprintf(__("Début de la synchonisation de l'account %s",__FILE__),$this->getName()));
+		log::add("volvocars","debug","├─" . __("Récupération de la liste des véhicules",__FILE__));
 		$payload = $this->getInfos('vehicles');
 		if (!isset($payload['status']) || $payload['status'] !== 'ok') {
 			$httpCode = isset($payload['httpCode']) ? $payload['httpCode'] : '';
@@ -317,6 +317,10 @@ class volvoAccount {
 		if (!isset($payload['data'])) {
 			log::add("volvocars","error","└" . __("Le payload %s n'a pas de 'data'", __FILE__));
 			throw new Exception("no data");
+		}
+		if (!is_array($payload['data'])) {
+			log::add("volvocars","warning","└" . __("Pas de véhicule trouvé",__FILE__));
+			throw new Exception (__("Pas de véhicule trouvé",__FILE__));
 		}
 		foreach ($payload['data'] as $car_info) {
 			$vin = $car_info['vin'];
@@ -429,39 +433,103 @@ class volvoAccount {
 	}
 
 	public function sendCommand($cmd) {
+		
+		log::add('volvocars','info',sprintf(
+			__("Envoi de la commande %s (%s) pour le véhicule %s",__FILE__),
+			$cmd->getName(),
+			$cmd->getLogicalId(),
+			$cmd->getEqLogic()->getName()
+		));
+		$srv = array (
+			'connectedVehicle' => 'https://api.volvocars.com/connected-vehicle',
+		);
 		$href = $cmd->getConfiguration('href');
 		if ($href === '') {
-			log::add('volvocars','error',sprintf(__("href inconnu pour la commande '%s' (%s)",__FILE__),$cmd->getName(), $cmd->getLogicalId()));
+			throw new Exception (sprintf(
+				__("href inconnu pour la commande '%s' (%s)",__FILE__),
+				$cmd->getName(),
+				$cmd->getLogicalId()
+			));
 		}
-		log::add('volvocars','info',sprintf(__("commande %s (%s)",__FILE__),$cmd->getName(), $cmd->getLogicalId()));
+		$volvoApi = $cmd->getConfiguration('volvoApi');
+		if ($volvoApi === '') {
+			throw new Exception (sprintf(
+				__("VolvoApi inconnu pour la commande '%s' (%s)",__FILE__),
+				$cmd->getName(),
+				$cmd->getLogicalId()
+			));
+			return;
+		}
+		$url = $srv[$volvoApi] . $href;
+		$session = $this->session($url);
+		curl_setopt($session,CURLOPT_POST,1);
+		$content = curl_exec($session);
+		log::add('volvocars','debug',$content);
+		$content = is_json($content,$content);
+		$httpCode = curl_getinfo($session,CURLINFO_HTTP_CODE);
+		if (isset ($content['data'])) {
+			$data = $content['data'];
+		} else {
+			$data = $content;
+		}
+		$lastAnswer = array();
+		foreach (['invokeStatus','message','readyToUnlock','readyToUnlockUntil','description'] as $key) {
+			if (isset($data[$key])) $lastAnswer[$key] = $data[$key];
+		}
+		switch ($httpCode) {
+			case 200:
+				switch ($data['invokeStatus']) {
+					case "COMPLETED":
+					case "WAITING":
+					case "RUNNING":
+					case "REJECTED":
+					case "UNKNOWN":
+					case "TIMEOUT":
+					case "CONNECTION_FAILURE":
+					case "VEHICLE_IN_SLEEP":
+					case "UNLOCK_TIME_FRAME_PASSED":
+					case "UNABLE_TO_LOCK_DOOR_OPEN":
+					case "EXPIRED":
+					case "SENT":
+					case "NOT_SUPPORTED":
+					case "CAR_IN_SLEEP_MODE":
+					case "DELIVERED":
+					case "DELIVERY_TIMEOUT":
+					case "SUCCESS":
+					case "CAR_TIMEOUT":
+					case "CAR_ERROR":
+					case "NOT_ALLOWED_PRIVACY_ENABLED":
+					case "NOT_ALLOWED_WRONG_USAGE_MODE":
+					case "INVOCATION_SPECIFIC_ERROR":
+						break;
+					default:
+						throw new Exception (sprintf(__("invokeStatus '%s' inconnu",__FILE__),$data['invokeStatus']));
+				}
+				break;
+			case 400:
+			case 401:
+			case 403:
+			case 404:
+			case 405:
+			case 409:
+			case 415:
+			case 422:
+			case 500:
+			case 503:
+			case 504:
+				$lastAnswer['httpCode'] = $httpCode;
+			default:
+				$cmd->getEqLogic()->checkAndUpdateCmd('lastAnswer',json_encode($lastAnswer));
+				throw new Exception (sprintf(
+					__("Erreur de l'envoi d'une commande pour le véhicule '%s' (http_code: %s): %s",__FILE__),
+					$vin,
+					$httpCode,
+					$lastAnswer['message']
+				));
+		}
+		$cmd->getEqLogic()->checkAndUpdateCmd('lastAnswer',json_encode($lastAnswer));
+		return;
 	}
-	// public function sendCommand($command, $vin) {
-	// 	switch ($command) {
-	// 		case 'lock':
-	// 			$url = sprintf(self::CAR_LOCK_URL,$vin);
-	// 			break;
-	// 		case 'lock-reduced':
-	// 			$url = sprintf(self::CAR_LOCK_REDUCED_URL,$vin);
-	// 			break;
-	// 		case 'unlock':
-	// 			$url = sprintf(self::CAR_UNLOCK_URL,$vin);
-	// 			break;
-	// 		case 'climStart':
-	// 			$url = sprintf(self::CLIMATE_START_URL,$vin);
-	// 			break;
-	// 		case 'climStop':
-	// 			$url = sprintf(self::CLIMATE_STOP_URL,$vin);
-	// 			break;
-	// 	}
-	// 	log::add("volvocars","debug",sprintf(__('Envoi de la commande %s (%s)',__FILE__),$command,$url));
-	// 	$session = $this->session($url);
-	// 	curl_setopt($session,CURLOPT_POST,1);
-	// 	$content = curl_exec($session);
-	// 	$httpCode = curl_getinfo($session,CURLINFO_HTTP_CODE);
-	// 	if ( $httpCode != 200) {
-	// 		throw new Exception (sprintf(__("Erreur de l'envoi d'une commande pour le  véhicule '%s' (http_code: %s)",__FILE__), $vin, $httpCode));
-	// 	}
-	// }
 
 	public function shouldRequest($_endpoint_id, $_vin) {
 		$lastAccess = $this->getCache('lastEndpointAccess');

@@ -18,6 +18,27 @@
 
 require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 
+function volvocars_goto_2() {
+	$cars = volvocars::byType('volvocars');
+	foreach ($cars as $car){
+		$car->createCmd('lastAnswer');
+		$car->sortCmds();
+		foreach ($car->getCmdsConfig() as $config) {
+			if (!isset($config['configuration'])) {
+				continue;
+			}
+			if (!isset($config['configuration']['linkedEndpoint'])) {
+				continue;
+			}
+			$cmd = $car->getCmd(null,$config['logicalId']);
+			if (is_object($cmd)) {
+				$cmd->setConfiguration('linkedEndpoint',$config['configuration']['linkedEndpoint']);
+				$cmd->save();
+			}
+		}
+	}
+}
+
 function volvocars_goto_1() {
 	$hrefs = array (
 		'lock' => '/v2/vehicles/#VIN#/commands/lock',
@@ -70,7 +91,7 @@ function volvocars_goto_1() {
 
 function volvocars_upgrade() {
 
-	$lastLevel = 1;
+	$lastLevel = 2;
 
 	$pluginLevel = config::byKey('pluginLevel','volvocars',0);
 	log::add("volvocars","info","pluginLevel: " . $pluginLevel . " => " . $lastLevel);

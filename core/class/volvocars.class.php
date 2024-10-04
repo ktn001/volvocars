@@ -395,8 +395,8 @@ class volvocars extends eqLogic {
 	 */
 	public function postInsert() {
 		$this->createCmd("refresh");
-		$this->createCmd("lock");
 		$this->createCmd("msg2widget");
+		$this->createCmd("lastAnswer");
 	}
 
 	/*
@@ -1333,6 +1333,7 @@ class volvocars extends eqLogic {
 			'fuelAmount',
 			'fuelAutonomy',
 			'hoodState',
+			'lastAnswer',
 			'locked',
 			'lock',
 			'odometer',
@@ -1551,25 +1552,20 @@ class volvocarsCmd extends cmd {
 		$logicalId = $this->getLogicalId();
 		if ($this->getType() == 'action') {
 			log::add("volvocars","info",sprintf(__("Execution de la commande %s pour le véhicule %s",__FILE__),$this->getName(),$car->getName()));
-			switch ($logicalId) {
-				case 'refresh':
-					$car->refresh(true);
-					break;
-				case 'lock':
-				case 'lock-reduced':
-				case 'unlock':
-					$car->getAccount()->sendCommand($this);
-					$car->getInfosFromApi('doors', true);
-					break;
-				case 'climStart':
-				case 'climStop':
-					$car->getAccount()->sendCommand($this);
-					break;
-				default:
-					log::add("volvocars","error",sprintf(__('Exécution de la commande action "%s" non définie',__FILE__),$this->getLogicalId()));
-					return false;
+			if ($this->getConfiguration('volvoApi') !== '') {
+				$car->getAccount()->sendCommand($this);
+				$endpoint = $this->getConfiguration('linkedEndpoint');
+				if ($endpoint !== '') {
+					$car->getInfosFromApi($endpoint, true);
+				}
+				return;
 			}
-			return;
+			if ($logicalId === 'refresh') {
+				$car->refresh(true);
+				return;
+			}
+			log::add("volvocars","error",sprintf(__('Exécution de la commande action "%s" non définie',__FILE__),$this->getLogicalId()));
+			return false;
 		}
 		if ($this->getType() == 'info') {
 			switch ($logicalId) {

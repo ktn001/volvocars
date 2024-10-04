@@ -32,7 +32,8 @@
     "type": "action",
     "subType": "other",
     "configuration" : {
-      "volvoApi" : "connectedVehicle"
+      "volvoApi" : "connectedVehicle",
+      "linkedEndpoint" : "doors"
     },
     "_volvoName": "UNLOCK"
   },
@@ -42,7 +43,8 @@
     "type": "action",
     "subType": "other",
     "configuration" : {
-      "volvoApi" : "connectedVehicle"
+      "volvoApi" : "connectedVehicle",
+      "linkedEndpoint" : "doors"
     },
     "_volvoName": "LOCK"
   },
@@ -53,7 +55,8 @@
     "subType": "other",
     "display": {
     "configuration" : {
-      "volvoApi" : "connectedVehicle"
+      "volvoApi" : "connectedVehicle",
+      "linkedEndpoint" : "doors"
     },
       "forceReturnLineAfter": "1"
     },
@@ -1210,6 +1213,13 @@
   {
     "logicalId": "msg2widget",
     "name": "{{messages pour widget}}",
+    "type": "info",
+    "subType": "string",
+    "isVisible": 0
+  },
+  {
+    "logicalId": "lastAnswer",
+    "name": "{{Dernier retour}}",
     "type": "info",
     "subType": "string",
     "isVisible": 0
