@@ -905,7 +905,7 @@ if (typeof volvocarsFrontEnd === "undefined") {
      */
     carImageLoaded: function (count = 0) {
       console.log(count);
-      if (count > 10) {
+      if (count > 100) {
         return;
       }
       let theme = document.querySelector("body").getAttribute("data-theme");
