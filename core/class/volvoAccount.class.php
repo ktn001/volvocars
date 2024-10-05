@@ -433,7 +433,6 @@ class volvoAccount {
 	}
 
 	public function sendCommand($cmd) {
-		
 		log::add('volvocars','info',sprintf(
 			__("Envoi de la commande %s (%s) pour le véhicule %s",__FILE__),
 			$cmd->getName(),
@@ -469,10 +468,16 @@ class volvoAccount {
 		$httpCode = curl_getinfo($session,CURLINFO_HTTP_CODE);
 		if (isset ($content['data'])) {
 			$data = $content['data'];
+		} elseif (isset ($content['error'])) {
+			$data = $content['error'];
 		} else {
 			$data = $content;
 		}
-		$lastAnswer = array();
+		$lastAnswer = array(
+			 'cmd' => $cmd->getName(),
+			 'date' => date('Y-m-d H:i:s')
+		);
+		
 		foreach (['invokeStatus','message','readyToUnlock','readyToUnlockUntil','description'] as $key) {
 			if (isset($data[$key])) $lastAnswer[$key] = $data[$key];
 		}

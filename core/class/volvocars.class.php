@@ -615,7 +615,6 @@ class volvocars extends eqLogic {
 	public function getImageUrl() {
 		$account = $this->getAccount();
 		$details = $account->getInfos('details',$this->getVin(), true);
-		log::add("volvocars","debug",print_r($details,true));
 
 		if (!isset($details['data'])) {
 			return "";
@@ -1381,7 +1380,6 @@ class volvocars extends eqLogic {
 					$replace['#' . $logicalId . '_history' . $carId . '#'] = $cmd->getIsHistorized() ? 'history cursor' : '';
 				}
 				$replace['#' . $logicalId . '_id' . $carId . '#'] = $cmd->getId();
-				log::add("volvocars","info",print_r($replace,true));
 			}
 		}
 

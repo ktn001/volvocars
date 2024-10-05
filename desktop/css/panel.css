@@ -162,7 +162,7 @@ img.volvo_logo_black {
 
 /* Les tiles rectangulaires de largeur d'une colonne */
 .tile.tile3 {
-  min-height: 100px;
+  min-height: 100px !important;
 }
 
 /* Les titre des tiles */
