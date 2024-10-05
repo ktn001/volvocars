@@ -1070,35 +1070,36 @@
   // RETOUR COMMANDES
   if (!"#lastAnswer_id#id##".startsWith('#')) {
     jeedom.cmd.update['#lastAnswer_id#id##'] = function(_option) {
-      let answer = JSON.parse(_option.display_value)
       document.querySelector('.Cmd#lastAnswer_id#id##').querySelector('tbody').html('')
-      let key = ''
-      for (key of ['invokeStatus','message']) {
-        console.log(key)
-        if (key in answer) {
-          let tr = '<tr>'
-          tr += '<th>' + key + ' :</th>'
-          tr += '<td>' + answer[key] + '</td>'
-          tr += '</tr>'
-          let newRow = document.createElement('tr')
-          newRow.innerHTML = tr
-          document.querySelector('.Cmd#lastAnswer_id#id##').querySelector('tbody').appendChild(newRow)
-          delete answer[key]
+      let answer = json_decode(_option.display_value)
+      if (answer != null) {
+        let key = ''
+        for (key of ['invokeStatus','message']) {
+          console.log(key)
+          if (key in answer) {
+            let tr = '<tr>'
+            tr += '<th>' + key + ' :</th>'
+            tr += '<td>' + answer[key] + '</td>'
+            tr += '</tr>'
+            let newRow = document.createElement('tr')
+            newRow.innerHTML = tr
+            document.querySelector('.Cmd#lastAnswer_id#id##').querySelector('tbody').appendChild(newRow)
+            delete answer[key]
+          }
+        }
+        for (key in answer) {
+          console.log(key)
+          if (key in answer) {
+            let tr = '<tr>'
+            tr += '<th>' + key + ' :</th>'
+            tr += '<td>' + answer[key] + '</td>'
+            tr += '</tr>'
+            let newRow = document.createElement('tr')
+            newRow.innerHTML = tr
+            document.querySelector('.Cmd#lastAnswer_id#id##').querySelector('tbody').appendChild(newRow)
+          }
         }
       }
-      for (key in answer) {
-        console.log(key)
-        if (key in answer) {
-          let tr = '<tr>'
-          tr += '<th>' + key + ' :</th>'
-          tr += '<td>' + answer[key] + '</td>'
-          tr += '</tr>'
-          let newRow = document.createElement('tr')
-          newRow.innerHTML = tr
-          document.querySelector('.Cmd#lastAnswer_id#id##').querySelector('tbody').appendChild(newRow)
-        }
-      }
-      // document.querySelector('.Cmd#lastAnswer_id#id##').html(_option.display_value)
     }
     jeedom.cmd.refreshValue([{cmd_id: '#lastAnswer_id#id##', value: '#lastAnswer_state#id##', display_value: '#lastAnswer_display_value#id##'}])
   }
