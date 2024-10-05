@@ -224,7 +224,7 @@ try {
 		$imageData = base64_decode(array_pop($content));
 		$imagePath = __DIR__ . './../../data/' . $vin . '.png';
 		file_put_contents($imagePath, $imageData);
-		ajax::success($url);
+		ajax::success($car->getImage());
 	}
 
 	throw new Exception(__('Aucune méthode correspondante à', __FILE__) . ' : ' . init('action'));

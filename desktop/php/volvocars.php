@@ -365,19 +365,6 @@ $accounts = volvoAccount::all();
 									<textarea class="form-control eqLogicAttr autogrow" data-l1key="comment"></textarea>
 								</div>
 							</div>
-							<?php
-								$carId = init('id');
-								$imageOK = false;
-								if ($carId) {
-									$car = volvocars::byId($carId);
-									if (is_object($car)) {
-										$imageOK = $car->imageOK();
-									}
-								}
-								sendVarToJS([
-									'imageOK' => $imageOK,
-								]);
-							?>
 							<div class='col-sm-12'>
 								<img id="img_car" class="img-responsive" style="margin-left:auto;margin-right:auto;margin-top:30px">
 							</div>

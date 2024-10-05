@@ -591,11 +591,11 @@ class volvocars extends eqLogic {
 		if (file_exists($imgPath)){
 			$fileInfo = getimagesize($imgPath);
 			if ($fileInfo !== false) {
-				return true;
+				return '1';
 			}
 		}
 		$plugin = plugin::byId($this->getEqType_name());
-		return false;
+		return '0';
 	}
 
 	/*
@@ -615,26 +615,32 @@ class volvocars extends eqLogic {
 	public function getImageUrl() {
 		$account = $this->getAccount();
 		$details = $account->getInfos('details',$this->getVin(), true);
-		if (isset($details['images'])){
-			if (isset($details['images']['exteriorImageUrl'])){
-				$url = $details['images']['exteriorImageUrl'];
-				$parsedURL = parse_url($url);
-				parse_str($parsedURL['query'],$params);
-				$params['bg'] = 'ffffff00';
-				$params['w'] = '1200';
-				$parsedURL['query'] = http_build_query($params);
-				$url = ((isset($parsedURL['scheme'])) ? $parsedURL['scheme'] . '://' : '')
-					  .((isset($parsedURL['user'])) ? $parsedURL['user'] . ((isset($parsedURL['pass'])) ? ':' . $parsedURL['pass'] : '') .'@' : '')
-					  .((isset($parsedURL['host'])) ? $parsedURL['host'] : '')
-					  .((isset($parsedURL['port'])) ? ':' . $parsedURL['port'] : '')
-					  .((isset($parsedURL['path'])) ? $parsedURL['path'] : '')
-					  .((isset($parsedURL['query'])) ? '?' . $parsedURL['query'] : '')
-					  .((isset($parsedURL['fragment'])) ? '#' . $parsedURL['fragment'] : '');
-				log::add("volvocars","debug","IMAGE: " . $url);
-				return $url;
-			}
+		log::add("volvocars","debug",print_r($details,true));
+
+		if (!isset($details['data'])) {
+			return "";
 		}
-		return "";
+		if (!isset($details['data']['images'])) {
+			return "";
+		}
+		if (!isset($details['data']['images']['exteriorImageUrl'])) {
+			return "";
+		}
+		$url = $details['data']['images']['exteriorImageUrl'];
+		$parsedURL = parse_url($url);
+		parse_str($parsedURL['query'],$params);
+		$params['bg'] = 'ffffff00';
+		$params['w'] = '1200';
+		$parsedURL['query'] = http_build_query($params);
+		$url = ((isset($parsedURL['scheme'])) ? $parsedURL['scheme'] . '://' : '')
+			  .((isset($parsedURL['user'])) ? $parsedURL['user'] . ((isset($parsedURL['pass'])) ? ':' . $parsedURL['pass'] : '') .'@' : '')
+			  .((isset($parsedURL['host'])) ? $parsedURL['host'] : '')
+			  .((isset($parsedURL['port'])) ? ':' . $parsedURL['port'] : '')
+			  .((isset($parsedURL['path'])) ? $parsedURL['path'] : '')
+			  .((isset($parsedURL['query'])) ? '?' . $parsedURL['query'] : '')
+			  .((isset($parsedURL['fragment'])) ? '#' . $parsedURL['fragment'] : '');
+		log::add("volvocars","debug","IMAGE: " . $url);
+		return $url;
 	}
 
 	/*

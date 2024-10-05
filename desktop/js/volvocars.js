@@ -169,7 +169,7 @@ if (typeof volvocarsFrontEnd === "undefined") {
        * Event Load
        */
       document.getElementById("img_car").addEventListener("load", function () {
-        volvocarsFrontEnd.carImageLoaded();
+        volvocarsFrontEnd.onCarImageLoaded();
       });
 
       /*
@@ -903,33 +903,33 @@ if (typeof volvocarsFrontEnd === "undefined") {
     /*
      * Image Chargée
      */
-    carImageLoaded: function (count = 0) {
-      console.log(count);
-      if (count > 100) {
+    onCarImageLoaded: function (count = 0) {
+      if (count > 50) {
         return;
       }
       let theme = document.querySelector("body").getAttribute("data-theme");
       if (theme === null) {
         setTimeout(function () {
           count = count + 1;
-          volvocarsFrontEnd.carImageLoaded(count);
+          volvocarsFrontEnd.onCarImageLoaded(count);
         }, 100);
         return;
       }
 
-      if (!imageOK) {
-        let el_img = document.querySelector("#img_car");
-        let url = el_img.getAttribute("src");
-        if (url.includes("volvocars_icon")) {
-          if (theme.endsWith("_Light")) {
-            el_img.style.filter = "invert(100%)";
-          }
-          document.getElementById("div-get_image").removeClass("hidden");
-          document.getElementById("drop-area").addClass("hidden");
-        } else {
-          document.getElementById("div-get_image").addClass("hidden");
-          document.getElementById("drop-area").removeClass("hidden");
+      let el_img = document.querySelector("#img_car");
+      let url = el_img.getAttribute("src");
+      if (url.includes("volvocars_icon")) {
+        if (theme.endsWith("_Light")) {
+          el_img.style.filter = "invert(100%)";
         }
+        document.getElementById("div-get_image").removeClass("hidden");
+        document.getElementById("drop-area").addClass("hidden");
+      } else if (url.includes("volvocars.com")) {
+        document.getElementById("div-get_image").addClass("hidden");
+        document.getElementById("drop-area").removeClass("hidden");
+      } else {
+        document.getElementById("div-get_image").addClass("hidden");
+        document.getElementById("drop-area").addClass("hidden");
       }
     },
 
@@ -976,6 +976,7 @@ if (typeof volvocarsFrontEnd === "undefined") {
           console.log(image);
           let reader = new FileReader();
           reader.addEventListener("load", function () {
+            let dropedImage = document.querySelector('#drop-area img').remove()
             let id = getUrlVars("id");
             domUtils.ajax({
               type: "POST",
@@ -996,10 +997,14 @@ if (typeof volvocarsFrontEnd === "undefined") {
                   });
                   return;
                 }
-                document.getElementById("drop-area").addClass("hidden");
+                console.log(data)
+                document.getElementById("drop-area").addClass("hidden")
+                document.getElementById("img_car").src = data.result
+                document.querySelector('.eqLogicDisplayCard[data-eqLogic_id="' + id + '"] img').src = data.result
               },
             });
           });
+
           reader.readAsDataURL(image);
           break;
         }
@@ -1012,11 +1017,3 @@ if (typeof volvocarsFrontEnd === "undefined") {
 }
 window.onload = volvocarsFrontEnd.init();
 
-//   volvocarsFrontEnd.init = function() {
-//     document.getElementById('drop-area').addEventListener('drop',volvocarsFrontEnd.dropImage)
-//
-//   }
-//
-//   // volvocarsFrontEnd.toggleEditVehicle(false)
-// }
-// https://uploadcare.com/blog/how-to-make-a-drag-and-drop-file-uploader/
