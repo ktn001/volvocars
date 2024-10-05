@@ -26,11 +26,11 @@ body[data-theme="core2019_Light"] {
 }
 
 .blur {
-	filter: blur(3px);
+  filter: blur(3px);
 }
 
 .blur:hover {
-	filter: blur(0);
+  filter: blur(0);
 }
 
 /* ************* */
@@ -347,11 +347,11 @@ table.lastAnswer {
   margin-right: 10px;
 }
 
-table.lastAnswer th{
+table.lastAnswer th {
   width: 150px;
 }
 
-table.lastAnswer td{
+table.lastAnswer td {
   text-align: left;
 }
 

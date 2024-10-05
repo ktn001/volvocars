@@ -538,7 +538,7 @@ if (typeof volvocarsFrontEnd === "undefined") {
      * Ajout d'une commande dans la table
      */
     addCmdToTable: function (_cmd) {
-      blur = ''
+      blur = "";
       if (!isset(_cmd)) {
         let _cmd = { configuration: {} };
       }
@@ -556,8 +556,8 @@ if (typeof volvocarsFrontEnd === "undefined") {
             .querySelector(".cmdAction[data-action=removeClosed]")
             .removeClass("hidden");
         }
-        if (_cmd.logicalId == 'position') {
-          blur = 'blur'
+        if (_cmd.logicalId == "position") {
+          blur = "blur";
         }
       }
       let tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">';
@@ -976,7 +976,7 @@ if (typeof volvocarsFrontEnd === "undefined") {
           console.log(image);
           let reader = new FileReader();
           reader.addEventListener("load", function () {
-            let dropedImage = document.querySelector('#drop-area img').remove()
+            let dropedImage = document.querySelector("#drop-area img").remove();
             let id = getUrlVars("id");
             domUtils.ajax({
               type: "POST",
@@ -997,10 +997,12 @@ if (typeof volvocarsFrontEnd === "undefined") {
                   });
                   return;
                 }
-                console.log(data)
-                document.getElementById("drop-area").addClass("hidden")
-                document.getElementById("img_car").src = data.result
-                document.querySelector('.eqLogicDisplayCard[data-eqLogic_id="' + id + '"] img').src = data.result
+                console.log(data);
+                document.getElementById("drop-area").addClass("hidden");
+                document.getElementById("img_car").src = data.result;
+                document.querySelector(
+                  '.eqLogicDisplayCard[data-eqLogic_id="' + id + '"] img',
+                ).src = data.result;
               },
             });
           });
@@ -1016,4 +1018,3 @@ if (typeof volvocarsFrontEnd === "undefined") {
   printEqLogic = volvocarsFrontEnd.printEqLogic;
 }
 window.onload = volvocarsFrontEnd.init();
-

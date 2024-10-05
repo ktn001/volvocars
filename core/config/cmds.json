@@ -31,9 +31,9 @@
     "name": "{{Déverrouiller}}",
     "type": "action",
     "subType": "other",
-    "configuration" : {
-      "volvoApi" : "connectedVehicle",
-      "linkedEndpoint" : "doors"
+    "configuration": {
+      "volvoApi": "connectedVehicle",
+      "linkedEndpoint": "doors"
     },
     "_volvoName": "UNLOCK"
   },
@@ -42,9 +42,9 @@
     "name": "{{Verrouiller}}",
     "type": "action",
     "subType": "other",
-    "configuration" : {
-      "volvoApi" : "connectedVehicle",
-      "linkedEndpoint" : "doors"
+    "configuration": {
+      "volvoApi": "connectedVehicle",
+      "linkedEndpoint": "doors"
     },
     "_volvoName": "LOCK"
   },
@@ -54,10 +54,10 @@
     "type": "action",
     "subType": "other",
     "display": {
-    "configuration" : {
-      "volvoApi" : "connectedVehicle",
-      "linkedEndpoint" : "doors"
-    },
+      "configuration": {
+        "volvoApi": "connectedVehicle",
+        "linkedEndpoint": "doors"
+      },
       "forceReturnLineAfter": "1"
     },
     "_volvoName": "LOCK_REDUCED_GUARD"
@@ -67,8 +67,8 @@
     "name": "{{Climatisation EN}}",
     "type": "action",
     "subType": "other",
-    "configuration" : {
-      "volvoApi" : "connectedVehicle"
+    "configuration": {
+      "volvoApi": "connectedVehicle"
     },
     "_volvoName": "CLIMATIZATION_START"
   },
@@ -80,8 +80,8 @@
     "display": {
       "forceReturnLineAfter": "1"
     },
-    "configuration" : {
-      "volvoApi" : "connectedVehicle"
+    "configuration": {
+      "volvoApi": "connectedVehicle"
     },
     "_volvoName": "CLIMATIZATION_STOP"
   },
@@ -265,7 +265,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "removable" : "1",
+      "removable": "1",
       "dependTo": "doorFlState"
     },
     "template": {
@@ -279,7 +279,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "removable" : "1",
+      "removable": "1",
       "dependTo": "doorFrState"
     },
     "template": {
@@ -293,7 +293,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "removable" : "1",
+      "removable": "1",
       "dependTo": "doorRlState"
     },
     "template": {
@@ -307,7 +307,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "removable" : "1",
+      "removable": "1",
       "dependTo": "doorRrState"
     },
     "template": {
@@ -324,7 +324,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "removable" : "1",
+      "removable": "1",
       "dependTo": "winFlState"
     }
   },
@@ -334,7 +334,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "removable" : "1",
+      "removable": "1",
       "dependTo": "winFrState"
     }
   },
@@ -344,7 +344,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "removable" : "1",
+      "removable": "1",
       "dependTo": "winRlState"
     }
   },
@@ -354,7 +354,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "removable" : "1",
+      "removable": "1",
       "dependTo": "winRrState"
     },
     "display": {
@@ -367,7 +367,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "removable" : "1",
+      "removable": "1",
       "dependTo": "hoodState"
     }
   },
@@ -377,7 +377,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "removable" : "1",
+      "removable": "1",
       "dependTo": "tailState"
     }
   },
@@ -387,7 +387,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "removable" : "1",
+      "removable": "1",
       "dependTo": "tankState"
     }
   },
@@ -397,7 +397,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "removable" : "1",
+      "removable": "1",
       "dependTo": "roofState"
     },
     "display": {
@@ -410,7 +410,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "removable" : "1",
+      "removable": "1",
       "dependTo": "doorFlState"
     },
     "template": {
@@ -424,7 +424,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "removable" : "1",
+      "removable": "1",
       "dependTo": "doorFrState"
     },
     "template": {
@@ -438,7 +438,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "removable" : "1",
+      "removable": "1",
       "dependTo": "doorRlState"
     },
     "template": {
@@ -452,7 +452,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "removable" : "1",
+      "removable": "1",
       "dependTo": "doorRrState"
     },
     "template": {
@@ -469,7 +469,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "removable" : "1",
+      "removable": "1",
       "dependTo": "winFlState"
     }
   },
@@ -479,7 +479,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "removable" : "1",
+      "removable": "1",
       "dependTo": "winFrState"
     }
   },
@@ -489,7 +489,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "removable" : "1",
+      "removable": "1",
       "dependTo": "winRlState"
     }
   },
@@ -499,7 +499,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "removable" : "1",
+      "removable": "1",
       "dependTo": "winRrState"
     },
     "display": {
@@ -512,7 +512,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "removable" : "1",
+      "removable": "1",
       "dependTo": "hoodState"
     }
   },
@@ -522,7 +522,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "removable" : "1",
+      "removable": "1",
       "dependTo": "tailState"
     }
   },
@@ -532,7 +532,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "removable" : "1",
+      "removable": "1",
       "dependTo": "tankState"
     }
   },
@@ -542,7 +542,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "removable" : "1",
+      "removable": "1",
       "dependTo": "roofState"
     },
     "display": {
@@ -590,7 +590,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "removable" : "1",
+      "removable": "1",
       "dependTo": "fuelAutonomy",
       "onlyFor": "fuelEngine"
     }
@@ -646,7 +646,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "removable" : "1",
+      "removable": "1",
       "dependTo": "electricAutonomy",
       "onlyFor": "electricEngine"
     }
@@ -691,7 +691,7 @@
     "type": "info",
     "subType": "string",
     "configuration": {
-      "removable" : "1",
+      "removable": "1",
       "dependTo": "chargingRemainingTime",
       "onlyFor": "electricEngine"
     }
@@ -721,7 +721,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "removable" : "1",
+      "removable": "1",
       "listener": "1",
       "dependTo": "brakeFluidLevel"
     }
@@ -743,7 +743,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "removable" : "1",
+      "removable": "1",
       "dependTo": "coolantLevel",
       "listener": "1",
       "onlyFor": "fuelEngine"
@@ -766,7 +766,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "removable" : "1",
+      "removable": "1",
       "dependTo": "oilLevel",
       "listener": "1",
       "onlyFor": "fuelEngine"
@@ -788,7 +788,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "removable" : "1",
+      "removable": "1",
       "dependTo": "washerFluidLevel",
       "listener": "1"
     }
@@ -799,7 +799,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "removable" : "1",
+      "removable": "1",
       "dependTo": [
         "al_brakeLightC",
         "al_brakeLightL",
@@ -1062,7 +1062,12 @@
     "logicalId": "position",
     "name": "{{position}}",
     "configuration": {
-      "dependencies": ["distanceSite1","presenceSite1","distanceSite2","presenceSite2"],
+      "dependencies": [
+        "distanceSite1",
+        "presenceSite1",
+        "distanceSite2",
+        "presenceSite2"
+      ],
       "listener": "1"
     },
     "type": "info",
@@ -1116,7 +1121,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "removable" : "1",
+      "removable": "1",
       "dependTo": ["tyreFl", "tyreFr", "tyreRl", "tyreRr"],
       "listener": "1"
     }

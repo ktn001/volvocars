@@ -33,9 +33,11 @@ if (typeof volvocarsPanel === "undefined") {
    */
   volvocarsPanel.displaySelectedEqLogic = function () {
     domUtils.showLoading();
-    let el = document.querySelector("#div_display_eqLogicList .active[data-eqLogic_id]")
-    if (! el) {
-      return
+    let el = document.querySelector(
+      "#div_display_eqLogicList .active[data-eqLogic_id]",
+    );
+    if (!el) {
+      return;
     }
     let id = el.getAttribute("data-eqLogic_id");
     domUtils.ajax({
@@ -65,4 +67,4 @@ if (typeof volvocarsPanel === "undefined") {
   };
 }
 volvocarsPanel.init();
-setTimeout (volvocarsPanel.displaySelectedEqLogic, 500)
+setTimeout(volvocarsPanel.displaySelectedEqLogic, 500);
