@@ -542,7 +542,6 @@ class volvocars extends eqLogic {
 				log::add("volvocars","error",sprintf(__("handler pour le listener du endpoint %s introuvable",__FILE__),$endpoint->getId()));
 				continue;
 			}
-			log::add("volvocars","debug",array('carId'=>$this->getId()));
 			$listener = listener::byClassAndFunction(__CLASS__,$function,array('carId'=>$this->getId()));
 			if (!is_object($listener)) {
 				$listener = new listener();
@@ -1518,7 +1517,10 @@ class volvocarsCmd extends cmd {
 
 	public function postInsert() {
 		$logicalIds = $this->getConfiguration('dependencies');
-		if ($logicalIds != '') {
+		if ($logicalIds !== '') {
+			if (!is_array($logicalIds)) {
+				$logicalIds = array($logicalIds);
+			}
 			foreach (explode(',',$logicalIds) as $logicalId) {
 				$cmd = $this->getEqLogic()->getCmd('info',$logicalId);
 				if (is_object($cmd)) {
