@@ -1521,7 +1521,7 @@ class volvocarsCmd extends cmd {
 			if (!is_array($logicalIds)) {
 				$logicalIds = array($logicalIds);
 			}
-			foreach (explode(',',$logicalIds) as $logicalId) {
+			foreach ($logicalIds as $logicalId) {
 				$cmd = $this->getEqLogic()->getCmd('info',$logicalId);
 				if (is_object($cmd)) {
 					$cmd->save();
