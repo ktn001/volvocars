@@ -18,6 +18,44 @@
 
 require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 
+function volvocars_goto_3() {
+	$cars = volvocars::byType('volvocars');
+	foreach ($cars as $car){
+		log::add("volvocars","info",sprintf(__("Traitement du véhicule %s",__FILE__),$car->getName()));
+		$commandMapping = array (
+			"HONK" => "honk",
+			"FLASH" => "flash",
+			"HONK_AND_FLASH" => "honk_flash",
+		);
+		$account = $car->getAccount();
+		$payload = $account->getInfos('commands',$car->getVin(), true);
+		if (!isset($payload['status']) || $payload['status'] !== 'ok') {
+			$httpCode = isset($payload['httpCode']) ? $payload['httpCode'] : '';
+			$message = isset($payload['message']) ? $payload['message'] : null;
+			$description = isset($payload['description']) ? $payload['description'] : null;
+			$detail = isset($payload['detail']) ? $payload['detail'] : null;
+			log::add("volvocars","error","└" . sprintf(__("Echec de la synchonisation de l'account %s",__FILE__),$car->getName()));
+			throw new volvoApiException('details',$httpCode,$message,$description,$detail);
+		}
+		if (!isset($payload['data'])) {
+			log::add("volvocars","error","└" . __("Le payload %s n'a pas de 'data'", __FILE__));
+			throw new Exception("no data");
+		}
+		$commands = $payload['data'];
+		$cmdsConfig = $car->getCmdsConfig();
+		foreach ($commands as $command) {
+			if (!isset($commandMapping[$command['command']])) {
+				continue;
+			}
+			log::add("volvocars","info",sprintf(__("Création de la commande %s",__FILE__),$commandMapping[$command['command']]));
+			$car->createCmd($commandMapping[$command['command']]);
+			$cmd=$car->getCmd(null,$commandMapping[$command['command']]);
+			$cmd->setConfiguration('href',$command['href']);
+			$cmd->save();
+		}
+	}
+}
+
 function volvocars_goto_2() {
 	$cars = volvocars::byType('volvocars');
 	foreach ($cars as $car){
@@ -91,7 +129,7 @@ function volvocars_goto_1() {
 
 function volvocars_upgrade() {
 
-	$lastLevel = 2;
+	$lastLevel = 3;
 
 	$pluginLevel = config::byKey('pluginLevel','volvocars',0);
 	log::add("volvocars","info","pluginLevel: " . $pluginLevel . " => " . $lastLevel);

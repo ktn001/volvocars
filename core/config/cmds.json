@@ -86,6 +86,36 @@
     "_volvoName": "CLIMATIZATION_STOP"
   },
   {
+    "logicalId": "honk",
+    "name": "{{Klaxonner}}",
+    "type": "action",
+    "subType": "other",
+    "configuration": {
+      "volvoApi": "connectedVehicle"
+    },
+    "_volvoName": "HONK"
+  },
+  {
+    "logicalId": "flash",
+    "name": "{{flash}}",
+    "type": "action",
+    "subType": "other",
+    "configuration": {
+      "volvoApi": "connectedVehicle"
+    },
+    "_volvoName": "FLASH"
+  },
+  {
+    "logicalId": "honk_flash",
+    "name": "{{klaxons_flash}}",
+    "type": "action",
+    "subType": "other",
+    "configuration": {
+      "volvoApi": "connectedVehicle"
+    },
+    "_volvoName": "HONK_AND_FLASH"
+  },
+  {
     "logicalId": "engineON",
     "name": "{{moteur en service}}",
     "type": "info",

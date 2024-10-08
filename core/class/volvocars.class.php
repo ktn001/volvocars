@@ -1320,6 +1320,9 @@ class volvocars extends eqLogic {
 			'chargingStatus',
 			'climStart',
 			'climStop',
+			'honk',
+			'flash',
+			'honk_flash',
 			'connectorStatus',
 			'consoElectric',
 			'consoFuel',
@@ -1379,6 +1382,9 @@ class volvocars extends eqLogic {
 					$replace['#' . $logicalId . '_history' . $carId . '#'] = $cmd->getIsHistorized() ? 'history cursor' : '';
 				}
 				$replace['#' . $logicalId . '_id' . $carId . '#'] = $cmd->getId();
+				$replace['#' . $logicalId . '_hidden' . $carId . '#'] = '';
+			} else {
+				$replace['#' . $logicalId . '_hidden' . $carId . '#'] = 'hidden';
 			}
 		}
 

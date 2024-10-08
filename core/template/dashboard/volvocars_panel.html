@@ -469,7 +469,7 @@
             <i class="fa-lg icon fas fa-sync-alt"></i>
           </button>
           <button
-            class="btn cmd Cmd#lock_id#id##"
+            class="btn cmd Cmd#lock_id#id## #lock_hidden#id##"
             data-cmd_id="#lock_id#id##"
             title="{{Verrouiller}}"
             onclick="jeedom.cmd.execute({id: #lock_id#id##, notify: true})"
@@ -477,7 +477,7 @@
             <i class="fa-lg icon fas fa-lock"></i>
           </button>
           <button
-            class="btn cmd Cmd#unlock_id#id##"
+            class="btn cmd Cmd#unlock_id#id## #unlock_hidden#id##"
             data-cmd_id="#unlock_id#id##"
             title="{{Déverrouiller}}"
             onclick="jeedom.cmd.execute({id: #unlock_id#id##, notify: true})"
@@ -485,7 +485,7 @@
             <i class="fa-lg icon fas fa-unlock"></i>
           </button>
           <button
-            class="btn cmd Cmd#climStart_id#id##"
+            class="btn cmd Cmd#climStart_id#id## #climStart_hidden#id##"
             data-cmd_id="#climStart_id#id##"
             title="{{Ventiller}}"
             onclick="jeedom.cmd.execute({id: #climStart_id#id##, notify: true})"
@@ -493,12 +493,37 @@
             <i class="fa-lg icon fas fa-fan"></i>
           </button>
           <button
-            class="btn cmd Cmd#climStop_id#id##"
+            class="btn cmd Cmd#climStop_id#id## #climStop_hidden#id##"
             data-cmd_id="#climStop_id#id##"
             title="{{Stop ventiller}}"
             onclick="jeedom.cmd.execute({id: #climStop_id#id##, notify: true})"
           >
             <i class="fa-lg icon fas fa-ban"></i>
+          </button>
+          <button
+            class="btn cmd Cmd#honk_id#id## #honk_hidden#id##"
+            data-cmd_id="#honk_id#id##"
+            title="{{Klaxonner}}"
+            onclick="jeedom.cmd.execute({id: #honk_id#id##, notify: true})"
+          >
+            <i class="fa-lg icon fas fa-volume-up"></i>
+          </button>
+          <button
+            class="btn cmd Cmd#flash_id#id## #flash_hidden#id##"
+            data-cmd_id="#flash_id#id##"
+            title="{{Appel de phare}}"
+            onclick="jeedom.cmd.execute({id: #flash_id#id##, notify: true})"
+          >
+            <i class="fa-lg icon fas fa-lightbulb"></i>
+          </button>
+          <button
+            class="btn cmd Cmd#honk_flash_id#id## #honk_flash_hidden#id##"
+            data-cmd_id="#honk_flash_id#id##"
+            title="{{Kalxonner + Appel de phare}}"
+            onclick="jeedom.cmd.execute({id: #honk_flash_id#id##, notify: true})"
+          >
+            <i class="fa-lg icon fas fa-volume-up"></i>
+            <i class="fa-lg icon fas fa-lightbulb"></i>
           </button>
         </div>
       </div>
