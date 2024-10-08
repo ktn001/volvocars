@@ -200,6 +200,7 @@
         "Heures moteur avant service": "Engine hours before service",
         "Jours": "Days",
         "Kilomètre avant service": "Kilometer before service",
+        "Klaxonner": "Horn",
         "Raison du service": "Reason for service",
         "Raison indiponibilité": "Reason unavailable",
         "Temps de charge restant": "Remaining charge time",
@@ -244,9 +245,11 @@
         "feux brouillard avant": "front fog lamps",
         "feux détresse": "hazard lights",
         "feux latéraux": "side lights",
+        "flash": "flash",
         "hayon fermé": "tailgate closed",
         "hayon ouvert": "tailgate open",
         "jours avant service": "days before service",
+        "klaxons_flash": "klaxons_flash",
         "messages pour widget": "widget messages",
         "moteur en service": "motor in service",
         "niveau charge batterie": "battery charge level",
@@ -295,6 +298,7 @@
     "plugins\/volvocars\/core\/template\/dashboard\/volvocars_panel.html": {
         "Accessibilité": "Accessibility",
         "Actions": "Actions",
+        "Appel de phare": "Headlight call",
         "Batterie": "Battery",
         "Capot": "Hood",
         "Coffre": "Safe",
@@ -308,7 +312,9 @@
         "Déverrouiller": "Unlock",
         "Fin de charge prévue ": "Scheduled end of charge",
         "Informations": "Information",
+        "Kalxonner + Appel de phare": "Kalxonner + Beacon",
         "Kilométrage": "Mileage",
+        "Klaxonner": "Horn",
         "Km restants (thermique)": "Remaining km (thermal)",
         "Km restants (électrique)": "Remaining km (electric)",
         "Localisation": "Localization",
@@ -474,5 +480,11 @@
         "Ouvert": "Open",
         "Prend la valeur 1 (true) lorsque l'ouvrant est fermé": "Takes value 1 (true) when sash is closed",
         "Prend la valeur 1 (true) lorsque l'ouvrant est ouvert": "Sets value to 1 (true) when sash is open"
+    },
+    "plugins\/volvocars\/plugin_info\/install.php": {
+        "Création de la commande %s": "Create %s command",
+        "Echec de la synchonisation de l'account %s": "Synchronization of account %s failed",
+        "Le payload %s n'a pas de 'data'": "Payload %s has no data",
+        "Traitement du véhicule %s": "Vehicle treatment %s"
     }
 }

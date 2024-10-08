@@ -200,6 +200,7 @@
         "Heures moteur avant service": "Ore del motore prima della manutenzione",
         "Jours": "Giorni",
         "Kilomètre avant service": "Chilometro prima del servizio",
+        "Klaxonner": "Suona il clacson",
         "Raison du service": "Motivo del servizio",
         "Raison indiponibilité": "Motivo della mancata disponibilità",
         "Temps de charge restant": "Tempo di carica residuo",
@@ -244,9 +245,11 @@
         "feux brouillard avant": "fari antinebbia anteriori",
         "feux détresse": "luci di emergenza",
         "feux latéraux": "luci laterali",
+        "flash": "flash",
         "hayon fermé": "portellone posteriore chiuso",
         "hayon ouvert": "portellone posteriore aperto",
         "jours avant service": "giorni prima del servizio",
+        "klaxons_flash": "clacson_flash",
         "messages pour widget": "messaggi per widget",
         "moteur en service": "motore in servizio",
         "niveau charge batterie": "livello di carica della batteria",
@@ -295,6 +298,7 @@
     "plugins\/volvocars\/core\/template\/dashboard\/volvocars_panel.html": {
         "Accessibilité": "Accessibilità",
         "Actions": "Stock",
+        "Appel de phare": "Luce lampeggiante",
         "Batterie": "Batterie",
         "Capot": "Bonnet",
         "Coffre": "Sicuro",
@@ -308,7 +312,9 @@
         "Déverrouiller": "Sbloccare",
         "Fin de charge prévue ": "Fine carica programmata",
         "Informations": "Informazioni",
+        "Kalxonner + Appel de phare": "Kalxonner + Beacon",
         "Kilométrage": "Chilometraggio",
+        "Klaxonner": "Suona il clacson",
         "Km restants (thermique)": "Km rimanenti (termici)",
         "Km restants (électrique)": "Km rimanenti (elettrici)",
         "Localisation": "Localizzazione",
@@ -474,5 +480,11 @@
         "Ouvert": "Aperto",
         "Prend la valeur 1 (true) lorsque l'ouvrant est fermé": "Assume il valore 1 (vero) quando l'anta è chiusa",
         "Prend la valeur 1 (true) lorsque l'ouvrant est ouvert": "Assume il valore 1 (vero) quando l'anta è aperta"
+    },
+    "plugins\/volvocars\/plugin_info\/install.php": {
+        "Création de la commande %s": "Creare il comando %s",
+        "Echec de la synchonisation de l'account %s": "Sincronizzazione dell'account %s fallita",
+        "Le payload %s n'a pas de 'data'": "Il payload %s non contiene dati",
+        "Traitement du véhicule %s": "Trattamento dei veicoli %s"
     }
 }
