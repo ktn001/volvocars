@@ -200,6 +200,7 @@
         "Heures moteur avant service": "Motorstunden vor dem Dienst",
         "Jours": "Tage",
         "Kilomètre avant service": "Vor-Dienst-Kilometer",
+        "Klaxonner": "Hupen",
         "Raison du service": "Grund für die Dienstleistung",
         "Raison indiponibilité": "Grund Unerreichbarkeit",
         "Temps de charge restant": "Verbleibende Ladezeit",
@@ -244,9 +245,11 @@
         "feux brouillard avant": "nebelscheinwerfer",
         "feux détresse": "warnleuchten",
         "feux latéraux": "seitenlichter",
+        "flash": "flash",
         "hayon fermé": "geschlossene Heckklappe",
         "hayon ouvert": "geöffnete Heckklappe",
         "jours avant service": "tage vor Dienst",
+        "klaxons_flash": "hornons_flash",
         "messages pour widget": "nachrichten für Widget",
         "moteur en service": "motor in Betrieb",
         "niveau charge batterie": "batterieladestand",
@@ -295,6 +298,7 @@
     "plugins\/volvocars\/core\/template\/dashboard\/volvocars_panel.html": {
         "Accessibilité": "Barrierefreiheit",
         "Actions": "Lager",
+        "Appel de phare": "Leuchtturmruf",
         "Batterie": "Schlagzeug",
         "Capot": "Abdeckhaube",
         "Coffre": "Safe",
@@ -308,7 +312,9 @@
         "Déverrouiller": "Entsperren",
         "Fin de charge prévue ": "Geplantes Ende der Ladung",
         "Informations": "Information",
+        "Kalxonner + Appel de phare": "Kalxonner + Leuchtturmruf",
         "Kilométrage": "Kilometerstand",
+        "Klaxonner": "Hupen",
         "Km restants (thermique)": "Verbleibende Km (thermisch)",
         "Km restants (électrique)": "Verbleibende Km (elektrisch)",
         "Localisation": "Lokalisierung",
@@ -474,5 +480,11 @@
         "Ouvert": "Offen",
         "Prend la valeur 1 (true) lorsque l'ouvrant est fermé": "Nimmt den Wert 1 (true) an, wenn der Flügel geschlossen ist",
         "Prend la valeur 1 (true) lorsque l'ouvrant est ouvert": "Nimmt den Wert 1 (true) an, wenn der Flügel geöffnet ist"
+    },
+    "plugins\/volvocars\/plugin_info\/install.php": {
+        "Création de la commande %s": "Erstellen des Befehls %s",
+        "Echec de la synchonisation de l'account %s": "Synchonisierung des Accounts %s fehlgeschlagen",
+        "Le payload %s n'a pas de 'data'": "Die Payload %s hat keine 'Daten'",
+        "Traitement du véhicule %s": "Fahrzeugverarbeitung %s"
     }
 }

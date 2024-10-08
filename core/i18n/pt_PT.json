@@ -200,6 +200,7 @@
         "Heures moteur avant service": "Horas do motor antes da manutenção",
         "Jours": "Dias",
         "Kilomètre avant service": "Quilómetro antes do serviço",
+        "Klaxonner": "Tocar a buzina",
         "Raison du service": "Motivo do serviço",
         "Raison indiponibilité": "Motivo da indisponibilidade",
         "Temps de charge restant": "Tempo de carga restante",
@@ -244,9 +245,11 @@
         "feux brouillard avant": "faróis de nevoeiro dianteiros",
         "feux détresse": "luzes de emergência",
         "feux latéraux": "luzes laterais",
+        "flash": "flash",
         "hayon fermé": "porta traseira fechada",
         "hayon ouvert": "porta traseira aberta",
         "jours avant service": "dias antes do serviço",
+        "klaxons_flash": "sinalizadores",
         "messages pour widget": "mensagens para widget",
         "moteur en service": "motor em serviço",
         "niveau charge batterie": "nível de carga da bateria",
@@ -295,6 +298,7 @@
     "plugins\/volvocars\/core\/template\/dashboard\/volvocars_panel.html": {
         "Accessibilité": "Acessibilidade",
         "Actions": "Ações",
+        "Appel de phare": "Luz intermitente",
         "Batterie": "Bateria",
         "Capot": "Bonnet",
         "Coffre": "Seguro",
@@ -308,7 +312,9 @@
         "Déverrouiller": "Desbloquear",
         "Fin de charge prévue ": "Fim de carregamento programado",
         "Informations": "Informação",
+        "Kalxonner + Appel de phare": "Kalxonner + Beacon",
         "Kilométrage": "Quilometragem",
+        "Klaxonner": "Tocar a buzina",
         "Km restants (thermique)": "Km restantes (térmico)",
         "Km restants (électrique)": "Km restante (elétrico)",
         "Localisation": "Localização",
@@ -474,5 +480,11 @@
         "Ouvert": "Aberto",
         "Prend la valeur 1 (true) lorsque l'ouvrant est fermé": "Assume o valor 1 (verdadeiro) quando o caixilho está fechado",
         "Prend la valeur 1 (true) lorsque l'ouvrant est ouvert": "Assume o valor 1 (verdadeiro) quando a folha está aberta"
+    },
+    "plugins\/volvocars\/plugin_info\/install.php": {
+        "Création de la commande %s": "Criar comando %s",
+        "Echec de la synchonisation de l'account %s": "A sincronização da conta %s falhou",
+        "Le payload %s n'a pas de 'data'": "A carga útil %s não tem dados",
+        "Traitement du véhicule %s": "Tratamento de veículos %s"
     }
 }
