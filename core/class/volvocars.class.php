@@ -1015,10 +1015,8 @@ class volvocars extends eqLogic {
 		while (($line = fgets($fh)) !== false) {
 			if (preg_match($pattern,$line,$matches)) {
 				$logicalId = $matches[1];
-				log::add("volvocars","debug","22222 " . $logicalId);
 				$cmd = $this->getCmd(null,$logicalId);
 				if (is_object($cmd)) {
-					log::add("volvocars","debug","33333 " . $pos );
 					if ($cmd->getOrder() != $pos) {
 						$cmd->setOrder($pos);
 						$cmd->save();
