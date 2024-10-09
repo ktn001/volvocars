@@ -468,6 +468,7 @@
         "Trier": "Sort",
         "Type": "Kind",
         "Visible": "Visible",
+        "Visible sur le panel": "Visible on the panel",
         "Vous devez créer un compte volvoId avant de pouvoir créer un véhicule": "You must create a volvoId account before you can create a vehicle",
         "Véhicule": "Vehicle",
         "paramètres": "parameters",
