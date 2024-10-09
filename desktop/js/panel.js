@@ -37,6 +37,7 @@ if (typeof volvocarsPanel === "undefined") {
       "#div_display_eqLogicList .active[data-eqLogic_id]",
     );
     if (!el) {
+      domUtils.hideLoading();
       return;
     }
     let id = el.getAttribute("data-eqLogic_id");

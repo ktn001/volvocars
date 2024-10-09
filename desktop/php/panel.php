@@ -28,7 +28,7 @@ include_file('desktop', 'panel', 'css', 'volvocars');
 				<?php
 				$first = true;
 				foreach ($eqLogics as $eqLogic) {
-					if ($eqLogic->getIsVisible() != 1) {
+					if ($eqLogic->getConfiguration('visibleOnPanel') != 1) {
 						continue;
 					}
 					$active = '';
