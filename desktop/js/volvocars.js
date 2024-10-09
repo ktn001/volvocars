@@ -630,8 +630,10 @@ if (typeof volvocarsFrontEnd === "undefined") {
         tr +=
           '<a class="btn btn-default btn-xs cmdAction" data-action="test"><i class="fas fa-rss"></i> {{Tester}}</a>';
       }
-      tr +=
-        '<i class="fas fa-minus-circle pull-right cmdAction cursor" data-action="remove" title="{{Supprimer la commande}}"></i>';
+      if (isset(_cmd.configuration.removable) && _cmd.configuration.removable == 1) {
+        tr +=
+          '<i class="fas fa-minus-circle pull-right cmdAction cursor" data-action="remove" title="{{Supprimer la commande}}"></i>';
+      }
       tr += "</td>";
       tr += "</tr>";
 

@@ -299,12 +299,16 @@ class volvocars extends eqLogic {
 	/*	 * *********************Méthodes d'instance************************* */
 
 	public function getCmdsConfig() {
+		if (isset($this->_cmdsConfig)) {
+			return $this->_cmdsConfig;
+		}
 		$cmdsFile = realpath(__DIR__ . '/../config/cmds.json');
 		$cmds = json_decode(translate::exec(file_get_contents($cmdsFile),$cmdsFile),true);
 		foreach ($cmds as $cmd) {
 			$cmd['name'] = str_replace('#site1#',$this->getConfiguration('site1_name'),$cmd['name']);
 			$cmd['name'] = str_replace('#site2#',$this->getConfiguration('site2_name'),$cmd['name']);
 		}
+		$this->_cmdsConfig = $cmds;
 		return $cmds;
 	}
 
@@ -960,6 +964,7 @@ class volvocars extends eqLogic {
 
 			$cmd = $this->getCmd($cmdConfig['type'],$cmdConfig['logicalId']);
 			if (! is_object($cmd)) {
+				log::add("volvocars","debug",sprintf(__("Création de la commande %s pour le véhicule %s",__FILE__),$cmdConfig['logicalId'],$this->getName()));
 				$cmd = new volvocarsCmd();
 				$cmd->setEqLogic_id($this->getId());
 				utils::a2o($cmd,$cmdConfig);
@@ -982,24 +987,47 @@ class volvocars extends eqLogic {
 		}
 	}
 
+	public function createMissingCmds() {
+		$commands = $this->getCmdsConfig();
+		foreach ($commands as $command) {
+			if (!isset($command['configuration'])) {
+				continue;
+			} 
+			if (!isset($command['configuration']['removable'])) {
+				continue;
+			} 
+			if ($command['configuration']['removable'] != 1) {
+				continue;
+			} 
+			$this->createCmd($command['logicalId'], false);
+			$this->sortCmds();
+		}
+	}
+
 	/*
 	 * Tri des commandes sur la base du fichier de configuration
 	 */
 	public function sortCmds() {
-		$commands = $this->getCmdsConfig();
 		$pos = 1;
-		foreach ($commands as $command) {
-			$cmds = volvocarsCmd::byLogicalId($command['logicalId']);
-			if (is_array($cmds)) {
-				foreach ($cmds as $cmd) {
+		$pattern = '/^\s*"logicalId"\s*:\s*"(.*?)"/';
+		$cmdsFile = realpath(__DIR__ . '/../config/cmds.json');
+		$fh = fopen($cmdsFile, "r");
+		while (($line = fgets($fh)) !== false) {
+			if (preg_match($pattern,$line,$matches)) {
+				$logicalId = $matches[1];
+				log::add("volvocars","debug","22222 " . $logicalId);
+				$cmd = $this->getCmd(null,$logicalId);
+				if (is_object($cmd)) {
+					log::add("volvocars","debug","33333 " . $pos );
 					if ($cmd->getOrder() != $pos) {
 						$cmd->setOrder($pos);
 						$cmd->save();
-						$pos++;
 					}
+					$pos++;
 				}
 			}
 		}
+		fclose($handle);
 	}
 
 	/*

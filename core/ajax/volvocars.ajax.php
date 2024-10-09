@@ -105,7 +105,7 @@ try {
 		if (!is_object($car)){
 			throw new Exception(sprintf(__("Le véhicule %s est introuvable",__FILE__),$car_id));
 		}
-		$car->createOrUpdateCmds(true);
+		$car->createMissingCmds();
 		ajax::success();
 	}
 
