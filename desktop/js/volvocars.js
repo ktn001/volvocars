@@ -547,14 +547,18 @@ if (typeof volvocarsFrontEnd === "undefined") {
       }
       if (isset(_cmd.logicalId)) {
         if (_cmd.logicalId.endsWith("Open")) {
-          document
-            .querySelector(".cmdAction[data-action=removeOpen]")
-            .removeClass("hidden");
+          if (! _cmd.logicalId.startsWith("all")) {
+            document
+              .querySelector(".cmdAction[data-action=removeOpen]")
+              .removeClass("hidden");
+          }
         }
         if (_cmd.logicalId.endsWith("Closed")) {
-          document
-            .querySelector(".cmdAction[data-action=removeClosed]")
-            .removeClass("hidden");
+          if (! _cmd.logicalId.startsWith("all")) {
+            document
+              .querySelector(".cmdAction[data-action=removeClosed]")
+              .removeClass("hidden");
+          }
         }
         if (_cmd.logicalId == "position") {
           blur = "blur";
@@ -1019,4 +1023,4 @@ if (typeof volvocarsFrontEnd === "undefined") {
   addCmdToTable = volvocarsFrontEnd.addCmdToTable;
   printEqLogic = volvocarsFrontEnd.printEqLogic;
 }
-window.onload = volvocarsFrontEnd.init();
+volvocarsFrontEnd.init();

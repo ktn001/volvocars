@@ -918,16 +918,19 @@ class volvocars extends eqLogic {
 				switch ($cmdConfig['configuration']['onlyFor']) {
 					case 'fuelEngine' :
 						if ($this->getConfiguration('fuelEngine',0) == 0) {
+							log::add("volvocars","debug",sprintf(__("La commande %s n'est pas créée pour les véhicules sans moteur thermique",__FILE__),$_logicalId));
 							return;
 						}
 						break;
 					case 'electricEngine' :
 						if ($this->getConfiguration('electricEngine',0) == 0) {
+							log::add("volvocars","debug",sprintf(__("La commande %s n'est pas créée pour les véhicules sans moteur électrique",__FILE__),$_logicalId));
 							return;
 						}
 						break;
 					case 'site1' :
 						if ($this->getConfiguration('site1_active',0) == 0) {
+							log::add("volvocars","debug",sprintf(__("La commande %s n'est pas créée si le site 1 n'est pas activé",__FILE__),$_logicalId));
 							return;
 						}
 						break;
@@ -935,16 +938,19 @@ class volvocars extends eqLogic {
 						if ($this->getConfiguration('site2_active',0) == 0) {
 							return;
 						}
+							log::add("volvocars","debug",sprintf(__("La commande %s n'est pas créée si le site 2 n'est pas activé",__FILE__),$_logicalId));
 						break;
 				}
 			}
-			if (substr_compare($_logicalId,'Open',-4) == 0) {
+			if (substr($_logicalId,-4) === 'Open' && substr($_logicalId,0,3) !== 'all') {
 				if (config::byKey("create_cmd_open","volvocars", "0") == 0) {
+					log::add("volvocars","debug",sprintf(__("La commande %s n'est pas créée(le plugin n'est pas configuré pour crééer les commande *Open)",__FILE__),$_logicalId));
 					return;
 				}
 			}
-			if (substr_compare($_logicalId,'Closed',-6) == 0) {
+			if (substr($_logicalId,-6) === 'Closed' && substr($_logicalId,0,3) !== 'all') {
 				if (config::byKey("create_cmd_closed","volvocars", "0") == 0) {
+					log::add("volvocars","debug",sprintf(__("La commande %s n'est pas créée(le plugin n'est pas configuré pour crééer les commande *Closed)",__FILE__),$_logicalId));
 					return;
 				}
 			}
@@ -964,7 +970,7 @@ class volvocars extends eqLogic {
 
 			$cmd = $this->getCmd($cmdConfig['type'],$cmdConfig['logicalId']);
 			if (! is_object($cmd)) {
-				log::add("volvocars","debug",sprintf(__("Création de la commande %s pour le véhicule %s",__FILE__),$cmdConfig['logicalId'],$this->getName()));
+				log::add("volvocars","debug","│ " . sprintf(__("Création de la commande %s pour le véhicule %s",__FILE__),$cmdConfig['logicalId'],$this->getName()));
 				$cmd = new volvocarsCmd();
 				$cmd->setEqLogic_id($this->getId());
 				utils::a2o($cmd,$cmdConfig);
