@@ -18,6 +18,29 @@
 
 require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 
+function volvocars_goto_5() {
+	$cars = volvocars::byType('volvocars');
+	foreach ($cars as $car){
+		log::add("volvocars","info",sprintf(__("Traitement du véhicule %s",__FILE__),$car->getName()));
+		$cmdsConfig = $car->getCmdsConfig();
+		foreach ($cmdsConfig as $cmdConfig) {
+			if (in_array($cmdConfig['logicalId'], ['doorFlState','doorFrState','doorRlState','doorRrState','hoodState','tailState','winFlState','winFrState','winRlState','winRrState','roofState'])) {
+				$cmd = $car->getCmd(null,$cmdConfig['logicalId']);
+				if (!is_object($cmd)) {
+					continue;
+				}
+				$cmd->setConfiguration('dependencies',$cmdConfig['configuration']['dependencies']);
+				$cmd->save();
+			}
+			if (in_array($cmdConfig['logicalId'], ['allDoorsClosed','allWinsClosed'])){
+				log::add("volvocars","info","Création de " . $cmdConfig['logicalId']);
+				$car->createCmd($cmdConfig['logicalId']);
+			}
+		}
+
+	}
+}
+
 function volvocars_goto_4() {
 	$cars = volvocars::byType('volvocars');
 	foreach ($cars as $car){
@@ -137,7 +160,7 @@ function volvocars_goto_1() {
 
 function volvocars_upgrade() {
 
-	$lastLevel = 4;
+	$lastLevel = 5;
 
 	$pluginLevel = config::byKey('pluginLevel','volvocars',0);
 	log::add("volvocars","info","pluginLevel: " . $pluginLevel . " => " . $lastLevel);

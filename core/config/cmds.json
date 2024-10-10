@@ -130,7 +130,7 @@
     "type": "info",
     "subType": "string",
     "configuration": {
-      "dependencies": ["doorFlOpen", "doorFlClosed"]
+      "dependencies": ["doorFlOpen", "doorFlClosed", "allDoorsClosed"]
     },
     "template": {
       "dashboard": "core::badge",
@@ -143,7 +143,7 @@
     "type": "info",
     "subType": "string",
     "configuration": {
-      "dependencies": ["doorFrOpen", "doorFrClosed"]
+      "dependencies": ["doorFrOpen", "doorFrClosed", "allDoorsClosed"]
     },
     "template": {
       "dashboard": "core::badge",
@@ -156,7 +156,7 @@
     "type": "info",
     "subType": "string",
     "configuration": {
-      "dependencies": ["doorRlOpen", "doorRlClosed"]
+      "dependencies": ["doorRlOpen", "doorRlClosed", "allDoorsClosed"]
     },
     "template": {
       "dashboard": "core::badge",
@@ -169,7 +169,7 @@
     "type": "info",
     "subType": "string",
     "configuration": {
-      "dependencies": ["doorRrOpen", "doorRrClosed"]
+      "dependencies": ["doorRrOpen", "doorRrClosed", "allDoorsClosed"]
     },
     "template": {
       "dashboard": "core::badge",
@@ -185,7 +185,7 @@
     "type": "info",
     "subType": "string",
     "configuration": {
-      "dependencies": ["winFlOpen", "winFlClosed"]
+      "dependencies": ["winFlOpen", "winFlClosed", "allWinsClosed"]
     },
     "template": {
       "dashboard": "core::badge",
@@ -198,7 +198,7 @@
     "type": "info",
     "subType": "string",
     "configuration": {
-      "dependencies": ["winFrOpen", "winFrClosed"]
+      "dependencies": ["winFrOpen", "winFrClosed", "allWinsClosed"]
     },
     "template": {
       "dashboard": "core::badge",
@@ -211,7 +211,7 @@
     "type": "info",
     "subType": "string",
     "configuration": {
-      "dependencies": ["winRlOpen", "winRlClosed"]
+      "dependencies": ["winRlOpen", "winRlClosed", "allWinsClosed"]
     },
     "template": {
       "dashboard": "core::badge",
@@ -224,7 +224,7 @@
     "type": "info",
     "subType": "string",
     "configuration": {
-      "dependencies": ["winRrOpen", "winRrClosed"]
+      "dependencies": ["winRrOpen", "winRrClosed", "allWinsClosed"]
     },
     "template": {
       "dashboard": "core::badge",
@@ -240,7 +240,7 @@
     "type": "info",
     "subType": "string",
     "configuration": {
-      "dependencies": ["hoodOpen", "hoodClosed"]
+      "dependencies": ["hoodOpen", "hoodClosed", "allDoorsClosed"]
     },
     "template": {
       "dashboard": "core::badge",
@@ -253,7 +253,7 @@
     "type": "info",
     "subType": "string",
     "configuration": {
-      "dependencies": ["tailOpen", "tailClosed"]
+      "dependencies": ["tailOpen", "tailClosed", "allDoorsClosed"]
     },
     "template": {
       "dashboard": "core::badge",
@@ -287,6 +287,38 @@
     },
     "display": {
       "forceReturnLineAfter": "1"
+    }
+  },
+  {
+    "logicalId": "allDoorsClosed",
+    "name": "{{portes fermées}}",
+    "type": "info",
+    "subType": "string",
+    "configuration": {
+      "removable": "1",
+      "dependTo": [
+	"doorFlState",
+	"doorFrState",
+	"doorRlState",
+	"doorRrState",
+        "tailState",
+        "hoodState"
+      ] 
+    }
+  },{
+    "logicalId": "allWinsClosed",
+    "name": "{{Fenêtres fermées}}",
+    "type": "info",
+    "subType": "string",
+    "configuration": {
+      "removable": "1",
+      "dependTo": [
+	"WinFlState",
+	"WinFrState",
+	"WinRlState",
+	"WinRrState",
+        "roofState"
+      ] 
     }
   },
   {
