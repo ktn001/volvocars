@@ -401,7 +401,7 @@ $accounts = volvoAccount::all();
 								<th class="hidden-xs" style="min-width:50px;width:70px;">ID</th>
 								<th style="min-width:200px;width:350px;">{{Nom}}</th>
 								<th style="width:130px">{{Type}}</th>
-								<th style="width:130px">LogicalId</th>
+								<th style="width:180px">LogicalId</th>
 								<th>{{paramètres}}</th>
 								<th style="width:270px;">{{Options}}</th>
 								<th style="width:150px">{{Etat}}</th>

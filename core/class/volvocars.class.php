@@ -469,11 +469,8 @@ class volvocars extends eqLogic {
 	 */
 	public function preSave() {
 		$this_wasEnable = $this->getIsEnable();
-		$this->_oldSiteState = array(
-			"site1" => $this->getConfiguration('site1_active',0),
-			"site2" => $this->getConfiguration('site2_active',0),
-		);
 	}
+
 	/*
 	 * Fonction exécutée automatiquement avant la création de l'équipement
 	 */
@@ -545,78 +542,55 @@ class volvocars extends eqLogic {
 	}
 
 	/*
-	 * Fonction appelée après la sauvegarde de l'eqLogic et des commandes via l'interface WEB
+	 * Fonction appelée automatiquement après la sauvegarde de l'équipement
 	 */
-	public function postAjax() {
+	public function postSave() {
 		if ($this->getIsEnable()) {
-			foreach (['site1','site2'] as $site){
-				if ($this->getConfiguration($site . '_active') == 1) {
-					if ($this->_oldSiteState[$site] != 1) {
-						if ($cmdsConfig == null) {
-							$cmdsConfig = $this->getCmdsConfig();
-						}
-						foreach ($cmdsConfig as $cmdConfig) {
-							if (isset($cmdConfig['configuration']['onlyFor']) and $cmdConfig['configuration']['onlyFor'] == $site) {
-								$this->createCmd($cmdConfig['type'],$cmdConfig['logicalId']);
-							}
-						}
+			$site1Active = $this->getConfiguration('site1_active') == 1;
+			$site2Active = $this->getConfiguration('site2_active') == 1;
+			if (!($site1Active && $site2Active)) {
+				foreach ($this->getCmd('info') as $cmd) {
+					$onlyFor = $cmd->getConfiguration('onlyFor');
+					if (($onlyFor == 'site1') && !$site1Active) {
+						$cmd->remove();
 					}
-				} else {
-					$cmds = $this->getCmdByConfiguration('"onlyFor":"' . $site .'"');
-					foreach ($cmds as $cmd) {
+					if (($onlyFor == 'site2') && !$site2Active) {
 						$cmd->remove();
 					}
 				}
 			}
+			if ($site1Active or $site2Active) {
+				foreach ($this->getCmdsConfig() as $cmdConfig) {
+					if (!isset ($cmdConfig['configuration'])) {
+						continue;
+					}
+					if (!isset ($cmdConfig['configuration']['onlyFor'])) {
+						continue;
+					}
+					$onlyFor = $cmdConfig['configuration']['onlyFor'];
+					if (($onlyFor == 'site1') && $site1Active) {
+						$cmd = $this->getCmd(null,$cmdConfig['logicalId']);
+						if (!is_object($cmd)) {
+							$this->createCmd($cmdConfig['logicalId']);
+						}
+					}
+					if (($onlyFor == 'site2') && $site2Active) {
+						$cmd = $this->getCmd(null,$cmdConfig['logicalId']);
+						if (!is_object($cmd)) {
+							$this->createCmd($cmdConfig['logicalId']);
+						}
+					}
+				}
+			}
+		}
+	}
 
-			foreach (['distanceSite1','distanceSite2'] as $logicalId){
-				$cmd = $this->getCmd('info',$logicalId);
-				if (is_object($cmd)) {
-					$cmd->event($cmd->execute());
-					$cmdName = $cmd->getName();
-					switch ($logicalId) {
-						case 'distanceSite1':
-							$siteName = $this->getConfiguration('site1_name');
-							$oldSiteName = $this->getConfiguration('old_site1_name');
-							$site = 'site1';
-							break;
-						case 'distanceSite2':
-							$siteName = $this->getConfiguration('site2_name');
-							$oldSiteName = $this->getConfiguration('old_site2_name');
-							$site = 'site2';
-							break;
-					}
-					$distance = __('distance',__FILE__);
-					if (($cmdName != $oldSiteName) && (($cmdName == $distance . ' ' . $site) || $cmdName == ($distance . ' ' . $oldSiteName))) {
-						$cmd->setName($distance . ' ' . $siteName);
-						$cmd->save();
-					}
-				}
-			}
-			foreach (['presenceSite1','presenceSite2'] as $logicalId){
-				$cmd = $this->getCmd('info',$logicalId);
-				if (is_object($cmd)) {
-					$cmdName = $cmd->getName();
-					switch ($logicalId) {
-						case 'presenceSite1':
-							$siteName = $this->getConfiguration('site1_name');
-							$oldSiteName = $this->getConfiguration('old_site1_name');
-							$site = 'site1';
-							break;
-						case 'presenceSite2':
-							$siteName = $this->getConfiguration('site2_name');
-							$oldSiteName = $this->getConfiguration('old_site2_name');
-							$site = 'site2';
-							break;
-					}
-					$presence = __('présence',__FILE__);
-					if (($cmdName != $oldSiteName) && (($cmdName == $presence . ' ' . $site) || $cmdName == ($presence . ' ' . $oldSiteName))) {
-						$cmd->setName($presence . ' ' . $siteName);
-						$cmd->save();
-					}
-					$cmd->event($cmd->execute());
-				}
-			}
+	/*
+	 * Fonction appelée après la sauvegarde de l'eqLogic et des commandes via l'interface WEB
+	 */
+	public function postAjax() {
+		if ($this->getIsEnable()) {
+
 			foreach ([
 				'al_electricAutonomy',
 				'al_fuelAutonomy'
@@ -628,6 +602,7 @@ class volvocars extends eqLogic {
 			}
 			$this->setCarListeners();
 			$this->cleanWidgetMessages();
+			$this->sortCmds();
 		}
 	}
 
@@ -1172,7 +1147,7 @@ class volvocars extends eqLogic {
 				}
 			}
 		}
-		fclose($handle);
+		fclose($fh);
 	}
 
 	/*
@@ -1450,11 +1425,11 @@ class volvocars extends eqLogic {
 	* Widget pour le panel
 	*/
 	public function toHtml($_version = 'dashboard') {
-
-		// $this->emptyCacheWidget();
-
-		if ($_version !== 'panel') {
-			return parent::toHtml($_version);
+		$this->emptyCacheWidget();
+		$panel = false;
+		if ($_version == 'panel') {
+			$panel = true;
+			$_version = 'dashboard';
 		}
 
 		$replace = $this->preToHtml($_version);
@@ -1488,6 +1463,8 @@ class volvocars extends eqLogic {
 			'al_oil',
 			'al_tyre',
 			'al_washerFluid',
+			'allDoorsClosed',
+			'allWinsClosed',
 			'batteryLevel',
 			'chargingEndTime',
 			'chargingStatus',
@@ -1581,12 +1558,14 @@ class volvocars extends eqLogic {
 			$replace['#msg2widget' . $carId . '#'] = addslashes($cmd->execCmd());
 		}
 
-		if ($_version === 'panel') {
+		if ($panel == true) {
 			$widgetFile = realpath( __DIR__ . '/../template/dashboard/volvocars_panel.html');
+		} else {
+			$widgetFile = realpath( __DIR__ . '/../template/dashboard/volvocars_dashboard.html');
 		}
 		$html = template_replace($replace, file_get_contents($widgetFile));
 		return translate::exec($html,$widgetFile);
-		return $this->postToHtml($_version, template_replace($replace, getTemplate('core',$_version,$template, 'volvocars')));
+		# return $this->postToHtml($_version, template_replace($replace, getTemplate('core',$_version,$template, 'volvocars')));
 	}
 
 	/*
@@ -1976,7 +1955,7 @@ class volvocarsCmd extends cmd {
 				case 'tailOpen':
 				case 'tankOpen':
 				case 'roofOpen':
-					$stateCmd = $car->getCmd('info',str_replace('open','state',$logicalId));
+					$stateCmd = $car->getCmd('info',$this->getConfiguration('dependTo'));
 					if (is_object($stateCmd)) {
 						switch ($stateCmd->execCmd()) {
 							case 'OPEN':
@@ -1999,7 +1978,7 @@ class volvocarsCmd extends cmd {
 				case 'tailClosed':
 				case 'tankClosed':
 				case 'roofClosed':
-					$stateCmd = $car->getCmd('info',str_replace('closed','state',$logicalId));
+					$stateCmd = $car->getCmd('info',$this->getConfiguration('dependTo'));
 					if (is_object($stateCmd)) {
 						switch ($stateCmd->execCmd()) {
 							case 'OPEN':
@@ -2021,6 +2000,27 @@ class volvocarsCmd extends cmd {
 					}
 					return date_fr(date('D H:i', strtotime($cmd->getValueDate() . "+" . $remaining . "minutes")));
 					break;
+				case 'allDoorsClosed':
+				case 'allWinsClosed':
+					$stateCmds = $this->getConfiguration('dependTo');
+					$allClosed = 1;
+					$oneCmdFound = false;
+					foreach ($stateCmds as $stateCmd) {
+						$cmd = $car->getCmd('info',$stateCmd);
+						if (!is_object($cmd)) {
+							continue;
+						}
+						$oneCmdFound = true;
+						if ($cmd->execCmd() !== 'CLOSED') {
+							$allClosed = 0;
+							break;
+						}
+					}
+					if (! oncCmdFound) {
+						return $this->execCmd();
+					}
+					return $allClosed;
+					break;
 				default:
 					log::add("volvocars","error",sprintf(__('Exécution de la commande "%s" non définie',__FILE__),$this->getLogicalId()));
 					return false;
@@ -2030,32 +2030,32 @@ class volvocarsCmd extends cmd {
 
 	public function getDisplayValue($value) {
 		$textes = [
-			"CHARGING_SYSTEM_CHARGING"		=> __("en charge",__FILE__),
-			"CHARGING_SYSTEM_IDLE"			=> __("en pause",__FILE__),
-			"CHARGING_SYSTEM_DONE"			=> __("terminée",__FILE__),
-			"CHARGING_SYSTEM_FAULT"			=> __("en erreur",__FILE__),
-			"CHARGING_SYSTEM_SCHEDULED"		=> __("programmée",__FILE__),
-			"CHARGING_SYSTEM_UNSPECIFIED"	=> __("état inconnu",__FILE__),
+			"CHARGING_SYSTEM_CHARGING"		=> __("En charge",__FILE__),
+			"CHARGING_SYSTEM_IDLE"			=> __("En pause",__FILE__),
+			"CHARGING_SYSTEM_DONE"			=> __("Terminée",__FILE__),
+			"CHARGING_SYSTEM_FAULT"			=> __("En erreur",__FILE__),
+			"CHARGING_SYSTEM_SCHEDULED"		=> __("Programmée",__FILE__),
+			"CHARGING_SYSTEM_UNSPECIFIED"	=> __("État inconnu",__FILE__),
 
-			"CONNECTION_STATUS_CONNECTED_AC" => __("branchée (AC)",__FILE__),
-			"CONNECTION_STATUS_CONNECTED_DC" => __("branchée (DC)",__FILE__),
-			"CONNECTION_STATUS_DISCONNECTED" => __("débranchée",__FILE__),
-			"CONNECTION_STATUS_FAULT"		 => __("en erreur",__FILE__),
-			"CONNECTION_STATUS_UNSPECIFIED"	 => __("état inconnu",__FILE__),
+			"CONNECTION_STATUS_CONNECTED_AC" => __("Branchée (AC)",__FILE__),
+			"CONNECTION_STATUS_CONNECTED_DC" => __("Branchée (DC)",__FILE__),
+			"CONNECTION_STATUS_DISCONNECTED" => __("Débranchée",__FILE__),
+			"CONNECTION_STATUS_FAULT"		 => __("En erreur",__FILE__),
+			"CONNECTION_STATUS_UNSPECIFIED"	 => __("État inconnu",__FILE__),
 
-			"AVAILABLE"	   => __("accessible",__FILE__),
-			"UNAVAILABLE"  => __("indisponnible",__FILE__),
-			"NO_INTERNET"  => __("pas d'accès Internet",__FILE__),
-			"POWER_SAWING" => __("en veille",__FILE__),
-			"CAR_IN_USE"   => __("en court d'utilisation",__FILE__),
-			"QUOTA_OUT"    => __("quota API dépassé",__FILE__),
+			"AVAILABLE"	   => __("Accessible",__FILE__),
+			"UNAVAILABLE"  => __("Indisponnible",__FILE__),
+			"NO_INTERNET"  => __("Pas d'accès Internet",__FILE__),
+			"POWER_SAWING" => __("En veille",__FILE__),
+			"CAR_IN_USE"   => __("En court d'utilisation",__FILE__),
+			"QUOTA_OUT"    => __("Quota API dépassé",__FILE__),
 
-			"LOCKED"	=> __("verrouillé",__FILE__),
-			"UNLOCKED"	=> __("déverrouillé",__FILE__),
+			"LOCKED"	=> __("Verrouillé",__FILE__),
+			"UNLOCKED"	=> __("Déverrouillé",__FILE__),
 
-			"OPEN"		=> __("ouvert",__FILE__),
-			"AJAR"		=> __("entre-ouvert",__FILE__),
-			"CLOSED"	=> __("fermé",__FILE__),
+			"OPEN"		=> __("Ouvert",__FILE__),
+			"AJAR"		=> __("Entre-ouvert",__FILE__),
+			"CLOSED"	=> __("Fermé",__FILE__),
 
 			"UNKNOWN_WARNING"								=> __("Service pour raison indterminée",__FILE__),
 			"REGULAR_MAINTENANCE_ALMOST_TIME_FOR_SERVICE"	=> __("Service régulier à prévoire",__FILE__),
@@ -2076,6 +2076,10 @@ class volvocarsCmd extends cmd {
 			"UNKNOWN"		=> __("Inconnu",__FILE__),
 			"NO_WARNING"	=> __("OK",__FILE__),
 		];
+
+		if ($this->getLogicalId() === 'allWinsClosed' or $this->getLogicalId() === 'allDoorsClosed') {
+			return ($value == 1) ? __("Fermées",__FILE__) : __("Ouvertes",__FILE__);
+		}
 
 		if ($this->getSubType() == 'string') {
 			if (isset($textes[$value])) {

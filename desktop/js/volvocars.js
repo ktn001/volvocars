@@ -1097,8 +1097,8 @@ if (typeof volvocarsFrontEnd === "undefined") {
       }
     },
   };
-  volvocarsFrontEnd.toggleEditVehicle(false);
-  addCmdToTable = volvocarsFrontEnd.addCmdToTable;
-  printEqLogic = volvocarsFrontEnd.printEqLogic;
 }
 volvocarsFrontEnd.init();
+volvocarsFrontEnd.toggleEditVehicle(false);
+addCmdToTable = volvocarsFrontEnd.addCmdToTable;
+printEqLogic = volvocarsFrontEnd.printEqLogic;

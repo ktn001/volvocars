@@ -36,8 +36,23 @@ function volvocars_goto_5() {
 				log::add("volvocars","info","Création de " . $cmdConfig['logicalId']);
 				$car->createCmd($cmdConfig['logicalId']);
 			}
+			if (in_array($cmdConfig['logicalId'], ['presenceSite1','presenceSite2'])) {
+				$cmd = $car->getCmd(null,$cmdConfig['logicalId']);
+				if (!is_object($cmd)) {
+					continue;
+				}
+				$cmd->setConfiguration('dependTo',$cmdConfig['configuration']['dependTo']);
+				$cmd->save();
+			}
+			if (in_array($cmdConfig['logicalId'], ['position','distanceSite1','distanceSite2'])) {
+				$cmd = $car->getCmd(null,$cmdConfig['logicalId']);
+				if (!is_object($cmd)) {
+					continue;
+				}
+				$cmd->setConfiguration('dependencies',$cmdConfig['configuration']['dependencies']);
+				$cmd->save();
+			}
 		}
-
 	}
 }
 
