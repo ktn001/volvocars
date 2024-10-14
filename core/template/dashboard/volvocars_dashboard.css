@@ -1,0 +1,78 @@
+.volvocars_widget .container-fluid {
+	margin: 3px !important;
+	padding: 0px !important;
+}
+
+.volvocars_widget .tile {
+	margin: 2px !important;
+	padding: 0px !important;
+	background-color: rgb(var(--bg-color)) !important;
+	border: solid;
+	border-width: 2px;
+	border-radius: 10px;
+	border-color: rgb(30,30,30);
+	height: 100px;
+}
+
+.volvocars_widget .tile.div_alert {
+	height: 50px;
+}
+
+.volvocars_widget .tile.col-xs-4 {
+	width: calc(33.33333% - 4px);
+}
+
+.volvocars_widget .tile.col-xs-6 {
+	width: calc(50% - 4px);
+}
+
+.volvocars_widget .tile.col-xs-12 {
+	width: calc(100% - 4px);
+}
+
+.volvocars_widget .title_tile {
+	height: 45px;
+	font-size: 12px;
+	color: var(--txt-color) !important;
+	margin: 0px 0px 0px 0px !important;
+	padding: 7px 0px 0px 0px !important;
+}
+
+.volvocars_widget .icon_tile {
+	margin: 0px !important;
+	height: 45px;
+	color: var(--al-info-color) !important;
+	margin: 0px 0px 0px 0px !important;
+	padding: 5px 0px 0px 0px !important;
+}
+
+.volvocars_widget .icon_tile img{
+	height: 24px;
+}
+
+.volvocars_widget .value_tile {
+	height: 55px;
+	font-size: 18px;
+	color: var(--link-color) !important;
+	text-align: center;
+	margin: 0px 0px 0px 0px !important;
+	padding: 0px !important;
+}
+
+.volvocars_widget .value_tile_1 {
+	height: 35px;
+}
+
+.volvocars_widget .value_tile_2 {
+	height: 20px;
+	font-size: 10px;
+}
+
+.volvocars_widget .div_alert img {
+	margin: 9px 8px 9px 8px;
+}
+
+.volvocars_widget .div_presence {
+	display: inline-block;
+	min-width: calc(50% - 2px);
+}

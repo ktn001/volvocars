@@ -266,9 +266,9 @@
     }
   },{
     "logicalId": "allDoorsClosed",
-    "name": "{{portes fermées}}",
+    "name": "{{Portes fermées}}",
     "type": "info",
-    "subType": "string",
+    "subType": "binary",
     "configuration": {
       "removable": "1",
       "dependTo": [
@@ -284,7 +284,7 @@
     "logicalId": "allWinsClosed",
     "name": "{{Fenêtres fermées}}",
     "type": "info",
-    "subType": "string",
+    "subType": "binary",
     "configuration": {
       "removable": "1",
       "dependTo": [
@@ -1030,9 +1030,7 @@
     "configuration": {
       "dependencies": [
         "distanceSite1",
-        "presenceSite1",
-        "distanceSite2",
-        "presenceSite2"
+        "distanceSite2"
       ],
       "listener": "1"
     },
@@ -1044,7 +1042,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "dependTo": "position",
+      "dependTo": "distanceSite1",
       "onlyFor": "site1"
     }
   },{
@@ -1055,6 +1053,7 @@
     "subType": "numeric",
     "configuration": {
       "dependTo": "position",
+      "dependencies": "presenceSite1",
       "onlyFor": "site1"
     }
   },{
@@ -1063,7 +1062,7 @@
     "type": "info",
     "subType": "binary",
     "configuration": {
-      "dependTo": "position",
+      "dependTo": "distanceSite2",
       "onlyFor": "site2"
     }
   },{
@@ -1074,6 +1073,7 @@
     "subType": "numeric",
     "configuration": {
       "dependTo": "position",
+      "dependencies": "presenceSite2",
       "onlyFor": "site2"
     }
   },{
