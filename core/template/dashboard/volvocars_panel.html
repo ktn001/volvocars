@@ -1084,16 +1084,17 @@
   // STATUS
   if (!"#engineON_id#id##".startsWith('#')) {
     jeedom.cmd.update['#engineON_id#id##'] = function(_options) {
+      let image = ''
       if (_options.value == 1) {
-        img = 'engine_green.svg'
+        image = 'engine_green.svg'
       } else {
-        if (document.querySelector('body').data('theme').endsWith('Dark')) {
-          img = 'engine_grey_dark.svg'
+        if (document.querySelector('body').getAttribute('data-theme').endsWith('Dark')) {
+          image = 'engine_grey_dark.svg'
         } else {
-          img = 'engine_grey_light.svg'
+          image = 'engine_grey_light.svg'
         }
       }
-      document.querySelector('.Cmd#engineON_id#id## img').setAttribute('src','/plugins/volvocars/desktop/img/' + img).data('value',_options.value)
+      document.querySelector('.Cmd#engineON_id#id## img').setAttribute('src','/plugins/volvocars/desktop/img/' + image)
     }
     jeedom.cmd.refreshValue([{cmd_id: '#engineON_id#id##', value: "#engineON#id##"}])
   }
