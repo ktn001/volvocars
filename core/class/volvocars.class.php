@@ -24,6 +24,7 @@ require_once __DIR__ . '/volvoAccount.class.php';
 class volvocars extends eqLogic {
 	/*	 * *************************Attributs****************************** */
 
+	const PYTHON_PATH = __DIR__ . '/../../resources/venv/bin/python3';
 
 	/*
 	 * Permet de définir les possibilités de personnalisation du widget (en cas d'utilisation de la
@@ -34,6 +35,146 @@ class volvocars extends eqLogic {
 	 	'custom' => true
 	);
 
+	private static function pythonRequirementsInstalled(string $pythonPath, string $requirementsPath) {
+		if (!file_exists($pythonPath) || !file_exists($requirementsPath)) {
+			return false;
+		}
+		exec("{$pythonPath} -m pip --no-cache-dir  freeze", $packages_installed);
+		$packages = join("||", $packages_installed);
+		exec("cat {$requirementsPath}", $packages_needed);
+		foreach ($packages_needed as $line) {
+			if (preg_match('/([^\s]+)[\s]*([>=~]=)[\s]*([\d+\.?]+)$/', $line, $need) === 1) {
+				if (preg_match('/' . $need[1] . '==([\d+\.?]+)/', $packages, $install) === 1) {
+					if ($need[2] == '==' && $need[3] != $install[1]) {
+						return false;
+					} elseif (version_compare($need[3], $install[1], '>')) {
+						return false;
+					}
+				} else {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	public static function dependancy_info() {
+		$return = array();
+		$return['log'] = log::getPathToLog(__CLASS__ . '_update');
+		$return['progress_file'] = jeedom::getTmpFolder(__CLASS__) . '/dependance';
+		$return['state'] = 'ok';
+		if (file_exists(jeedom::getTmpFolder(__CLASS__) . '/dependance')) {
+			$return['state'] = 'in_progress';
+		} elseif (!self::pythonRequirementsInstalled(self::PYTHON_PATH, __DIR__ . '/../../resources/requirements.txt')) {
+			$return['state'] = 'nok';
+		}
+		return $return;
+	}
+
+	public static function dependancy_install() {
+		log::remove(__CLASS__ . '_update');
+		return array('script' => __DIR__ . '/../../resources/install_#stype#.sh', 'log' => log::getPathToLog(__CLASS__ . '_update'));
+	}
+
+	public static function deamon_info() {
+		return self::daemon_info();
+	}
+	public static function daemon_info() {
+		$return = array();
+		$return['log'] = __CLASS__;
+		$return['launchable'] = 'ok';
+		$return['state'] = 'nok';
+		$pid_file = jeedom::getTmpFolder(__CLASS__) . '/daemon.pid';
+		if (file_exists($pid_file)) {
+			if (@posix_getsid(trim(file_get_contents($pid_file)))) {
+				$return['state'] = 'ok';
+			} else {
+				shell_exec(system::getCmdSudo() . 'rm -rf ' . $pid_file . ' 2>&1 > /dev/null');
+			}
+		}
+		return $return;
+	}
+
+	public static function getPort() {
+		$daemonState = self::daemon_info();
+		$port = config::byKey('socketport',__CLASS__);
+		if ($port) {
+			if ($daemonState['state'] == 'ok') {
+				return $port;
+			}
+			$connection = @fsockopen('localhost', $port);
+			if (!is_resource($connection)) {
+				return $port;
+			}
+		}
+		$port = 8001;
+		$max_port = 9000;
+		while ($port <= $max_port) {
+			$connection = @fsockopen('localhost', $port);
+			if (!is_resource($connection)) {
+				config::save('socketport',$port,__CLASS__);
+				return $port;
+			}
+			fclose($connection);
+			$port++;
+		}
+	}
+
+	public static function deamon_start() {
+		return self::daemon_start();
+	}
+
+	public static function daemon_start() {
+		$logLevel = log::convertLogLevel(log::getLogLevel(__CLASS__));
+		$path = realpath(__DIR__ . '/../../resources/bin');
+		$cmd = self::PYTHON_PATH . " {$path}/volvocarsd.py";
+		$cmd .= " -l " . $logLevel;
+		$cmd .= " -p " . jeedom::getTmpFolder(__CLASS__) . '/daemon.pid';
+		$cmd .= " -P " . self::getPort();
+		$cmd .= " -a " . jeedom::getApiKey(__CLASS__);
+		exec ($cmd . ' >> ' . log::getPathToLog(__CLASS__ . '_daemon') . ' 2>&1 &');
+		$ok = false;
+		for ($i=0; $i < 10; $i++) {
+			$daemon_info = self::daemon_info();
+			if ($daemon_info['state'] == 'ok') {
+				$ok = true;
+				break;
+			}
+			sleep (1);
+		}
+		if (!$ok) {
+			log::add(__CLASS__,'error',__('Impossible de lancer le démon',__FILE__), 'unableStartDaemon');
+			return false;
+		}
+		message::removeAll(__CLASS__, 'unableStartDaemon');
+		return true;
+	}
+
+	public static function deamon_stop() {
+		return self::daemon_stop();
+	}
+
+	public static function daemon_stop() {
+		$pidFile = jeedom::getTmpFolder(__CLASS__) . '/daemon.pid';
+		if (file_exists($pidFile)) {
+			$pid = intval(trim(file_get_contents($pidFile)));
+			system::kill($pid);
+		}
+		sleep(1);
+	}
+
+	public static function sendToDeamon($params) {
+		$daemon_info = self::daemon_info();
+		if ($daemon_info['state'] != 'ok') {
+			throw new Exception(__("Le démon n'est pas démarreé",__FILE__));
+		}
+		$param['apikey'] = jeedom::getApiKey(__CLASS__);
+		$payLoad = json_encode($params);
+		$socket = socket_create(AF_INET, SOCK_STREAM, 0);
+		$socket_connect($socket, '127.0.0.1', self::getPort());
+		$socket_write($socket, $payLoad, strlen($payLoad));
+		$socket_close($socket);
+	}
 	/*	 * ***********************Methode static*************************** */
 
 	/*
@@ -992,13 +1133,13 @@ class volvocars extends eqLogic {
 		foreach ($commands as $command) {
 			if (!isset($command['configuration'])) {
 				continue;
-			} 
+			}
 			if (!isset($command['configuration']['removable'])) {
 				continue;
-			} 
+			}
 			if ($command['configuration']['removable'] != 1) {
 				continue;
-			} 
+			}
 			$this->createCmd($command['logicalId'], false);
 			$this->sortCmds();
 		}

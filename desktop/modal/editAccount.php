@@ -42,6 +42,7 @@ if (!isConnect('admin')) {
 			</div>
 		</div>
 	</fieldset>
+	<div id="error_message" class="danger"></div>
 </form>
 
 <script>

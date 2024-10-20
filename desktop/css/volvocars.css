@@ -17,3 +17,8 @@
   border: 2px dashed #ccc;
   cursor: pointer;
 }
+
+#error_message {
+  text-align: center;
+}
+

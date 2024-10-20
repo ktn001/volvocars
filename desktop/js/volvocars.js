@@ -185,30 +185,28 @@ if (typeof volvocarsFrontEnd === "undefined") {
      */
     createAccount: function () {
       jeeDialog.prompt({ title: "{{Nom de l'account}}:" }, function (name) {
-        if (name !== null) {
-          domUtils.ajax({
-            type: "POST",
-            async: false,
-            global: false,
-            url: volvocarsFrontEnd.ajaxUrl,
-            data: {
-              action: "createAccount",
-              name: name,
-            },
-            dataType: "json",
-            success: function (data) {
-              if (data.state != "ok") {
-                jeedomUtils.showAlert({
-                  message: data.result,
-                  level: "danger",
-                });
-                return;
-              }
-              let account = json_decode(data.result);
-              volvocarsFrontEnd.editAccount(account.id);
-            },
-          });
-        }
+        domUtils.ajax({
+          type: "POST",
+          async: false,
+          global: false,
+          url: volvocarsFrontEnd.ajaxUrl,
+          data: {
+            action: "createAccount",
+            name: name,
+          },
+          dataType: "json",
+          success: function (data) {
+            if (data.state != "ok") {
+              jeedomUtils.showAlert({
+                message: data.result,
+                level: "danger",
+              });
+              return;
+            }
+            let account = json_decode(data.result);
+            volvocarsFrontEnd.editAccount(account.id);
+          },
+        });
       });
     },
 
@@ -235,7 +233,7 @@ if (typeof volvocarsFrontEnd === "undefined") {
           jeeDialog.dialog({
             id: volvocarsFrontEnd.mdId_editAccount,
             title: "{{Compte}}: " + account.name,
-            height: 260,
+            height: 280,
             width: 400,
             contentUrl: "index.php?v=d&plugin=volvocars&modal=editAccount",
             buttons: {
@@ -318,6 +316,20 @@ if (typeof volvocarsFrontEnd === "undefined") {
                           });
                           return;
                         }
+                        let result = json_decode(data.result)
+                        console.log(result)
+                        if (result.code == 'VALIDATION_ERROR') {
+                          let msg = "toto"
+                          if ('details' in result) {
+                            result = result.details[0]
+                          }
+                          if (result.code == "CREDENTIAL_VALIDATION_FAILED") { 
+                            msg = '{{Compte ou password invalide.}}'
+                          }
+                          document.getElementById('error_message').innerText = msg
+                          return
+                        }
+                        document.getElementById('error_message').innerText = ''
                         let card = document.querySelector(
                           '.accountDisplayCard[data-account_id="' +
                             account.id +

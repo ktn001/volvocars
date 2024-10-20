@@ -22,7 +22,8 @@ require_once __DIR__ . '/endpoint.class.php';
 class volvoAccount {
 
 	const OAUTH_URL = "https://volvoid.eu.volvocars.com/as/token.oauth2";
-
+	const OAUTH_AUTH_URL = "https://volvoid.eu.volvocars.com/as/authorization.oauth2";
+	const USER_AGENT = "vca-android/5.46.0";
 
 
 	const CAR_LOCK_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands/lock";
@@ -142,6 +143,9 @@ class volvoAccount {
 	 * save
 	 */
 	public function save() {
+		if ($this->getName() == '') {
+			throw new Exception(__("Le nom du compte ne peut pas être vide!",__FILE__));
+		}
 		$acc = self::byName($this->getName());
 		if (is_object($acc) and $acc->getId() != $this->getId()) {
 			throw new Exception (sprintf(__('Un compte nommé %s existe déjà',__FILE__),$this->getName()));
@@ -171,51 +175,116 @@ class volvoAccount {
 		return 'volvoAccountToken'. $this->getId();
 	}
 
-	private function login() {
-		log::add("volvocars","debug",sprintf(__("Login du compte %s",__FILE__). "...", $this->getName()));
-		$session = curl_init(self::OAUTH_URL);
-		curl_setopt($session, CURLOPT_HTTPHEADER, [
-			"authorization: Basic aDRZZjBiOlU4WWtTYlZsNnh3c2c1WVFxWmZyZ1ZtSWFEcGhPc3kxUENhVXNpY1F0bzNUUjVrd2FKc2U0QVpkZ2ZJZmNMeXc=",
-			"content-type: application/x-www-form-urlencoded",
-			"accept: application/json"
-		]);
-		$data = http_build_query([
-			"username" => $this->getLogin(),
-			"password" => $this->getPassword(),
-			"grant_type" => "password",
-			"scope" => " openid email profile care_by_volvo:financial_information:invoice:read care_by_volvo:financial_information:payment_method"
-					 . " care_by_volvo:subscription:read customer:attributes customer:attributes:write order:attributes vehicle:attributes"
-					 . " tsp_customer_api:all conve:brake_status conve:climatization_start_stop conve:command_accessibility conve:commands"
-					 . " conve:diagnostics_engine_status conve:diagnostics_workshop conve:doors_status conve:engine_status conve:environment"
-					 . " conve:fuel_status conve:honk_flash conve:lock conve:lock_status conve:navigation conve:odometer_status conve:trip_statistics"
-					 . " conve:tyre_status conve:unlock conve:vehicle_relation conve:warnings conve:windows_status energy:battery_charge_level"
-					 . " energy:charging_connection_status energy:charging_system_status energy:electric_range energy:estimated_charging_time"
-					 . " energy:recharge_status vehicle:attributes"
-		]);
-					 //. " energy:recharge_status energy:target_battery_level energy:charging_current_limit vehicle:attributes"
-		curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($session, CURLOPT_POST, true);
-		curl_setopt($session, CURLOPT_POSTFIELDS, $data);
-		$content = curl_exec($session);
-		$httpCode = curl_getinfo($session,CURLINFO_HTTP_CODE);
-		if ( $httpCode != 200) {
-			$detail = $content;
-			$content = is_json($content,$content);
-			$message = null;
-			if (isset($content['error'])) {
-				$message = $content['error'];
-			}
-			$description = null;
-			if (isset($content['error_description'])) {
-				$description = $content['error_description'];
-			}
-			throw new volvoApiException (self::OAUTH_URL, $httpCode, $message, $description, $detail);
-		}
-		$this->_token = is_json($content,$content);
-		$this->_token['expires_at'] = time() + $this->_token['expires_in'] - 90;
-		cache::set($this->cacheKey(),json_encode($this->_token), $this->_token['expires_in'] - 10);
-		log::add("volvocars","info",sprintf(__("Compte %s logué!",__FILE__),$this->getName()));
+	private function getToken() {
+		$token = cache::byKey($this->cacheKey())->getValue();
+		$token = is_json($token,$token);
+		return $token;
 	}
+
+	public function authorize() {
+		$guid = uniqid("",true);
+		log::add("volvocars","debug","GUID: " . $guid);
+		$socket = socket_create(AF_INET,SOCK_STREAM,SOL_TCP);
+		if ($socket === false) {
+			throw new Exception ("Erreur de socket: " . socket_strerror(socket_last_error()));
+		}
+		$port = volvocars::getPort();
+		$connection = socket_connect($socket,'127.0.0.1',$port);
+		if ($connection === false) {
+			throw new Exception ("Erreur de socket: " . socket_strerror(socket_last_error($socket)));
+		}
+		$message = array (
+			'apikey' => jeedom::getapiKey('volvocars'),
+			'action' => 'login',
+			'login' => $this->getLogin(),
+			'password' => $this->getPassword(),
+			'state' => $guid,
+		);
+		$message = json_encode($message) . "\n";
+		socket_write($socket,$message,strlen($message));
+		$response = socket_read($socket, 4096);
+		log::add("volvocars","debug",print_r($response,true));
+	}
+
+//	private function checkUsernamePassword ($session, $url) {
+//		$url .= '?action=checkUsernamePassword';
+//		# $url="http://jeedomp/?action=checkUsernamePassword";
+//		log::add("volvocars","debug","URL: " . $url);
+//		$data = [
+//			"username" => $this->getLogin(),
+//			"password" => $this->getPassword()
+//		];
+//		#$session = curl_init($url);
+//		curl_setopt($session, CURLOPT_URL, $url);
+//		curl_setopt($session, CURLOPT_HTTPHEADER, [
+//			"authorization: Basic aDRZZjBiOlU4WWtTYlZsNnh3c2c1WVFxWmZyZ1ZtSWFEcGhPc3kxUENhVXNpY1F0bzNUUjVrd2FKc2U0QVpkZ2ZJZmNMeXc=",
+//			"User-Agent: " . self::USER_AGENT,
+//			"Content-Type: application/json; charset=utf-8",
+//			"Accept-Encoding: gzip",
+//			"x-xsrf-header: PingFederate",
+//		]);
+//		curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
+//		curl_setopt($session, CURLOPT_POST, true);
+//		curl_setopt($session, CURLOPT_POSTFIELDS, json_encode($data));
+//		$content = curl_exec($session);
+//		$httpCode = curl_getinfo($session,CURLINFO_HTTP_CODE);
+//		log::add("volvocars","debug","UP content: " . $httpCode);
+//		log::add("volvocars","debug","UP content: " . $content);
+//		if ( $httpCode == 200) {
+//		} else {
+//			throw new Exception($content);
+//		}
+//	}
+//
+//	private function login() {
+//		log::add("volvocars","debug","=========================");
+//		$this->authorize();
+//		log::add("volvocars","debug","=========================");
+//		log::add("volvocars","debug",sprintf(__("Login du compte %s",__FILE__). "...", $this->getName()));
+//		$session = curl_init(self::OAUTH_URL);
+//		curl_setopt($session, CURLOPT_HTTPHEADER, [
+//			"authorization: Basic aDRZZjBiOlU4WWtTYlZsNnh3c2c1WVFxWmZyZ1ZtSWFEcGhPc3kxUENhVXNpY1F0bzNUUjVrd2FKc2U0QVpkZ2ZJZmNMeXc=",
+//			"content-type: application/x-www-form-urlencoded",
+//			"User-Agent: " . self::USER_AGENT,
+//			"accept: application/json"
+//		]);
+//		$data = http_build_query([
+//			"username" => $this->getLogin(),
+//			"password" => $this->getPassword(),
+//			"grant_type" => "password",
+//			"scope" => " openid email profile care_by_volvo:financial_information:invoice:read care_by_volvo:financial_information:payment_method"
+//					 . " care_by_volvo:subscription:read customer:attributes customer:attributes:write order:attributes vehicle:attributes"
+//					 . " tsp_customer_api:all conve:brake_status conve:climatization_start_stop conve:command_accessibility conve:commands"
+//					 . " conve:diagnostics_engine_status conve:diagnostics_workshop conve:doors_status conve:engine_status conve:environment"
+//					 . " conve:fuel_status conve:honk_flash conve:lock conve:lock_status conve:navigation conve:odometer_status conve:trip_statistics"
+//					 . " conve:tyre_status conve:unlock conve:vehicle_relation conve:warnings conve:windows_status energy:battery_charge_level"
+//					 . " energy:charging_connection_status energy:charging_system_status energy:electric_range energy:estimated_charging_time"
+//					 . " energy:recharge_status vehicle:attributes"
+//		]);
+//					 //. " energy:recharge_status energy:target_battery_level energy:charging_current_limit vehicle:attributes"
+//		curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
+//		curl_setopt($session, CURLOPT_POST, true);
+//		curl_setopt($session, CURLOPT_POSTFIELDS, $data);
+//		$content = curl_exec($session);
+//		$httpCode = curl_getinfo($session,CURLINFO_HTTP_CODE);
+//		if ( $httpCode != 200) {
+//			$detail = $content;
+//			$content = is_json($content,$content);
+//			$message = null;
+//			if (isset($content['error'])) {
+//				$message = $content['error'];
+//			}
+//			$description = null;
+//			if (isset($content['error_description'])) {
+//				$description = $content['error_description'];
+//			}
+//			throw new volvoApiException (self::OAUTH_URL, $httpCode, $message, $description, $detail);
+//		}
+//		$this->_token = is_json($content,$content);
+//		$this->_token['expires_at'] = time() + $this->_token['expires_in'] - 90;
+//		cache::set($this->cacheKey(),json_encode($this->_token), $this->_token['expires_in'] - 10);
+//		log::add("volvocars","info",sprintf(__("Compte %s logué!",__FILE__),$this->getName()));
+//	}
 
 	private function refreshToken() {
 		log::add("volvocars","debug",sprintf(__("Rafraîchissement du token du compte %s",__FILE__). "...", $this->getName()));

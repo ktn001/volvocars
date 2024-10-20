@@ -31,11 +31,12 @@ try {
   */
 	ajax::init();
 	$action = init('action');
+	log::add("volvocars","debug","Action AJAX: " . $action);
 
 	if ($action == 'createAccount') {
 		try {
 			$name = init('name');
-			if ($name == '') {
+			if ($name === 'null' or $name === '') {
 				throw new Exception(__("Le nom du compte n'est pas défini",__FILE__));
 			}
 			log::add("volvocars", "debug", sprintf (__('Création du compte %s',__FILE__),$name));
@@ -44,6 +45,59 @@ try {
 		} catch (Exception $e) {
 			ajax::error(displayException($e), $e->getCode());
 		}
+	}
+
+	if ($action == 'saveAccount') {
+		$data = init('account');
+		if ($data == ''){
+			throw new Exception (__("Pas de données pour la sauvegarde du compte",__FILE__));
+		}
+		$data = json_decode($data,true);
+		if ($data['name'] == ''){
+			throw new Exception(__("Le nom de l'account à sauvegarder est indéfini",__FILE__));
+		}
+		$otp = init('otp');
+		if ($otp == '') {
+			$socket = socket_create(AF_INET,SOCK_STREAM,SOL_TCP);
+			if ($socket === false) {
+				throw new Exception ("Erreur de socket: " . socket_strerror(socket_last_error()));
+			}
+			$port = volvocars::getPort();
+			$connection = socket_connect($socket,'127.0.0.1',$port);
+			if ($connection === false) {
+				throw new Exception ("Erreur de socket: " . socket_strerror(socket_last_error($socket)));
+			}
+			$message = array (
+				'apikey' => jeedom::getapiKey('volvocars'),
+				'action' => 'login',
+				'login' => $data['login'],
+				'password' => $data['password'],
+			);
+			$message = json_encode($message) . "\n";
+			socket_write($socket,$message,strlen($message));
+			$response = chop(socket_read($socket, 4096));
+			log::add("volvocars","debug",print_r($response,true));
+			$response_array = is_json($response,$response);
+			if (isset($response['error'])) {
+				if (isset($response['HttpCode'])) {
+					log::add("volvocars","error","HttpCode: " . $response['HttpCode'] . " Content: " . $response['content']);
+					ajax.error(sprintf(__("Erreur HTTP %s lors de la validation du login/password",__FILE__),$response['HttpCode']));
+				}
+				if (isset($response['state'])) {
+					log::add("volvocars","error","State: " . $response['state'] . " Content: " . $response['content']);
+					ajax.error(sprintf(__("Erreur dans le flux de traitement de validation du login/password (state: %s)",__FILE__),$response['state']));
+				}
+				ajax.error(__("Errreur indéterminée lors de la validation du login/password",__FILE__));
+			}
+			ajax::success($response);
+		}
+		$account = volvoAccount::byId($data['id']);
+		if (!is_object($account)){
+			throw new Exception(sprintf(__("L'account %s à sauvegarder est introuvable",__FILE__),$data['id']));
+		}
+		utils::a2o($account,$data);
+		$account->save(true);
+		ajax::success();
 	}
 
 	if ($action == 'getAccount') {
@@ -122,24 +176,6 @@ try {
 			ajax::success();
 		}
 		ajax::error(sprintf(__("La suppression de compte %s n'a pas fonctionné correctement",__FILE__),$id));
-	}
-
-	if ($action == 'saveAccount') {
-		$data = init('account');
-		if ($data == ''){
-			throw new Exception (__("Pas de données pour la sauvegarde du compte",__FILE__));
-		}
-		$data = json_decode($data,true);
-		if ($data['name'] == ''){
-			throw new Exception(__("Le nom de l'account à sauvegarder est indéfini",__FILE__));
-		}
-		$account = volvoAccount::byId($data['id']);
-		if (!is_object($account)){
-			throw new Exception(sprintf(__("L'account %s à sauvegarder est introuvable",__FILE__),$data['id']));
-		}
-		utils::a2o($account,$data);
-		$account->save();
-		ajax::success();
 	}
 
 	if ($action == 'getCmdsUse'){
