@@ -20,6 +20,7 @@
 if (typeof volvocarsFrontEnd === "undefined") {
   var volvocarsFrontEnd = {
     mdId_editAccount: "mod_editVolvocarsAccount",
+    mdId_getOTP: "mod_getOTP",
     mdId_rawDatas: "mod_rawDatas",
     accountNeedReload: false,
     ajaxUrl: "plugins/volvocars/core/ajax/volvocars.ajax.php",
@@ -123,10 +124,11 @@ if (typeof volvocarsFrontEnd === "undefined") {
             return;
           }
 
-          if ((_target = event.target.closest("#btn-get_image"))) {
+          if (_target = event.target.closest("#btn-get_image")) {
             volvocarsFrontEnd.GetImage();
             return;
           }
+
         });
 
       /*
@@ -213,7 +215,7 @@ if (typeof volvocarsFrontEnd === "undefined") {
     /*
      * Edition d'un account
      */
-    editAccount: function (id) {
+    editAccount: function (account_id) {
       domUtils.ajax({
         type: "POST",
         async: false,
@@ -221,7 +223,7 @@ if (typeof volvocarsFrontEnd === "undefined") {
         url: volvocarsFrontEnd.ajaxUrl,
         data: {
           action: "getAccount",
-          id: id,
+          id: account_id,
         },
         dataType: "json",
         success: function (data) {
@@ -317,7 +319,6 @@ if (typeof volvocarsFrontEnd === "undefined") {
                           return;
                         }
                         let result = json_decode(data.result)
-                        console.log(result)
                         if (result.code == 'VALIDATION_ERROR') {
                           let msg = "toto"
                           if ('details' in result) {
@@ -330,30 +331,11 @@ if (typeof volvocarsFrontEnd === "undefined") {
                           return
                         }
                         document.getElementById('error_message').innerText = ''
-                        let card = document.querySelector(
-                          '.accountDisplayCard[data-account_id="' +
-                            account.id +
-                            '"]',
-                        );
-                        let reload = false;
-                        if (card) {
-                          card.getElementsByClassName("name")[0].innerText =
-                            account.name;
-                        } else {
-                          reload = true;
+                        if (result.status == 'OTP_REQUIRED') {
+                          editVolvocarsAccount.close();
+                          console.log(result)
+                          volvocarsFrontEnd.getOTP(result, account.id)
                         }
-                        let option = document.querySelector(
-                          '#sel_account option[value="' + account.id + '"]',
-                        );
-                        if (option) {
-                          option.text = account.name;
-                        } else {
-                          reload = true;
-                        }
-                        if (reload) {
-                          jeedomUtils.loadPage(document.URL);
-                        }
-                        editVolvocarsAccount.close();
                       },
                     });
                   },
@@ -366,6 +348,69 @@ if (typeof volvocarsFrontEnd === "undefined") {
           });
         },
       });
+    },
+
+    /*
+     * Saisie et envoi du One Time Password
+     */
+    getOTP: function (infos, account_id) {
+      console.log(account_id)
+      jeeDialog.dialog({
+        id: volvocarsFrontEnd.mdId_getOTP,
+        title: "One Time Password",
+        height: 295,
+        width: 400,
+        contentUrl: "index.php?v=d&plugin=volvocars&modal=getOTP",
+        onShown: function() {
+          setTimeout(function(){
+            volvocarsOTP.init(infos)
+          },500)
+        },
+        buttons: {
+          cancel: {
+            callback: {
+              click: function(event) {
+                volvocarsOTP.close()
+                let account = editVolvocarsAccount.getAccount()
+                let card = document.querySelector('.accountDisplayCard[data-account="' + account.id + '"]')
+                if (!card) {
+                  jeedomUtils.loadPage(document.URL)
+                }
+              },
+            },
+          },
+          "confirm": {
+            callback: {
+              click:function(event) {
+                console.log(infos)
+                let OTP = volvocarsOTP.getOTP()
+                domUtils.ajax({
+                  type: "POST",
+                  async: false,
+                  global: false,
+                  url: volvocarsFrontEnd.ajaxUrl,
+                  data: {
+                    action: "sendOTP",
+                    account_id: account_id,
+                    infos: json_encode(infos),
+                    otp: OTP,
+                  },
+                  dataType: "json",
+                  success: function (data) {
+                    if (data.state != "ok") {
+                      jeedomUtils.showAlert({
+                        message: data.result,
+                        level: "danger",
+                      });
+                      return;
+                    }
+                  },
+                });
+              },
+            },
+          },
+        },
+      })
     },
 
     /*
@@ -987,7 +1032,6 @@ if (typeof volvocarsFrontEnd === "undefined") {
       for (let i = 0; i < data.length; i += 1) {
         if (data[i].kind === "file" && data[i].type === "image/png") {
           let image = data[i].getAsFile();
-          console.log(image);
           let reader = new FileReader();
           reader.addEventListener("load", function () {
             let dropedImage = document.querySelector("#drop-area img").remove();
@@ -1011,7 +1055,6 @@ if (typeof volvocarsFrontEnd === "undefined") {
                   });
                   return;
                 }
-                console.log(data);
                 document.getElementById("drop-area").addClass("hidden");
                 document.getElementById("img_car").src = data.result;
                 document.querySelector(

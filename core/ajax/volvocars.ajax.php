@@ -58,6 +58,7 @@ try {
 		}
 		$otp = init('otp');
 		if ($otp == '') {
+			log::add("volvocars","info",__("Validation esername/password de l'accoun",__FILE__));
 			$socket = socket_create(AF_INET,SOCK_STREAM,SOL_TCP);
 			if ($socket === false) {
 				throw new Exception ("Erreur de socket: " . socket_strerror(socket_last_error()));
@@ -100,6 +101,32 @@ try {
 		ajax::success();
 	}
 
+	if ($action == 'sendOTP') {
+		$account_id = init('account_id');
+		$infos = init('infos');
+		$otp = init('otp');
+		$socket = socket_create(AF_INET,SOCK_STREAM,SOL_TCP);
+		if ($socket === false) {
+			throw new Exception ("Erreur de socket: " . socket_strerror(socket_last_error()));
+		}
+		$port = volvocars::getPort();
+		$connection = socket_connect($socket,'127.0.0.1',$port);
+		if ($connection === false) {
+			throw new Exception ("Erreur de socket: " . socket_strerror(socket_last_error($socket)));
+		}
+		$message = array(
+			'apikey' => jeedom::getapiKey('volvocars'),
+			'action' => 'sendOTP',
+			'account_id' => $account_id,
+			'otp' => $otp,
+			'infos' => $infos,
+		);
+		$message = json_encode($message) . "\n";
+		socket_write($socket,$message,strlen($message));
+		$response = chop(socket_read($socket, 4096));
+		ajax::success();
+	}
+
 	if ($action == 'getAccount') {
 		$id = init('id');
 		if ($id == '') {
@@ -114,6 +141,40 @@ try {
 			throw new Exception(sprintf(__("Le compte %s est introuvable",__FILE__),$id));
 		}
 		ajax::success(json_encode(utils::o2a($account)));
+	}
+
+	if ($action == 'resendOTP') {
+		$socket = socket_create(AF_INET,SOCK_STREAM,SOL_TCP);
+		if ($socket === false) {
+			throw new Exception ("Erreur de socket: " . socket_strerror(socket_last_error()));
+		}
+		$port = volvocars::getPort();
+		$connection = socket_connect($socket,'127.0.0.1',$port);
+		if ($connection === false) {
+			throw new Exception ("Erreur de socket: " . socket_strerror(socket_last_error($socket)));
+		}
+		$message = array (
+			'apikey' => jeedom::getapiKey('volvocars'),
+			'action' => 'resendOTP',
+			'url' => init('url'),
+		);
+		$message = json_encode($message) . "\n";
+		socket_write($socket,$message,strlen($message));
+		$response = chop(socket_read($socket, 4096));
+		$response=is_json($response,$response);
+		log::add("volvocars","debug",print_r($response,true));
+		if (isset($response['error'])) {
+			if (isset($response['HttpCode'])) {
+				log::add("volvocars","error","HttpCode: " . $response['HttpCode'] . " Content: " . $response['content']);
+				ajax::error(sprintf(__("Erreur HTTP %s lors de la demande de renvoi du OTP",__FILE__),$response['HttpCode']));
+			}
+			if (isset($response['state'])) {
+				log::add("volvocars","error","State: " . $response['state'] . " Content: " . $response['content']);
+				ajax::error(sprintf(__("Erreur dans le flux de traitement de validation du login/password (state: %s)",__FILE__),$response['state']));
+			}
+			ajax::error(__("Errreur indéterminée lors de la validation du login/password",__FILE__));
+		}
+		ajax::success($response);
 	}
 
 	if ($action == 'getPosition') {

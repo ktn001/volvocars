@@ -19,15 +19,32 @@ _socket_port = None
 _pidfile = None
 _apikey = None
 _netAdapter = None
+auth_session = None
+
+def logResponse(title, response):
+    logging.debug("-DEBUT-------------" + title + "--------------------")
+    logging.debug("  Request")
+    logging.debug("    URL")
+    logging.debug("      " + response.request.url)
+    logging.debug("    Body")
+    if response.request.body:
+        logging.debug("      " + response.request.body)
+    logging.debug("    Headers")
+    for header in response.request.headers:
+        logging.debug("      " + header + ": " + response.request.headers[header])
+    logging.debug("  Response")
+    logging.debug("    Body")
+    logging.debug("      " + response.content.decode('utf-8'))
+    logging.debug("-FIN---------------" + title + "--------------------")
 
 # ------------------------------------------------------------------------------------------------------
 # Class HttpError
 # ------------------------------------------------------------------------------------------------------
 class HttpError(Exception):
     def __init__ (self, httpCode, Content):
-        Exception.__init__(self,httpCode, content)
-        self.httpCode = httpcode
-        self.content = content
+        Exception.__init__(self,httpCode, Content)
+        self.httpCode = httpCode
+        self.content = Content
 
 # ------------------------------------------------------------------------------------------------------
 # Class StateError
@@ -42,16 +59,21 @@ class StateError(Exception):
 # Class socket_handler
 # ------------------------------------------------------------------------------------------------------
 class socket_handler(StreamRequestHandler):
-    def login(self, payload):
-        login = payload['login']
-        password = payload['password']
-        session = requests.session()
-        session.headers = {
+    def getAuthSession(self):
+        global auth_session
+        logging.debug("Création d'une nouvelle session")
+        auth_session = requests.Session()
+        auth_session.headers = {
             "authorization": "Basic aDRZZjBiOlU4WWtTYlZsNnh3c2c1WVFxWmZyZ1ZtSWFEcGhPc3kxUENhVXNpY1F0bzNUUjVrd2FKc2U0QVpkZ2ZJZmNMeXc=",
             "User-Agent": "vca-android/5.46.0",
             "Accept-Encoding": "gzip",
-            "Content-Type": "aplication/json; charset=utf-8"
+            "Content-Type": "application/json; charset=utf-8"
         }
+
+    def login(self, payload):
+        login = payload['login']
+        password = payload['password']
+        self.getAuthSession()
         url_params = ( "?client_id=h4Yf0b"
             "&response_type=code"
             "&acr_values=urn:volvoid:aal:bronze:2sv"
@@ -97,17 +119,19 @@ class socket_handler(StreamRequestHandler):
                 "energy:recharge_status "
                 "vehicle:attributes"
             )
-        auth = session.get(OAUTH_AUTH_URL + url_params)
+        auth = auth_session.get(OAUTH_AUTH_URL + url_params)
+        logResponse("LOGIN", auth)
 
         if auth.status_code == 200:
             response = auth.json()
             auth_state = response['status']
    
             if auth_state == 'USERNAME_PASSWORD_REQUIRED':
-                session.headers.update({"x-xsrf-header": "PingFederate"})
+                auth_session.headers.update({"x-xsrf-header": "PingFederate"})
                 url = response['_links']["checkUsernamePassword"]["href"] + "?action=checkUsernamePassword"
                 body = {'username': login, 'password': password}
-                auth = session.post(url, data=json.dumps(body))
+                auth = auth_session.post(url, data=json.dumps(body))
+                logResponse("CHECK USER PASSWORD", auth)
                 logging.debug(auth.status_code)
                 logging.debug(auth.content)
                 if auth.status_code == 200:
@@ -120,29 +144,58 @@ class socket_handler(StreamRequestHandler):
             logging.error(f'Unknow State "{auth_state}" returnend by phase 1')
             raise StaterError (auth_state)
         else:
-            logging.error(f'Httpcode: {auth_state} returnend by phase 1')
+            logging.error(f'Httpcode: {auth.status_code} returnend by phase 1')
             raise HttpError(auth.status_code, auth.content)
+
+    def resendOTP(self, payload):
+        logging.debug(payload['url'])
+        response = auth_session.get(payload['url'])
+        if response.status_code == 200:
+            return response.content
+        logging.error(f'Httpcode: {response.status_code} returnend by resendOTP')
+        raise HttpError(response.status_code, response.content)
+
+    def sendOTP(self, payload):
+        infos = json.loads(payload['infos'])
+        url = infos['_links']['checkOtp']['href'] + "?action=checkOtp"
+        body = {"otp": payload['otp']}
+        response = auth_session.post(url, data=json.dumps(body))
+        logResponse("CHECK OTP", response)
+        if response.status_code == 200:
+            return response.content
+        logging.error(f'Httpcode: {response.status_code} returnend by sendOTP')
+        logging.debug(response.content)
+        raise HttpError(response.status_code, response.content)
 
     def handle(self):
         logging.info("Client connected to [%s:%d]" % self.client_address)
         payload = self.rfile.readline().decode('utf-8')
-        logging.info(payload)
         logging.info("Message read from socket: " + str(payload.strip()))
         payload = json.loads(payload)
-        if payload['apikey'] != _apikey:
+        if 'apikey' not in payload or payload['apikey'] != _apikey:
             logging.error("Invalid apikey" )
             return
         try:
+
             if payload['action'] == 'login':
                 response = self.login(payload)
                 self.wfile.write(response)
+
+            elif payload['action'] == 'resendOTP':
+                response = self.resendOTP(payload)
+                self.wfile.write(response)
+
+            elif payload['action'] == 'sendOTP':
+                response = self.sendOTP(payload)
+                self.wfile.write(response)
+
         except HttpError as e:
             response = {
                 "error" : "HttpCode",
                 "HttpCode" : e.httpCode,
-                "content" : e.content
+                "content" : e.content.decode()
             }
-            self.wfile.write(json.dumps(response))
+            self.wfile.write(json.dumps(response).encode('utf-8'))
         except StateError as e:
             response = {
                 "error" : "State",

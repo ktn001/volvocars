@@ -22,3 +22,42 @@
   text-align: center;
 }
 
+#mod_getOTP H4 {
+  text-align: center;
+}
+
+#mod_getOTP #email {
+  color: var(--al-primary-color);
+  text-align: center;
+}
+
+#mod_getOTP #volvocarsOTP_T1 {
+  width: 90%;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#mod_getOTP #volvocarsOTP_T2 {
+  text-align: center;
+  margin-top: 5px;
+  font-style: italic;
+}
+
+#mod_getOTP #volvocarsOTP_code {
+  width: 25%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#mod_getOTP #volvocarsOTP_code input {
+  text-align: center;
+}
+
+#mod_getOTP a {
+  display: block;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+}

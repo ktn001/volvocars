@@ -49,18 +49,19 @@ if (!isConnect('admin')) {
 "use strict"
 
 if (typeof editvolvocarsAccount === "undefined") {
-	var editVolvocarsAccount = {}
-	editVolvocarsAccount.init = function(account) {
-		let modal = document.getElementById(volvocarsFrontEnd.mdId_editAccount)
-		modal.setJeeValues(account,'.accountAttr')
-	},
-	editVolvocarsAccount.getAccount = function(mdId) {
-		let modal = document.getElementById(volvocarsFrontEnd.mdId_editAccount)
-		let account=modal.getJeeValues('.accountAttr')
-		return account[0]
-	},
-	editVolvocarsAccount.close = function() {
-		document.getElementById(volvocarsFrontEnd.mdId_editAccount)._jeeDialog.close()
+	var editVolvocarsAccount = {
+		init: function(account) {
+			let modal = document.getElementById(volvocarsFrontEnd.mdId_editAccount)
+			modal.setJeeValues(account,'.accountAttr')
+		},
+		getAccount: function(mdId) {
+			let modal = document.getElementById(volvocarsFrontEnd.mdId_editAccount)
+			let account=modal.getJeeValues('.accountAttr')
+			return account[0]
+		},
+		close: function() {
+			document.getElementById(volvocarsFrontEnd.mdId_editAccount)._jeeDialog.close()
+		}
 	}
 }
 </script>
