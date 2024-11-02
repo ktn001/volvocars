@@ -318,23 +318,22 @@ if (typeof volvocarsFrontEnd === "undefined") {
                           });
                           return;
                         }
-                        let result = json_decode(data.result)
-                        if (result.code == 'VALIDATION_ERROR') {
-                          let msg = "toto"
-                          if ('details' in result) {
-                            result = result.details[0]
+                        let auth = json_decode(data.result)
+                        if (auth.code == 'VALIDATION_ERROR') {
+                          let msg = ""
+                          if ('details' in auth) {
+                            auth = auth.details[0]
                           }
-                          if (result.code == "CREDENTIAL_VALIDATION_FAILED") { 
+                          if (auth.code == "CREDENTIAL_VALIDATION_FAILED") { 
                             msg = '{{Compte ou password invalide.}}'
                           }
                           document.getElementById('error_message').innerText = msg
                           return
                         }
                         document.getElementById('error_message').innerText = ''
-                        if (result.status == 'OTP_REQUIRED') {
+                        if (auth.status == 'OTP_REQUIRED') {
                           editVolvocarsAccount.close();
-                          console.log(result)
-                          volvocarsFrontEnd.getOTP(result, account.id)
+                          volvocarsFrontEnd.getOTP(auth, account.id)
                         }
                       },
                     });
@@ -353,19 +352,13 @@ if (typeof volvocarsFrontEnd === "undefined") {
     /*
      * Saisie et envoi du One Time Password
      */
-    getOTP: function (infos, account_id) {
-      console.log(account_id)
+    getOTP: function (auth, account_id) {
       jeeDialog.dialog({
         id: volvocarsFrontEnd.mdId_getOTP,
         title: "One Time Password",
         height: 295,
         width: 400,
         contentUrl: "index.php?v=d&plugin=volvocars&modal=getOTP",
-        onShown: function() {
-          setTimeout(function(){
-            volvocarsOTP.init(infos)
-          },500)
-        },
         buttons: {
           cancel: {
             callback: {
@@ -382,8 +375,8 @@ if (typeof volvocarsFrontEnd === "undefined") {
           "confirm": {
             callback: {
               click:function(event) {
-                console.log(infos)
                 let OTP = volvocarsOTP.getOTP()
+                let auth = volvocarsOTP.getAuth()
                 domUtils.ajax({
                   type: "POST",
                   async: false,
@@ -392,7 +385,7 @@ if (typeof volvocarsFrontEnd === "undefined") {
                   data: {
                     action: "sendOTP",
                     account_id: account_id,
-                    infos: json_encode(infos),
+                    auth: json_encode(auth),
                     otp: OTP,
                   },
                   dataType: "json",
@@ -411,6 +404,9 @@ if (typeof volvocarsFrontEnd === "undefined") {
           },
         },
       })
+      setTimeout(function(){
+        volvocarsOTP.init(auth)
+      },500)
     },
 
     /*

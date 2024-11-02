@@ -70,10 +70,7 @@ class socket_handler(StreamRequestHandler):
             "Content-Type": "application/json; charset=utf-8"
         }
 
-    def login(self, payload):
-        login = payload['login']
-        password = payload['password']
-        self.getAuthSession()
+    def initAuthorize(self):
         url_params = ( "?client_id=h4Yf0b"
             "&response_type=code"
             "&acr_values=urn:volvoid:aal:bronze:2sv"
@@ -119,33 +116,63 @@ class socket_handler(StreamRequestHandler):
                 "energy:recharge_status "
                 "vehicle:attributes"
             )
-        auth = auth_session.get(OAUTH_AUTH_URL + url_params)
-        logResponse("LOGIN", auth)
-
-        if auth.status_code == 200:
-            response = auth.json()
-            auth_state = response['status']
-   
-            if auth_state == 'USERNAME_PASSWORD_REQUIRED':
-                auth_session.headers.update({"x-xsrf-header": "PingFederate"})
-                url = response['_links']["checkUsernamePassword"]["href"] + "?action=checkUsernamePassword"
-                body = {'username': login, 'password': password}
-                auth = auth_session.post(url, data=json.dumps(body))
-                logResponse("CHECK USER PASSWORD", auth)
-                logging.debug(auth.status_code)
-                logging.debug(auth.content)
-                if auth.status_code == 200:
-                    return auth.content
-                elif auth.status_code == 400:
-                    return auth.content
-                else:
-                    logging.error(f'HttpCode: {auth.status_code} for "checkUserNamePassword"')
-                    raise HttpError(auth.status_code, auth.content)
-            logging.error(f'Unknow State "{auth_state}" returnend by phase 1')
-            raise StaterError (auth_state)
+        response = auth_session.get(OAUTH_AUTH_URL + url_params)
+        logResponse("LOGIN", response)
+        if response.status_code == 200:
+            auth = response.json()
+            return auth
         else:
-            logging.error(f'Httpcode: {auth.status_code} returnend by phase 1')
-            raise HttpError(auth.status_code, auth.content)
+            logging.error(f'Httpcode: {response.status_code} returnend by initAuthorize')
+            raise HttpError(response.status_code, response.content)
+   
+    def sendUsernamePassword(self, url, username, password):
+        url = url + "?action=checkUsernamePassword"
+        body = {'username': username, 'password': password}
+        response = auth_session.post(url, data=json.dumps(body))
+        logResponse("CHECK USER PASSWORD", response)
+        if response.status_code == 200:
+            auth = response.json()
+            return auth
+        elif response.status_code == 400:
+            auth = response.json()
+            return auth
+        else:
+            logging.error(f'Httpcode: {response.status_code} returnend by checkUsernamePassword')
+            raise HttpError(response.status_code, response.content)
+
+    def login_phase1(self, payload):
+        self.getAuthSession()
+        auth = self.initAuthorize()
+        auth_status = auth['status']
+        auth_session.headers.update({"x-xsrf-header": "PingFederate"})
+
+        if auth_status == 'USERNAME_PASSWORD_REQUIRED':
+            login = payload['login']
+            password = payload['password']
+            url = auth['_links']["checkUsernamePassword"]["href"]
+            auth = self.sendUsernamePassword(url, login, password)
+            return auth
+        else:
+            logging.error(f'Unknow State "{auth_status}" returnend by initAuthorize')
+            raise StaterError (auth_status)
+
+    def sendOTP(self, url, otp):
+        url = url + "?action=checkOTP"
+        body = {"otp": otp}
+        auth = auth_session.post(url, data=json.dumps(body))
+        logResponse("CHECK OTP", auth)
+        if response.status_code == 200:
+            auth = response.json()
+            return auth
+        else:
+            logging.error(f'Httpcode: {response.status_code} returnend by checkUsernamePassword')
+            raise HttpError(response.status_code, response.content)
+
+    def login_phase2(self, payload):
+        auth = json.loads(payload['auth'])
+        opt = payload['otp']
+        url = auth['_links']['checkOtp']['href']
+        auth = self.sendOTP(url, url)
 
     def resendOTP(self, payload):
         logging.debug(payload['url'])
@@ -155,17 +182,23 @@ class socket_handler(StreamRequestHandler):
         logging.error(f'Httpcode: {response.status_code} returnend by resendOTP')
         raise HttpError(response.status_code, response.content)
 
-    def sendOTP(self, payload):
+    def XsendOTP(self, payload):
         infos = json.loads(payload['infos'])
         url = infos['_links']['checkOtp']['href'] + "?action=checkOtp"
         body = {"otp": payload['otp']}
-        response = auth_session.post(url, data=json.dumps(body))
-        logResponse("CHECK OTP", response)
-        if response.status_code == 200:
-            return response.content
-        logging.error(f'Httpcode: {response.status_code} returnend by sendOTP')
-        logging.debug(response.content)
-        raise HttpError(response.status_code, response.content)
+        auth = auth_session.post(url, data=json.dumps(body))
+        logResponse("CHECK OTP", auth)
+        if auth.status_code == 200:
+            response = auth.json()
+            auth_state = response['status']
+   
+            if auth_state == 'OTP_VERIFIED':
+                return auth.content
+            logging.error(f'Unknow State "{auth_state}" returnend by sendOTP')
+            raise StaterError (auth_state)
+        logging.error(f'Httpcode: {auth.status_code} returnend by sendOTP')
+        logging.debug(auth.content)
+        raise HttpError(auth.status_code, auth.content)
 
     def handle(self):
         logging.info("Client connected to [%s:%d]" % self.client_address)
@@ -178,15 +211,16 @@ class socket_handler(StreamRequestHandler):
         try:
 
             if payload['action'] == 'login':
-                response = self.login(payload)
-                self.wfile.write(response)
+                auth = self.login_phase1(payload)
+                auth = json.dumps(auth).encode()
+                self.wfile.write(auth)
 
             elif payload['action'] == 'resendOTP':
-                response = self.resendOTP(payload)
+                response = self.resendOT(payload)
                 self.wfile.write(response)
 
             elif payload['action'] == 'sendOTP':
-                response = self.sendOTP(payload)
+                response = self.login_phase2(payload)
                 self.wfile.write(response)
 
         except HttpError as e:

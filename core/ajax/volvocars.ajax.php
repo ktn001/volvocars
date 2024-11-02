@@ -58,7 +58,7 @@ try {
 		}
 		$otp = init('otp');
 		if ($otp == '') {
-			log::add("volvocars","info",__("Validation esername/password de l'accoun",__FILE__));
+			log::add("volvocars","info",__("Validation username/password de l'account",__FILE__));
 			$socket = socket_create(AF_INET,SOCK_STREAM,SOL_TCP);
 			if ($socket === false) {
 				throw new Exception ("Erreur de socket: " . socket_strerror(socket_last_error()));
@@ -76,21 +76,21 @@ try {
 			);
 			$message = json_encode($message) . "\n";
 			socket_write($socket,$message,strlen($message));
-			$response = chop(socket_read($socket, 4096));
-			log::add("volvocars","debug",print_r($response,true));
-			$response_array = is_json($response,$response);
-			if (isset($response['error'])) {
-				if (isset($response['HttpCode'])) {
-					log::add("volvocars","error","HttpCode: " . $response['HttpCode'] . " Content: " . $response['content']);
-					ajax.error(sprintf(__("Erreur HTTP %s lors de la validation du login/password",__FILE__),$response['HttpCode']));
+			$auth = chop(socket_read($socket, 4096));
+			log::add("volvocars","debug","auth: " . print_r($auth,true));
+			$auth_array = is_json($auth,$auth);
+			if (isset($auth['error'])) {
+				if (isset($auth['HttpCode'])) {
+					log::add("volvocars","error","HttpCode: " . $auth['HttpCode'] . " Content: " . $auth['content']);
+					ajax.error(sprintf(__("Erreur HTTP %s lors de la validation du login/password",__FILE__),$auth['HttpCode']));
 				}
-				if (isset($response['state'])) {
-					log::add("volvocars","error","State: " . $response['state'] . " Content: " . $response['content']);
-					ajax.error(sprintf(__("Erreur dans le flux de traitement de validation du login/password (state: %s)",__FILE__),$response['state']));
+				if (isset($auth['state'])) {
+					log::add("volvocars","error","State: " . $auth['state'] . " Content: " . $auth['content']);
+					ajax.error(sprintf(__("Erreur dans le flux de traitement de validation du login/password (state: %s)",__FILE__),$auth['state']));
 				}
 				ajax.error(__("Errreur indéterminée lors de la validation du login/password",__FILE__));
 			}
-			ajax::success($response);
+			ajax::success($auth);
 		}
 		$account = volvoAccount::byId($data['id']);
 		if (!is_object($account)){
@@ -103,7 +103,8 @@ try {
 
 	if ($action == 'sendOTP') {
 		$account_id = init('account_id');
-		$infos = init('infos');
+		$auth = init('auth');
+		log::add("volvocars","debug","auth: " . print_r($auth,true));
 		$otp = init('otp');
 		$socket = socket_create(AF_INET,SOCK_STREAM,SOL_TCP);
 		if ($socket === false) {
@@ -119,11 +120,12 @@ try {
 			'action' => 'sendOTP',
 			'account_id' => $account_id,
 			'otp' => $otp,
-			'infos' => $infos,
+			'auth' => $auth,
 		);
 		$message = json_encode($message) . "\n";
 		socket_write($socket,$message,strlen($message));
-		$response = chop(socket_read($socket, 4096));
+		$auth = chop(socket_read($socket, 4096));
+		log::add("volvocars","debug","auth: " . print_r($auth,true));
 		ajax::success();
 	}
 

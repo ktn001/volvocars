@@ -34,10 +34,9 @@ if (!isConnect('admin')) {
 
 if (typeof volvocarsOTP === "undefined") {
     var volvocarsOTP = {
-		renewLink : "",
-    	init: function (infos){
-			this.renewLink = infos._links.resendOtp.href
-			document.querySelector('#' + volvocarsFrontEnd.mdId_getOTP + ' #email').innerText = infos.devices[0].target
+    	init: function (auth){
+			volvocarsOTP.auth = auth
+			document.querySelector('#' + volvocarsFrontEnd.mdId_getOTP + ' #email').innerText = auth.devices[0].target
 		},
 		close: function(){
 			document.getElementById(volvocarsFrontEnd.mdId_getOTP)._jeeDialog.close()
@@ -45,11 +44,12 @@ if (typeof volvocarsOTP === "undefined") {
 		getOTP: function(){
 			return document.querySelector('#volvocarsOTP_code input').value
 		},
+		getAuth: function(){
+			return volvocarsOTP.auth
+		},
 		resendOTP: function(){
-			console.log("RESEND OTP")
-			console.log(this)
 			domUtils.ajax({
-				typa: "POST",
+				type: "POST",
 				async: true,
 				global:false,
 				url: volvocarsFrontEnd.ajaxUrl,
@@ -59,7 +59,6 @@ if (typeof volvocarsOTP === "undefined") {
 				},
 				dataType: "json",
 				success: function(data) {
-					console.log(data)
 					if (data.state != 'ok') {
 						jeedomUtils.showAlert({message: data.result, level: "danger"})
 						return
