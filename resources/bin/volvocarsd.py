@@ -13,7 +13,7 @@ import json
 from socketserver import StreamRequestHandler, ThreadingTCPServer
 
 OAUTH_AUTH_URL = "https://volvoid.eu.volvocars.com/as/authorization.oauth2"
-
+OAUTH_TOKEN_URL = "https://volvoid.eu.volvocars.com/as/token.oauth2"
 
 _socket_port = None
 _pidfile = None
@@ -157,10 +157,10 @@ class socket_handler(StreamRequestHandler):
             raise StaterError (auth_status)
 
     def sendOTP(self, url, otp):
-        url = url + "?action=checkOTP"
+        url = url + "?action=checkOtp"
         body = {"otp": otp}
-        auth = auth_session.post(url, data=json.dumps(body))
-        logResponse("CHECK OTP", auth)
+        response = auth_session.post(url, data=json.dumps(body))
+        logResponse("CHECK OTP", response)
         if response.status_code == 200:
             auth = response.json()
             return auth
@@ -168,11 +168,55 @@ class socket_handler(StreamRequestHandler):
             logging.error(f'Httpcode: {response.status_code} returnend by checkUsernamePassword')
             raise HttpError(response.status_code, response.content)
 
+    def continue_auth(self, url):
+        url = url + "?action=continueAuthentication"
+        response = auth_session.get(url)
+        logResponse("CONTINUEAUTHENTICATION", response)
+        if response.status_code == 200:
+            auth = response.json()
+            return auth
+        else:
+            logging.error(f'Httpcode: {response.status_code} returnend by checkUsernamePassword')
+            raise HttpError(response.status_code, response.content)
+
+    def get_token(self, code):
+        url = OAUTH_TOKEN_URL
+        auth_session.headers.update({"content-type": "application/x-www-form-urlencoded"})
+        body = {
+            "code": code,
+            "grant_type": "authorization_code"
+        }
+        response = auth_session.post(url, data=body)
+        logResponse("CONTINUEAUTHENTICATION", response)
+        if response.status_code == 200:
+            tokens = response.json()
+            return tokens
+        else:
+            logging.error(f'Httpcode: {response.status_code} returnend by getToken')
+            raise HttpError(response.status_code, response.content)
+
     def login_phase2(self, payload):
         auth = json.loads(payload['auth'])
-        opt = payload['otp']
+        otp = payload['otp']
         url = auth['_links']['checkOtp']['href']
-        auth = self.sendOTP(url, url)
+        auth = self.sendOTP(url, otp)
+        auth_status = auth['status']
+
+        if auth_status == 'OTP_VERIFIED':
+            url = auth['_links']["continueAuthentication"]["href"]
+            auth = self.continue_auth(url)
+            auth_status = auth['status']
+        else:
+            logging.error(f'Unknow State "{auth_status}" returnend by continueAuthentication')
+            raise StaterError (auth_status)
+
+        if auth_status == 'COMPLETED':
+            code = auth['authorizeResponse']['code']
+            tokens = self.get_token(code)
+            return tokens
+        else:
+            logging.error(f'Unknow State "{auth_status}" returnend by getToken')
+            raise StaterError (auth_status)
 
     def resendOTP(self, payload):
         logging.debug(payload['url'])
@@ -181,24 +225,6 @@ class socket_handler(StreamRequestHandler):
             return response.content
         logging.error(f'Httpcode: {response.status_code} returnend by resendOTP')
         raise HttpError(response.status_code, response.content)
-
-    def XsendOTP(self, payload):
-        infos = json.loads(payload['infos'])
-        url = infos['_links']['checkOtp']['href'] + "?action=checkOtp"
-        body = {"otp": payload['otp']}
-        auth = auth_session.post(url, data=json.dumps(body))
-        logResponse("CHECK OTP", auth)
-        if auth.status_code == 200:
-            response = auth.json()
-            auth_state = response['status']
-   
-            if auth_state == 'OTP_VERIFIED':
-                return auth.content
-            logging.error(f'Unknow State "{auth_state}" returnend by sendOTP')
-            raise StaterError (auth_state)
-        logging.error(f'Httpcode: {auth.status_code} returnend by sendOTP')
-        logging.debug(auth.content)
-        raise HttpError(auth.status_code, auth.content)
 
     def handle(self):
         logging.info("Client connected to [%s:%d]" % self.client_address)
@@ -220,8 +246,9 @@ class socket_handler(StreamRequestHandler):
                 self.wfile.write(response)
 
             elif payload['action'] == 'sendOTP':
-                response = self.login_phase2(payload)
-                self.wfile.write(response)
+                tokens = self.login_phase2(payload)
+                tokens = json.dumps(tokens).encode()
+                self.wfile.write(tokens)
 
         except HttpError as e:
             response = {
