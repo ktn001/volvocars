@@ -50,7 +50,8 @@
   margin-right: auto;
 }
 
-#mod_getOTP #volvocarsOTP_code input {
+#mod_getOTP #volvocarsOTP_code input,
+#mod_getOTP #volvocarsOTP_msg {
   text-align: center;
 }
 

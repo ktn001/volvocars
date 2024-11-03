@@ -391,12 +391,34 @@ if (typeof volvocarsFrontEnd === "undefined") {
                   dataType: "json",
                   success: function (data) {
                     if (data.state != "ok") {
-                      jeedomUtils.showAlert({
-                        message: data.result,
-                        level: "danger",
-                      });
+                      let printAlert = true
+                      let msg = ''
+                      if (typeof(data.result) === 'object'){
+                        if ('content' in data.result) {
+                          let content = ''
+                          try {
+                            content = JSON.parse(data.result.content)
+                            if ('code' in content) {
+                              switch (content.code) {
+                                case 'INVALID_OTP':
+                                  msg = '{{Le code est invalide ou a expiré}}'
+                                  printAlert = false
+                                  break
+                              }
+                            }
+                          } catch(e) {}
+                        }
+                      }
+                      volvocarsOTP.setMessage(msg)
+                      if (printAlert) {
+                        jeedomUtils.showAlert({
+                          message: data.result,
+                         level: "danger",
+                        });
+                      }
                       return;
                     }
+                    volvocarsOTP.close()
                   },
                 });
               },

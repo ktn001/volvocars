@@ -56,49 +56,45 @@ try {
 		if ($data['name'] == ''){
 			throw new Exception(__("Le nom de l'account à sauvegarder est indéfini",__FILE__));
 		}
-		$otp = init('otp');
-		if ($otp == '') {
-			log::add("volvocars","info",__("Validation username/password de l'account",__FILE__));
-			$socket = socket_create(AF_INET,SOCK_STREAM,SOL_TCP);
-			if ($socket === false) {
-				throw new Exception ("Erreur de socket: " . socket_strerror(socket_last_error()));
-			}
-			$port = volvocars::getPort();
-			$connection = socket_connect($socket,'127.0.0.1',$port);
-			if ($connection === false) {
-				throw new Exception ("Erreur de socket: " . socket_strerror(socket_last_error($socket)));
-			}
-			$message = array (
-				'apikey' => jeedom::getapiKey('volvocars'),
-				'action' => 'login',
-				'login' => $data['login'],
-				'password' => $data['password'],
-			);
-			$message = json_encode($message) . "\n";
-			socket_write($socket,$message,strlen($message));
-			$auth = chop(socket_read($socket, 4096));
-			log::add("volvocars","debug","auth: " . print_r($auth,true));
-			$auth_array = is_json($auth,$auth);
-			if (isset($auth['error'])) {
-				if (isset($auth['HttpCode'])) {
-					log::add("volvocars","error","HttpCode: " . $auth['HttpCode'] . " Content: " . $auth['content']);
-					ajax.error(sprintf(__("Erreur HTTP %s lors de la validation du login/password",__FILE__),$auth['HttpCode']));
-				}
-				if (isset($auth['state'])) {
-					log::add("volvocars","error","State: " . $auth['state'] . " Content: " . $auth['content']);
-					ajax.error(sprintf(__("Erreur dans le flux de traitement de validation du login/password (state: %s)",__FILE__),$auth['state']));
-				}
-				ajax.error(__("Errreur indéterminée lors de la validation du login/password",__FILE__));
-			}
-			ajax::success($auth);
+		log::add("volvocars","info",__("Validation username/password de l'account",__FILE__));
+		$socket = socket_create(AF_INET,SOCK_STREAM,SOL_TCP);
+		if ($socket === false) {
+			throw new Exception ("Erreur de socket: " . socket_strerror(socket_last_error()));
 		}
+		$port = volvocars::getPort();
+		$connection = socket_connect($socket,'127.0.0.1',$port);
+		if ($connection === false) {
+			throw new Exception ("Erreur de socket: " . socket_strerror(socket_last_error($socket)));
+		}
+		$message = array (
+			'apikey' => jeedom::getapiKey('volvocars'),
+			'action' => 'login',
+			'login' => $data['login'],
+			'password' => $data['password'],
+		);
+		$message = json_encode($message) . "\n";
+		socket_write($socket,$message,strlen($message));
+		$auth = chop(socket_read($socket, 8192));
+		log::add("volvocars","debug","auth: " . print_r($auth,true));
+		if (isset($auth['error'])) {
+			if (isset($auth['HttpCode'])) {
+				log::add("volvocars","error","HttpCode: " . $auth['HttpCode'] . " Content: " . $auth['content']);
+				ajax::error(sprintf(__("Erreur HTTP %s lors de la validation du login/password",__FILE__),$auth['HttpCode']));
+			}
+			if (isset($auth['state'])) {
+				log::add("volvocars","error","State: " . $auth['state'] . " Content: " . $auth['content']);
+				ajax::error(sprintf(__("Erreur dans le flux de traitement de validation du login/password (state: %s)",__FILE__),$auth['state']));
+			}
+			ajax::error(__("Errreur indéterminée lors de la validation du login/password",__FILE__));
+		}
+		
 		$account = volvoAccount::byId($data['id']);
 		if (!is_object($account)){
 			throw new Exception(sprintf(__("L'account %s à sauvegarder est introuvable",__FILE__),$data['id']));
 		}
 		utils::a2o($account,$data);
 		$account->save(true);
-		ajax::success();
+		ajax::success($auth);
 	}
 
 	if ($action == 'sendOTP') {
@@ -124,8 +120,21 @@ try {
 		);
 		$message = json_encode($message) . "\n";
 		socket_write($socket,$message,strlen($message));
-		$auth = chop(socket_read($socket, 4096));
-		log::add("volvocars","debug","auth: " . print_r($auth,true));
+		$token = chop(socket_read($socket, 8192));
+		$token=is_json($token,$token);
+		if (isset($token['error'])) {
+			if (isset($token['HttpCode'])) {
+				log::add("volvocars","error","HttpCode: " . $token['HttpCode'] . " Content: " . $token['content']);
+				#ajax::error(sprintf(__("Erreur HTTP %s lors de la validation du code",__FILE__),$token['HttpCode']));
+				ajax::error(is_json($tokeni,$token));
+			}
+			if (isset($token['state'])) {
+				log::add("volvocars","error","State: " . $token['state'] . " Content: " . $token['content']);
+				ajax::error(sprintf(__("Erreur dans le flux de traitement de validation du code (state: %s): %s",__FILE__),$token['state'], $token['content']));
+			}
+			ajax::error(__("Errreur indéterminée lors de la validation du login/password",__FILE__));
+		}
+		volvoAccount::saveToken($token, $account_id);
 		ajax::success();
 	}
 
@@ -162,7 +171,7 @@ try {
 		);
 		$message = json_encode($message) . "\n";
 		socket_write($socket,$message,strlen($message));
-		$response = chop(socket_read($socket, 4096));
+		$response = chop(socket_read($socket, 8192));
 		$response=is_json($response,$response);
 		log::add("volvocars","debug",print_r($response,true));
 		if (isset($response['error'])) {

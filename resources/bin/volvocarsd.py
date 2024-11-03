@@ -165,8 +165,13 @@ class socket_handler(StreamRequestHandler):
             auth = response.json()
             return auth
         else:
-            logging.error(f'Httpcode: {response.status_code} returnend by checkUsernamePassword')
-            raise HttpError(response.status_code, response.content)
+            content = response.json()
+            if 'details' in content:
+                message = json.dumps(content['details'][0])
+            else:
+                message = response.content
+            logging.error(f'Httpcode: {response.status_code} returnend by checkOTP')
+            raise HttpError(response.status_code, message)
 
     def continue_auth(self, url):
         url = url + "?action=continueAuthentication"
@@ -176,7 +181,7 @@ class socket_handler(StreamRequestHandler):
             auth = response.json()
             return auth
         else:
-            logging.error(f'Httpcode: {response.status_code} returnend by checkUsernamePassword')
+            logging.error(f'Httpcode: {response.status_code} returnend by continueAuth')
             raise HttpError(response.status_code, response.content)
 
     def get_token(self, code):
@@ -254,14 +259,14 @@ class socket_handler(StreamRequestHandler):
             response = {
                 "error" : "HttpCode",
                 "HttpCode" : e.httpCode,
-                "content" : e.content.decode()
+                "content" : e.content
             }
             self.wfile.write(json.dumps(response).encode('utf-8'))
         except StateError as e:
             response = {
                 "error" : "State",
                 "state" : e.state,
-                "content" : e.content
+                "content" : e.content.decode()
             }
             self.wfile.write(json.dumps(response))
         logging.info("Client disconnected from [%s:%d]" % self.client_address)

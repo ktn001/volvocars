@@ -28,7 +28,8 @@ if (!isConnect('admin')) {
 <div id="email"></div>
 <div id="volvocarsOTP_T2">{{Veuillez le saisir ci-dessous pour vérifier votre identité}}</div>
 <div id="volvocarsOTP_code"><input type="text" class="form-control"/></div>
-<a id="resendOTP" >{{Envoyer un nouveau code}}</a>
+<div><a id="resendOTP" class="hidden">{{Envoyer un nouveau code}}</a></div>
+<div id='volvocarsOTP_msg' class='danger'></div>
 <script>
 "use strict"
 
@@ -37,9 +38,13 @@ if (typeof volvocarsOTP === "undefined") {
     	init: function (auth){
 			volvocarsOTP.auth = auth
 			document.querySelector('#' + volvocarsFrontEnd.mdId_getOTP + ' #email').innerText = auth.devices[0].target
+			document.querySelector('#volvocarsOTP_code input').focus()
 		},
 		close: function(){
 			document.getElementById(volvocarsFrontEnd.mdId_getOTP)._jeeDialog.close()
+		},
+		setMessage: function(message){
+			document.getElementById('volvocarsOTP_msg').innerText = message
 		},
 		getOTP: function(){
 			return document.querySelector('#volvocarsOTP_code input').value
