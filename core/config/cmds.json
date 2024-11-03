@@ -4,17 +4,20 @@
     "name": "refresh",
     "type": "action",
     "subType": "other"
-  },{
+  },
+  {
     "logicalId": "availability",
     "name": "{{Disponibilité}}",
     "type": "info",
     "subType": "string"
-  },{
+  },
+  {
     "logicalId": "unavailableReason",
     "name": "{{Raison indiponibilité}}",
     "type": "info",
     "subType": "string"
-  },{
+  },
+  {
     "logicalId": "locked",
     "name": "{{Verrouillé}}",
     "type": "info",
@@ -22,7 +25,8 @@
     "display": {
       "forceReturnLineAfter": "1"
     }
-  },{
+  },
+  {
     "logicalId": "unlock",
     "name": "{{Déverrouiller}}",
     "type": "action",
@@ -32,7 +36,8 @@
       "linkedEndpoint": "doors"
     },
     "_volvoName": "UNLOCK"
-  },{
+  },
+  {
     "logicalId": "lock",
     "name": "{{Verrouiller}}",
     "type": "action",
@@ -42,7 +47,8 @@
       "linkedEndpoint": "doors"
     },
     "_volvoName": "LOCK"
-  },{
+  },
+  {
     "logicalId": "lockReduced",
     "name": "{{Verrouiller avec protection réduite}}",
     "type": "action",
@@ -55,7 +61,8 @@
       "forceReturnLineAfter": "1"
     },
     "_volvoName": "LOCK_REDUCED_GUARD"
-  },{
+  },
+  {
     "logicalId": "climStart",
     "name": "{{Climatisation EN}}",
     "type": "action",
@@ -64,7 +71,8 @@
       "volvoApi": "connectedVehicle"
     },
     "_volvoName": "CLIMATIZATION_START"
-  },{
+  },
+  {
     "logicalId": "climStop",
     "name": "{{Climatisation HORS}}",
     "type": "action",
@@ -76,7 +84,8 @@
       "volvoApi": "connectedVehicle"
     },
     "_volvoName": "CLIMATIZATION_STOP"
-  },{
+  },
+  {
     "logicalId": "honk",
     "name": "{{Klaxonner}}",
     "type": "action",
@@ -85,7 +94,8 @@
       "volvoApi": "connectedVehicle"
     },
     "_volvoName": "HONK"
-  },{
+  },
+  {
     "logicalId": "flash",
     "name": "{{flash}}",
     "type": "action",
@@ -94,7 +104,8 @@
       "volvoApi": "connectedVehicle"
     },
     "_volvoName": "FLASH"
-  },{
+  },
+  {
     "logicalId": "honk_flash",
     "name": "{{klaxons_flash}}",
     "type": "action",
@@ -103,7 +114,8 @@
       "volvoApi": "connectedVehicle"
     },
     "_volvoName": "HONK_AND_FLASH"
-  },{
+  },
+  {
     "logicalId": "engineON",
     "name": "{{moteur en service}}",
     "type": "info",
@@ -111,7 +123,8 @@
     "configuration": {
       "onlyFor": "fuelEngine"
     }
-  },{
+  },
+  {
     "logicalId": "doorFlState",
     "name": "{{Etat porte avant gauche}}",
     "type": "info",
@@ -123,7 +136,8 @@
       "dashboard": "core::badge",
       "mobile": "core::badge"
     }
-  },{
+  },
+  {
     "logicalId": "doorFrState",
     "name": "{{Etat porte avant droite}}",
     "type": "info",
@@ -135,7 +149,8 @@
       "dashboard": "core::badge",
       "mobile": "core::badge"
     }
-  },{
+  },
+  {
     "logicalId": "doorRlState",
     "name": "{{Etat porte arrière gauche}}",
     "type": "info",
@@ -147,7 +162,8 @@
       "dashboard": "core::badge",
       "mobile": "core::badge"
     }
-  },{
+  },
+  {
     "logicalId": "doorRrState",
     "name": "{{Etat porte arrière droite}}",
     "type": "info",
@@ -162,7 +178,8 @@
     "display": {
       "forceReturnLineAfter": "1"
     }
-  },{
+  },
+  {
     "logicalId": "winFlState",
     "name": "{{état vitre avant gauche}}",
     "type": "info",
@@ -174,7 +191,8 @@
       "dashboard": "core::badge",
       "mobile": "core::badge"
     }
-  },{
+  },
+  {
     "logicalId": "winFrState",
     "name": "{{état vitre avant droite}}",
     "type": "info",
@@ -186,7 +204,8 @@
       "dashboard": "core::badge",
       "mobile": "core::badge"
     }
-  },{
+  },
+  {
     "logicalId": "winRlState",
     "name": "{{état vitre arrière gauche}}",
     "type": "info",
@@ -198,7 +217,8 @@
       "dashboard": "core::badge",
       "mobile": "core::badge"
     }
-  },{
+  },
+  {
     "logicalId": "winRrState",
     "name": "{{état vitre arrière droite}}",
     "type": "info",
@@ -213,7 +233,8 @@
     "display": {
       "forceReturnLineAfter": "1"
     }
-  },{
+  },
+  {
     "logicalId": "hoodState",
     "name": "{{état capot}}",
     "type": "info",
@@ -225,7 +246,8 @@
       "dashboard": "core::badge",
       "mobile": "core::badge"
     }
-  },{
+  },
+  {
     "logicalId": "tailState",
     "name": "{{état hayon}}",
     "type": "info",
@@ -237,7 +259,8 @@
       "dashboard": "core::badge",
       "mobile": "core::badge"
     }
-  },{
+  },
+  {
     "logicalId": "tankState",
     "name": "{{état trappe}}",
     "type": "info",
@@ -249,7 +272,8 @@
       "dashboard": "core::badge",
       "mobile": "core::badge"
     }
-  },{
+  },
+  {
     "logicalId": "roofState",
     "name": "{{état toit}}",
     "type": "info",
@@ -264,7 +288,8 @@
     "display": {
       "forceReturnLineAfter": "1"
     }
-  },{
+  },
+  {
     "logicalId": "doorFlClosed",
     "name": "{{porte avant gauche fermée}}",
     "type": "info",
@@ -277,7 +302,8 @@
       "dashboard": "volvocars::DoorClosed",
       "mobile": "volvocars::DoorClosed"
     }
-  },{
+  },
+  {
     "logicalId": "doorFrClosed",
     "name": "{{porte avant droite fermée}}",
     "type": "info",
@@ -290,7 +316,8 @@
       "dashboard": "volvocars::DoorClosed",
       "mobile": "volvocars::DoorClosed"
     }
-  },{
+  },
+  {
     "logicalId": "doorRlClosed",
     "name": "{{porte arrière gauche fermée}}",
     "type": "info",
@@ -303,7 +330,8 @@
       "dashboard": "volvocars::DoorClosed",
       "mobile": "volvocars::DoorClosed"
     }
-  },{
+  },
+  {
     "logicalId": "doorRrClosed",
     "name": "{{porte arrière droite fermée}}",
     "type": "info",
@@ -319,7 +347,8 @@
     "display": {
       "forceReturnLineAfter": "1"
     }
-  },{
+  },
+  {
     "logicalId": "winFlClosed",
     "name": "{{vitre avant gauche fermée}}",
     "type": "info",
@@ -328,7 +357,8 @@
       "removable": "1",
       "dependTo": "winFlState"
     }
-  },{
+  },
+  {
     "logicalId": "winFrClosed",
     "name": "{{vitre avant droite fermée}}",
     "type": "info",
@@ -337,7 +367,8 @@
       "removable": "1",
       "dependTo": "winFrState"
     }
-  },{
+  },
+  {
     "logicalId": "winRlClosed",
     "name": "{{vitre arrière gauche fermée}}",
     "type": "info",
@@ -346,7 +377,8 @@
       "removable": "1",
       "dependTo": "winRlState"
     }
-  },{
+  },
+  {
     "logicalId": "winRrClosed",
     "name": "{{vitre arrière droite fermée}}",
     "type": "info",
@@ -358,7 +390,8 @@
     "display": {
       "forceReturnLineAfter": "1"
     }
-  },{
+  },
+  {
     "logicalId": "hoodClosed",
     "name": "{{capot fermé}}",
     "type": "info",
@@ -367,7 +400,8 @@
       "removable": "1",
       "dependTo": "hoodState"
     }
-  },{
+  },
+  {
     "logicalId": "tailClosed",
     "name": "{{hayon fermé}}",
     "type": "info",
@@ -376,7 +410,8 @@
       "removable": "1",
       "dependTo": "tailState"
     }
-  },{
+  },
+  {
     "logicalId": "tankClosed",
     "name": "{{trappe fermée}}",
     "type": "info",
@@ -385,7 +420,8 @@
       "removable": "1",
       "dependTo": "tankState"
     }
-  },{
+  },
+  {
     "logicalId": "roofClosed",
     "name": "{{toit fermé}}",
     "type": "info",
@@ -397,7 +433,8 @@
     "display": {
       "forceReturnLineAfter": "1"
     }
-  },{
+  },
+  {
     "logicalId": "doorFlOpen",
     "name": "{{porte avant gauche ouverte}}",
     "type": "info",
@@ -410,7 +447,8 @@
       "dashboard": "volvocars::DoorOpen",
       "mobile": "volvocars::DoorOpen"
     }
-  },{
+  },
+  {
     "logicalId": "doorFrOpen",
     "name": "{{porte avant droite ouverte}}",
     "type": "info",
@@ -423,7 +461,8 @@
       "dashboard": "volvocars::DoorOpen",
       "mobile": "volvocars::DoorOpen"
     }
-  },{
+  },
+  {
     "logicalId": "doorRlOpen",
     "name": "{{porte arrière gauche ouverte}}",
     "type": "info",
@@ -436,7 +475,8 @@
       "dashboard": "volvocars::DoorOpen",
       "mobile": "volvocars::DoorOpen"
     }
-  },{
+  },
+  {
     "logicalId": "doorRrOpen",
     "name": "{{porte arrière droite ouverte}}",
     "type": "info",
@@ -452,7 +492,8 @@
     "display": {
       "forceReturnLineAfter": "1"
     }
-  },{
+  },
+  {
     "logicalId": "winFlOpen",
     "name": "{{vitre avant gauche ouverte}}",
     "type": "info",
@@ -461,7 +502,8 @@
       "removable": "1",
       "dependTo": "winFlState"
     }
-  },{
+  },
+  {
     "logicalId": "winFrOpen",
     "name": "{{vitre avant droite ouverte}}",
     "type": "info",
@@ -470,7 +512,8 @@
       "removable": "1",
       "dependTo": "winFrState"
     }
-  },{
+  },
+  {
     "logicalId": "winRlOpen",
     "name": "{{vitre arrière gauche ouverte}}",
     "type": "info",
@@ -479,7 +522,8 @@
       "removable": "1",
       "dependTo": "winRlState"
     }
-  },{
+  },
+  {
     "logicalId": "winRrOpen",
     "name": "{{vitre arrière droite ouverte}}",
     "type": "info",
@@ -491,7 +535,8 @@
     "display": {
       "forceReturnLineAfter": "1"
     }
-  },{
+  },
+  {
     "logicalId": "hoodOpen",
     "name": "{{capot ouvert}}",
     "type": "info",
@@ -500,7 +545,8 @@
       "removable": "1",
       "dependTo": "hoodState"
     }
-  },{
+  },
+  {
     "logicalId": "tailOpen",
     "name": "{{hayon ouvert}}",
     "type": "info",
@@ -509,7 +555,8 @@
       "removable": "1",
       "dependTo": "tailState"
     }
-  },{
+  },
+  {
     "logicalId": "tankOpen",
     "name": "{{trappe ouverte}}",
     "type": "info",
@@ -518,7 +565,8 @@
       "removable": "1",
       "dependTo": "tankState"
     }
-  },{
+  },
+  {
     "logicalId": "roofOpen",
     "name": "{{toit ouvert}}",
     "type": "info",
@@ -530,7 +578,8 @@
     "display": {
       "forceReturnLineAfter": "1"
     }
-  },{
+  },
+  {
     "logicalId": "odometer",
     "name": "{{odomètre}}",
     "type": "info",
@@ -543,7 +592,8 @@
     "display": {
       "forceReturnLineAfter": "1"
     }
-  },{
+  },
+  {
     "logicalId": "fuelAmount",
     "name": "{{carburant}}",
     "type": "info",
@@ -552,7 +602,8 @@
     "configuration": {
       "onlyFor": "fuelEngine"
     }
-  },{
+  },
+  {
     "logicalId": "fuelAutonomy",
     "name": "{{autonomie thermique}}",
     "type": "info",
@@ -562,7 +613,8 @@
       "dependencies": "al_fuelAutonomy",
       "onlyFor": "fuelEngine"
     }
-  },{
+  },
+  {
     "logicalId": "al_fuelAutonomy",
     "name": "{{Autonomie thermique faible}}",
     "type": "info",
@@ -572,7 +624,8 @@
       "dependTo": "fuelAutonomy",
       "onlyFor": "fuelEngine"
     }
-  },{
+  },
+  {
     "logicalId": "consoFuel",
     "name": "{{consommation carburant}}",
     "type": "info",
@@ -581,7 +634,8 @@
     "configuration": {
       "onlyFor": "fuelEngine"
     }
-  },{
+  },
+  {
     "logicalId": "consoFuelTrip",
     "name": "{{consommation carburant (trajet)}}",
     "type": "info",
@@ -593,7 +647,8 @@
     "display": {
       "forceReturnLineAfter": "1"
     }
-  },{
+  },
+  {
     "logicalId": "batteryLevel",
     "name": "{{niveau charge batterie}}",
     "type": "info",
@@ -602,7 +657,8 @@
     "configuration": {
       "onlyFor": "electricEngine"
     }
-  },{
+  },
+  {
     "logicalId": "electricAutonomy",
     "name": "{{Autonomie électrique}}",
     "type": "info",
@@ -613,7 +669,8 @@
       "listener": "1",
       "onlyFor": "electricEngine"
     }
-  },{
+  },
+  {
     "logicalId": "al_electricAutonomy",
     "name": "{{Autonomie électrique faible}}",
     "type": "info",
@@ -623,7 +680,8 @@
       "dependTo": "electricAutonomy",
       "onlyFor": "electricEngine"
     }
-  },{
+  },
+  {
     "logicalId": "consoElectric",
     "name": "{{consommation électrique}}",
     "type": "info",
@@ -632,7 +690,8 @@
     "configuration": {
       "onlyFor": "electricEngine"
     }
-  },{
+  },
+  {
     "logicalId": "chargingStatus",
     "name": "{{Etat de la charge}}",
     "type": "info",
@@ -640,7 +699,8 @@
     "configuration": {
       "onlyFor": "electricEngine"
     }
-  },{
+  },
+  {
     "logicalId": "chargingRemainingTime",
     "name": "{{Temps de charge restant}}",
     "type": "info",
@@ -654,7 +714,8 @@
       "dashboard": "core::badge",
       "mobile": "core::badge"
     }
-  },{
+  },
+  {
     "logicalId": "chargingEndTime",
     "name": "{{Heure fin de charge}}",
     "type": "info",
@@ -664,7 +725,8 @@
       "dependTo": "chargingRemainingTime",
       "onlyFor": "electricEngine"
     }
-  },{
+  },
+  {
     "logicalId": "connectorStatus",
     "name": "{{Etat de la prise}}",
     "type": "info",
@@ -672,7 +734,8 @@
     "configuration": {
       "onlyFor": "electricEngine"
     }
-  },{
+  },
+  {
     "logicalId": "brakeFluidLevel",
     "name": "{{niveau liquide de frein}}",
     "type": "info",
@@ -681,7 +744,8 @@
       "dependencies": "al_brakeFluid",
       "listener": "1"
     }
-  },{
+  },
+  {
     "logicalId": "al_brakeFluid",
     "name": "{{alerte liquide de frein}}",
     "type": "info",
@@ -691,7 +755,8 @@
       "listener": "1",
       "dependTo": "brakeFluidLevel"
     }
-  },{
+  },
+  {
     "logicalId": "coolantLevel",
     "name": "{{niveau liquide refroidissement}}",
     "type": "info",
@@ -701,7 +766,8 @@
       "listener": "1",
       "onlyFor": "fuelEngine"
     }
-  },{
+  },
+  {
     "logicalId": "al_coolant",
     "name": "{{alerte liquide de refroidissement}}",
     "type": "info",
@@ -712,7 +778,8 @@
       "listener": "1",
       "onlyFor": "fuelEngine"
     }
-  },{
+  },
+  {
     "logicalId": "oilLevel",
     "name": "{{niveau d'huile}}",
     "type": "info",
@@ -722,7 +789,8 @@
       "listener": "1",
       "onlyFor": "fuelEngine"
     }
-  },{
+  },
+  {
     "logicalId": "al_oil",
     "name": "{{alerte niveau d'huile}}",
     "type": "info",
@@ -733,7 +801,8 @@
       "listener": "1",
       "onlyFor": "fuelEngine"
     }
-  },{
+  },
+  {
     "logicalId": "washerFluidLevel",
     "name": "{{niveau lave-vitres}}",
     "type": "info",
@@ -742,7 +811,8 @@
       "dependencies": "al_washerFluid",
       "listener": "1"
     }
-  },{
+  },
+  {
     "logicalId": "al_washerFluid",
     "name": "{{alerte lave-vitres}}",
     "type": "info",
@@ -752,7 +822,8 @@
       "dependTo": "washerFluidLevel",
       "listener": "1"
     }
-  },{
+  },
+  {
     "logicalId": "al_light",
     "name": "{{alerte lampe}}",
     "type": "info",
@@ -786,7 +857,8 @@
       ],
       "listener": "1"
     }
-  },{
+  },
+  {
     "logicalId": "al_brakeLightL",
     "name": "{{feu frein gauche}}",
     "type": "info",
@@ -795,7 +867,8 @@
       "dependencies": "al_light",
       "listener": "1"
     }
-  },{
+  },
+  {
     "logicalId": "al_brakeLightR",
     "name": "{{feu frein droite}}",
     "type": "info",
@@ -804,7 +877,8 @@
       "dependencies": "al_light",
       "listener": "1"
     }
-  },{
+  },
+  {
     "logicalId": "al_brakeLightC",
     "name": "{{feu frein central}}",
     "type": "info",
@@ -813,7 +887,8 @@
       "dependencies": "al_light",
       "listener": "1"
     }
-  },{
+  },
+  {
     "logicalId": "al_daytimeRunningLightL",
     "name": "{{feu jour gauche}}",
     "type": "info",
@@ -822,7 +897,8 @@
       "dependencies": "al_light",
       "listener": "1"
     }
-  },{
+  },
+  {
     "logicalId": "al_daytimeRunningLightR",
     "name": "{{feu jour droit}}",
     "type": "info",
@@ -831,7 +907,8 @@
       "dependencies": "al_light",
       "listener": "1"
     }
-  },{
+  },
+  {
     "logicalId": "al_fogLightF",
     "name": "{{feux brouillard avant}}",
     "type": "info",
@@ -840,7 +917,8 @@
       "dependencies": "al_light",
       "listener": "1"
     }
-  },{
+  },
+  {
     "logicalId": "al_fogLightR",
     "name": "{{feux brouillard arrière}}",
     "type": "info",
@@ -849,7 +927,8 @@
       "dependencies": "al_light",
       "listener": "1"
     }
-  },{
+  },
+  {
     "logicalId": "al_hazardLights",
     "name": "{{feux détresse}}",
     "type": "info",
@@ -858,7 +937,8 @@
       "dependencies": "al_light",
       "listener": "1"
     }
-  },{
+  },
+  {
     "logicalId": "al_highBeamL",
     "name": "{{feu route gauche}}",
     "type": "info",
@@ -867,7 +947,8 @@
       "dependencies": "al_light",
       "listener": "1"
     }
-  },{
+  },
+  {
     "logicalId": "al_highBeamR",
     "name": "{{feu route droite}}",
     "type": "info",
@@ -876,7 +957,8 @@
       "dependencies": "al_light",
       "listener": "1"
     }
-  },{
+  },
+  {
     "logicalId": "al_lowBeamL",
     "name": "{{feu croisement gauche}}",
     "type": "info",
@@ -885,7 +967,8 @@
       "dependencies": "al_light",
       "listener": "1"
     }
-  },{
+  },
+  {
     "logicalId": "al_lowBeamR",
     "name": "{{feu croisement droite}}",
     "type": "info",
@@ -894,7 +977,8 @@
       "dependencies": "al_light",
       "listener": "1"
     }
-  },{
+  },
+  {
     "logicalId": "al_positionLightFl",
     "name": "{{feu position avant gauche}}",
     "type": "info",
@@ -903,7 +987,8 @@
       "dependencies": "al_light",
       "listener": "1"
     }
-  },{
+  },
+  {
     "logicalId": "al_positionLightFr",
     "name": "{{feu position avant droite}}",
     "type": "info",
@@ -912,7 +997,8 @@
       "dependencies": "al_light",
       "listener": "1"
     }
-  },{
+  },
+  {
     "logicalId": "al_positionLightRl",
     "name": "{{feu position arrière gauche}}",
     "type": "info",
@@ -921,7 +1007,8 @@
       "dependencies": "al_light",
       "listener": "1"
     }
-  },{
+  },
+  {
     "logicalId": "al_positionLightRr",
     "name": "{{feu position arrière droit}}",
     "type": "info",
@@ -930,7 +1017,8 @@
       "dependencies": "al_light",
       "listener": "1"
     }
-  },{
+  },
+  {
     "logicalId": "al_registrationPlateLight",
     "name": "{{feu plaque}}",
     "type": "info",
@@ -939,7 +1027,8 @@
       "dependencies": "al_light",
       "listener": "1"
     }
-  },{
+  },
+  {
     "logicalId": "al_reverseLights",
     "name": "{{feu recule}}",
     "type": "info",
@@ -948,7 +1037,8 @@
       "dependencies": "al_light",
       "listener": "1"
     }
-  },{
+  },
+  {
     "logicalId": "al_sideMarkLights",
     "name": "{{feux latéraux}}",
     "type": "info",
@@ -957,7 +1047,8 @@
       "dependencies": "al_light",
       "listener": "1"
     }
-  },{
+  },
+  {
     "logicalId": "al_turnIndicationFl",
     "name": "{{clignotant avant gauche}}",
     "type": "info",
@@ -966,7 +1057,8 @@
       "dependencies": "al_light",
       "listener": "1"
     }
-  },{
+  },
+  {
     "logicalId": "al_turnIndicationFr",
     "name": "{{clignotant avant droit}}",
     "type": "info",
@@ -975,7 +1067,8 @@
       "dependencies": "al_light",
       "listener": "1"
     }
-  },{
+  },
+  {
     "logicalId": "al_turnIndicationRl",
     "name": "{{clignotant arrière gauche}}",
     "type": "info",
@@ -984,7 +1077,8 @@
       "dependencies": "al_light",
       "listener": "1"
     }
-  },{
+  },
+  {
     "logicalId": "al_turnIndicationRr",
     "name": "{{clignotant arrière droit}}",
     "type": "info",
@@ -993,7 +1087,8 @@
       "dependencies": "al_light",
       "listener": "1"
     }
-  },{
+  },
+  {
     "logicalId": "position",
     "name": "{{position}}",
     "configuration": {
@@ -1007,7 +1102,8 @@
     },
     "type": "info",
     "subType": "string"
-  },{
+  },
+  {
     "logicalId": "presenceSite1",
     "name": "{{présence #site1#}}",
     "type": "info",
@@ -1016,7 +1112,8 @@
       "dependTo": "position",
       "onlyFor": "site1"
     }
-  },{
+  },
+  {
     "logicalId": "distanceSite1",
     "name": "{{distance #site1#}}",
     "unite": "m",
@@ -1026,7 +1123,8 @@
       "dependTo": "position",
       "onlyFor": "site1"
     }
-  },{
+  },
+  {
     "logicalId": "presenceSite2",
     "name": "{{présence #site2#}}",
     "type": "info",
@@ -1035,7 +1133,8 @@
       "dependTo": "position",
       "onlyFor": "site2"
     }
-  },{
+  },
+  {
     "logicalId": "distanceSite2",
     "name": "{{distance #site2#}}",
     "unite": "m",
@@ -1045,7 +1144,8 @@
       "dependTo": "position",
       "onlyFor": "site2"
     }
-  },{
+  },
+  {
     "logicalId": "al_tyre",
     "name": "{{alerte pneus}}",
     "type": "info",
@@ -1055,7 +1155,8 @@
       "dependTo": ["tyreFl", "tyreFr", "tyreRl", "tyreRr"],
       "listener": "1"
     }
-  },{
+  },
+  {
     "logicalId": "tyreFl",
     "name": "{{pneu avant gauche}}",
     "type": "info",
@@ -1068,7 +1169,8 @@
       "dashboard": "core::badge",
       "mobile": "core::badge"
     }
-  },{
+  },
+  {
     "logicalId": "tyreFr",
     "name": "{{pneu avant droit}}",
     "type": "info",
@@ -1081,7 +1183,8 @@
       "dashboard": "core::badge",
       "mobile": "core::badge"
     }
-  },{
+  },
+  {
     "logicalId": "tyreRl",
     "name": "{{pneu arrière gauche}}",
     "type": "info",
@@ -1094,7 +1197,8 @@
       "dashboard": "core::badge",
       "mobile": "core::badge"
     }
-  },{
+  },
+  {
     "logicalId": "tyreRr",
     "name": "{{pneu arrière droit}}",
     "type": "info",
@@ -1107,41 +1211,48 @@
       "dashboard": "core::badge",
       "mobile": "core::badge"
     }
-  },{
+  },
+  {
     "logicalId": "service",
     "name": "{{service}}",
     "type": "info",
     "subType": "string"
-  },{
+  },
+  {
     "logicalId": "serviceTrigger",
     "name": "{{Raison du service}}",
     "type": "info",
     "subType": "string"
-  },{
+  },
+  {
     "logicalId": "engineHoursToService",
     "name": "{{Heures moteur avant service}}",
     "type": "info",
     "subType": "numeric",
     "unite": "H"
-  },{
+  },
+  {
     "logicalId": "distanceToService",
     "name": "{{Kilomètre avant service}}",
     "type": "info",
     "subType": "numeric",
     "unite": "Km"
-  },{
+  },
+  {
     "logicalId": "timeToService",
     "name": "{{jours avant service}}",
     "type": "info",
     "subType": "numeric",
     "unite": "{{Jours}}"
-  },{
+  },
+  {
     "logicalId": "msg2widget",
     "name": "{{messages pour widget}}",
     "type": "info",
     "subType": "string",
     "isVisible": 0
-  },{
+  },
+  {
     "logicalId": "lastAnswer",
     "name": "{{Dernier retour}}",
     "type": "info",

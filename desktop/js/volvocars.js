@@ -124,11 +124,10 @@ if (typeof volvocarsFrontEnd === "undefined") {
             return;
           }
 
-          if (_target = event.target.closest("#btn-get_image")) {
+          if ((_target = event.target.closest("#btn-get_image"))) {
             volvocarsFrontEnd.GetImage();
             return;
           }
-
         });
 
       /*
@@ -318,22 +317,23 @@ if (typeof volvocarsFrontEnd === "undefined") {
                           });
                           return;
                         }
-                        let auth = json_decode(data.result)
-                        if (auth.code == 'VALIDATION_ERROR') {
-                          let msg = ""
-                          if ('details' in auth) {
-                            auth = auth.details[0]
+                        let auth = json_decode(data.result);
+                        if (auth.code == "VALIDATION_ERROR") {
+                          let msg = "";
+                          if ("details" in auth) {
+                            auth = auth.details[0];
                           }
-                          if (auth.code == "CREDENTIAL_VALIDATION_FAILED") { 
-                            msg = '{{Compte ou password invalide.}}'
+                          if (auth.code == "CREDENTIAL_VALIDATION_FAILED") {
+                            msg = "{{Compte ou password invalide.}}";
                           }
-                          document.getElementById('error_message').innerText = msg
-                          return
+                          document.getElementById("error_message").innerText =
+                            msg;
+                          return;
                         }
-                        document.getElementById('error_message').innerText = ''
-                        if (auth.status == 'OTP_REQUIRED') {
+                        document.getElementById("error_message").innerText = "";
+                        if (auth.status == "OTP_REQUIRED") {
                           editVolvocarsAccount.close();
-                          volvocarsFrontEnd.getOTP(auth, account.id)
+                          volvocarsFrontEnd.getOTP(auth, account.id);
                         }
                       },
                     });
@@ -362,21 +362,23 @@ if (typeof volvocarsFrontEnd === "undefined") {
         buttons: {
           cancel: {
             callback: {
-              click: function(event) {
-                volvocarsOTP.close()
-                let account = editVolvocarsAccount.getAccount()
-                let card = document.querySelector('.accountDisplayCard[data-account="' + account.id + '"]')
+              click: function (event) {
+                volvocarsOTP.close();
+                let account = editVolvocarsAccount.getAccount();
+                let card = document.querySelector(
+                  '.accountDisplayCard[data-account="' + account.id + '"]',
+                );
                 if (!card) {
-                  jeedomUtils.loadPage(document.URL)
+                  jeedomUtils.loadPage(document.URL);
                 }
               },
             },
           },
-          "confirm": {
+          confirm: {
             callback: {
-              click:function(event) {
-                let OTP = volvocarsOTP.getOTP()
-                let auth = volvocarsOTP.getAuth()
+              click: function (event) {
+                let OTP = volvocarsOTP.getOTP();
+                let auth = volvocarsOTP.getAuth();
                 domUtils.ajax({
                   type: "POST",
                   async: false,
@@ -391,44 +393,44 @@ if (typeof volvocarsFrontEnd === "undefined") {
                   dataType: "json",
                   success: function (data) {
                     if (data.state != "ok") {
-                      let printAlert = true
-                      let msg = ''
-                      if (typeof(data.result) === 'object'){
-                        if ('content' in data.result) {
-                          let content = ''
+                      let printAlert = true;
+                      let msg = "";
+                      if (typeof data.result === "object") {
+                        if ("content" in data.result) {
+                          let content = "";
                           try {
-                            content = JSON.parse(data.result.content)
-                            if ('code' in content) {
+                            content = JSON.parse(data.result.content);
+                            if ("code" in content) {
                               switch (content.code) {
-                                case 'INVALID_OTP':
-                                  msg = '{{Le code est invalide ou a expiré}}'
-                                  printAlert = false
-                                  break
+                                case "INVALID_OTP":
+                                  msg = "{{Le code est invalide ou a expiré}}";
+                                  printAlert = false;
+                                  break;
                               }
                             }
-                          } catch(e) {}
+                          } catch (e) {}
                         }
                       }
-                      volvocarsOTP.setMessage(msg)
+                      volvocarsOTP.setMessage(msg);
                       if (printAlert) {
                         jeedomUtils.showAlert({
                           message: data.result,
-                         level: "danger",
+                          level: "danger",
                         });
                       }
                       return;
                     }
-                    volvocarsOTP.close()
+                    volvocarsOTP.close();
                   },
                 });
               },
             },
           },
         },
-      })
-      setTimeout(function(){
-        volvocarsOTP.init(auth)
-      },500)
+      });
+      setTimeout(function () {
+        volvocarsOTP.init(auth);
+      }, 500);
     },
 
     /*
@@ -705,7 +707,10 @@ if (typeof volvocarsFrontEnd === "undefined") {
         tr +=
           '<a class="btn btn-default btn-xs cmdAction" data-action="test"><i class="fas fa-rss"></i> {{Tester}}</a>';
       }
-      if (isset(_cmd.configuration.removable) && _cmd.configuration.removable == 1) {
+      if (
+        isset(_cmd.configuration.removable) &&
+        _cmd.configuration.removable == 1
+      ) {
         tr +=
           '<i class="fas fa-minus-circle pull-right cmdAction cursor" data-action="remove" title="{{Supprimer la commande}}"></i>';
       }
