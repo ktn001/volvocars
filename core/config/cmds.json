@@ -305,7 +305,25 @@
         "hoodState"
       ] 
     }
-  },{
+  },
+  {
+    "logicalId": "allDoorsClosed",
+    "name": "{{Portes fermées}}",
+    "type": "info",
+    "subType": "binary",
+    "configuration": {
+      "removable": "1",
+      "dependTo": [
+	"doorFlState",
+	"doorFrState",
+	"doorRlState",
+	"doorRrState",
+        "tailState",
+        "hoodState"
+      ] 
+    }
+  },
+  {
     "logicalId": "allWinsClosed",
     "name": "{{Fenêtres fermées}}",
     "type": "info",
