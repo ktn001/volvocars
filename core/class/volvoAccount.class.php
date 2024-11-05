@@ -154,9 +154,13 @@ class volvoAccount {
 
 	public static function saveToken ($token, $account_id) {
 		$token['expires_at'] = time() + $token['expires_in'];
-		$tokenFileName = self::tokenFile();
 		$tokens = self::getTokens();
 		$tokens[$account_id] = $token;
+		$tokenFileName = self::tokenFile();
+		if (!file_exists(dirname($tokenFileName))) {
+			mkdir (dirname($tokenFileName), 0777, true);
+			chmod (dirname($tokenFileName), 0775);
+		}
 		file_put_contents($tokenFileName,json_encode($tokens,JSON_PRETTY_PRINT));
 	}
 
