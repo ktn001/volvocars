@@ -494,12 +494,14 @@
         "vin du véhicule": "fahrzeugwein"
     },
     "plugins\/volvocars\/plugin_info\/configuration.php": {
+        "Clé Volvocars API": "Volvocars API-Schlüssel",
         "Commandes à créer lors des synchronisations": "Befehle, die bei Synchronisierungen erstellt werden sollen",
         "Commandes à créer pour les ouvrants": "Zu erstellende Befehle für die Flügel",
         "Fermé": "Geschlossen",
         "Ouvert": "Offen",
         "Prend la valeur 1 (true) lorsque l'ouvrant est fermé": "Nimmt den Wert 1 (true) an, wenn der Flügel geschlossen ist",
-        "Prend la valeur 1 (true) lorsque l'ouvrant est ouvert": "Nimmt den Wert 1 (true) an, wenn der Flügel geöffnet ist"
+        "Prend la valeur 1 (true) lorsque l'ouvrant est ouvert": "Nimmt den Wert 1 (true) an, wenn der Flügel geöffnet ist",
+        "voir la documentation pour la création d'une clé sur https:\/\/developer.volvocars.com": "siehe die Dokumentation zur Erstellung eines Schlüssels auf https:\/\/developer.volvocars.com"
     },
     "plugins\/volvocars\/plugin_info\/install.php": {
         "Création de la commande %s": "Erstellen des Befehls %s",
