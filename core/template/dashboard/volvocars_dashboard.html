@@ -13,26 +13,34 @@
 			<div class="col-xs-6 tile">
 				<div class="col-xs-8 title_tile">{{Verrouillage}}</div>
 				<div class="col-xs-4 icon_tile"><i class="fas fa-lg fa-unlock-alt"></i></div>
-				<div class="col-xs-12 value_tile"><span class="value#locked_id#id##"></span></div>
+				<div class="col-xs-12 value_tile #locked_history#id##" data-cmd_id="#locked_id#id##">
+					<span class="value#locked_id#id##"></span>
+				</div>
 			</div>
 
 			<div class="col-xs-6 tile">
 				<div class="col-xs-8 title_tile">{{Accessibilité}}</div>
 				<div class="col-xs-4 icon_tile"><i class="fas fa-lg fa-check-circle"></i></div>
-				<div class="col-xs-12 value_tile"><span class="value#availability_id#id##"></span></div>
+				<div class="col-xs-12 value_tile availability_history#id##" data-cmd_id="#availability_id#id##">
+					<span class="value#availability_id#id##"></span>
+				</div>
 			</div>
 
 			<div class="col-xs-6 tile">
 				<div class="col-xs-8 title_tile">{{Toutes les portes}}</div>
 				<div class="col-xs-4 icon_tile"><img src="/plugins/volvocars/desktop/img/doors_blue.png"></img></div>
-				<div class="col-xs-12 value_tile"><span class="value#allDoorsClosed_id#id##"></span></div>
+				<div class="col-xs-12 value_tile allDoorsClosed_history#id##" data-cmd_id="#allDoorsClosed_id#id##">
+					<span class="value#allDoorsClosed_id#id##"></span>
+				</div>
 			</div>
 		</div>
 
 			<div class="col-xs-6 tile">
 				<div class="col-xs-8 title_tile">{{Toutes les fenêtres}}</div>
 				<div class="col-xs-4 icon_tile"><img src="/plugins/volvocars/desktop/img/windows_blue.png"></img></div>
-				<div class="col-xs-12 value_tile"><span class="value#allWinsClosed_id#id##"></span></div>
+				<div class="col-xs-12 value_tile #allWindowsClosed_history#id##" data-cmd_id="#allWindowsClosed#id##">
+					<span class="value#allWinsClosed_id#id##"></span>
+				</div>
 			</div>
 
 			<div class="col-xs-12 tile div_alert">
@@ -98,10 +106,10 @@
 				<div class="col-xs-8 title_tile">{{Présence}}</div>
 				<div class="col-xs-4 icon_tile"><i class="fas fa-lg fa-map-signs"></i></div>
 				<div class="col-xs-12">
-					<div class="div_presence Cmd#presenceSite1_id#id## #presenceSite1_hidden#id##">
+					<div class="div_presence Cmd#presenceSite1_id#id## #presenceSite1_hidden#id## #presenceSite1_history#id##" data-cmd_id="#presenceSite1_id#id##">
 						<i class="fas fa-lg fa-house-user"></i><br>#site1_name#id##
 					</div>
-					<div class="div_presence Cmd#presenceSite2_id#id## #presenceSite2_hidden#id##">
+					<div class="div_presence Cmd#presenceSite2_id#id## #presenceSite2_hidden#id# #presenceSite2_history#id##" data-cmd_id="#presenceSite2_id#id##">
 						<i class="fas fa-lg fa-house-user"></i><br>#site2_name#id##
 					</div>
 				</div>
@@ -110,7 +118,7 @@
 			<div class="col-xs-6 tile">
 				<div class="col-xs-8 title_tile">{{Kilométrage}}</div>
 				<div class="col-xs-4 icon_tile"><i class="fas fa-lg fa-map-signs"></i></div>
-				<div class="col-xs-12 value_tile">
+				<div class="col-xs-12 value_tile #odometer_history#id##" data-cmd_id="#odometer_id#id##">
 					<span class="value#odometer_id#id##"></span>
 					<span class="unit#odometer_id#id##"></span>
 				</div>
@@ -119,7 +127,7 @@
 			<div class="col-xs-4 tile">
 				<div class="col-xs-8 title_tile">{{Batterie}}</div>
 				<div class="col-xs-4 icon_tile"><i class="fas fa-lg fa-car-battery"></i></div>
-				<div class="col-xs-12 value_tile">
+				<div class="col-xs-12 value_tile #batteryLevel_history#id##" data-cmd_id="#batteryLevel_id#id##">
 					<span class="value#batteryLevel_id#id## tile-value"></span>
 					<span class="unit#batteryLevel_id#id## tile-unit"></span>
 				</div>
@@ -128,7 +136,7 @@
 			<div class="col-xs-4 tile">
 				<div class="col-xs-8 title_tile">{{Prise}}</div>
 				<div class="col-xs-4 icon_tile"><i class="fas fa-lg fa-plug"></i></div>
-				<div class="col-xs-12 value_tile">
+				<div class="col-xs-12 value_tile #connectorStatus_history#id##" data-cmd_id="#connectorStatus_id#id##">
 					<span class="value#connectorStatus_id#id## tile-value"></span>
 				</div>
 			</div>
@@ -137,11 +145,11 @@
 				<div class="col-xs-8 title_tile">{{Recharge}}</div>
 				<div class="col-xs-4 icon_tile"><i class="fas fa-lg fa-charging-station"></i></div>
 				<div class="col-xs-12 value_tile">
-					<div class="value_tile_1">
+					<div class="value_tile_1 #chargingStatus_history#id##" data-cmd_id=#chargingStatus_id#id##">
 						<span class="value#chargingStatus_id#id## tile-value"></span>
 					</div>
 					<div class="value_tile_2">
-						lulu
+						<span class="value#chargingEndTime_id#id##"></span>
 					</div>
 				</div>
 			</div>
@@ -168,6 +176,8 @@ if (typeof volvocarsDashboard === "undefined") {
 	volvocarsDashboard.loadCss()
 }
 
+// LOCKED
+// ======
 if (!"#locked_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#locked_id#id##'] = function(_options) {
 		document.querySelector('.value#locked_id#id##').html(_options.display_value)
@@ -175,6 +185,8 @@ if (!"#locked_id#id##".startsWith('#')) {
 	jeedom.cmd.refreshValue([{cmd_id: '#locked_id#id##', display_value: "#locked_display_value#id##"}])
 }
 
+// AVAILABILITY
+// ============
 if (!"#availability_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#availability_id#id##'] = function(_options) {
 		document.querySelector('.value#availability_id#id##').html(_options.display_value)
@@ -182,6 +194,8 @@ if (!"#availability_id#id##".startsWith('#')) {
 	jeedom.cmd.refreshValue([{cmd_id: '#availability_id#id##', display_value: "#availability_display_value#id##"}])
 }
 
+// ALL DOORS CLOSED
+// ================
 if (!"#allDoorsClosed_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#allDoorsClosed_id#id##'] = function(_options) {
 		document.querySelector('.value#allDoorsClosed_id#id##').html(_options.display_value)
@@ -189,146 +203,8 @@ if (!"#allDoorsClosed_id#id##".startsWith('#')) {
 	jeedom.cmd.refreshValue([{cmd_id: '#allDoorsClosed_id#id##', display_value: "#allDoorsClosed_display_value#id##"}])
 }
 
-  if (!"#al_oil_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#al_oil_id#id##'] = function(_options) {
-      let img = ''
-      if (_options.value != 0) {
-        img = 'oil_red.svg'
-      } else {
-        if (document.body.getAttribute('data-theme').endsWith('Dark')) {
-          img = 'oil_grey_dark.svg'
-        } else {
-          img = 'oil_grey_light.svg'
-        }
-      }
-      document.querySelector('#div_al_oil#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#al_oil_id#id##', value: "#al_oil#id##"}])
-  }
-
-  // COOLANT
-  if (!"#al_coolant_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#al_coolant_id#id##'] = function(_options) {
-      let img = ''
-      if (_options.value == 1) {
-        img = 'coolant_red.svg'
-      } else {
-        if (document.body.getAttribute('data-theme').endsWith('Dark')) {
-          img = 'coolant_grey_dark.svg'
-        } else {
-          img = 'coolant_grey_light.svg'
-        }
-      }
-      document.querySelector('#div_al_coolant#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#al_coolant_id#id##', value: "#al_coolant#id##"}])
-  }
-
-  // BRAKE
-  if (!"#al_brakeFluid_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#al_brakeFluid_id#id##'] = function(_options) {
-      let img = ""
-      if (_options.value == 1) {
-        img = 'brake_red.svg'
-      } else {
-        if (document.body.getAttribute('data-theme').endsWith('Dark')) {
-          img = 'brake_grey_dark.svg'
-        } else {
-          img = 'brake_grey_light.svg'
-        }
-      }
-      document.querySelector('#div_al_brake#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#al_brakeFluid_id#id##', value: "#al_brakeFluid#id##"}])
-  }
- // WASH
-  if (!"#al_washerFluid_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#al_washerFluid_id#id##'] = function(_options) {
-      let img = ""
-      if (_options.value == 1) {
-        img = 'wash_red.svg'
-      } else {
-        if (document.body.getAttribute('data-theme').endsWith('Dark')) {
-          img = 'wash_grey_dark.svg'
-        } else {
-          img = 'wash_grey_light.svg'
-        }
-      }
-      document.querySelector('#div_al_wash#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#al_washerFluid_id#id##', value: "#al_washerFluid#id##"}])
-  }
-
-  // AL FUEL AUTONOMY
-  if (!"#al_fuelautonomy_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#al_fuelautonomy_id#id##'] = function(_options) {
-      let img = ""
-      if (_options.value == 1) {
-        img = 'station_gas_red.svg'
-      } else {
-        if (document.body.getAttribute('data-theme').endsWith('Dark')) {
-          img = 'station_gas_grey_dark.svg'
-        } else {
-          img = 'station_gas_grey_light.svg'
-        }
-      }
-      document.querySelector('#div_al_fuelautonomy#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#al_fuelautonomy_id#id##', value: "#al_fuelautonomy#id##"}])
-  }
-
-  // AL ELECTRIC AUTONOMY
-  if (!"#al_electricautonomy_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#al_electricautonomy_id#id##'] = function(_options) {
-      let img = ""
-      if (_options.value == 1) {
-        img = 'station_recharge_red.svg'
-      } else {
-        if (document.body.getAttribute('data-theme').endsWith('Dark')) {
-          img = 'station_recharge_grey_dark.svg'
-        } else {
-          img = 'station_recharge_grey_light.svg'
-        }
-      }
-      document.querySelector('#div_al_electricautonomy#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#al_electricautonomy_id#id##', value: "#al_electricautonomy#id##"}])
-  }  // AL TYRE
-  if (!"#al_tyre_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#al_tyre_id#id##'] = function(_options) {
-      let img = ""
-      if (_options.value >= 1) {
-        img = 'tyre_red.svg'
-      } else {
-        if (document.body.getAttribute('data-theme').endsWith('Dark')) {
-          img = 'tyre_grey_dark.svg'
-        } else {
-          img = 'tyre_grey_light.svg'
-        }
-      }
-      document.querySelector('#div_al_tyre#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#al_tyre_id#id##', value: "#al_tyre#id##"}])
-  }
-
-  // AL LIGHT
-  if (!"#al_light_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#al_light_id#id##'] = function(_options) {
-      let img = ""
-      if (_options.value == 1) {
-        img = 'light_red.svg'
-      } else {
-        if (document.body.getAttribute('data-theme').endsWith('Dark')) {
-          img = 'light_grey_dark.svg'
-        } else {
-          img = 'light_grey_light.svg'
-        }
-      }
-      document.querySelector('#div_al_light#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#al_light_id#id##', value: "#al_light#id##"}])
-  }
-
+// ALL WINDOWS CLOSED
+// ==================
 if (!"#allWinsClosed_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#allWinsClosed_id#id##'] = function(_options) {
 		document.querySelector('.value#allWinsClosed_id#id##').html(_options.display_value)
@@ -336,6 +212,160 @@ if (!"#allWinsClosed_id#id##".startsWith('#')) {
 	jeedom.cmd.refreshValue([{cmd_id: '#allWinsClosed_id#id##', display_value: "#allWinsClosed_display_value#id##"}])
 }
 
+// AL OIL
+// ======
+if (!"#al_oil_id#id##".startsWith('#')) {
+  jeedom.cmd.update['#al_oil_id#id##'] = function(_options) {
+    let img = ''
+    if (_options.value != 0) {
+      img = 'oil_red.svg'
+    } else {
+      if (document.body.getAttribute('data-theme').endsWith('Dark')) {
+        img = 'oil_grey_dark.svg'
+      } else {
+        img = 'oil_grey_light.svg'
+      }
+    }
+    document.querySelector('#div_al_oil#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
+  }
+  jeedom.cmd.refreshValue([{cmd_id: '#al_oil_id#id##', value: "#al_oil#id##"}])
+}
+
+// AL COOLANT
+// ==========
+if (!"#al_coolant_id#id##".startsWith('#')) {
+  jeedom.cmd.update['#al_coolant_id#id##'] = function(_options) {
+    let img = ''
+    if (_options.value == 1) {
+      img = 'coolant_red.svg'
+    } else {
+      if (document.body.getAttribute('data-theme').endsWith('Dark')) {
+        img = 'coolant_grey_dark.svg'
+      } else {
+        img = 'coolant_grey_light.svg'
+      }
+    }
+    document.querySelector('#div_al_coolant#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
+  }
+  jeedom.cmd.refreshValue([{cmd_id: '#al_coolant_id#id##', value: "#al_coolant#id##"}])
+}
+
+// AL BRAKE
+// ========
+if (!"#al_brakeFluid_id#id##".startsWith('#')) {
+  jeedom.cmd.update['#al_brakeFluid_id#id##'] = function(_options) {
+    let img = ""
+    if (_options.value == 1) {
+      img = 'brake_red.svg'
+    } else {
+      if (document.body.getAttribute('data-theme').endsWith('Dark')) {
+        img = 'brake_grey_dark.svg'
+      } else {
+        img = 'brake_grey_light.svg'
+      }
+    }
+    document.querySelector('#div_al_brake#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
+  }
+  jeedom.cmd.refreshValue([{cmd_id: '#al_brakeFluid_id#id##', value: "#al_brakeFluid#id##"}])
+}
+
+// AL WASH
+// =======
+if (!"#al_washerFluid_id#id##".startsWith('#')) {
+  jeedom.cmd.update['#al_washerFluid_id#id##'] = function(_options) {
+    let img = ""
+    if (_options.value == 1) {
+      img = 'wash_red.svg'
+    } else {
+      if (document.body.getAttribute('data-theme').endsWith('Dark')) {
+        img = 'wash_grey_dark.svg'
+      } else {
+        img = 'wash_grey_light.svg'
+      }
+    }
+    document.querySelector('#div_al_wash#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
+  }
+  jeedom.cmd.refreshValue([{cmd_id: '#al_washerFluid_id#id##', value: "#al_washerFluid#id##"}])
+}
+
+// AL FUEL AUTONOMY
+// ================
+if (!"#al_fuelautonomy_id#id##".startsWith('#')) {
+  jeedom.cmd.update['#al_fuelautonomy_id#id##'] = function(_options) {
+    let img = ""
+    if (_options.value == 1) {
+      img = 'station_gas_red.svg'
+    } else {
+      if (document.body.getAttribute('data-theme').endsWith('Dark')) {
+        img = 'station_gas_grey_dark.svg'
+      } else {
+        img = 'station_gas_grey_light.svg'
+      }
+    }
+    document.querySelector('#div_al_fuelautonomy#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
+  }
+  jeedom.cmd.refreshValue([{cmd_id: '#al_fuelautonomy_id#id##', value: "#al_fuelautonomy#id##"}])
+}
+
+// AL ELECTRIC AUTONOMY
+// ====================
+if (!"#al_electricautonomy_id#id##".startsWith('#')) {
+  jeedom.cmd.update['#al_electricautonomy_id#id##'] = function(_options) {
+    let img = ""
+    if (_options.value == 1) {
+      img = 'station_recharge_red.svg'
+    } else {
+      if (document.body.getAttribute('data-theme').endsWith('Dark')) {
+        img = 'station_recharge_grey_dark.svg'
+      } else {
+        img = 'station_recharge_grey_light.svg'
+      }
+    }
+    document.querySelector('#div_al_electricautonomy#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
+  }
+  jeedom.cmd.refreshValue([{cmd_id: '#al_electricautonomy_id#id##', value: "#al_electricautonomy#id##"}])
+}
+
+// AL TYRE
+// =======
+if (!"#al_tyre_id#id##".startsWith('#')) {
+  jeedom.cmd.update['#al_tyre_id#id##'] = function(_options) {
+    let img = ""
+    if (_options.value >= 1) {
+      img = 'tyre_red.svg'
+    } else {
+      if (document.body.getAttribute('data-theme').endsWith('Dark')) {
+        img = 'tyre_grey_dark.svg'
+      } else {
+        img = 'tyre_grey_light.svg'
+      }
+    }
+    document.querySelector('#div_al_tyre#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
+  }
+  jeedom.cmd.refreshValue([{cmd_id: '#al_tyre_id#id##', value: "#al_tyre#id##"}])
+}
+
+// AL LIGHT
+// ========
+if (!"#al_light_id#id##".startsWith('#')) {
+  jeedom.cmd.update['#al_light_id#id##'] = function(_options) {
+    let img = ""
+    if (_options.value == 1) {
+      img = 'light_red.svg'
+    } else {
+      if (document.body.getAttribute('data-theme').endsWith('Dark')) {
+        img = 'light_grey_dark.svg'
+      } else {
+        img = 'light_grey_light.svg'
+      }
+    }
+    document.querySelector('#div_al_light#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
+  }
+  jeedom.cmd.refreshValue([{cmd_id: '#al_light_id#id##', value: "#al_light#id##"}])
+}
+
+// PRESENCE SITE 1
+// ===============
 if (!"#presenceSite1_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#presenceSite1_id#id##'] = function(_options) {
 		div_el = document.querySelector('.div_presence.Cmd#presenceSite1_id#id##')
@@ -353,6 +383,8 @@ if (!"#presenceSite1_id#id##".startsWith('#')) {
 	jeedom.cmd.refreshValue([{cmd_id: '#presenceSite1_id#id##', value: "#presenceSite1#id##"}])
 }
 
+// PRESENCE SITE 2
+// ===============
 if (!"#presenceSite2_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#presenceSite2_id#id##'] = function(_options) {
 		div_el = document.querySelector('.div_presence.Cmd#presenceSite2_id#id##')
@@ -370,6 +402,8 @@ if (!"#presenceSite2_id#id##".startsWith('#')) {
 	jeedom.cmd.refreshValue([{cmd_id: '#presenceSite2_id#id##', value: "#presenceSite2#id##"}])
 }
 
+// ODOMETER
+// ========
 if (!"#odometer_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#odometer_id#id##'] = function(_options) {
 		document.querySelector('.value#odometer_id#id##').html(_options.display_value)
@@ -378,6 +412,8 @@ if (!"#odometer_id#id##".startsWith('#')) {
 	jeedom.cmd.refreshValue([{cmd_id: '#odometer_id#id##', display_value: "#odometer_display_value#id##", unit: "#odometer_unit#id##"}])
 }
 
+// BATTERY LEVEL
+// =============
 if (!"#batteryLevel_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#batteryLevel_id#id##'] = function(_options) {
 		document.querySelector('.value#batteryLevel_id#id##').html(_options.display_value)
@@ -386,6 +422,8 @@ if (!"#batteryLevel_id#id##".startsWith('#')) {
 	jeedom.cmd.refreshValue([{cmd_id: '#batteryLevel_id#id##', display_value: "#batteryLevel_display_value#id##", unit: "#batteryLevel_unit#id##"}])
 }
 
+// CONNECTOR STATUS
+// ================
 if (!"#connectorStatus_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#connectorStatus_id#id##'] = function(_options) {
 		document.querySelector('.value#connectorStatus_id#id##').html(_options.display_value)
@@ -393,6 +431,8 @@ if (!"#connectorStatus_id#id##".startsWith('#')) {
 	jeedom.cmd.refreshValue([{cmd_id: '#connectorStatus_id#id##', display_value: "#connectorStatus_display_value#id##"}])
 }
 
+// CHARGING STATUS
+// ===============
 if (!"#chargingStatus_id#id##".startsWith('#')) {
 	jeedom.cmd.update['#chargingStatus_id#id##'] = function(_options) {
 		document.querySelector('.value#chargingStatus_id#id##').html(_options.display_value)
@@ -400,6 +440,19 @@ if (!"#chargingStatus_id#id##".startsWith('#')) {
 	jeedom.cmd.refreshValue([{cmd_id: '#chargingStatus_id#id##', display_value: "#chargingStatus_display_value#id##"}])
 }
 
+// CHARGING END TIME
+// =================
+if (!"#chargingEndTime_id#id##".startsWith('#')) {
+	jeedom.cmd.update['#chargingEndTime_id#id##'] = function(_options) {
+		if (_options.display_value == '') {
+			document.querySelector('.value#chargingEndTime_id#id##').closest('div').addClass('hidden')
+		} else {
+			document.querySelector('.value#chargingEndTime_id#id##').closest('div').removeClass('hidden')
+			document.querySelector('.value#chargingEndTime_id#id##').html(_options.display_value)
+		}
+	}
+	jeedom.cmd.refreshValue([{cmd_id: '#chargingEndTime_id#id##', display_value: "#chargingEndTime_display_value#id##", unit: "#chargingEndTime_unit#id##"}])
+}
 </script>
 <!--
 vim: tabstop=4 autoindent
