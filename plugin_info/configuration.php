@@ -23,12 +23,17 @@ if (!isConnect()) {
 }
 ?>
 <form class="form-horizontal">
-  <fieldset>
-    <div class="form-group">
-      <label class="col-md-4 col-sm-6 control-label">{{Commandes à créer pour les ouvrants}}
+    <div class="form-group col-md-6 col-sm-12">
+      <label class="col-md-4 col-sm-5 control-label">{{Clé Volvocars API}}
+      	<sup><i class="fas fa-question-circle tooltips"  title="{{voir la documentation pour la création d'une clé sur https://developer.volvocars.com}}"></i></sup>
+      </label>
+	<input class="col-md-4 col-sm-5 configKey" data-l1key="vcc-api-key"></input>
+    </div>
+    <div class="form-group col-md-6 col-sm-12">
+      <label class="col-md-7 col-sm-5 control-label">{{Commandes à créer pour les ouvrants}}
         <sup><i class="fas fa-question-circle tooltips" title="{{Commandes à créer lors des synchronisations}}"></i></sup>
       </label>
-      <div class="col-md-4 col-sm-6">
+      <div class="col-md-5 col-sm-6">
 	<label>{{Ouvert}}
           <sup><i class="fas fa-question-circle tooltips" title="{{Prend la valeur 1 (true) lorsque l'ouvrant est ouvert}}"></i></sup>
 	  <input type="checkbox" class="configKey" data-l1key="create_cmd_open" checked></input>
@@ -39,5 +44,4 @@ if (!isConnect()) {
 	</label>
       </div>
     </div>
-  </fieldset>
 </form>
