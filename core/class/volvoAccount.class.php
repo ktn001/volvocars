@@ -271,9 +271,10 @@ class volvoAccount {
 		} else {
 			$accept = $endpoint->getAccept();
 		}
+		$vccApiKey = config::byKey('vcc-api-key','volvocars');
 		curl_setopt($session, CURLOPT_HTTPHEADER, [
 			"authorization: Bearer " . $accessToken,
-			"vcc-api-key: f3eeea40752040b88125725896290bad",
+			"vcc-api-key: " . $vccApiKey,
 			"accept: " . $accept,
 			"content-type: application/json"
 		]);

@@ -494,12 +494,14 @@
         "vin du véhicule": "vehículo vin"
     },
     "plugins\/volvocars\/plugin_info\/configuration.php": {
+        "Clé Volvocars API": "Clave API de Volvocars",
         "Commandes à créer lors des synchronisations": "Comandos que se crearán durante la sincronización",
         "Commandes à créer pour les ouvrants": "Comandos a crear para los abridores",
         "Fermé": "Cerrado",
         "Ouvert": "Abierto",
         "Prend la valeur 1 (true) lorsque l'ouvrant est fermé": "Toma el valor 1 (verdadero) cuando la hoja está cerrada",
-        "Prend la valeur 1 (true) lorsque l'ouvrant est ouvert": "Toma el valor 1 (verdadero) cuando la hoja está abierta"
+        "Prend la valeur 1 (true) lorsque l'ouvrant est ouvert": "Toma el valor 1 (verdadero) cuando la hoja está abierta",
+        "voir la documentation pour la création d'une clé sur https:\/\/developer.volvocars.com": "consulte la documentación para crear una llave en https:\/\/developer.volvocars.com"
     },
     "plugins\/volvocars\/plugin_info\/install.php": {
         "Création de la commande %s": "Crear comando %s",
