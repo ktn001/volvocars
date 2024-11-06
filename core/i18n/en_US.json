@@ -494,12 +494,14 @@
         "vin du véhicule": "vehicle vin"
     },
     "plugins\/volvocars\/plugin_info\/configuration.php": {
+        "Clé Volvocars API": "Volvocars API Key",
         "Commandes à créer lors des synchronisations": "Commands to be created during synchronization",
         "Commandes à créer pour les ouvrants": "Commands to be created for openers",
         "Fermé": "Closed",
         "Ouvert": "Open",
         "Prend la valeur 1 (true) lorsque l'ouvrant est fermé": "Takes value 1 (true) when sash is closed",
-        "Prend la valeur 1 (true) lorsque l'ouvrant est ouvert": "Sets value to 1 (true) when sash is open"
+        "Prend la valeur 1 (true) lorsque l'ouvrant est ouvert": "Sets value to 1 (true) when sash is open",
+        "voir la documentation pour la création d'une clé sur https:\/\/developer.volvocars.com": "see the documentation for creating a key on https:\/\/developer.volvocars.com"
     },
     "plugins\/volvocars\/plugin_info\/install.php": {
         "Création de la commande %s": "Create %s command",
