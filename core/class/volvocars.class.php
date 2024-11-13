@@ -593,7 +593,11 @@ class volvocars extends eqLogic {
 
 			foreach ([
 				'al_electricAutonomy',
-				'al_fuelAutonomy'
+				'al_fuelAutonomy',
+				'presenceSite1',
+				'distanceStie1',
+				'presenceSite2',
+				'distanceStie2',
 			] as $logicalId) {
 				$cmd = $this->getCmd('info',$logicalId);
 				if (is_object($cmd)){
@@ -799,9 +803,9 @@ class volvocars extends eqLogic {
 				if (!is_object($cmd)) {
 					$this->createCmd($cmdConfig['logicalId']);
 					$cmd = $this->getCmd(null,$cmdConfig['logicalId']);
-					$cmd->setConfiguration('href',$command['href']);
-					$cmd->save();
 				}
+				$cmd->setConfiguration('href',$command['href']);
+				$cmd->save();
 				$cmdOk = true;
 				break;
 			}
@@ -1430,6 +1434,10 @@ class volvocars extends eqLogic {
 		if ($_version == 'panel') {
 			$panel = true;
 			$_version = 'dashboard';
+		} else {
+			if (config::byKey('use_widget_volvocars',__CLASS__) != 1) {
+				return parent::toHtml($_version);
+			}
 		}
 
 		$replace = $this->preToHtml($_version);

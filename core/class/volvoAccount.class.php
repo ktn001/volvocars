@@ -25,13 +25,6 @@ class volvoAccount {
 	const OAUTH_AUTH_URL = "https://volvoid.eu.volvocars.com/as/authorization.oauth2";
 	const USER_AGENT = "vca-android/5.46.0";
 
-
-	const CAR_LOCK_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands/lock";
-	const CAR_LOCK_REDUCED_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands/lock-reduced-guard";
-	const CAR_UNLOCK_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands/unlock";
-	const CLIMATE_START_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands/climatization-start";
-	const CLIMATE_STOP_URL = "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands/climatization-stop";
-
 	private $id = -1;
 	private $name = '';
 	private $login = '';

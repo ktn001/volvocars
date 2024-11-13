@@ -7,10 +7,7 @@
 	margin: 2px !important;
 	padding: 0px !important;
 	background-color: rgb(var(--bg-color)) !important;
-	border: solid;
-	border-width: 2px;
-	border-radius: 10px;
-	border-color: rgb(30,30,30);
+	border-radius: var(--border-radius) ! important;
 	height: 100px;
 }
 
@@ -38,10 +35,15 @@
 	padding: 7px 0px 0px 0px !important;
 }
 
+.volvocars_widget .tile.actions .title_tile {
+	font-size: 18px;
+	text-align: left;
+	font-weight: 500;
+}
 .volvocars_widget .icon_tile {
 	margin: 0px !important;
 	height: 45px;
-	color: var(--al-info-color) !important;
+	color: rgb(80,120,170) !important;
 	margin: 0px 0px 0px 0px !important;
 	padding: 5px 0px 0px 0px !important;
 }
@@ -53,6 +55,7 @@
 .volvocars_widget .value_tile {
 	height: 55px;
 	font-size: 18px;
+	font-weight: 500;
 	color: var(--link-color) !important;
 	text-align: center;
 	margin: 0px 0px 0px 0px !important;
