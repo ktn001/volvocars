@@ -18,6 +18,10 @@
 
 require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 
+function volvocars_goto_6() {
+	config::save('use_widget_volvocars',1,'volvocars');
+}
+
 function volvocars_goto_5() {
 	$cars = volvocars::byType('volvocars');
 	foreach ($cars as $car){
@@ -175,7 +179,7 @@ function volvocars_goto_1() {
 
 function volvocars_upgrade() {
 
-	$lastLevel = 5;
+	$lastLevel = 6;
 
 	$pluginLevel = config::byKey('pluginLevel','volvocars',0);
 	log::add("volvocars","info","pluginLevel: " . $pluginLevel . " => " . $lastLevel);
