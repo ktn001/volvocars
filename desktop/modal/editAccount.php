@@ -35,7 +35,7 @@ if (!isConnect('admin')) {
 		<div class="form-group">
 			<label class="col-sm-3 control-label">{{Password}}:</label>
 			<div class="input-group col-sm-7" style="padding-right:0px !important; padding-left:0px !important">
-				<input class="accountAttr form-control inputPassword rouddedLeft" type="text" data-l1key="password">
+				<input class="accountAttr form-control inputPassword roudedLeft" type="text" data-l1key="password">
 				<span class="input-group-btn">
 					<a class="btn btn-default form-control bt_showPass roundedRight"><i class="fas fa-eye"></i></a>
 				</span>
