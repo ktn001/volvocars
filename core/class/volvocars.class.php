@@ -774,6 +774,9 @@ class volvocars extends eqLogic {
 		$this->setActions();
 	}
 
+	/*
+	 * Création des commance de type "action" qui sont supportée pour le véhicule
+	 */
 	public function setActions() {
 		$created = false;
 		$account = $this->getAccount();
@@ -1027,12 +1030,21 @@ class volvocars extends eqLogic {
 	/*
 	 * Création d'une commande
 	 */
-	public function createCmd($_logicalId, $sort=true) {
+	public function createCmd($_logicalId, $sort=true, $value=Null) {
 		$created = false;
 		$cmdsConfig = $this->getCmdsConfig();
 		foreach ($cmdsConfig as $cmdConfig) {
 			if ($cmdConfig['logicalId'] !== $_logicalId) {
 				continue;
+			}
+			if (isset($cmdConfig['_createOnlyForValues'])) {
+				if ($value===Null) {
+					log::add("volvocars","warning",sprintf(__("Commande %s pas créée car value non définie",__FILE__),$_logicalId));
+					continue;
+				}
+				if (! in_array($value,$cmdConfig['_createOnlyForValues'])){
+					continue;
+				}
 			}
 			if (isset($cmdConfig['configuration']) && isset($cmdConfig['configuration']['onlyFor'])) {
 				switch ($cmdConfig['configuration']['onlyFor']) {
@@ -1215,14 +1227,6 @@ class volvocars extends eqLogic {
 		foreach (array_keys($infos) as $key) {
 			log::add("volvocars","debug",sprintf("├─key: %s",$key));
 			foreach (endpoint::byId($endpoint_id)->getLogicalIds($key) as $logicalId) {
-				$cmd = $this->getCmd('info',$logicalId);
-				if (!is_object($cmd)) {
-					$this->createCmd($logicalId);
-				}
-				$cmd = $this->getCmd('info',$logicalId);
-				if (!is_object($cmd)) {
-					continue;
-				}
 				switch ($logicalId) {
 					case 'position':
 						$value = $infos[$key]['coordinates'][1] . ',' . $infos[$key]['coordinates'][0];
@@ -1239,6 +1243,14 @@ class volvocars extends eqLogic {
 						break;
 					default:
 						$value = $infos[$key]['value'];
+				}
+				$cmd = $this->getCmd('info',$logicalId);
+				if (!is_object($cmd)) {
+					$this->createCmd($logicalId, true, $infos[$key]['value']);
+				}
+				$cmd = $this->getCmd('info',$logicalId);
+				if (!is_object($cmd)) {
+					continue;
 				}
 				log::add("volvocars","info",sprintf("│ %s: %s",$logicalId,$value));
 				$this->checkAndUpdateCmd($cmd,$value);
@@ -1716,6 +1728,24 @@ class volvocarsCmd extends cmd {
 				}
 				break;
 		}
+	}
+
+	public function preRemove() {
+		$dependencies = $this->getConfiguration('dependencies');
+		if ($dependencies === '') {
+			return true;
+		}
+		if (! is_array($dependencies)) {
+			$dependencies = array($dependencies);
+		}
+		$car = $this->getEqLogic();
+		foreach ($dependencies as $dependency){
+			$cmd = $car->getCmd('info',$dependency);
+			if (is_object($cmd)) {
+				$cmd->remove();
+			}
+		}
+		return true;
 	}
 
 	// Exécution d'une commande

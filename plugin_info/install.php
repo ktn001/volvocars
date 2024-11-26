@@ -18,6 +18,20 @@
 
 require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 
+function volvocars_goto_7() {
+	$cars = volvocars::byType('volvocars');
+	foreach ($cars as $car){
+		$roofStateCmd = $car->getCmd('info','roofState');
+		if (! is_object($roofStateCmd)) {
+			continue;
+		}
+		$roofState = $roofStateCmd->execCmd();
+		if (! in_array($roofState,['OPEN','CLOSED','AJAR'])) {
+			$roofStateCmd->remove();
+		}
+	}
+}
+
 function volvocars_goto_6() {
 	config::save('use_widget_volvocars',1,'volvocars');
 }
@@ -179,7 +193,7 @@ function volvocars_goto_1() {
 
 function volvocars_upgrade() {
 
-	$lastLevel = 6;
+	$lastLevel = 7;
 
 	$pluginLevel = config::byKey('pluginLevel','volvocars',0);
 	log::add("volvocars","info","pluginLevel: " . $pluginLevel . " => " . $lastLevel);

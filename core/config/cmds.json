@@ -287,7 +287,12 @@
     },
     "display": {
       "forceReturnLineAfter": "1"
-    }
+    },
+    "_createOnlyForValues" : [
+      "OPEN",
+      "CLOSED",
+      "AJAR"
+    ]
   },
   {
     "logicalId": "allDoorsClosed",
