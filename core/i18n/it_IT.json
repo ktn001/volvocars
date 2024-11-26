@@ -62,6 +62,7 @@
         "Branchée (AC)": "Collegato (AC)",
         "Branchée (DC)": "Collegato (DC)",
         "Commande %s introuvable": "Comando %s non trovato",
+        "Commande %s pas créée car value non définie": "Comando %s non creato perché il valore non è definito",
         "Commande Jeedom pour '%s' introuvable": "Comando Jeedom per '%s' non trovato",
         "Création de la commande %s pour le véhicule %s": "Creare il comando %s per il veicolo %s",
         "Diesel": "Diesel",

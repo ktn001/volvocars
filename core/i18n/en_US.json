@@ -62,6 +62,7 @@
         "Branchée (AC)": "Connected (AC)",
         "Branchée (DC)": "Connected (DC)",
         "Commande %s introuvable": "Command %s not found",
+        "Commande %s pas créée car value non définie": "Command %s not created because value not defined",
         "Commande Jeedom pour '%s' introuvable": "Jeedom command for '%s' not found",
         "Création de la commande %s pour le véhicule %s": "Create command %s for vehicle %s",
         "Diesel": "Diesel",

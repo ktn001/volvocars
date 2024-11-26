@@ -62,6 +62,7 @@
         "Branchée (AC)": "Conectado (CA)",
         "Branchée (DC)": "Conectado (CC)",
         "Commande %s introuvable": "Comando %s no encontrado",
+        "Commande %s pas créée car value non définie": "Comando %s no creado porque valor no definido",
         "Commande Jeedom pour '%s' introuvable": "Comando Jeedom para '%s' no encontrado",
         "Création de la commande %s pour le véhicule %s": "Crear comando %s para vehículo %s",
         "Diesel": "Diesel",
