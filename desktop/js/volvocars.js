@@ -624,14 +624,14 @@ if (typeof volvocarsFrontEnd === "undefined") {
       }
       if (isset(_cmd.logicalId)) {
         if (_cmd.logicalId.endsWith("Open")) {
-          if (! _cmd.logicalId.startsWith("all")) {
+          if (!_cmd.logicalId.startsWith("all")) {
             document
               .querySelector(".cmdAction[data-action=removeOpen]")
               .removeClass("hidden");
           }
         }
         if (_cmd.logicalId.endsWith("Closed")) {
-          if (! _cmd.logicalId.startsWith("all")) {
+          if (!_cmd.logicalId.startsWith("all")) {
             document
               .querySelector(".cmdAction[data-action=removeClosed]")
               .removeClass("hidden");

@@ -288,11 +288,7 @@
     "display": {
       "forceReturnLineAfter": "1"
     },
-    "_createOnlyForValues" : [
-      "OPEN",
-      "CLOSED",
-      "AJAR"
-    ]
+    "_createOnlyForValues": ["OPEN", "CLOSED", "AJAR"]
   },
   {
     "logicalId": "allDoorsClosed",
@@ -302,13 +298,13 @@
     "configuration": {
       "removable": "1",
       "dependTo": [
-	"doorFlState",
-	"doorFrState",
-	"doorRlState",
-	"doorRrState",
+        "doorFlState",
+        "doorFrState",
+        "doorRlState",
+        "doorRrState",
         "tailState",
         "hoodState"
-      ] 
+      ]
     }
   },
   {
@@ -319,13 +315,13 @@
     "configuration": {
       "removable": "1",
       "dependTo": [
-	"doorFlState",
-	"doorFrState",
-	"doorRlState",
-	"doorRrState",
+        "doorFlState",
+        "doorFrState",
+        "doorRlState",
+        "doorRrState",
         "tailState",
         "hoodState"
-      ] 
+      ]
     }
   },
   {
@@ -336,12 +332,12 @@
     "configuration": {
       "removable": "1",
       "dependTo": [
-	"WinFlState",
-	"WinFrState",
-	"WinRlState",
-	"WinRrState",
+        "WinFlState",
+        "WinFrState",
+        "WinRlState",
+        "WinRrState",
         "roofState"
-      ] 
+      ]
     }
   },
   {
@@ -1147,10 +1143,7 @@
     "logicalId": "position",
     "name": "{{position}}",
     "configuration": {
-      "dependencies": [
-        "distanceSite1",
-        "distanceSite2"
-      ],
+      "dependencies": ["distanceSite1", "distanceSite2"],
       "listener": "1"
     },
     "type": "info",
