@@ -810,7 +810,7 @@ class volvocars extends eqLogic {
 				$cmd->setConfiguration('href',$command['href']);
 				$cmd->save();
 				$cmdOk = true;
-				break;
+				continue;
 			}
 			if (! $cmdOk) {
 				log::add("volvocars","warning",sprintf(__("Commande Jeedom pour '%s' introuvable",__FILE__),$command['command']));
@@ -1096,6 +1096,7 @@ class volvocars extends eqLogic {
 					if (is_object($dependCmd)) {
 						break;
 					}
+					log::add("volvocars","debug","│ " . sprintf(__("Pas de dépendance trouvée pour la commande %s",__FILE__).$_logicalId));
 					return;
 				}
 			}

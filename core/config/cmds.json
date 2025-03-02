@@ -53,14 +53,55 @@
     "name": "{{Verrouiller avec protection réduite}}",
     "type": "action",
     "subType": "other",
+    "configuration": {
+      "volvoApi": "connectedVehicle",
+      "linkedEndpoint": "doors"
+    },
     "display": {
-      "configuration": {
-        "volvoApi": "connectedVehicle",
-        "linkedEndpoint": "doors"
-      },
       "forceReturnLineAfter": "1"
     },
     "_volvoName": "LOCK_REDUCED_GUARD"
+  },
+  {
+    "logicalId": "engineStart",
+    "name": "{{Démarrer moteur}}",
+    "type": "action",
+    "subType": "other",
+    "configuration": {
+      "volvoApi": "connectedVehicle"
+    },
+    "_volvoName": "CLIMATIZATION_START"
+  },
+  {
+    "logicalId": "engineStop",
+    "name": "{{Arrêter moteur}}",
+    "type": "action",
+    "subType": "other",
+    "configuration": {
+      "volvoApi": "connectedVehicle"
+    },
+    "_volvoName": "CLIMATIZATION_STOP"
+  },
+  {
+    "logicalId": "timetorun",
+    "name": "temps de fonctionement",
+    "type": "action",
+    "subtype": "slider",
+    "configuration": {
+      "minValue": "1",
+      "maxValue": "15"
+    },
+    "template": {
+      "dashboard": "core::value",
+      "mobile": "core::value"
+    },
+    "display": {
+      "parameters": {
+        "noslider": "1"
+      },
+      "forceReturnLineAfter": "1"
+    },
+    "_volvoName": "CLIMATIZATION_START"
   },
   {
     "logicalId": "climStart",
@@ -77,11 +118,11 @@
     "name": "{{Climatisation HORS}}",
     "type": "action",
     "subType": "other",
-    "display": {
-      "forceReturnLineAfter": "1"
-    },
     "configuration": {
       "volvoApi": "connectedVehicle"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
     },
     "_volvoName": "CLIMATIZATION_STOP"
   },
