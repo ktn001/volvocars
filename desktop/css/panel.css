@@ -375,7 +375,7 @@ table.lastAnswer td {
   border-right: 0px;
   border-top-style: solid;
   border-bottom-style: solid;
-  border-color: var(--btnEq-default-color) !important; 
+  border-color: var(--btnEq-default-color) !important;
 }
 
 var(--btnEq-default-color) !important/* *** */
