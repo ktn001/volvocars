@@ -9,3 +9,10 @@ name : 'Prettier Plugin Jeedom'
 jobs:
   prettier:
     uses: jeedom/workflows/.github/workflows/prettier.yml@main
+    run-listener:
+      steps:
+        - name: Set up Python
+          uses: actions/setup-python@v1
+          with:
+            python-version: 3.8
+
