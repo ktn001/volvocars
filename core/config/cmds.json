@@ -83,7 +83,7 @@
     "_volvoName": "CLIMATIZATION_STOP"
   },
   {
-    "logicalId": "timetorun",
+    "logicalId": "timeToRun",
     "name": "temps de fonctionement",
     "type": "action",
     "subtype": "slider",

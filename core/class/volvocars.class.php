@@ -1492,6 +1492,8 @@ class volvocars extends eqLogic {
 			'climStart',
 			'climStop',
 			'honk',
+			'engineStart',
+			'engineStop',
 			'flash',
 			'honk_flash',
 			'connectorStatus',
@@ -1523,6 +1525,7 @@ class volvocars extends eqLogic {
 			'service',
 			'serviceTrigger',
 			'tailState',
+			'timeToRun',
 			'timeToService',
 			'tyreFl',
 			'tyreFr',
@@ -1551,6 +1554,18 @@ class volvocars extends eqLogic {
 					$replace['#' . $logicalId . '_display_value' . $carId . '#'] = $display_value;
 					$replace['#' . $logicalId . '_unit' . $carId . '#'] = $unit;
 					$replace['#' . $logicalId . '_history' . $carId . '#'] = $cmd->getIsHistorized() ? 'history cursor' : '';
+				}
+				if ($cmd->getType() == 'action') {
+					$cmdValue = $cmd->getCmdValue();
+					if (is_object($cmdValue) && $cmdValue->getType() == 'info') {
+						$replace['#' . $logicalId . $carId . '#'] = $cmdValue->execCmd();
+					} else {
+						$replace['#' . $logicalId . $carId . '#'] = ($cmd->getLastValue() !== null) ? $cmd->getLastValue() : '';
+					}
+				}
+				if ($cmd->getType() == 'action' and $cmd->getSubType() == 'slider') {
+					$replace['#' . $logicalId . '_min' . $carId . '#'] = $cmd->getConfiguration('minValue',0);
+					$replace['#' . $logicalId . '_max' . $carId . '#'] = $cmd->getConfiguration('maxValue',100);
 				}
 				$replace['#' . $logicalId . '_id' . $carId . '#'] = $cmd->getId();
 				$replace['#' . $logicalId . '_hidden' . $carId . '#'] = '';
@@ -1761,6 +1776,9 @@ class volvocarsCmd extends cmd {
 				if ($endpoint !== '') {
 					$car->getInfosFromApi($endpoint, true);
 				}
+				return;
+			}
+			if ($logicalId === 'timeToRun') {
 				return;
 			}
 			if ($logicalId === 'refresh') {
@@ -2055,7 +2073,7 @@ class volvocarsCmd extends cmd {
 							break;
 						}
 					}
-					if (! oncCmdFound) {
+					if (! oneCmdFound) {
 						return $this->execCmd();
 					}
 					return $allClosed;

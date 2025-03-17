@@ -79,3 +79,8 @@
   display: inline-block;
   min-width: calc(50% - 2px);
 }
+
+.volvocars_widget button img {
+  position: relative;
+  top: -3px;
+}

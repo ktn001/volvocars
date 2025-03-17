@@ -1,4 +1,4 @@
-<div id="volvocars_widget_ID" class="eqLogic-widget eqLogic noResize volvocars_widget volvocars_widget_#id# volvocars" style="min-width:385px !important; max-width:385px !important; min-height:710px; max-height:710px; text-align:center; border:#border#; border-radius:#border-radius#; background-color:#background-color#; color:#color#; #style#;" data-eqType="#eqType#" data-translate-category="#translate_category#" data-category="#category#" data-tags="#tags#" data-eqLogic_id="#id#" data-eqLogic_uid="#uid#" data-version="dashboard">
+<div id="volvocars_widget_ID" class="eqLogic-widget eqLogic noResize volvocars_widget volvocars_widget_#id# volvocars" style="min-width:385px !important; max-width:385px !important; min-height:750px; max-height:750px; text-align:center; border:#border#; border-radius:#border-radius#; background-color:#background-color#; color:#color#; #style#;" data-eqType="#eqType#" data-translate-category="#translate_category#" data-category="#category#" data-tags="#tags#" data-eqLogic_id="#id#" data-eqLogic_uid="#uid#" data-version="dashboard">
 
 	<div class="text-center widget-name">
 		<span class="reportModeVisible">#name_display# <span class="object_name">#object_name#</span></span>
@@ -195,7 +195,10 @@
 					</span>
 				</button>
 				<button class="btn cmd action" title="{{Démarrer moteur}}" data-cmd_id="#engineStart_id#id##" onclick="jeedom.cmd.execute({id: #engineStart_id#id##})">
-					<i class="fas fa-lg fa-fan"></i>
+			  		<img src='/plugins/volvocars/desktop/img/engine_start_dark.svg'/>	
+				</button>
+				<button class="btn cmd action" title="{{Arrêter moteur}}" data-cmd_id="#engineStop_id#id##" onclick="jeedom.cmd.execute({id: #engineStop_id#id##})">
+					<img src='/plugins/volvocars/desktop/img/engine_stop_dark.svg'/>	
 				</button>
 				<button class="btn cmd action" title="{{Flash}}" data-cmd_id="#flash_id#id##" onclick="jeedom.cmd.execute({id: #flash_id#id##})">
 					<i class="fas fa-lg fa-lightbulb "></i>
@@ -207,6 +210,12 @@
 					<i class="fas fa-lg fa-lightbulb "></i>
 					<i class="fas fa-lg fa-volume-up "></i>
 				</button>
+				<br>
+				<form class="form-horizontal">
+					<label>{{Durée de fonctionnement}} :</label>
+					<input type="numeric"></input>
+					{{Minutes}}
+				</form>
 			</div>
 		</div>
 	</div>
@@ -552,6 +561,12 @@ if (!"#chargingEndTime_id#id##".startsWith('#')) {
 	}
 	jeedom.cmd.refreshValue([{cmd_id: '#chargingEndTime_id#id##', display_value: "#chargingEndTime_display_value#id##", unit: "#chargingEndTime_unit#id##"}])
 }
+
+// ACTIONS
+// =======
+if (!'#timeToRun_id#id##'.startsWith('#')) {
+}
+
 </script>
 <!--
 vim: tabstop=4 autoindent

@@ -1,6 +1,3 @@
-<!--
- vim: tabstop=2 autoindent expandtab
--->
 <div
   class="eqLogic-widget eqLogic noResize volvo_panel"
   data-eqType="#eqType#"
@@ -455,12 +452,12 @@
       </div>
 
       <!-- Actions -->
-      <div class="col-xs-12 tile tile3">
+      <div class="col-xs-12 tile tile3 div_actions">
         <div class="col-xs-1 tile-icon"><i class="fas fa-lg fa-cogs"></i></div>
         <div class="col-xs-11 tile-title">{{Actions}}</div>
         <div class"col-xs-12">
           <button
-            class="btn cmd refresh Cmd#refresh_id#id##"
+            class="btn cmd refresh Cmd#refresh_id##id# #refresh_hidden#id##"
             data-cmd_id="#refresh_id#id##"
             title="{{Rafraîchir}}"
             style="margin-top: 0px !important;"
@@ -483,6 +480,25 @@
             onclick="jeedom.cmd.execute({id: #unlock_id#id##, notify: true})"
           >
             <i class="fa-lg icon fas fa-unlock"></i>
+          </button>
+          <button
+            class="btn cmd Cmd#engineStart_id#id## #engineStart_hidden#id##"
+            data_cmd_id="#engineStart_id#id##"
+            title="{{Démarrer le moteur}}"
+            onclick="jeedom.cmd.execute({id: #engineStart_id#id##, notify: true})"
+          >
+          <img src='/plugins/volvocars/desktop/img/engine_start_dark.svg'/>
+          </button>
+          <span class="slider_timeToRun" title="{{Durée de fonctionnement (M.)}}" >
+            <input id="input#timeToRun_id#id##" style="background-color:var(--btnEq-default-color) !important" type="number" min="1" max="15" step="1"/>
+          </span>
+          <button
+            class="btn cmd Cmd#engineStop_id#id## #engineStop_hidden#id##"
+            data_cmd_id="#engineStop_id#id##"
+            title="{{Arrêter le moteur}}"
+            onclick="jeedom.cmd.execute({id: #engineStop_id#id##, notify: true})"
+          >
+          <img src='/plugins/volvocars/desktop/img/engine_stop_dark.svg'/>
           </button>
           <button
             class="btn cmd Cmd#climStart_id#id## #climStart_hidden#id##"
@@ -1081,6 +1097,7 @@
   }
 
   // STATUS
+  // //////
   if (!"#engineON_id#id##".startsWith('#')) {
     let image = ''
     jeedom.cmd.update['#engineON_id#id##'] = function(_options) {
@@ -1099,6 +1116,44 @@
     jeedom.cmd.refreshValue([{cmd_id: '#engineON_id#id##', value: "#engineON#id##"}])
   }
 
+  // ACTIONS
+  // ///////
+  if (!"#timeToRun_id#id##".startsWith('#')) {
+    new ISpin(document.getElementById('input#timeToRun_id#id##'), {
+      wrapperClass: 'ispin-wrapper',
+      buttonsClass: 'ispin-button',
+      step: 1,
+      min: parseFloat('#timeToRun_min#id##') || undefined,
+      max: parseFloat('#timeToRun_max#id##') || undefined,
+      disabled: false,
+      repeatInterval: 200,
+      wrapOverflow: false,
+      parse: Number,
+      onChange: function(value) {
+        clearTimeout(window['spinTime#timeToRun#id##'])
+        window['spinTime#timeToRun#id##'] = setTimeout(function() {
+          document.getElementById('input#timeToRun_id#id##').blur()
+        },1000)
+      }
+    })
+
+    document.getElementById('input#timeToRun_id#id##').addEventListener('blur', function(event) {
+      clearTimeout(window['spinTime#timeToRun#id##'])
+      if (this.getAttribute('value') != this.value) {
+        jeedom.cmd.execute({ id: '#timeToRun_id#id##', value: { slider: parseFloat(this.value)}})
+      }
+    })
+
+    jeedom.cmd.addUpdateFunction('#timeToRun_id#id##', function(_options) {
+      let input = document.getElementById('input#timeToRun_id#id##')
+      input.value = _options.value
+      input.setAttribute('value', _options.value)
+      input.setAttribute('aria-valuenow', _options.value)
+    })
+
+    jeedom.cmd.refreshValue([{ cmd_id:'#timeToRun_id#id##', value:'#timeToRun#id##'}])
+  }
+  
   // RETOUR COMMANDES
   if (!"#lastAnswer_id#id##".startsWith('#')) {
     jeedom.cmd.update['#lastAnswer_id#id##'] = function(_option) {
@@ -1107,7 +1162,6 @@
       if (answer != null) {
         let key = ''
         for (key of ['cmd','date', 'invokeStatus','message']) {
-          console.log(key)
           if (key in answer) {
             let label = key == 'cmd' ? '{{Commande}}' : key
             label = key == 'date' ? '{{Date}}' : label
@@ -1122,7 +1176,6 @@
           }
         }
         for (key in answer) {
-          console.log(key)
           if (key in answer) {
             let tr = '<tr>'
             tr += '<th>' + key + ' :</th>'
@@ -1196,3 +1249,7 @@
     jeedom.cmd.refreshValue([{cmd_id: '#msg2widget_id#id##', value: "#msg2widget#id##"}])
   }
 </script>
+
+<!--
+ vim: tabstop=2 autoindent expandtab
+-->

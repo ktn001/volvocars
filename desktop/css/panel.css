@@ -355,7 +355,30 @@ table.lastAnswer td {
   text-align: left;
 }
 
-/* *** */
+/* ************ */
+/* TILE ACTIONS */
+/* ************ */
+.div_actions .btn:has(> img) {
+  padding: 5px;
+}
+
+.div_actions img {
+  height: 22px;
+}
+
+.slider_timeToRun {
+  display: inline-flex;
+  width: 40px;
+  border-top: 3px;
+  border-bottom: 3px;
+  border-left: 0px;
+  border-right: 0px;
+  border-top-style: solid;
+  border-bottom-style: solid;
+  border-color: var(--btnEq-default-color) !important; 
+}
+
+var(--btnEq-default-color) !important/* *** */
 /* MAP */
 /* *** */
 
