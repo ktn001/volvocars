@@ -18,6 +18,20 @@
 
 require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 
+function volvocars_goto_8() {
+	$cars = volvocars::byType('volvocars');
+	$countFuelEngines = 0;
+	foreach ($cars as $car) {
+		#if ($car->getConfiguration('fuelEngine') == 1) {
+		if ($car->getConfiguration('FuelEngine') == 1) {
+			$countFuelEngines++;
+		}
+	}
+	if ($countFuelEngines > 0) {
+		message::add("Volvo", __("Veuillez relancer une Synchronisation des comptes",__FILE__));
+	}
+}
+
 function volvocars_goto_7() {
 	$cars = volvocars::byType('volvocars');
 	foreach ($cars as $car){
@@ -193,7 +207,7 @@ function volvocars_goto_1() {
 
 function volvocars_upgrade() {
 
-	$lastLevel = 7;
+	$lastLevel = 8;
 
 	$pluginLevel = config::byKey('pluginLevel','volvocars',0);
 	log::add("volvocars","info","pluginLevel: " . $pluginLevel . " => " . $lastLevel);

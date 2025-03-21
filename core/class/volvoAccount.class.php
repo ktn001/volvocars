@@ -405,13 +405,24 @@ class volvoAccount {
 		return $return;
 	}
 
-	public function sendCommand($cmd) {
-		log::add('volvocars','info',sprintf(
-			__("Envoi de la commande %s (%s) pour le véhicule %s",__FILE__),
-			$cmd->getName(),
-			$cmd->getLogicalId(),
-			$cmd->getEqLogic()->getName()
-		));
+	public function sendCommand($cmd, $payload = null) {
+	    log::add("volvocars","info",print_r($payload,true));
+	    if ($payload) {
+			log::add('volvocars','info',sprintf(
+				__("Envoi de la commande %s (%s) pour le véhicule %s (data: %s)",__FILE__),
+				$cmd->getName(),
+				$cmd->getLogicalId(),
+				$cmd->getEqLogic()->getName(),
+				$payload
+			));
+		} else {
+			log::add('volvocars','info',sprintf(
+				__("Envoi de la commande %s (%s) pour le véhicule %s",__FILE__),
+				$cmd->getName(),
+				$cmd->getLogicalId(),
+				$cmd->getEqLogic()->getName()
+			));
+		}
 		$srv = array (
 			'connectedVehicle' => 'https://api.volvocars.com/connected-vehicle',
 		);
@@ -435,6 +446,9 @@ class volvoAccount {
 		$url = $srv[$volvoApi] . $href;
 		$session = $this->session($url);
 		curl_setopt($session,CURLOPT_POST,1);
+		if ($payload) {
+			curl_setopt($session,CURLOPT_POSTFIELDS, $payload);
+		}
 		$content = curl_exec($session);
 		log::add('volvocars','debug',$content);
 		$content = is_json($content,$content);

@@ -84,3 +84,34 @@
   position: relative;
   top: -3px;
 }
+
+.volvocars .tile.actions form {
+  margin-top: 2px;
+}
+
+.volvocars .tile.actions form,
+.volvocars .tile.actions label {
+  font-weight: normal;
+  font-size: 12px;
+}
+
+.volvocars div.ispin-wrapper {
+  display: inline;
+}
+
+.volvocars div.ispin-wrapper input{
+  position: relative;
+  top: -2px;
+  padding-top: 0;
+  padding-bottom: 0;
+  border-top-width: 0;
+  border-bottom-width: 0;
+}
+
+.volvocars div.ispin-wrapper .ispin-button-inc {
+  top: -2px;
+}
+
+.volvocars div.ispin-wrapper .ispin-button-dec {
+  bottom: 2px;
+}

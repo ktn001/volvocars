@@ -1771,7 +1771,37 @@ class volvocarsCmd extends cmd {
 		if ($this->getType() == 'action') {
 			log::add("volvocars","info",sprintf(__("Execution de la commande %s pour le véhicule %s",__FILE__),$this->getName(),$car->getName()));
 			if ($this->getConfiguration('volvoApi') !== '') {
-				$car->getAccount()->sendCommand($this);
+			    $paramsDef = $this->getConfiguration('params');
+				if (is_array($paramsDef)) {
+					$content = array();
+					foreach ($paramsDef as $paramDef) {
+						if (array_key_exists('name', $paramDef)) {
+							$key = $paramDef['name'];
+						}
+						$value = '';
+						if (array_key_exists('cmd',$paramDef)) {
+							$cmd = $car->getCmd('info', $paramDef['cmd']);
+							if (is_object($cmd)) {
+								$value = $cmd->execCmd();
+							}
+						}
+						if ($value == '') {
+							if (array_key_exists('default',$paramDef)) {
+								$value = $paramDef['default'];
+							}
+						}
+						if (array_key_exists('type', $paramDef)) {
+							if ($paramDef['type'] == 'numeric') {
+								$value = intval($value);
+							}
+						}
+						$content[$key] = $value;
+					}
+					$payLoad = json_encode($content);
+					$car->getAccount()->sendCommand($this, $payLoad);
+				} else {
+					$car->getAccount()->sendCommand($this);
+				}
 				$endpoint = $this->getConfiguration('linkedEndpoint');
 				if ($endpoint !== '') {
 					$car->getInfosFromApi($endpoint, true);

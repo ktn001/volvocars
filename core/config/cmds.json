@@ -68,9 +68,17 @@
     "type": "action",
     "subType": "other",
     "configuration": {
-      "volvoApi": "connectedVehicle"
+      "volvoApi": "connectedVehicle",
+      "params": [
+        {
+          "name": "runtimeMinutes",
+          "cmd": "timeToRun",
+          "default" : "5",
+          "type": "numeric"
+        }
+      ]
     },
-    "_volvoName": "CLIMATIZATION_START"
+    "_volvoName": "ENGINE_START"
   },
   {
     "logicalId": "engineStop",
@@ -80,7 +88,7 @@
     "configuration": {
       "volvoApi": "connectedVehicle"
     },
-    "_volvoName": "CLIMATIZATION_STOP"
+    "_volvoName": "ENGINE_STOP"
   },
   {
     "logicalId": "timeToRun",

@@ -101,6 +101,7 @@ class socket_handler(StreamRequestHandler):
             "conve:doors_status "
             "conve:engine_status "
             "conve:environment "
+            "conve:climatization_start_stop",
             "conve:fuel_status "
             "conve:honk_flash "
             "conve:lock "
