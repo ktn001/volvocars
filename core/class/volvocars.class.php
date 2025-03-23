@@ -1780,9 +1780,13 @@ class volvocarsCmd extends cmd {
 						}
 						$value = '';
 						if (array_key_exists('cmd',$paramDef)) {
-							$cmd = $car->getCmd('info', $paramDef['cmd']);
+							$cmd = $car->getCmd(null, $paramDef['cmd']);
 							if (is_object($cmd)) {
-								$value = $cmd->execCmd();
+								if ($cmd->getType() == 'info') {
+									$value = $cmd->execCmd();
+								} else {
+									$value = $cmd->getLastValue();
+								}
 							}
 						}
 						if ($value == '') {
