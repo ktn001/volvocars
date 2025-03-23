@@ -21,7 +21,8 @@ require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 function volvocars_goto_9() {
 	$cars = volvocars::byType('volvocars');
 	foreach ($cars as $car){
-		$cmd = $car->getCmd('action','timeToRun') {
+		$cmd = $car->getCmd('action','timeToRun');
+		if (is_object($cmd)) {
 			$cmd->setConfiguration('href', null);
 			$cmd->save();
 		}
