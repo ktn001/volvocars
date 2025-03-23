@@ -18,6 +18,16 @@
 
 require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 
+function volvocars_goto_9() {
+	$cars = volvocars::byType('volvocars');
+	foreach ($cars as $car){
+		$cmd = $car->getCmd('action','timeToRun') {
+			$cmd->setConfiguration('href', null);
+			$cmd->save();
+		}
+	}
+}
+
 function volvocars_goto_8() {
 	$cars = volvocars::byType('volvocars');
 	$countFuelEngines = 0;
@@ -207,7 +217,7 @@ function volvocars_goto_1() {
 
 function volvocars_upgrade() {
 
-	$lastLevel = 8;
+	$lastLevel = 9;
 
 	$pluginLevel = config::byKey('pluginLevel','volvocars',0);
 	log::add("volvocars","info","pluginLevel: " . $pluginLevel . " => " . $lastLevel);

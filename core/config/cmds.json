@@ -78,7 +78,8 @@
         }
       ]
     },
-    "_volvoName": "ENGINE_START"
+    "_volvoName": "ENGINE_START",
+    "_linkedCmd": "timeToRun"
   },
   {
     "logicalId": "engineStop",
@@ -108,8 +109,7 @@
         "noslider": "1"
       },
       "forceReturnLineAfter": "1"
-    },
-    "_volvoName": "CLIMATIZATION_START"
+    }
   },
   {
     "logicalId": "climStart",

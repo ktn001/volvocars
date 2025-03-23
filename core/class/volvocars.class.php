@@ -1119,6 +1119,29 @@ class volvocars extends eqLogic {
 					$this->createCmd($dependency, false);
 				}
 			}
+
+			if (isset($cmdConfig['_linkedCmd'])) {
+				$linkedLogicalIds = $cmdConfig['_linkedCmd'];
+				if (!is_array($linkedLogicalIds)) {
+					$linkedLogicalIds = array($linkedLogicalIds);
+				}
+				foreach ($linkedLogicalIds as $linkedLogicalId) {
+					$this->createCmd($linkedLogicalId);
+				}
+			}
+			$logicalIds = $this->getConfiguration('dependencies');
+			if ($logicalIds !== '') {
+				if (!is_array($logicalIds)) {
+					$logicalIds = array($logicalIds);
+				}
+				foreach ($logicalIds as $logicalId) {
+					$cmd = $this->getEqLogic()->getCmd('info',$logicalId);
+					if (is_object($cmd)) {
+						$cmd->save();
+					}
+				}
+			}
+
 			if ($created && $sort) {
 				$this->sortCmds();
 			}
@@ -1710,18 +1733,6 @@ class volvocarsCmd extends cmd {
 	}
 
 	public function postInsert() {
-		$logicalIds = $this->getConfiguration('dependencies');
-		if ($logicalIds !== '') {
-			if (!is_array($logicalIds)) {
-				$logicalIds = array($logicalIds);
-			}
-			foreach ($logicalIds as $logicalId) {
-				$cmd = $this->getEqLogic()->getCmd('info',$logicalId);
-				if (is_object($cmd)) {
-					$cmd->save();
-				}
-			}
-		}
 		switch ($this->getLogicalId()) {
 			case 'position':
 				foreach (['distanceSite1', 'distanceSite2'] as $logicalId) {
