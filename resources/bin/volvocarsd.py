@@ -69,18 +69,17 @@ class socket_handler(StreamRequestHandler):
         auth_session = requests.Session()
         auth_session.headers = {
             "authorization": "Basic aDRZZjBiOlU4WWtTYlZsNnh3c2c1WVFxWmZyZ1ZtSWFEcGhPc3kxUENhVXNpY1F0bzNUUjVrd2FKc2U0QVpkZ2ZJZmNMeXc=",
-            "User-Agent": "vca-android/5.46.0",
+            "User-Agent": "vca-android/5.53.1",
             "Accept-Encoding": "gzip",
             "Content-Type": "application/json; charset=utf-8",
         }
 
     def initAuthorize(self):
-        url_params = (
-            "?client_id=h4Yf0b"
-            "&response_type=code"
-            "&acr_values=urn:volvoid:aal:bronze:2sv"
-            "&response_mode=pi.flow"
-            "&scope="
+        url_params =  ("?client_id=h4Yf0b"
+         "&response_type=code"
+         "&acr_values=urn:volvoid:aal:bronze:2sv"
+         "&response_mode=pi.flow"
+         "&scope="
             "openid "
             "email "
             "profile "
@@ -101,7 +100,6 @@ class socket_handler(StreamRequestHandler):
             "conve:doors_status "
             "conve:engine_status "
             "conve:environment "
-            "conve:climatization_start_stop",
             "conve:fuel_status "
             "conve:honk_flash "
             "conve:lock "
@@ -120,8 +118,9 @@ class socket_handler(StreamRequestHandler):
             "energy:electric_range "
             "energy:estimated_charging_time "
             "energy:recharge_status "
-            "vehicle:attributes"
-        )
+            "vehicle:attributes")
+
+        logging.info(OAUTH_AUTH_URL + url_params)
         response = auth_session.get(OAUTH_AUTH_URL + url_params)
         logResponse("LOGIN", response)
         if response.status_code == 200:
