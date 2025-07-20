@@ -22,116 +22,6 @@ _netAdapter = None
 _logLevel =  'error'
 
 _AUTH_URL = "https://volvoid.eu.volvocars.com/as/authorization.oauth2"
-_CLIENT_ID = "dc-o1u00kgdad2fg0s9e2fcdvteq"
-_CLIENT_SECRET = "ZGMtbzF1MDBrZ2RhZDJmZzBzOWUyZmNkdnRlcTpId3hvdVBWU2ZaMk1VemdCM1VSZXRsCg=="
-_SCOPE= [
-    "appointment",
-    "appointment:write",
-    "care_by_volvo:customer:identity",
-    "care_by_volvo:financial_information:invoice:read",
-    "care_by_volvo:financial_information:payment_method",
-    "care_by_volvo:subscription:read",
-    "carshare:guest",
-    "carshare:owner",
-    "conve:battery_charge_level",
-    "conve:brake_status",
-    "conve:climatization_start_stop",
-    "conve:command_accessibility",
-    "conve:commands",
-    "conve:connectivity_status",
-    "conve:diagnostics_engine_status",
-    "conve:diagnostics_workshop",
-    "conve:doors_status",
-    "conve:engine_start_stop",
-    "conve:engine_status",
-    "conve:environment",
-    "conve:fuel_status",
-    "conve:honk_flash",
-    "conve:lock",
-    "conve:lock_status",
-    "conve:navigation",
-    "conve:odometer_status",
-    "conve:recharge_status",
-    "conve:trip_statistics",
-    "conve:tyre_status",
-    "conve:unlock",
-    "conve:vehicle_relation",
-    "conve:warnings",
-    "conve:windows_status",
-    "csb:all",
-    "customer:attributes",
-    "customer:attributes:write",
-    "email",
-    "energy:battery_charge_level",
-    "energy:capability:read",
-    "energy:charging_connection_status",
-    "energy:charging_current_limit",
-    "energy:charging_history:read",
-    "energy:charging_property:read",
-    "energy:charging_system_status",
-    "energy:electric_range",
-    "energy:estimated_charging_time",
-    "energy:recharge_status",
-    "energy:state:read",
-    "energy:target_battery_level",
-    "exve:brake_status",
-    "exve:diagnostics_engine_status",
-    "exve:diagnostics_workshop",
-    "exve:doors_status",
-    "exve:engine_status",
-    "exve:fuel_status",
-    "exve:lock_status",
-    "exve:odometer_status",
-    "exve:tyre_status",
-    "exve:vehicle_statistics",
-    "exve:warnings",
-    "exve:windows_status",
-    "location:read",
-    "oidc.profile.read",
-    "openid",
-    "order:attributes",
-    "payment:payment",
-    "profile",
-    "subscription:read",
-    "subscription:write",
-    "subscription_manager:read",
-    "tsp_customer_api:all",
-    "vehicle:attributes",
-    "vehicle:attributes:write",
-    "vehicle:brake_status",
-    "vehicle:bulb_status",
-    "vehicle:capabilities",
-    "vehicle:climatization",
-    "vehicle:climatization_calendar",
-    "vehicle:climatization_calendar_status",
-    "vehicle:climatization_status",
-    "vehicle:connectivity_status",
-    "vehicle:coolant_status",
-    "vehicle:deliverToCar",
-    "vehicle:doors_status",
-    "vehicle:engine",
-    "vehicle:engine_start",
-    "vehicle:engine_status",
-    "vehicle:fuel_status",
-    "vehicle:honk_blink",
-    "vehicle:ihu",
-    "vehicle:location",
-    "vehicle:lock",
-    "vehicle:lock_status",
-    "vehicle:maintenance_status",
-    "vehicle:odometer_status",
-    "vehicle:oil_status",
-    "vehicle:orderToCar",
-    "vehicle:parking",
-    "vehicle:privacy",
-    "vehicle:service_status",
-    "vehicle:trip_status",
-    "vehicle:trips",
-    "vehicle:tyre_status",
-    "vehicle:unlock",
-    "vehicle:washer_status",
-    "volvo_on_call:all "]
-
 
 def options():
     global _socket_port
@@ -190,6 +80,8 @@ class myException(Exception):
     pass
 class credentialException(myException):
     pass
+class otpException(Exception):
+    pass
 # ------------------------------------------------------------------------------------------------------
 # Class socket_handler
 # ------------------------------------------------------------------------------------------------------
@@ -207,19 +99,24 @@ class socket_handler(StreamRequestHandler):
             if data['action'] == 'login':
                 message = self.run(data)
             elif data['action'] == 'sendOTP':
-                message = self.send_otp(data)
+                message = self.run(data)
             else:
                 raise myException(f"Action <{data['action']}> inconnue dans le daemon")
+        except credentialException as e:
+            message = { "type" : "message",
+                        "level": "warning",
+                        "code" : "credential",
+                        "message": e.args[0] }
+        except otpException as e:
+            message = { "type" : "message",
+                        "level": "warning",
+                        "code" : "otp",
+                        "message": e.args[0] }
         except myException as e:
             logging.error(e.args[0])
             message = { "type" : "message",
                         "level": "error",
                         "code" : "unknow",
-                        "message": e.args[0] }
-        except credentionException as e:
-            message = { "type" : "message",
-                        "level": "warning",
-                        "code" : "credential",
                         "message": e.args[0] }
         self.wfile.write(json.dumps(message).encode('utf-8'))
 
@@ -242,7 +139,11 @@ class socket_handler(StreamRequestHandler):
             response = self.login(auth_session, data)
             auth_session.headers.update({"x-xsrf-header": "PingFederate"})
         elif data['action'] == 'sendOTP':
-            response = self.send_otp(data)
+            auth = json.loads(data['auth'])
+            id = auth['id']
+            auth_session = self.get_auth_session(id)
+            auth_session.headers.update({"x-xsrf-header": "PingFederate"})
+            response = self.send_otp(auth_session,data)
         else:
             return
         while 1:
@@ -294,7 +195,7 @@ class socket_handler(StreamRequestHandler):
         logResponse("CHECK USER PASSWORD", auth)
         if auth.status_code == 400:
             message = auth.json()
-            if "code" in message and message['code'] == 'VALIDATION':
+            if "code" in message and message['code'] == 'VALIDATION_ERROR':
                 if message['details'][0]['code'] == "CREDENTIAL_VALIDATION_FAILED":
                     raise credentialException("Nous n'avons pas reconnu le nom d'utilisateur ou le mot de passe que vous avez saisi. Veuillez réessayer.")
         if auth.status_code != 200:
@@ -305,15 +206,10 @@ class socket_handler(StreamRequestHandler):
         return auth.json()
 
 
-    def send_otp(self, data):
-        logging.info(data)
+    def send_otp(self, auth_session, data):
         auth = json.loads(data['auth'])
         next_url = auth['_links']['checkOtp']['href'].replace("http://","https://") + "?action=checkOtp"
         body = {"otp": data['otp']}
-
-        id = auth['id']
-        auth_session = self.get_auth_session(id)
-        auth_session.headers.update({"x-xsrf-header": "PingFederate"})
 
         auth = auth_session.post(next_url, data=json.dumps(body))
         logResponse("CHECK OTP", auth)
@@ -323,11 +219,8 @@ class socket_handler(StreamRequestHandler):
                 raise myException(message["details"][0]['userMessage'])
         if auth.status_code != 200:
             message = auth.json()
-            raise myException(message["details"][0]["userMessage"])
+            raise otpException("Ce code est invalide ou a expiré")
         response = auth.json()
-        if response['status'] != "OTP_VERIFIED":
-            raise myException(f"Status <{response['status']}> inconnu après envoi de l'OTP")
-        response = self.continue_auth(auth_session, response)
         return response
 
 

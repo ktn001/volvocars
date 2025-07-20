@@ -205,7 +205,11 @@ class volvoAccount {
 			throw new Exception (sprintf(__("Token pour le compte %s introuvable. Veuillez refaire une sauvegarde de ce compte",__FILE__),$this->getName()));
 		}
 		$token = $tokens[$this->getId()];
-		
+
+		if (! isset($token['refresh_token'])){
+			throw new Exception (sprintf(__("Token de renouvellement pour le compte %s introuvable. Veuillez refaire une sauvegarde de ce compte",__FILE__),$this->getName()));
+		}
+		$refresh_token = $token['refresh_token'];
 		$session = curl_init(self::OAUTH_URL);
 		log::add("volvocars","debug","renewToken: " . $token["refresh_token"]);
 		curl_setopt($session, CURLOPT_HTTPHEADER, [
@@ -235,6 +239,10 @@ class volvoAccount {
 			throw new volvoApiException (self::OAUTH_URL, $httpCode, $message, $description, $detail);
 		}
 		$token = is_json($content,$content);
+		if (! isset($token['refresh_token'])){
+			$token['refresh_token'] = $refresh_token;
+		}
+		log::add("volocars","debug","newToken: " . print_r($token,true));
 		self::saveToken($token, $this->getId());
 	}
 

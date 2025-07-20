@@ -311,27 +311,23 @@ if (typeof volvocarsFrontEnd === "undefined") {
                       dataType: "json",
                       success: function (data) {
                         if (data.state != "ok") {
+                          let message = '';
+                          let level = '';
+                          if (typeof(data.result) == 'string') {
+                            message = data.result;
+                            level = "danger"
+                          } else {
+                            message = data.result.msg;
+                            level = data.result.level;
+                          }
                           jeedomUtils.showAlert({
-                            message: data.result,
-                            level: "danger",
+                            message: message,
+                            level: level, 
                           });
                           return;
-                        }
-                        let auth = json_decode(data.result);
-                        if (auth.code == "VALIDATION_ERROR") {
-                          let msg = "";
-                          if ("details" in auth) {
-                            auth = auth.details[0];
-                          }
-                          if (auth.code == "CREDENTIAL_VALIDATION_FAILED") {
-                            msg = "{{Compte ou password invalide.}}";
-                          }
-                          document.getElementById("error_message").innerText =
-                            msg;
-                          return;
-                        }
-                        document.getElementById("error_message").innerText = "";
-                        if (auth.status == "OTP_REQUIRED") {
+                        } else {
+                          let auth = json_decode(data.result);
+                          document.getElementById("error_message").innerText = "";
                           editVolvocarsAccount.close();
                           volvocarsFrontEnd.getOTP(auth, account.id);
                         }
