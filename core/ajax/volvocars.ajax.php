@@ -76,6 +76,12 @@ try {
 		socket_write($socket,$message,strlen($message));
 		$auth = chop(socket_read($socket, 8192));
 		log::add("volvocars","debug","auth: " . print_r($auth,true));
+		$message = is_json($auth,$auth);
+		if (isset($message['message'])) {
+			log::add("volvocars",$message['level'],$message['message']);
+			ajax::error($message['message']);
+		}
+
 		if (isset($auth['error'])) {
 			if (isset($auth['HttpCode'])) {
 				log::add("volvocars","error","HttpCode: " . $auth['HttpCode'] . " Content: " . $auth['content']);
@@ -120,6 +126,17 @@ try {
 		);
 		$message = json_encode($message) . "\n";
 		socket_write($socket,$message,strlen($message));
+		$auth = chop(socket_read($socket, 8192));
+		log::add("volvocars","debug","auth: " . print_r($auth,true));
+		$message = is_json($auth,$auth);
+		if (isset($message['message'])) {
+			log::add("volvocars",$message['level'],$message['message']);
+			ajax::error($message['message']);
+		}
+
+
+
+
 		$token = chop(socket_read($socket, 8192));
 		$token=is_json($token,$token);
 		if (isset($token['error'])) {
