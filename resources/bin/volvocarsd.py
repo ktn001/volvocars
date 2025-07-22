@@ -20,6 +20,7 @@ _pidfile = None
 _apikey = None
 _netAdapter = None
 _logLevel =  'error'
+_authorisation_file_name = os.path.realpath(os.path.dirname(__file__) + "/../etc/volvocars_authorisation.json")
 
 _AUTH_URL = "https://volvoid.eu.volvocars.com/as/authorization.oauth2"
 
@@ -124,9 +125,13 @@ class socket_handler(StreamRequestHandler):
         if id != None and id in self.sessions:
             return self.sessions[id]
 
+        logging.debug(f"lecture de <{_authorisation_file_name}>")
+        with open(_authorisation_file_name, 'r') as file:
+            authorisation = json.load(file)
+
         auth_session = requests.session()
         auth_session.headers = {
-            "authorization": "Basic aDRZZjBiOlU4WWtTYlZsNnh3c2c1WVFxWmZyZ1ZtSWFEcGhPc3kxUENhVXNpY1F0bzNUUjVrd2FKc2U0QVpkZ2ZJZmNMeXc=",
+            "authorization": "Basic " + authorisation['basic'],
             "User-Agent": "vca-android/5.58.1",
             "Accept-Encoding": "gzip",
             "Content-Type": "application/json; charset=utf-8"
@@ -173,11 +178,16 @@ class socket_handler(StreamRequestHandler):
 
 
     def login(self, auth_session, data):
-        url_params = ("?client_id=h4Yf0b"
+        logging.debug(f"lecture de <{_authorisation_file_name}>")
+        with open(_authorisation_file_name, 'r') as file:
+            authorisation = json.load(file)
+
+        url_params = ("?client_id=" + authorisation['client_id'] +
                       "&response_type=code"
                       "&acr_values=urn:volvoid:aal:bronze:2sv"
                       "&response_mode=pi.flow"
-                      "&scope=openid email profile care_by_volvo:financial_information:invoice:read care_by_volvo:financial_information:payment_method care_by_volvo:subscription:read customer:attributes customer:attributes:write order:attributes vehicle:attributes tsp_customer_api:all conve:brake_status conve:climatization_start_stop conve:command_accessibility conve:commands conve:diagnostics_engine_status conve:diagnostics_workshop conve:doors_status conve:engine_status conve:environment conve:fuel_status conve:honk_flash conve:lock conve:lock_status conve:navigation conve:odometer_status conve:trip_statistics conve:tyre_status conve:unlock conve:vehicle_relation conve:warnings conve:windows_status energy:battery_charge_level energy:charging_connection_status energy:charging_system_status energy:electric_range energy:estimated_charging_time energy:recharge_status vehicle:attributes")
+                      "&scope=" + " ".join(authorisation['scope'])
+                      )
 
         auth = auth_session.get(OAUTH_AUTH_URL + url_params)
         logResponse("START LOGIN",auth)
