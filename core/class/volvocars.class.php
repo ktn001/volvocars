@@ -2118,7 +2118,7 @@ class volvocarsCmd extends cmd {
 							break;
 						}
 					}
-					if (! oneCmdFound) {
+					if (! $oneCmdFound) {
 						return $this->execCmd();
 					}
 					return $allClosed;
