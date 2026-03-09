@@ -242,7 +242,7 @@ class volvoAccount {
 		if (! isset($token['refresh_token'])){
 			$token['refresh_token'] = $refresh_token;
 		}
-		log::add("volocars","debug","newToken: " . print_r($token,true));
+		log::add("volvocars","debug","newToken: " . print_r($token,true));
 		self::saveToken($token, $this->getId());
 	}
 

@@ -142,17 +142,18 @@ class endpoint {
 				"odometer" => "odometer",
 			],
 		],
-		"recharge_status" => [
+		"state" => [
 			"API" => "Energy",
-			"url" => "https://api.volvocars.com/energy/v1/vehicles/%s/recharge-status",
-			"accept" => "application/vnd.volvocars.api.energy.vehicledata.v1+json",
+			"url" => "https://api.volvocars.com/energy/v2/vehicles/%s/state",
+			"accept" => "application/json",
 			"type" => "info",
 			"refreshDelai" => 5,
 			"cmds" => [
-				"batteryChargeLevel"        => "batteryLevel",
-				"chargingSystemStatus"      => "chargingStatus",
-				"estimatedChargingTime"     => "chargingRemainingTime",
-				"chargingConnectionStatus"  => "connectorStatus",
+				"batteryChargeLevel"    						    => "batteryLevel",
+				"electricRange"										=> "electricAutonomy",
+				"chargerConnectionStatus"							=> "connectorStatus",
+				"chargingStatus"									=> "chargingStatus",
+				"estimatedChargingTimeToTargetBatteryChargeLevel"	=> "chargingRemainingTime",
 			],
 		],
 		"statistics" => [

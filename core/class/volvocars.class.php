@@ -2139,6 +2139,7 @@ class volvocarsCmd extends cmd {
 			"CHARGING_SYSTEM_SCHEDULED"		=> __("Programmée",__FILE__),
 			"CHARGING_SYSTEM_UNSPECIFIED"	=> __("État inconnu",__FILE__),
 
+			"CONNECTED"		=> __("Branchée",__FILE__),
 			"CONNECTION_STATUS_CONNECTED_AC" => __("Branchée (AC)",__FILE__),
 			"CONNECTION_STATUS_CONNECTED_DC" => __("Branchée (DC)",__FILE__),
 			"CONNECTION_STATUS_DISCONNECTED" => __("Débranchée",__FILE__),
