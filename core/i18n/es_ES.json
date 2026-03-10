@@ -59,8 +59,6 @@
         "Autonomie:": "Autonomía:",
         "Autre": "Otro",
         "Branchée": "Conectada",
-        "Branchée (AC)": "Conectado (CA)",
-        "Branchée (DC)": "Conectado (CC)",
         "Commande %s introuvable": "Comando %s no encontrado",
         "Commande %s pas créée car value non définie": "Comando %s no creado porque valor no definido",
         "Commande Jeedom pour '%s' introuvable": "Comando Jeedom para '%s' no encontrado",
@@ -97,6 +95,7 @@
         "Electricité": "Electricidad",
         "En charge": "En carga",
         "En court d'utilisation": "En uso",
+        "En décharge": "En vertedero",
         "En erreur": "En caso de error",
         "En pause": "Pausa",
         "En veille": "En espera",
@@ -196,8 +195,7 @@
         "la commande %s est introuvable": "no se encuentra el comando %s",
         "la couleur du véhicule %s n'est pas définie": "el color del vehículo %s no está definido",
         "mise à jour des listeners": "actualización de oyentes",
-        "service régulier en retard": "servicio regular tardío",
-        "État inconnu": "Estado desconocido"
+        "service régulier en retard": "servicio regular tardío"
     },
     "plugins\/volvocars\/core\/config\/cmds.json": {
         "Arrêter moteur": "Parar motor",

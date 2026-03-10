@@ -59,8 +59,6 @@
         "Autonomie:": "Autonomie:",
         "Autre": "Andere",
         "Branchée": "Angeschlossen",
-        "Branchée (AC)": "Angeschlossen (AC)",
-        "Branchée (DC)": "Angeschlossen (DC)",
         "Commande %s introuvable": "Befehl %s nicht gefunden",
         "Commande %s pas créée car value non définie": "Befehl %s nicht erstellt, da value nicht definiert ist",
         "Commande Jeedom pour '%s' introuvable": "Jeedom-Befehl für '%s' nicht gefunden",
@@ -97,6 +95,7 @@
         "Electricité": "Strom",
         "En charge": "Aufgeladen",
         "En court d'utilisation": "Kurz in Gebrauch",
+        "En décharge": "Auf Deponie",
         "En erreur": "In Fehler",
         "En pause": "In Pause",
         "En veille": "Im Standby-Modus",
@@ -196,8 +195,7 @@
         "la commande %s est introuvable": "der Befehl %s wurde nicht gefunden",
         "la couleur du véhicule %s n'est pas définie": "die Farbe des Fahrzeugs %s ist nicht festgelegt",
         "mise à jour des listeners": "aktualisierung von Listenern",
-        "service régulier en retard": "regelmäßiger Dienst verspätet",
-        "État inconnu": "Unbekannter Status"
+        "service régulier en retard": "regelmäßiger Dienst verspätet"
     },
     "plugins\/volvocars\/core\/config\/cmds.json": {
         "Arrêter moteur": "Motor anhalten",

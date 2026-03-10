@@ -59,8 +59,6 @@
         "Autonomie:": "Autonomy:",
         "Autre": "Other",
         "Branchée": "Connected",
-        "Branchée (AC)": "Connected (AC)",
-        "Branchée (DC)": "Connected (DC)",
         "Commande %s introuvable": "Command %s not found",
         "Commande %s pas créée car value non définie": "Command %s not created because value not defined",
         "Commande Jeedom pour '%s' introuvable": "Jeedom command for '%s' not found",
@@ -97,6 +95,7 @@
         "Electricité": "Electricity",
         "En charge": "Under load",
         "En court d'utilisation": "In use",
+        "En décharge": "In landfill",
         "En erreur": "In error",
         "En pause": "Pause",
         "En veille": "Standby",
@@ -196,8 +195,7 @@
         "la commande %s est introuvable": "the command %s cannot be found",
         "la couleur du véhicule %s n'est pas définie": "vehicle color %s not defined",
         "mise à jour des listeners": "listeners update",
-        "service régulier en retard": "regular late service",
-        "État inconnu": "Status unknown"
+        "service régulier en retard": "regular late service"
     },
     "plugins\/volvocars\/core\/config\/cmds.json": {
         "Arrêter moteur": "Stop motor",
