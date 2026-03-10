@@ -2132,19 +2132,16 @@ class volvocarsCmd extends cmd {
 
 	public function getDisplayValue($value) {
 		$textes = [
-			"CHARGING_SYSTEM_CHARGING"		=> __("En charge",__FILE__),
-			"CHARGING_SYSTEM_IDLE"			=> __("En pause",__FILE__),
-			"CHARGING_SYSTEM_DONE"			=> __("Terminée",__FILE__),
-			"CHARGING_SYSTEM_FAULT"			=> __("En erreur",__FILE__),
-			"CHARGING_SYSTEM_SCHEDULED"		=> __("Programmée",__FILE__),
-			"CHARGING_SYSTEM_UNSPECIFIED"	=> __("État inconnu",__FILE__),
+			"IDLE"			=> __("En pause",__FILE__),
+			"CHARGING"		=> __("En charge",__FILE__),
+			"SCHEDULED"		=> __("Programmée",__FILE__),
+			"DISCHARGING"	=> __("En décharge",__FILE__),
+			"ERROR"			=> __("En erreur",__FILE__),
+			"DONE"			=> __("Terminée",__FILE__),
 
 			"CONNECTED"		=> __("Branchée",__FILE__),
-			"CONNECTION_STATUS_CONNECTED_AC" => __("Branchée (AC)",__FILE__),
-			"CONNECTION_STATUS_CONNECTED_DC" => __("Branchée (DC)",__FILE__),
-			"CONNECTION_STATUS_DISCONNECTED" => __("Débranchée",__FILE__),
-			"CONNECTION_STATUS_FAULT"		 => __("En erreur",__FILE__),
-			"CONNECTION_STATUS_UNSPECIFIED"	 => __("État inconnu",__FILE__),
+			"DISCONNECTED"	=> __("Débranchée",__FILE__),
+			"FAULT"			 => __("En erreur",__FILE__),
 
 			"AVAILABLE"	   => __("Accessible",__FILE__),
 			"UNAVAILABLE"  => __("Indisponnible",__FILE__),
