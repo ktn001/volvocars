@@ -66,7 +66,7 @@
 					<img/>
 				</span>
 				<span
-					id="div_al_wash#id#"
+					id="div_al_washerFluid#id#"
 					class="#al_washerFluid_history#id##"
 					data-cmd_id="#al_washerFluid_id#id##"
 					>
@@ -77,7 +77,7 @@
 					class="#fuelEngineOnly#id## #al_fuelautonomy_history#id##"
 					data-cmd_id="#al_fuelautonomy_id#id##"
 					>
-					<img src="/plugins/volvocars/desktop/img/station_recharge_grey_dark.svg">
+					<img/>
 				</span>
 				<span
 					id="div_al_electricautonomy#id#"
@@ -210,7 +210,7 @@
 						title="{{Démarrer moteur}}"
 						data-cmd_id="#engineStart_id#id##"
 						onclick="jeedom.cmd.execute({id: #engineStart_id#id##})">
-			  		<img src='/plugins/volvocars/desktop/img/engine_start_dark.svg'/>	
+					<img src='/plugins/volvocars/desktop/img/engine_start_dark.svg'/>	
 				</button>
 				<button class="btn cmd action #engineStop_hidden#id##"
 						title="{{Arrêter moteur}}"
@@ -289,304 +289,480 @@ for (cmdId of ['#lock_id#id##', '#unlock_id#id##', '#climStart_id#id##', '#climS
 // LOCKED
 // ======
 if (!"#locked_id#id##".startsWith('#')) {
-	jeedom.cmd.update['#locked_id#id##'] = function(_options) {
-		document.querySelector('.value#locked_id#id##').html(_options.display_value)
-	}
-	jeedom.cmd.refreshValue([{cmd_id: '#locked_id#id##', display_value: "#locked_display_value#id##"}])
+	jeedom.cmd.addUpdateFunction('#locked_id#id##', function(_options) {
+		if  (is_object(cmd = document.querySelector(".value#locked_id#id##"))) {
+			cmd.html(_options.display_value)
+			cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+		}
+	})
+
+	jeedom.cmd.refreshValue([{cmd_id: '#locked_id#id##',
+							  display_value: "#locked_display_value#id##",
+							  valueDate: "#locked_valueDate#id##",
+							  collectDate: "#locked_collectDate#id##"}])
 }
 
 // AVAILABILITY
 // ============
 if (!"#availability_id#id##".startsWith('#')) {
-	jeedom.cmd.update['#availability_id#id##'] = function(_options) {
-		document.querySelector('.value#availability_id#id##').html(_options.display_value)
-	}
-	jeedom.cmd.refreshValue([{cmd_id: '#availability_id#id##', display_value: "#availability_display_value#id##"}])
+	jeedom.cmd.addUpdateFunction('#availability_id#id##', function(_options) {
+		if  (is_object(cmd = document.querySelector(".value#availability_id#id##"))) {
+			cmd.html(_options.display_value)
+			cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+		}
+	})
+
+	jeedom.cmd.refreshValue([{cmd_id: '#availability_id#id##',
+							  display_value: "#availability_display_value#id##",
+							  valueDate: "#availability_valueDate#id##",
+							  collectDate: "#availability_collectDate#id##"}])
 }
 
 // ALL DOORS CLOSED
 // ================
 if (!"#allDoorsClosed_id#id##".startsWith('#')) {
-	jeedom.cmd.update['#allDoorsClosed_id#id##'] = function(_options) {
-		document.querySelector('.value#allDoorsClosed_id#id##').html(_options.display_value)
-	}
-	jeedom.cmd.refreshValue([{cmd_id: '#allDoorsClosed_id#id##', display_value: "#allDoorsClosed_display_value#id##"}])
+	jeedom.cmd.addUpdateFunction('#allDoorsClosed_id#id##', function(_options) {
+		if  (is_object(cmd = document.querySelector(".value#allDoorsClosed_id#id##"))) {
+			cmd.html(_options.display_value)
+			cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+		}
+	})
+
+	jeedom.cmd.refreshValue([{cmd_id: '#allDoorsClosed_id#id##',
+							  display_value: "#allDoorsClosed_display_value#id##",
+							  valueDate: "#allDoorsClosed_valueDate#id##",
+							  collectDate: "#allDoorsClosed_collectDate#id##"}])
 }
 
 // ALL WINDOWS CLOSED
 // ==================
 if (!"#allWinsClosed_id#id##".startsWith('#')) {
-	jeedom.cmd.update['#allWinsClosed_id#id##'] = function(_options) {
-		document.querySelector('.value#allWinsClosed_id#id##').html(_options.display_value)
-	}
-	jeedom.cmd.refreshValue([{cmd_id: '#allWinsClosed_id#id##', display_value: "#allWinsClosed_display_value#id##"}])
+	jeedom.cmd.addUpdateFunction('#allWinsClosed_id#id##', function(_options) {
+		if  (is_object(cmd = document.querySelector(".value#allWinsClosed_id#id##"))) {
+			cmd.html(_options.display_value)
+			cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+		}
+	})
+
+	jeedom.cmd.refreshValue([{cmd_id: '#allWinsClosed_id#id##',
+							  display_value: "#allWinsClosed_display_value#id##",
+							  valueDate: "#allWinsClosed_valueDate#id##",
+							  collectDate: "#allWinsClosed_collectDate#id##"}])
 }
 
 // AL OIL
 // ======
 if (!"#al_oil_id#id##".startsWith('#')) {
-  jeedom.cmd.update['#al_oil_id#id##'] = function(_options) {
-	let img = ''
-	if (_options.value != 0) {
-	  img = 'oil_red.svg'
-	} else {
-	  if (document.body.getAttribute('data-theme').endsWith('Dark')) {
-		img = 'oil_grey_dark.svg'
-	  } else {
-		img = 'oil_grey_light.svg'
-	  }
-	}
-	document.querySelector('#div_al_oil#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
-  }
-  jeedom.cmd.refreshValue([{cmd_id: '#al_oil_id#id##', value: "#al_oil#id##"}])
+	jeedom.cmd.addUpdateFunction('#al_oil_id#id##', function(_options) {
+		if  (is_object(cmd = document.querySelector("#div_al_oil#id# img"))) {
+			let img = ''
+			if (_options.value != 0) {
+				img = 'oil_red.svg'
+			} else {
+				if (document.body.getAttribute('data-theme').endsWith('Dark')) {
+					img = 'oil_grey_dark.svg'
+				} else {
+				img = 'oil_grey_light.svg'
+				}
+			}
+			cmd.setAttribute('src','/plugins/volvocars/desktop/img/' + img)
+			cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+		}
+	})
+
+	jeedom.cmd.refreshValue([{cmd_id: '#al_oil_id#id##',
+							  value: "#al_oil#id##",
+							  display_value: "#al_oil_display_value#id##",
+							  valueDate: "#al_oil_valueDate#id##",
+							  collectDate: "#al_oil_collectDate#id##"}])
 }
 
 // AL COOLANT
 // ==========
 if (!"#al_coolant_id#id##".startsWith('#')) {
-  jeedom.cmd.update['#al_coolant_id#id##'] = function(_options) {
-	let img = ''
-	if (_options.value == 1) {
-	  img = 'coolant_red.svg'
-	} else {
-	  if (document.body.getAttribute('data-theme').endsWith('Dark')) {
-		img = 'coolant_grey_dark.svg'
-	  } else {
-		img = 'coolant_grey_light.svg'
-	  }
-	}
-	document.querySelector('#div_al_coolant#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
-  }
-  jeedom.cmd.refreshValue([{cmd_id: '#al_coolant_id#id##', value: "#al_coolant#id##"}])
+	jeedom.cmd.addUpdateFunction('#al_coolant_id#id##', function(_options) {
+		if  (is_object(cmd = document.querySelector("#div_al_coolant#id# img"))) {
+			let img = ''
+			if (_options.value == 1) {
+				img = 'coolant_red.svg'
+			} else {
+				if (document.body.getAttribute('data-theme').endsWith('Dark')) {
+					img = 'coolant_grey_dark.svg'
+				} else {
+					img = 'coolant_grey_light.svg'
+				}
+			}
+			cmd.setAttribute('src','/plugins/volvocars/desktop/img/' + img)
+			cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+		}
+	})
+
+	jeedom.cmd.refreshValue([{cmd_id: '#al_coolant_id#id##',
+							  display_value: "#al_coolant_display_value#id##",
+							  value: "#al_coolant#id##",
+							  valueDate: "#al_coolant_valueDate#id##",
+							  collectDate: "#al_coolant_collectDate#id##"}])
 }
 
 // AL BRAKE
 // ========
 if (!"#al_brakeFluid_id#id##".startsWith('#')) {
-  jeedom.cmd.update['#al_brakeFluid_id#id##'] = function(_options) {
-	let img = ""
-	if (_options.value == 1) {
-	  img = 'brake_red.svg'
-	} else {
-	  if (document.body.getAttribute('data-theme').endsWith('Dark')) {
-		img = 'brake_grey_dark.svg'
-	  } else {
-		img = 'brake_grey_light.svg'
-	  }
-	}
-	document.querySelector('#div_al_brake#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
-  }
-  jeedom.cmd.refreshValue([{cmd_id: '#al_brakeFluid_id#id##', value: "#al_brakeFluid#id##"}])
+	jeedom.cmd.addUpdateFunction('#al_brakeFluid_id#id##', function(_options) {
+		if  (is_object(cmd = document.querySelector("#div_al_brake#id# img"))) {
+			let img = ""
+			if (_options.value == 1) {
+				img = 'brake_red.svg'
+			} else {
+				if (document.body.getAttribute('data-theme').endsWith('Dark')) {
+					img = 'brake_grey_dark.svg'
+				} else {
+					img = 'brake_grey_light.svg'
+				}
+			}
+			cmd.setAttribute('src','/plugins/volvocars/desktop/img/' + img)
+			cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+		}
+	})
+
+	jeedom.cmd.refreshValue([{cmd_id: '#al_brakeFluid_id#id##',
+							  display_value: "#al_brakeFluid_display_value#id##",
+							  value: "#al_brakeFluid#id##",
+							  valueDate: "#al_brakeFluid_valueDate#id##",
+							  collectDate: "#al_brakeFluid_collectDate#id##"}])
 }
 
 // AL WASH
 // =======
 if (!"#al_washerFluid_id#id##".startsWith('#')) {
-  jeedom.cmd.update['#al_washerFluid_id#id##'] = function(_options) {
-	let img = ""
-	if (_options.value == 1) {
-	  img = 'wash_red.svg'
-	} else {
-	  if (document.body.getAttribute('data-theme').endsWith('Dark')) {
-		img = 'wash_grey_dark.svg'
-	  } else {
-		img = 'wash_grey_light.svg'
-	  }
-	}
-	document.querySelector('#div_al_wash#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
-  }
-  jeedom.cmd.refreshValue([{cmd_id: '#al_washerFluid_id#id##', value: "#al_washerFluid#id##"}])
+	jeedom.cmd.addUpdateFunction('#al_washerFluid_id#id##', function(_options) {
+		if  (is_object(cmd = document.querySelector("#div_al_washerFluid#id# img"))) {
+			let img = ""
+			if (_options.value == 1) {
+				img = 'wash_red.svg'
+			} else {
+				if (document.body.getAttribute('data-theme').endsWith('Dark')) {
+					img = 'wash_grey_dark.svg'
+				} else {
+					img = 'wash_grey_light.svg'
+				}
+			}
+			cmd.setAttribute('src','/plugins/volvocars/desktop/img/' + img)
+			cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+		}
+	})
+
+	jeedom.cmd.refreshValue([{cmd_id: '#al_washerFluid_id#id##',
+							  display_value: "#al_washerFluid_display_value#id##",
+							  value: "#al_washerFluid#id##",
+							  valueDate: "#al_washerFluid_valueDate#id##",
+							  collectDate: "#al_washerFluid_collectDate#id##"}])
 }
 
 // AL FUEL AUTONOMY
 // ================
 if (!"#al_fuelautonomy_id#id##".startsWith('#')) {
-  jeedom.cmd.update['#al_fuelautonomy_id#id##'] = function(_options) {
-	let img = ""
-	if (_options.value == 1) {
-	  img = 'station_gas_red.svg'
-	} else {
-	  if (document.body.getAttribute('data-theme').endsWith('Dark')) {
-		img = 'station_gas_grey_dark.svg'
-	  } else {
-		img = 'station_gas_grey_light.svg'
-	  }
-	}
-	document.querySelector('#div_al_fuelautonomy#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
-  }
-  jeedom.cmd.refreshValue([{cmd_id: '#al_fuelautonomy_id#id##', value: "#al_fuelautonomy#id##"}])
+	console.log("#div_al_fuelautonomy#id# img")
+	jeedom.cmd.addUpdateFunction('#al_fuelautonomy_id#id##', function(_options) {
+		if  (is_object(cmd = document.querySelector("#div_al_fuelautonomy#id# img"))) {
+			let img = ""
+			if (_options.value == 1) {
+				img = 'station_gas_red.svg'
+			} else {
+				if (document.body.getAttribute('data-theme').endsWith('Dark')) {
+					img = 'station_gas_grey_dark.svg'
+				} else {
+					img = 'station_gas_grey_light.svg'
+				}
+			}
+			console.log(img)
+			cmd.setAttribute('src','/plugins/volvocars/desktop/img/' + img)
+			cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+		}
+	})
+
+	jeedom.cmd.refreshValue([{cmd_id: '#al_fuelautonomy_id#id##',
+							  value: "#al_fuelautonomy#id##",
+							  display_value: "#al_fuelautonomy_display_value#id##",
+							  valueDate: "#al_fuelautonomy_valueDate#id##",
+							  collectDate: "#al_fuelautonomy_collectDate#id##"}])
 }
 
 // AL ELECTRIC AUTONOMY
 // ====================
 if (!"#al_electricautonomy_id#id##".startsWith('#')) {
-  jeedom.cmd.update['#al_electricautonomy_id#id##'] = function(_options) {
-	let img = ""
-	if (_options.value == 1) {
-	  img = 'station_recharge_red.svg'
-	} else {
-	  if (document.body.getAttribute('data-theme').endsWith('Dark')) {
-		img = 'station_recharge_grey_dark.svg'
-	  } else {
-		img = 'station_recharge_grey_light.svg'
-	  }
-	}
-	document.querySelector('#div_al_electricautonomy#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
-  }
-  jeedom.cmd.refreshValue([{cmd_id: '#al_electricautonomy_id#id##', value: "#al_electricautonomy#id##"}])
+	jeedom.cmd.addUpdateFunction('#al_electricautonomy_id#id##', function(_options) {
+		if  (is_object(cmd = document.querySelector("#div_al_electricautonomy#id# img"))) {
+			let img = ""
+			if (_options.value == 1) {
+				img = 'station_recharge_red.svg'
+			} else {
+				if (document.body.getAttribute('data-theme').endsWith('Dark')) {
+					img = 'station_recharge_grey_dark.svg'
+				} else {
+					img = 'station_recharge_grey_light.svg'
+				}
+			}
+			cmd.setAttribute('src','/plugins/volvocars/desktop/img/' + img)
+			cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+		}
+	})
+
+	jeedom.cmd.refreshValue([{cmd_id: '#al_electricautonomy_id#id##',
+							  value: "#al_electricautonomy#id##",
+							  display_value: "#al_electricautonomy_display_value#id##",
+							  valueDate: "#al_electricautonomy_valueDate#id##",
+							  collectDate: "#al_electricautonomy_collectDate#id##"}])
 }
 
 // AL TYRE
 // =======
 if (!"#al_tyre_id#id##".startsWith('#')) {
-  jeedom.cmd.update['#al_tyre_id#id##'] = function(_options) {
-	let img = ""
-	if (_options.value >= 1) {
-	  img = 'tyre_red.svg'
-	} else {
-	  if (document.body.getAttribute('data-theme').endsWith('Dark')) {
-		img = 'tyre_grey_dark.svg'
-	  } else {
-		img = 'tyre_grey_light.svg'
-	  }
-	}
-	document.querySelector('#div_al_tyre#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
-  }
-  jeedom.cmd.refreshValue([{cmd_id: '#al_tyre_id#id##', value: "#al_tyre#id##"}])
+	jeedom.cmd.addUpdateFunction('#al_tyre_id#id##', function(_options) {
+		if  (is_object(cmd = document.querySelector("#div_al_tyre#id# img"))) {
+			let img = ""
+			if (_options.value >= 1) {
+				img = 'tyre_red.svg'
+			} else {
+				if (document.body.getAttribute('data-theme').endsWith('Dark')) {
+					img = 'tyre_grey_dark.svg'
+				} else {
+					img = 'tyre_grey_light.svg'
+				}
+			}
+			cmd.setAttribute('src','/plugins/volvocars/desktop/img/' + img)
+			cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+		}
+	})
+
+	jeedom.cmd.refreshValue([{cmd_id: '#al_tyre_id#id##',
+							  value: "#al_tyre#id##",
+							  display_value: "#al_tyre_display_value#id##",
+							  valueDate: "#al_tyre_valueDate#id##",
+							  collectDate: "#al_tyre_collectDate#id##"}])
 }
 
 // AL LIGHT
 // ========
 if (!"#al_light_id#id##".startsWith('#')) {
-  jeedom.cmd.update['#al_light_id#id##'] = function(_options) {
-	let img = ""
-	if (_options.value == 1) {
-	  img = 'light_red.svg'
-	} else {
-	  if (document.body.getAttribute('data-theme').endsWith('Dark')) {
-		img = 'light_grey_dark.svg'
-	  } else {
-		img = 'light_grey_light.svg'
-	  }
-	}
-	document.querySelector('#div_al_light#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
-  }
-  jeedom.cmd.refreshValue([{cmd_id: '#al_light_id#id##', value: "#al_light#id##"}])
+	jeedom.cmd.addUpdateFunction('#al_light_id#id##', function(_options) {
+		if  (is_object(cmd = document.querySelector("#div_al_light#id# img"))) {
+			let img = ""
+			if (_options.value == 1) {
+				img = 'light_red.svg'
+			} else {
+				if (document.body.getAttribute('data-theme').endsWith('Dark')) {
+					img = 'light_grey_dark.svg'
+				} else {
+					img = 'light_grey_light.svg'
+				}
+			}
+			cmd.setAttribute('src','/plugins/volvocars/desktop/img/' + img)
+			cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+		}
+	})
+
+	jeedom.cmd.refreshValue([{cmd_id: '#al_light_id#id##',
+							  value: "#al_light#id##",
+							  display_value: "#al_light_display_value#id##",
+							  valueDate: "#al_light_valueDate#id##",
+							  collectDate: "#al_light_collectDate#id##"}])
 }
 
 // PRESENCE SITE 1
 // ===============
 if (!"#presenceSite1_id#id##".startsWith('#')) {
-	jeedom.cmd.update['#presenceSite1_id#id##'] = function(_options) {
-		div_el = document.querySelector('.div_presence.Cmd#presenceSite1_id#id##')
-		if (_options.value === '1'){
-			div_el.removeClass('danger')
-			div_el.addClass('success')
-		} else if (_options.value === '0') {
-			div_el.addClass('danger')
-			div_el.removeClass('success')
-		} else {
-			div_el.removeClass('danger')
-			div_el.removeClass('success')
+	jeedom.cmd.addUpdateFunction('#presenceSite1_id#id##', function(_options) {
+		if  (is_object(div_el = document.querySelector(".div_presence.Cmd#presenceSite1_id#id##"))) {
+		console.log(_options)
+		console.log(div_el)
+			if (_options.value == '1'){
+				div_el.removeClass('danger')
+				div_el.addClass('success')
+			} else if (_options.value == '0') {
+				div_el.addClass('danger')
+				div_el.removeClass('success')
+			} else {
+				div_el.removeClass('danger')
+				div_el.removeClass('success')
+			}
+			div_el.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
 		}
-	}
-	jeedom.cmd.refreshValue([{cmd_id: '#presenceSite1_id#id##', value: "#presenceSite1#id##"}])
+	})
+
+	jeedom.cmd.refreshValue([{cmd_id: '#presenceSite1_id#id##',
+							  value: "#presenceSite1#id##",
+							  display_value: "#presenceSite1_display_value#id##",
+							  valueDate: "#presenceSite1_valueDate#id##",
+							  collectDate: "#presenceSite1_collectDate#id##"}])
 }
 
 // PRESENCE SITE 2
 // ===============
 if (!"#presenceSite2_id#id##".startsWith('#')) {
-	jeedom.cmd.update['#presenceSite2_id#id##'] = function(_options) {
-		div_el = document.querySelector('.div_presence.Cmd#presenceSite2_id#id##')
-		if (_options.value === '1'){
-			div_el.removeClass('danger')
-			div_el.addClass('success')
-		} else if (_options.value === '0') {
-			div_el.addClass('danger')
-			div_el.removeClass('success')
-		} else {
-			div_el.removeClass('danger')
-			div_el.removeClass('success')
+	jeedom.cmd.addUpdateFunction('#presenceSite2_id#id##', function(_options) {
+		if  (is_object(div_el = document.querySelector(".div_presence.Cmd#presenceSite2_id#id##"))) {
+		console.log(_options)
+		console.log(div_el)
+			if (_options.value == '1'){
+				div_el.removeClass('danger')
+				div_el.addClass('success')
+			} else if (_options.value == '0') {
+				div_el.addClass('danger')
+				div_el.removeClass('success')
+			} else {
+				div_el.removeClass('danger')
+				div_el.removeClass('success')
+			}
+			div_el.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
 		}
-	}
-	jeedom.cmd.refreshValue([{cmd_id: '#presenceSite2_id#id##', value: "#presenceSite2#id##"}])
+	})
+
+	jeedom.cmd.refreshValue([{cmd_id: '#presenceSite2_id#id##',
+							  value: "#presenceSite2#id##",
+							  display_value: "#presenceSite2_display_value#id##",
+							  valueDate: "#presenceSite2_valueDate#id##",
+							  collectDate: "#presenceSite2_collectDate#id##"}])
 }
 
 // ODOMETER
 // ========
 if (!"#odometer_id#id##".startsWith('#')) {
-	jeedom.cmd.update['#odometer_id#id##'] = function(_options) {
-		document.querySelector('.value#odometer_id#id##').html(_options.display_value)
-	}
-	jeedom.cmd.refreshValue([{cmd_id: '#odometer_id#id##', display_value: "#odometer_display_value#id##"}])
+	jeedom.cmd.addUpdateFunction('#odometer_id#id##', function(_options) {
+		if  (is_object(cmd = document.querySelector('.value#odometer_id#id##'))) {
+			cmd.html(_options.display_value)
+			cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+		}
+	})
+
+	jeedom.cmd.refreshValue([{cmd_id: '#odometer_id#id##',
+							  value: "#odometer#id##",
+							  display_value: "#odometer_display_value#id##",
+							  valueDate: "#odometer_valueDate#id##",
+							  collectDate: "#odometer_collectDate#id##"}])
 }
 
 // FUEL AMOUNT
 // ===========
 if (!"#fuelAmount_id#id##".startsWith('#')) {
-	jeedom.cmd.update['#fuelAmount_id#id##'] = function(_options) {
-		document.querySelector('.value#fuelAmount_id#id##').html(_options.display_value)
-	}
-	jeedom.cmd.refreshValue([{cmd_id: '#fuelAmount_id#id##', display_value: "#fuelAmount_display_value#id##"}])
+	jeedom.cmd.addUpdateFunction('#fuelAmount_id#id##', function(_options) {
+		if  (is_object(cmd = document.querySelector('.value#fuelAmount_id#id##'))) {
+			cmd.html(_options.display_value)
+			cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+		}
+	})
+
+	jeedom.cmd.refreshValue([{cmd_id: '#fuelAmount_id#id##',
+							  value: "#fuelAmount#id##",
+							  display_value: "#fuelAmount_display_value#id##",
+							  valueDate: "#fuelAmount_valueDate#id##",
+							  collectDate: "#fuelAmount_collectDate#id##"}])
 }
 
 // FUEL AUTONONY
 // =============
 if (!"#fuelAutonomy_id#id##".startsWith('#')) {
-	jeedom.cmd.update['#fuelAutonomy_id#id##'] = function(_options) {
-		document.querySelector('.value#fuelAutonomy_id#id##').html(_options.display_value)
-	}
-	jeedom.cmd.refreshValue([{cmd_id: '#fuelAutonomy_id#id##', display_value: "#fuelAutonomy_display_value#id##"}])
+	jeedom.cmd.addUpdateFunction('#fuelAutonomy_id#id##', function(_options) {
+		if  (is_object(cmd = document.querySelector('.value#fuelAutonomy_id#id##'))) {
+			cmd.html(_options.display_value)
+			cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+		}
+	})
+
+	jeedom.cmd.refreshValue([{cmd_id: '#fuelAutonomy_id#id##',
+							  value: "#fuelAutonomy#id##",
+							  display_value: "#fuelAutonomy_display_value#id##",
+							  valueDate: "#fuelAutonomy_valueDate#id##",
+							  collectDate: "#fuelAutonomy_collectDate#id##"}])
 }
 
 // BATTERY LEVEL
 // =============
 if (!"#batteryLevel_id#id##".startsWith('#')) {
-	jeedom.cmd.update['#batteryLevel_id#id##'] = function(_options) {
-		document.querySelector('.value#batteryLevel_id#id##').html(_options.display_value)
-	}
-	jeedom.cmd.refreshValue([{cmd_id: '#batteryLevel_id#id##', display_value: "#batteryLevel_display_value#id##"}])
+	jeedom.cmd.addUpdateFunction('#batteryLevel_id#id##', function(_options) {
+		if  (is_object(cmd = document.querySelector('.value#batteryLevel_id#id##'))) {
+			cmd.html(_options.display_value)
+			cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+		}
+	})
+
+	jeedom.cmd.refreshValue([{cmd_id: '#batteryLevel_id#id##',
+							  value: "#batteryLevel#id##",
+							  display_value: "#batteryLevel_display_value#id##",
+							  valueDate: "#batteryLevel_valueDate#id##",
+							  collectDate: "#batteryLevel_collectDate#id##"}])
 }
 
 // ELECTRIC AUTONONY
 // =================
 if (!"#electricAutonomy_id#id##".startsWith('#')) {
-	jeedom.cmd.update['#electricAutonomy_id#id##'] = function(_options) {
-		document.querySelector('.value#electricAutonomy_id#id##').html(_options.display_value)
-	}
-	jeedom.cmd.refreshValue([{cmd_id: '#electricAutonomy_id#id##', display_value: "#electricAutonomy_display_value#id##"}])
+	jeedom.cmd.addUpdateFunction('#electricAutonomy_id#id##', function(_options) {
+		if  (is_object(cmd = document.querySelector('.value#electricAutonomy_id#id##'))) {
+			cmd.html(_options.display_value)
+			cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+		}
+	})
+
+	jeedom.cmd.refreshValue([{cmd_id: '#electricAutonomy_id#id##',
+							  value: "#electricAutonomy#id##",
+							  display_value: "#electricAutonomy_display_value#id##",
+							  valueDate: "#electricAutonomy_valueDate#id##",
+							  collectDate: "#electricAutonomy_collectDate#id##"}])
 }
 
 // CONNECTOR STATUS
 // ================
 if (!"#connectorStatus_id#id##".startsWith('#')) {
-	jeedom.cmd.update['#connectorStatus_id#id##'] = function(_options) {
-		document.querySelector('.value#connectorStatus_id#id##').html(_options.display_value)
-	}
-	jeedom.cmd.refreshValue([{cmd_id: '#connectorStatus_id#id##', display_value: "#connectorStatus_display_value#id##"}])
+	jeedom.cmd.addUpdateFunction('#connectorStatus_id#id##', function(_options) {
+		if  (is_object(cmd = document.querySelector('.value#connectorStatus_id#id##'))) {
+			cmd.html(_options.display_value)
+			cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+		}
+	})
+
+	jeedom.cmd.refreshValue([{cmd_id: '#connectorStatus_id#id##',
+							  value: "#connectorStatus#id##",
+							  display_value: "#connectorStatus_display_value#id##",
+							  valueDate: "#connectorStatus_valueDate#id##",
+							  collectDate: "#connectorStatus_collectDate#id##"}])
 }
 
 // CHARGING STATUS
 // ===============
 if (!"#chargingStatus_id#id##".startsWith('#')) {
-	jeedom.cmd.update['#chargingStatus_id#id##'] = function(_options) {
-		document.querySelector('.value#chargingStatus_id#id##').html(_options.display_value)
-	}
-	jeedom.cmd.refreshValue([{cmd_id: '#chargingStatus_id#id##', display_value: "#chargingStatus_display_value#id##"}])
+	jeedom.cmd.addUpdateFunction('#chargingStatus_id#id##', function(_options) {
+		if  (is_object(cmd = document.querySelector(".value#chargingStatus_id#id##"))) {
+			cmd.html(_options.display_value)
+			cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+		}
+	})
+
+	jeedom.cmd.refreshValue([{cmd_id: '#chargingStatus_id#id##',
+							  value: "#chargingStatus#id##",
+							  display_value: "#chargingStatus_display_value#id##",
+							  valueDate: "#chargingStatus_valueDate#id##",
+							  collectDate: "#chargingStatus_collectDate#id##"}])
 }
 
 // CHARGING END TIME
 // =================
 if (!"#chargingEndTime_id#id##".startsWith('#')) {
-	jeedom.cmd.update['#chargingEndTime_id#id##'] = function(_options) {
-		if (_options.display_value == '') {
-			document.querySelector('.value#chargingEndTime_id#id##').closest('div').addClass('hidden')
-		} else {
-			document.querySelector('.value#chargingEndTime_id#id##').closest('div').removeClass('hidden')
-			document.querySelector('.value#chargingEndTime_id#id##').html(_options.display_value)
+	jeedom.cmd.addUpdateFunction('#chargingEndTime_id#id##', function(_options) {
+		if  (is_object(cmd = document.querySelector(".value#chargingEndTime_id#id##"))) {
+			if (_options.display_value == '') {
+				cmd.closest('div').addClass('hidden')
+			} else {
+				cmd.closest('div').removeClass('hidden')
+				cmd.html(_options.display_value)
+				cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+			}
 		}
-	}
-	jeedom.cmd.refreshValue([{cmd_id: '#chargingEndTime_id#id##', display_value: "#chargingEndTime_display_value#id##", unit: "#chargingEndTime_unit#id##"}])
+	})
+
+	jeedom.cmd.refreshValue([{cmd_id: '#chargingEndTime_id#id##',
+							  value: "#chargingEndTime#id##",
+							  display_value: "#chargingEndTime_display_value#id##",
+							  valueDate: "#chargingEndTime_valueDate#id##",
+							  collectDate: "#chargingEndTime_collectDate#id##"}])
 }
 
 // ACTIONS

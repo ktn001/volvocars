@@ -1577,6 +1577,8 @@ class volvocars extends eqLogic {
 					$replace['#' . $logicalId . '_display_value' . $carId . '#'] = $display_value;
 					$replace['#' . $logicalId . '_unit' . $carId . '#'] = $unit;
 					$replace['#' . $logicalId . '_history' . $carId . '#'] = $cmd->getIsHistorized() ? 'history cursor' : '';
+					$replace['#' . $logicalId . '_valueDate' . $carId . '#'] = $cmd->getValueDate();
+					$replace['#' . $logicalId . '_collectDate' . $carId . '#'] = $cmd->getCollectDate();
 				}
 				if ($cmd->getType() == 'action') {
 					$cmdValue = $cmd->getCmdValue();
