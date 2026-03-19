@@ -41,27 +41,27 @@
           ><img
         /></span>
         <span
-          id="div_al_brake#id#"
+          id="div_al_brakeFluid#id#"
           class="#al_brakeFluid_history#id##"
           data-cmd_id="#al_brakeFluid_id#id##"
           ><img
         /></span>
         <span
-          id="div_al_wash#id#"
+          id="div_al_washerFluid#id#"
           class="#al_washerFluid_history#id##"
           data-cmd_id="#al_washerFluid_id#id##"
           ><img
         /></span>
         <span
-          id="div_al_fuelautonomy#id#"
+          id="div_al_fuelAutonomy#id#"
           class="#fuelEngineOnly#id## #al_fuelautonomy_history#id##"
           data-cmd_id="#al_fuelautonomy_id#id##"
           ><img
         /></span>
         <span
-          id="div_al_electricautonomy#id#"
-          class="#electricEngineOnly#id## #al_electricautonomy_history#id##"
-          data-cmd_id="#al_electricautonomy_id#id##"
+          id="div_al_electricAutonomy#id#"
+          class="#electricEngineOnly#id## #al_electricAutonomy_history#id##"
+          data-cmd_id="#al_electricAutonomy_id#id##"
           ><img
         /></span>
         <span
@@ -600,6 +600,7 @@
 
 <script>
   "use strict"
+
   // SITES
   // =====
 
@@ -619,172 +620,295 @@
   // TEMOINS ALERTES
   // ===============
 
-  // OIL
+  // AL OIL
   if (!"#al_oil_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#al_oil_id#id##'] = function(_options) {
-      let img = ''
-      if (_options.value != 0) {
-        img = 'oil_red.svg'
-      } else {
-        if (document.body.getAttribute('data-theme').endsWith('Dark')) {
-          img = 'oil_grey_dark.svg'
+    jeedom.cmd.addUpdateFunction('#al_oil_id#id##', function(_options) {
+      let cmd = document.querySelector('#div_al_oil#id#')
+      if (is_object(cmd)) {
+        let img = ''
+        if (_options.value != 0) {
+          img = 'oil_red.svg'
         } else {
-          img = 'oil_grey_light.svg'
+          if (document.body.getAttribute('data-theme').endsWith('Dark')) {
+            img = 'oil_grey_dark.svg'
+          } else {
+            img = 'oil_grey_light.svg'
+          }
         }
+        cmd.querySelector('img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
+        cmd.setAttribute('data-valueDate',_options.valueDate)
+        cmd.setAttribute('data-collectDate',_options.collectDate)
+        let title = ""
+        if (cmd.hasAttribute('data-txt')) {
+          title = cmd.getAttribute('data-txt') + "<BR>"
+        }
+        title += "{{Date de valeur}}:" + cmd.getAttribute("data-valueDate") + "<BR>"
+        title += "{{Date de collecte}}:" + cmd.getAttribute("data-collectDate")
       }
-      document.querySelector('#div_al_oil#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#al_oil_id#id##', value: "#al_oil#id##"}])
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#al_oil_id#id##',
+                              value: "#al_oil#id##",
+                              valueDate: "#al_oil_valueDate#id##",
+                              collectDate: "#al_oil_collectDate#id##"}])
   }
 
-  // COOLANT
+  // AL COOLANT
   if (!"#al_coolant_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#al_coolant_id#id##'] = function(_options) {
-      let img = ''
-      if (_options.value == 1) {
-        img = 'coolant_red.svg'
-      } else {
-        if (document.body.getAttribute('data-theme').endsWith('Dark')) {
-          img = 'coolant_grey_dark.svg'
+    jeedom.cmd.addUpdateFunction('#al_coolant_id#id##', function(_options) {
+      let cmd = document.querySelector('#div_al_coolant#id#')
+      if (is_object(cmd)) {
+        let img = ''
+        if (_options.value != 0) {
+          img = 'coolant_red.svg'
         } else {
-          img = 'coolant_grey_light.svg'
+          if (document.body.getAttribute('data-theme').endsWith('Dark')) {
+            img = 'coolant_grey_dark.svg'
+          } else {
+            img = 'coolant_grey_light.svg'
+          }
         }
+        cmd.querySelector('img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
+        cmd.setAttribute('data-valueDate',_options.valueDate)
+        cmd.setAttribute('data-collectDate',_options.collectDate)
+        let title = ""
+        if (cmd.hasAttribute('data-txt')) {
+          title = cmd.getAttribute('data-txt') + "<BR>"
+        }
+        title += "{{Date de valeur}}:" + cmd.getAttribute("data-valueDate") + "<BR>"
+        title += "{{Date de collecte}}:" + cmd.getAttribute("data-collectDate")
       }
-      document.querySelector('#div_al_coolant#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#al_coolant_id#id##', value: "#al_coolant#id##"}])
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#al_coolant_id#id##',
+                              value: "#al_coolant#id##",
+                              valueDate: "#al_coolant_valueDate#id##",
+                              collectDate: "#al_coolant_collectDate#id##"}])
   }
 
-  // BRAKE
+  // AL BRAKE
   if (!"#al_brakeFluid_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#al_brakeFluid_id#id##'] = function(_options) {
-      let img = ""
-      if (_options.value == 1) {
-        img = 'brake_red.svg'
-      } else {
-        if (document.body.getAttribute('data-theme').endsWith('Dark')) {
-          img = 'brake_grey_dark.svg'
+    jeedom.cmd.addUpdateFunction('#al_brakeFluid_id#id##', function(_options) {
+      let cmd = document.querySelector('#div_al_brakeFluid#id#')
+      if (is_object(cmd)) {
+        let img = ''
+        if (_options.value != 0) {
+          img = 'brake_red.svg'
         } else {
-          img = 'brake_grey_light.svg'
+          if (document.body.getAttribute('data-theme').endsWith('Dark')) {
+            img = 'brake_grey_dark.svg'
+          } else {
+            img = 'brake_grey_light.svg'
+          }
         }
+        cmd.querySelector('img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
+        cmd.setAttribute('data-valueDate',_options.valueDate)
+        cmd.setAttribute('data-collectDate',_options.collectDate)
+        let title = ""
+        if (cmd.hasAttribute('data-txt')) {
+          title = cmd.getAttribute('data-txt') + "<BR>"
+        }
+        title += "{{Date de valeur}}:" + cmd.getAttribute("data-valueDate") + "<BR>"
+        title += "{{Date de collecte}}:" + cmd.getAttribute("data-collectDate")
       }
-      document.querySelector('#div_al_brake#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#al_brakeFluid_id#id##', value: "#al_brakeFluid#id##"}])
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#al_brakeFluid_id#id##',
+                              value: "#al_brakeFluid#id##",
+                              valueDate: "#al_brakeFluid_valueDate#id##",
+                              collectDate: "#al_brakeFluid_collectDate#id##"}])
   }
 
-  // WASH
+  // AL WASH
   if (!"#al_washerFluid_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#al_washerFluid_id#id##'] = function(_options) {
-      let img = ""
-      if (_options.value == 1) {
-        img = 'wash_red.svg'
-      } else {
-        if (document.body.getAttribute('data-theme').endsWith('Dark')) {
-          img = 'wash_grey_dark.svg'
+    jeedom.cmd.addUpdateFunction('#al_washerFluid_id#id##', function(_options) {
+      let cmd = document.querySelector('#div_al_washerFluid#id#')
+      if (is_object(cmd)) {
+        let img = ''
+        if (_options.value != 0) {
+          img = 'wash_red.svg'
         } else {
-          img = 'wash_grey_light.svg'
+          if (document.body.getAttribute('data-theme').endsWith('Dark')) {
+            img = 'wash_grey_dark.svg'
+          } else {
+            img = 'wash_grey_light.svg'
+          }
         }
+        cmd.querySelector('img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
+        cmd.setAttribute('data-valueDate',_options.valueDate)
+        cmd.setAttribute('data-collectDate',_options.collectDate)
+        let title = ""
+        if (cmd.hasAttribute('data-txt')) {
+          title = cmd.getAttribute('data-txt') + "<BR>"
+        }
+        title += "{{Date de valeur}}:" + cmd.getAttribute("data-valueDate") + "<BR>"
+        title += "{{Date de collecte}}:" + cmd.getAttribute("data-collectDate")
       }
-      document.querySelector('#div_al_wash#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#al_washerFluid_id#id##', value: "#al_washerFluid#id##"}])
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#al_washerFluid_id#id##',
+                              value: "#al_washerFluid#id##",
+                              valueDate: "#al_washerFluid_valueDate#id##",
+                              collectDate: "#al_washerFluid_collectDate#id##"}])
   }
 
   // AL FUEL AUTONOMY
-  if (!"#al_fuelautonomy_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#al_fuelautonomy_id#id##'] = function(_options) {
-      let img = ""
-      if (_options.value == 1) {
-        img = 'station_gas_red.svg'
-      } else {
-        if (document.body.getAttribute('data-theme').endsWith('Dark')) {
-          img = 'station_gas_grey_dark.svg'
+  if (!"#al_fuelAutonomy_id#id##".startsWith('#')) {
+    jeedom.cmd.addUpdateFunction('#al_fuelAutonomy_id#id##', function(_options) {
+      let cmd = document.querySelector('#div_al_fuelAutonomy#id#')
+      if (is_object(cmd)) {
+        let img = ''
+        if (_options.value != 0) {
+          img = 'station_gas_red.svg'
         } else {
-          img = 'station_gas_grey_light.svg'
+          if (document.body.getAttribute('data-theme').endsWith('Dark')) {
+            img = 'station_gas_grey_dark.svg'
+          } else {
+            img = 'station_gas_grey_light.svg'
+          }
         }
+        cmd.querySelector('img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
+        cmd.setAttribute('data-valueDate',_options.valueDate)
+        cmd.setAttribute('data-collectDate',_options.collectDate)
+        let title = ""
+        if (cmd.hasAttribute('data-txt')) {
+          title = cmd.getAttribute('data-txt') + "<BR>"
+        }
+        title += "{{Date de valeur}}:" + cmd.getAttribute("data-valueDate") + "<BR>"
+        title += "{{Date de collecte}}:" + cmd.getAttribute("data-collectDate")
       }
-      document.querySelector('#div_al_fuelautonomy#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#al_fuelautonomy_id#id##', value: "#al_fuelautonomy#id##"}])
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#al_fuelAutonomy_id#id##',
+                              value: "#al_fuelAutonomy#id##",
+                              valueDate: "#al_fuelAutonomy_valueDate#id##",
+                              collectDate: "#al_fuelAutonomy_collectDate#id##"}])
   }
 
   // AL ELECTRIC AUTONOMY
-  if (!"#al_electricautonomy_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#al_electricautonomy_id#id##'] = function(_options) {
-      let img = ""
-      if (_options.value == 1) {
-        img = 'station_recharge_red.svg'
-      } else {
-        if (document.body.getAttribute('data-theme').endsWith('Dark')) {
-          img = 'station_recharge_grey_dark.svg'
+  if (!"#al_electricAutonomy_id#id##".startsWith('#')) {
+    jeedom.cmd.addUpdateFunction('#al_electricAutonomy_id#id##', function(_options) {
+      let cmd = document.querySelector('#div_al_electricAutonomy#id#')
+      if (is_object(cmd)) {
+        let img = ''
+        if (_options.value != 0) {
+          img = 'station_recharge_red.svg'
         } else {
-          img = 'station_recharge_grey_light.svg'
+          if (document.body.getAttribute('data-theme').endsWith('Dark')) {
+            img = 'station_recharge_grey_dark.svg'
+          } else {
+            img = 'station_recharge_grey_light.svg'
+          }
         }
+        cmd.querySelector('img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
+        cmd.setAttribute('data-valueDate',_options.valueDate)
+        cmd.setAttribute('data-collectDate',_options.collectDate)
+        let title = ""
+        if (cmd.hasAttribute('data-txt')) {
+          title = cmd.getAttribute('data-txt') + "<BR>"
+        }
+        title += "{{Date de valeur}}:" + cmd.getAttribute("data-valueDate") + "<BR>"
+        title += "{{Date de collecte}}:" + cmd.getAttribute("data-collectDate")
       }
-      document.querySelector('#div_al_electricautonomy#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#al_electricautonomy_id#id##', value: "#al_electricautonomy#id##"}])
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#al_electricAutonomy_id#id##',
+                              value: "#al_electricAutonomy#id##",
+                              valueDate: "#al_electricAutonomy_valueDate#id##",
+                              collectDate: "#al_electricAutonomy_collectDate#id##"}])
   }
 
   // AL TYRE
   if (!"#al_tyre_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#al_tyre_id#id##'] = function(_options) {
-      let img = ""
-      if (_options.value >= 1) {
-        img = 'tyre_red.svg'
-      } else {
-        if (document.body.getAttribute('data-theme').endsWith('Dark')) {
-          img = 'tyre_grey_dark.svg'
+    jeedom.cmd.addUpdateFunction('#al_tyre_id#id##', function(_options) {
+      let cmd = document.querySelector('#div_al_tyre#id#')
+      if (is_object(cmd)) {
+        let img = ''
+        if (_options.value != 0) {
+          img = 'tyre_red.svg'
         } else {
-          img = 'tyre_grey_light.svg'
+          if (document.body.getAttribute('data-theme').endsWith('Dark')) {
+            img = 'tyre_grey_dark.svg'
+          } else {
+            img = 'tyre_grey_light.svg'
+          }
         }
+        cmd.querySelector('img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
+        cmd.setAttribute('data-valueDate',_options.valueDate)
+        cmd.setAttribute('data-collectDate',_options.collectDate)
+        let title = ""
+        if (cmd.hasAttribute('data-txt')) {
+          title = cmd.getAttribute('data-txt') + "<BR>"
+        }
+        title += "{{Date de valeur}}:" + cmd.getAttribute("data-valueDate") + "<BR>"
+        title += "{{Date de collecte}}:" + cmd.getAttribute("data-collectDate")
       }
-      document.querySelector('#div_al_tyre#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#al_tyre_id#id##', value: "#al_tyre#id##"}])
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#al_tyre_id#id##',
+                              value: "#al_tyre#id##",
+                              valueDate: "#al_tyre_valueDate#id##",
+                              collectDate: "#al_tyre_collectDate#id##"}])
   }
 
   // AL LIGHT
   if (!"#al_light_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#al_light_id#id##'] = function(_options) {
-      let img = ""
-      if (_options.value == 1) {
-        img = 'light_red.svg'
-      } else {
-        if (document.body.getAttribute('data-theme').endsWith('Dark')) {
-          img = 'light_grey_dark.svg'
+    jeedom.cmd.addUpdateFunction('#al_light_id#id##', function(_options) {
+      let cmd = document.querySelector('#div_al_light#id#')
+      if (is_object(cmd)) {
+        let img = ''
+        if (_options.value != 0) {
+          img = 'light_red.svg'
         } else {
-          img = 'light_grey_light.svg'
+          if (document.body.getAttribute('data-theme').endsWith('Dark')) {
+            img = 'light_grey_dark.svg'
+          } else {
+            img = 'light_grey_light.svg'
+          }
         }
+        cmd.querySelector('img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
+        cmd.setAttribute('data-valueDate',_options.valueDate)
+        cmd.setAttribute('data-collectDate',_options.collectDate)
+        let title = ""
+        if (cmd.hasAttribute('data-txt')) {
+          title = cmd.getAttribute('data-txt') + "<BR>"
+        }
+        title += "{{Date de valeur}}:" + cmd.getAttribute("data-valueDate") + "<BR>"
+        title += "{{Date de collecte}}:" + cmd.getAttribute("data-collectDate")
       }
-      document.querySelector('#div_al_light#id# img').setAttribute('src','/plugins/volvocars/desktop/img/' + img)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#al_light_id#id##', value: "#al_light#id##"}])
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#al_light_id#id##',
+                              value: "#al_light#id##",
+                              valueDate: "#al_light_valueDate#id##",
+                              collectDate: "#al_light_collectDate#id##"}])
   }
 
   // PRESENCES
   // =========
   function updatePresence(presence_id, site_name, _options) {
-    if (_options.value == 1) {
-      document.querySelector('.Cmd' + presence_id).empty().html('<i class="fas fa-house-user color_on" style="font-size:1.75em;"></i>');
-    } else if (_options.value == 0) {
-      document.querySelector('.Cmd' + presence_id).empty().html('<i class="fas fa-home color_off" style="font-size:1.75em;"></i>');
-    } else {
-      document.querySelector('.Cmd' + presence_id).empty().html('<i class="fas fa-house-damage" style="font-size:1.75em;"></i>');
+    let cmd = document.querySelector('.Cmd' + presence_id)
+    if (is_object(cmd)) {
+      if (_options.value == 1) {
+        cmd.empty().html('<i class="fas fa-house-user color_on" style="font-size:1.75em;"></i>')
+      } else if (_options.value == 0) {
+        cmd.empty().html('<i class="fas fa-home color_off" style="font-size:1.75em;"></i>')
+      } else {
+        cmd.empty().html('<i class="fas fa-house-damage" style="font-size:1.75em;"></i>')
+      }
+      let title = '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate
+      cmd.setAttribute('title', title)
     }
   }
   if (!"#presenceSite1_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#presenceSite1_id#id##'] = function(_options) {
+    jeedom.cmd.addUpdateFunction('#presenceSite1_id#id##', function(_options) {
       updatePresence('#presenceSite1_id#id##', '#site1_name#id##', _options)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#presenceSite1_id#id##', value: '#presenceSite1#id##'}]);
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#presenceSite1_id#id##',
+                              value: '#presenceSite1#id##',
+                              valueDate: '#presenceSite1_valueDate#id##',
+                              collectDate: '#presenceSite1_collectDate#id##'}])
   }
   if (!"#presenceSite2_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#presenceSite2_id#id##'] = function(_options) {
+    jeedom.cmd.addUpdateFunction('#presenceSite2_id#id##', function(_options) {
       updatePresence('#presenceSite2_id#id##', '#site2_name#id##', _options)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#presenceSite2_id#id##', value: '#presenceSite2#id##'}]);
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#presenceSite2_id#id##',
+                              value: '#presenceSite2#id##',
+                              valueDate: '#presenceSite2_valueDate#id##',
+                              collectDate: '#presenceSite2_collectDate#id##'}])
   }
 
   // DISTANCES
@@ -804,200 +928,315 @@
         unit = 'Km'
       }
     }
-    document.querySelector('.Cmd' + distance_id).empty().html('<span class="' + color_class + '">' + value + ' ' + unit + '</span>')
+    let cmd = document.querySelector('.Cmd' + distance_id)
+    cmd.empty().html('<span class="' + color_class + '">' + value + ' ' + unit + '</span>')
+    let title = '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate
+    cmd.setAttribute('title', title)
   }
   if (!"#distanceSite1_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#distanceSite1_id#id##'] = function(_options) {
+    jeedom.cmd.addUpdateFunction('#distanceSite1_id#id##', function(_options) {
       let color_class = 'color_off'
       if (_options.value <= #site1_limit#id##) {
         color_class = 'color_on'
       }
       updateDistance('#distanceSite1_id#id##', color_class, _options)
-    }
-    jeedom.cmd.refreshValue([{
-      cmd_id: '#distanceSite1_id#id##',
-      value: '#distanceSite1#id##',
-      display_value: '#distanceSite1_display_value#id##',
-      unit: '#distanceSite1_unit#id##'
-    }])
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#distanceSite1_id#id##',
+                              value: '#distanceSite1#id##',
+                              display_value: '#distanceSite1_display_value#id##',
+                              unit: '#distanceSite1_unit#id##',
+                              valueDate: '#distanceSite1_valueDate#id##',
+                              collectDate: '#distanceSite1_collectDate#id##'}])
   }
   if (!"#distanceSite2_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#distanceSite2_id#id##'] = function(_options) {
+    jeedom.cmd.addUpdateFunction('#distanceSite2_id#id##', function(_options) {
       let color_class = 'color_off'
       if (_options.value <= #site2_limit#id##) {
         color_class = 'color_on'
       }
       updateDistance('#distanceSite2_id#id##', color_class, _options)
-    }
-    jeedom.cmd.refreshValue([{
-      cmd_id: '#distanceSite2_id#id##',
-      value: '#distanceSite2#id##',
-      display_value: '#distanceSite2_display_value#id##',
-      unit: '#distanceSite2_unit#id##'
-    }])
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#distanceSite2_id#id##',
+                              value: '#distanceSite2#id##',
+                              display_value: '#distanceSite2_display_value#id##',
+                              unit: '#distanceSite2_unit#id##',
+                              valueDate: '#distanceSite2_valueDate#id##',
+                              collectDate: '#distanceSite2_collectDate#id##'}])
   }
 
   // ODOMETER
   // ========
   if (!"#odometer_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#odometer_id#id##'] = function(_options) {
+    jeedom.cmd.addUpdateFunction('#odometer_id#id##', function(_options) {
       document.querySelector('.value#odometer_id#id##').html(_options.display_value)
       document.querySelector('.unit#odometer_id#id##').html(_options.unit)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#odometer_id#id##', display_value: "#odometer_display_value#id##", unit: "#odometer_unit#id##"}])
+      let title = '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate
+      document.querySelector('.value#odometer_id#id##').closest('div').setAttribute('title', title)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#odometer_id#id##',
+                              display_value: "#odometer_display_value#id##",
+                              unit: "#odometer_unit#id##",
+                              valueDate: '#odometer_valueDate#id##',
+                              collectDate: '#odometer_collectDate#id##'}])
   }
 
   // FUEL
   // ====
   if (!"#fuelAmount_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#fuelAmount_id#id##'] = function(_options) {
+    jeedom.cmd.addUpdateFunction('#fuelAmount_id#id##', function(_options) {
       document.querySelector('.value#fuelAmount_id#id##').html(_options.display_value)
       document.querySelector('.unit#fuelAmount_id#id##').html(_options.unit)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#fuelAmount_id#id##', display_value: "#fuelAmount_display_value#id##", unit: "#fuelAmount_unit#id##"}])
+      let title = '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate
+      document.querySelector('.value#fuelAmount_id#id##').closest('div').setAttribute('title', title)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#fuelAmount_id#id##',
+                              display_value: "#fuelAmount_display_value#id##",
+                              unit: "#fuelAmount_unit#id##",
+                              valueDate: '#fuelAmount_valueDate#id##',
+                              collectDate: '#fuelAmount_collectDate#id##'}])
   }
 
   // KM THERMIQUE RESTANTS
   //======================
   if (!"#fuelAutonomy_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#fuelAutonomy_id#id##'] = function(_options) {
+    jeedom.cmd.addUpdateFunction('#fuelAutonomy_id#id##', function(_options) {
       document.querySelector('.value#fuelAutonomy_id#id##').html(_options.display_value)
       document.querySelector('.unit#fuelAutonomy_id#id##').html(_options.unit)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#fuelAutonomy_id#id##', display_value: "#fuelAutonomy_display_value#id##", unit: "#fuelAutonomy_unit#id##"}])
+      let title = '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate
+      document.querySelector('.value#fuelAutonomy_id#id##').closest('div').setAttribute('title', title)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#fuelAutonomy_id#id##',
+                              display_value: "#fuelAutonomy_display_value#id##",
+                              unit: "#fuelAutonomy_unit#id##",
+                              valueDate: '#fuelAutonomy_valueDate#id##',
+                              collectDate: '#fuelAutonomy_collectDate#id##'}])
   }
 
   // CONSO FUEL
   //===========
   if (!"#consoFuel_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#consoFuel_id#id##'] = function(_options) {
+    jeedom.cmd.addUpdateFunction('#consoFuel_id#id##', function(_options) {
       document.querySelector('.value#consoFuel_id#id##').html(_options.display_value)
       document.querySelector('.unit#consoFuel_id#id##').html(_options.unit)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#consoFuel_id#id##', display_value: "#consoFuel_display_value#id##", unit: "#consoFuel_unit#id##"}])
+      let title = '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate
+      document.querySelector('.value#consoFuel_id#id##').closest('div').setAttribute('title', title)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#consoFuel_id#id##',
+                              display_value: "#consoFuel_display_value#id##",
+                              unit: "#consoFuel_unit#id##",
+                              valueDate: '#consoFuel_valueDate#id##',
+                              collectDate: '#consoFuel_collectDate#id##'}])
   }
 
   // CONSO FUEL PARCOURS
   //====================
   if (!"#consoFuelTrip_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#consoFuelTrip_id#id##'] = function(_options) {
+    jeedom.cmd.addUpdateFunction('#consoFuelTrip_id#id##', function(_options) {
       document.querySelector('.value#consoFuelTrip_id#id##').html(_options.display_value)
       document.querySelector('.unit#consoFuelTrip_id#id##').html(_options.unit)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#consoFuelTrip_id#id##', display_value: "#consoFuelTrip_display_value#id##", unit: "#consoFuelTrip_unit#id##"}])
+      let title = '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate
+      document.querySelector('.value#consoFuelTrip_id#id##').closest('div').setAttribute('title', title)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#consoFuelTrip_id#id##',
+                              display_value: "#consoFuelTrip_display_value#id##",
+                              unit: "#consoFuelTrip_unit#id##",
+                              valueDate: '#consoFuelTrip_valueDate#id##',
+                              collectDate: '#consoFuelTrip_collectDate#id##'}])
   }
 
   // BATTERY LEVEL
   // =============
   if (!"#batteryLevel_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#batteryLevel_id#id##'] = function(_options) {
+    jeedom.cmd.addUpdateFunction('#batteryLevel_id#id##', function(_options) {
       document.querySelector('.value#batteryLevel_id#id##').html(_options.display_value)
       document.querySelector('.unit#batteryLevel_id#id##').html(_options.unit)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#batteryLevel_id#id##', display_value: "#batteryLevel_display_value#id##", unit: "#batteryLevel_unit#id##"}])
+      let title = '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate
+      document.querySelector('.value#batteryLevel_id#id##').closest('div').setAttribute('title', title)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#batteryLevel_id#id##',
+                              display_value: "#batteryLevel_display_value#id##",
+                              unit: "#batteryLevel_unit#id##",
+                              valueDate: '#batteryLevel_valueDate#id##',
+                              collectDate: '#batteryLevel_collectDate#id##'}])
   }
 
   // KM ELECTRIQUE RESTANTS
   // ======================
   if (!"#electricAutonomy_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#electricAutonomy_id#id##'] = function(_options) {
+    jeedom.cmd.addUpdateFunction('#electricAutonomy_id#id##', function(_options) {
       document.querySelector('.value#electricAutonomy_id#id##').html(_options.display_value)
       document.querySelector('.unit#electricAutonomy_id#id##').html(_options.unit)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#electricAutonomy_id#id##', display_value: "#electricAutonomy_display_value#id##", unit: "#electricAutonomy_unit#id##"}])
+      let title = '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate
+      document.querySelector('.value#electricAutonomy_id#id##').closest('div').setAttribute('title', title)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#electricAutonomy_id#id##',
+                              display_value: "#electricAutonomy_display_value#id##",
+                              unit: "#electricAutonomy_unit#id##",
+                              valueDate: '#electricAutonomy_valueDate#id##',
+                              collectDate: '#electricAutonomy_collectDate#id##'}])
   }
 
   // CONSO ELECTRIQUE
   //=================
   if (!"#consoElectric_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#consoElectric_id#id##'] = function(_options) {
+    jeedom.cmd.addUpdateFunction('#consoElectric_id#id##', function(_options) {
       document.querySelector('.value#consoElectric_id#id##').html(_options.display_value)
       document.querySelector('.unit#consoElectric_id#id##').html(_options.unit)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#consoElectric_id#id##', display_value: "#consoElectric_display_value#id##", unit: "#consoElectric_unit#id##"}])
+      let title = '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate
+      document.querySelector('.value#consoElectric_id#id##').closest('div').setAttribute('title', title)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#consoElectric_id#id##',
+                              display_value: "#consoElectric_display_value#id##",
+                              unit: "#consoElectric_unit#id##",
+                              valueDate: '#consoElectric_valueDate#id##',
+                              collectDate: '#consoElectric_collectDate#id##'}])
   }
 
   // PRISE
   // =====
   if (!"#connectorStatus_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#connectorStatus_id#id##'] = function(_options) {
-      document.querySelector('.value#connectorStatus_id#id##').html(_options.display_value)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#connectorStatus_id#id##', display_value: "#connectorStatus_display_value#id##"}])
+    jeedom.cmd.addUpdateFunction('#connectorStatus_id#id##', function(_options) {
+      let cmd = document.querySelector('.value#connectorStatus_id#id##')
+      cmd.html(_options.display_value)
+      cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#connectorStatus_id#id##',
+                              display_value: "#connectorStatus_display_value#id##",
+                              unit: "#connectorStatus_unit#id##",
+                              valueDate: '#connectorStatus_valueDate#id##',
+                              collectDate: '#connectorStatus_collectDate#id##'}])
   }
 
   // RECHARGE
   // ========
   if (!"#chargingStatus_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#chargingStatus_id#id##'] = function(_options) {
-      document.querySelector('.value#chargingStatus_id#id##').html(_options.display_value)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#chargingStatus_id#id##', display_value: "#chargingStatus_display_value#id##"}])
+    jeedom.cmd.addUpdateFunction('#chargingStatus_id#id##', function(_options) {
+      let cmd = document.querySelector('.value#chargingStatus_id#id##')
+      cmd.html(_options.display_value)
+      cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#chargingStatus_id#id##',
+                              display_value: "#chargingStatus_display_value#id##",
+                              unit: "#chargingStatus_unit#id##",
+                              valueDate: '#chargingStatus_valueDate#id##',
+                              collectDate: '#chargingStatus_collectDate#id##'}])
   }
 
   // RECHARGE END TIME
   // =================
   if (!"#chargingEndTime_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#chargingEndTime_id#id##'] = function(_options) {
+    jeedom.cmd.addUpdateFunction('#chargingEndTime_id#id##', function(_options) {
+      let cmd = document.querySelector(".value#chargingEndTime_id#id##")
       if (_options.display_value == '') {
-        document.querySelector(".value#chargingEndTime_id#id##").closest('div').addClass('hidden')
+        cmd.closest('div').addClass('hidden')
       } else {
-        document.querySelector(".value#chargingEndTime_id#id##").closest('div').removeClass('hidden')
-        document.querySelector('.value#chargingEndTime_id#id##').html(_options.display_value)
+        cmd.closest('div').removeClass('hidden')
+        cmd.html(_options.display_value)
       }
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#chargingEndTime_id#id##', display_value: "#chargingEndTime_display_value#id##", unit: "#chargingEndTime_unit#id##"}])
+      cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#chargingEndTime_id#id##',
+                              display_value: "#chargingEndTime_display_value#id##",
+                              unit: "#chargingEndTime_unit#id##",
+                              valueDate: '#chargingEndTime_valueDate#id##',
+                              collectDate: '#chargingEndTime_collectDate#id##'}])
   }
 
   // VERROUILLAGE
   // ============
   if (!"#locked_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#locked_id#id##'] = function(_options) {
-      document.querySelector('.value#locked_id#id##').html(_options.display_value)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#locked_id#id##', display_value: "#locked_display_value#id##"}])
+    jeedom.cmd.addUpdateFunction('#locked_id#id##', function(_options) {
+      let cmd = document.querySelector('.value#locked_id#id##')
+      cmd.html(_options.display_value)
+      cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#locked_id#id##',
+                              display_value: "#locked_display_value#id##",
+                              unit: "#locked_unit#id##",
+                              valueDate: '#locked_valueDate#id##',
+                              collectDate: '#locked_collectDate#id##'}])
   }
 
   // ACCESSIBILITE
   // =============
   if (!"#availability_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#availability_id#id##'] = function(_options) {
-      document.querySelector('.value#availability_id#id##').html(_options.display_value)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#availability_id#id##', display_value: "#availability_display_value#id##"}])
+    jeedom.cmd.addUpdateFunction('#availability_id#id##', function(_options) {
+      let cmd = document.querySelector('.value#availability_id#id##')
+      cmd.html(_options.display_value)
+      cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#availability_id#id##',
+                              display_value: "#availability_display_value#id##",
+                              unit: "#availability_unit#id##",
+                              valueDate: '#availability_valueDate#id##',
+                              collectDate: '#availability_collectDate#id##'}])
   }
+
   if (!"#unavailableReason_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#unavailableReason_id#id##'] = function(_options) {
-      document.querySelector('.value#unavailableReason_id#id##').html(_options.display_value)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#unavailableReason_id#id##', display_value: "#unavailableReason_display_value#id##"}])
+    jeedom.cmd.addUpdateFunction('#unavailableReason_id#id##', function(_options) {
+      let cmd = document.querySelector('.value#unavailableReason_id#id##')
+      cmd.html(_options.display_value)
+      cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#unavailableReason_id#id##',
+                              display_value: "#unavailableReason_display_value#id##",
+                              unit: "#unavailableReason_unit#id##",
+                              valueDate: '#unavailableReason_valueDate#id##',
+                              collectDate: '#unavailableReason_collectDate#id##'}])
   }
 
   // TYRE
   // ====
   if (!"#tyreFl_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#tyreFl_id#id##'] = function(_options) {
-      document.querySelector('.Cmd#tyreFl_id#id## .info_text').html(_options.display_value)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#tyreFl_id#id##', display_value: "#tyreFl_display_value#id##"}])
+    jeedom.cmd.addUpdateFunction('#tyreFl_id#id##', function(_options) {
+      let cmd = document.querySelector('.Cmd#tyreFl_id#id## .info_text')
+      cmd.html(_options.display_value)
+      cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#tyreFl_id#id##',
+                              display_value: "#tyreFl_display_value#id##",
+                              unit: "#tyreFl_unit#id##",
+                              valueDate: '#tyreFl_valueDate#id##',
+                              collectDate: '#tyreFl_collectDate#id##'}])
   }
+
   if (!"#tyreFr_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#tyreFr_id#id##'] = function(_options) {
-      document.querySelector('.Cmd#tyreFr_id#id## .info_text').html(_options.display_value)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#tyreFr_id#id##', display_value: "#tyreFr_display_value#id##"}])
+    jeedom.cmd.addUpdateFunction('#tyreFr_id#id##', function(_options) {
+      let cmd = document.querySelector('.Cmd#tyreFr_id#id## .info_text')
+      cmd.html(_options.display_value)
+      cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#tyreFr_id#id##',
+                              display_value: "#tyreFr_display_value#id##",
+                              unit: "#tyreFr_unit#id##",
+                              valueDate: '#tyreFr_valueDate#id##',
+                              collectDate: '#tyreFr_collectDate#id##'}])
   }
+
   if (!"#tyreRl_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#tyreRl_id#id##'] = function(_options) {
-      document.querySelector('.Cmd#tyreRl_id#id## .info_text').html(_options.display_value)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#tyreRl_id#id##', display_value: "#tyreRl_display_value#id##"}])
+    jeedom.cmd.addUpdateFunction('#tyreRl_id#id##', function(_options) {
+      let cmd = document.querySelector('.Cmd#tyreRl_id#id## .info_text')
+      cmd.html(_options.display_value)
+      cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#tyreRl_id#id##',
+                              display_value: "#tyreRl_display_value#id##",
+                              unit: "#tyreRl_unit#id##",
+                              valueDate: '#tyreRl_valueDate#id##',
+                              collectDate: '#tyreRl_collectDate#id##'}])
   }
+
   if (!"#tyreRr_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#tyreRr_id#id##'] = function(_options) {
-      document.querySelector('.Cmd#tyreRr_id#id## .info_text').html(_options.display_value)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#tyreRr_id#id##', display_value: "#tyreRr_display_value#id##"}])
+    jeedom.cmd.addUpdateFunction('#tyreRr_id#id##', function(_options) {
+      let cmd = document.querySelector('.Cmd#tyreRr_id#id## .info_text')
+      cmd.html(_options.display_value)
+      cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#tyreRr_id#id##',
+                              display_value: "#tyreRr_display_value#id##",
+                              unit: "#tyreRr_unit#id##",
+                              valueDate: '#tyreRr_valueDate#id##',
+                              collectDate: '#tyreRr_collectDate#id##'}])
   }
 
   // DOORS
@@ -1019,101 +1258,158 @@
     }
   }
   if (!"#doorFlState_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#doorFlState_id#id##'] = function(_options) {
+    jeedom.cmd.addUpdateFunction('#doorFlState_id#id##', function(_options) {
       show_opening('doorFl', _options.value)
-      document.querySelector('.Cmd#doorFlState_id#id## .info_text').html(_options.display_value)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#doorFlState_id#id##', value: "#doorFlState#id##", display_value: "#doorFlState_display_value#id##"}])
+      let cmd = document.querySelector('.Cmd#doorFlState_id#id## .info_text')
+      cmd.html(_options.display_value)
+      cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#doorFlState_id#id##',
+                              value: "#doorFlState#id##",
+                              display_value: "#doorFlState_display_value#id##",
+                              unit: "#doorFlState_unit#id##",
+                              valueDate: '#doorFlState_valueDate#id##',
+                              collectDate: '#doorFlState_collectDate#id##'}])
   }
   if (!"#doorFrState_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#doorFrState_id#id##'] = function(_options) {
+    jeedom.cmd.addUpdateFunction('#doorFrState_id#id##', function(_options) {
       show_opening('doorFr', _options.value)
-      document.querySelector('.Cmd#doorFrState_id#id## .info_text').html(_options.display_value)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#doorFrState_id#id##', value: "#doorFrState#id##", display_value: "#doorFrState_display_value#id##"}])
+      let cmd = document.querySelector('.Cmd#doorFrState_id#id## .info_text')
+      cmd.html(_options.display_value)
+      cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#doorFrState_id#id##',
+                              value: "#doorFrState#id##",
+                              display_value: "#doorFrState_display_value#id##",
+                              unit: "#doorFrState_unit#id##",
+                              valueDate: '#doorFrState_valueDate#id##',
+                              collectDate: '#doorFrState_collectDate#id##'}])
   }
   if (!"#doorRlState_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#doorRlState_id#id##'] = function(_options) {
+    jeedom.cmd.addUpdateFunction('#doorRlState_id#id##', function(_options) {
       show_opening('doorRl', _options.value)
-      document.querySelector('.Cmd#doorRlState_id#id## .info_text').html(_options.display_value)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#doorRlState_id#id##', value: "#doorRlState#id##", display_value: "#doorRlState_display_value#id##"}])
+      let cmd = document.querySelector('.Cmd#doorRlState_id#id## .info_text')
+      cmd.html(_options.display_value)
+      cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#doorRlState_id#id##',
+                              value: "#doorRlState#id##",
+                              display_value: "#doorRlState_display_value#id##",
+                              unit: "#doorRlState_unit#id##",
+                              valueDate: '#doorRlState_valueDate#id##',
+                              collectDate: '#doorRlState_collectDate#id##'}])
   }
   if (!"#doorRrState_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#doorRrState_id#id##'] = function(_options) {
+    jeedom.cmd.addUpdateFunction('#doorRrState_id#id##', function(_options) {
       show_opening('doorRr', _options.value)
-      document.querySelector('.Cmd#doorRrState_id#id## .info_text').html(_options.display_value)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#doorRrState_id#id##', value: "#doorRrState#id##", display_value: "#doorRrState_display_value#id##"}])
+      let cmd = document.querySelector('.Cmd#doorRrState_id#id## .info_text')
+      cmd.html(_options.display_value)
+      cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#doorRrState_id#id##',
+                              value: "#doorRrState#id##",
+                              display_value: "#doorRrState_display_value#id##",
+                              unit: "#doorRrState_unit#id##",
+                              valueDate: '#doorRrState_valueDate#id##',
+                              collectDate: '#doorRrState_collectDate#id##'}])
   }
 
   // WINDOWS
   // =======
   if (!"#winFlState_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#winFlState_id#id##'] = function(_options) {
-      document.querySelector('.Cmd#winFlState_id#id## .info_text').html(_options.display_value)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#winFlState_id#id##', display_value: "#winFlState_display_value#id##"}])
+    jeedom.cmd.addUpdateFunction('#winFlState_id#id##', function(_options) {
+      let cmd = document.querySelector('.Cmd#winFlState_id#id## .info_text')
+      cmd.html(_options.display_value)
+      cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#winFlState_id#id##',
+                              value: "#winFlState#id##",
+                              display_value: "#winFlState_display_value#id##",
+                              unit: "#winFlState_unit#id##",
+                              valueDate: '#winFlState_valueDate#id##',
+                              collectDate: '#winFlState_collectDate#id##'}])
   }
   if (!"#winFrState_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#winFrState_id#id##'] = function(_options) {
-      document.querySelector('.Cmd#winFrState_id#id## .info_text').html(_options.display_value)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#winFrState_id#id##', display_value: "#winFrState_display_value#id##"}])
+    jeedom.cmd.addUpdateFunction('#winFrState_id#id##', function(_options) {
+      let cmd = document.querySelector('.Cmd#winFrState_id#id## .info_text')
+      cmd.html(_options.display_value)
+      cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#winFrState_id#id##',
+                              value: "#winFrState#id##",
+                              display_value: "#winFrState_display_value#id##",
+                              unit: "#winFrState_unit#id##",
+                              valueDate: '#winFrState_valueDate#id##',
+                              collectDate: '#winFrState_collectDate#id##'}])
   }
   if (!"#winRlState_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#winRlState_id#id##'] = function(_options) {
-      document.querySelector('.Cmd#winRlState_id#id## .info_text').html(_options.display_value)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#winRlState_id#id##', display_value: "#winRlState_display_value#id##"}])
+    jeedom.cmd.addUpdateFunction('#winRlState_id#id##', function(_options) {
+      let cmd = document.querySelector('.Cmd#winRlState_id#id## .info_text')
+      cmd.html(_options.display_value)
+      cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#winRlState_id#id##',
+                              value: "#winRlState#id##",
+                              display_value: "#winRlState_display_value#id##",
+                              unit: "#winRlState_unit#id##",
+                              valueDate: '#winRlState_valueDate#id##',
+                              collectDate: '#winRlState_collectDate#id##'}])
   }
   if (!"#winRrState_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#winRrState_id#id##'] = function(_options) {
-      document.querySelector('.Cmd#winRrState_id#id## .info_text').html(_options.display_value)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#winRrState_id#id##', display_value: "#winRrState_display_value#id##"}])
+    jeedom.cmd.addUpdateFunction('#winRrState_id#id##', function(_options) {
+      let cmd = document.querySelector('.Cmd#winRrState_id#id## .info_text')
+      cmd.html(_options.display_value)
+      cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#winRrState_id#id##',
+                              value: "#winRrState#id##",
+                              display_value: "#winRrState_display_value#id##",
+                              unit: "#winRrState_unit#id##",
+                              valueDate: '#winRrState_valueDate#id##',
+                              collectDate: '#winRrState_collectDate#id##'}])
   }
 
   if (!"#hoodState_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#hoodState_id#id##'] = function(_options) {
+    jeedom.cmd.addUpdateFunction('#hoodState_id#id##', function(_options) {
       show_opening('hood', _options.value)
-      document.querySelector('.Cmd#hoodState_id#id## .info_text').html(_options.display_value)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#hoodState_id#id##', value: "#hoodState#id##", display_value: "#hoodState_display_value#id##"}])
+      let cmd = document.querySelector('.Cmd#hoodState_id#id## .info_text')
+      cmd.html(_options.display_value)
+      cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#hoodState_id#id##',
+                              value: "#hoodState#id##",
+                              display_value: "#hoodState_display_value#id##",
+                              unit: "#hoodState_unit#id##",
+                              valueDate: '#hoodState_valueDate#id##',
+                              collectDate: '#hoodState_collectDate#id##'}])
   }
   if (!"#roofState_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#roofState_id#id##'] = function(_options) {
+    jeedom.cmd.addUpdateFunction('#roofState_id#id##', function(_options) {
       show_opening('roof', _options.value)
-      document.querySelector('.Cmd#roofState_id#id## .info_text').html(_options.display_value)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#roofState_id#id##', value: "#roofState#id##", display_value: "#roofState_display_value#id##"}])
+      let cmd = document.querySelector('.Cmd#roofState_id#id## .info_text')
+      cmd.html(_options.display_value)
+      cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#roofState_id#id##',
+                              value: '#roofState#id##',
+                              display_value: "#roofState_display_value#id##",
+                              unit: "#roofState_unit#id##",
+                              valueDate: '#roofState_valueDate#id##',
+                              collectDate: '#roofState_collectDate#id##'}])
   }
   if (!"#tailState_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#tailState_id#id##'] = function(_options) {
+    jeedom.cmd.addUpdateFunction('#tailState_id#id##', function(_options) {
       show_opening('tail', _options.value)
-      document.querySelector('.Cmd#tailState_id#id## .info_text').html(_options.display_value)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#tailState_id#id##', value: "#tailState#id##", display_value: "#tailState_display_value#id##"}])
-  }
-
-  // STATUS
-  // //////
-  if (!"#engineON_id#id##".startsWith('#')) {
-    let image = ''
-    jeedom.cmd.update['#engineON_id#id##'] = function(_options) {
-      let image = ''
-      if (_options.value == 1) {
-        image = 'engine_green.svg'
-      } else {
-        if (document.querySelector('body').getAttribute('data-theme').endsWith('Dark')) {
-          image = 'engine_grey_dark.svg'
-        } else {
-          image = 'engine_grey_light.svg'
-        }
-      }
-      document.querySelector('.Cmd#engineON_id#id## img').setAttribute('src','/plugins/volvocars/desktop/img/' + image)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#engineON_id#id##', value: "#engineON#id##"}])
+      let cmd = document.querySelector('.Cmd#tailState_id#id## .info_text')
+      cmd.html(_options.display_value)
+      cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#tailState_id#id##',
+                              value: '#tailState#id##',
+                              display_value: "#tailState_display_value#id##",
+                              unit: "#tailState_unit#id##",
+                              valueDate: '#tailState_valueDate#id##',
+                              collectDate: '#tailState_collectDate#id##'}])
   }
 
   // ACTIONS
@@ -1156,10 +1452,11 @@
   
   // RETOUR COMMANDES
   if (!"#lastAnswer_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#lastAnswer_id#id##'] = function(_option) {
+    jeedom.cmd.addUpdateFunction('#lastAnswer_id#id##', function(_options) {
       document.querySelector('.Cmd#lastAnswer_id#id##').querySelector('tbody').html('')
-      let answer = json_decode(_option.display_value)
+      let answer = json_decode(_options.display_value)
       if (answer != null) {
+        let title = '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate
         let key = ''
         for (key of ['cmd','date', 'invokeStatus','message']) {
           if (key in answer) {
@@ -1171,6 +1468,7 @@
             tr += '</tr>'
             let newRow = document.createElement('tr')
             newRow.innerHTML = tr
+            newRow.querySelector('td').setAttribute('title',title)
             document.querySelector('.Cmd#lastAnswer_id#id##').querySelector('tbody').appendChild(newRow)
             delete answer[key]
           }
@@ -1183,44 +1481,111 @@
             tr += '</tr>'
             let newRow = document.createElement('tr')
             newRow.innerHTML = tr
+            newRow.querySelector('td').setAttribute('title',title)
             document.querySelector('.Cmd#lastAnswer_id#id##').querySelector('tbody').appendChild(newRow)
           }
         }
       }
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#lastAnswer_id#id##', value: '#lastAnswer_state#id##', display_value: '#lastAnswer_display_value#id##'}])
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#lastAnswer_id#id##',
+                              value: '#lastAnswer#id##',
+                              display_value: '#lastAnswer_display_value#id##',
+                              unit: '#lastAnswer_unit#id##',
+                              valueDate: '#lastAnswer_valueDate#id##',
+                              collectDate: '#lastAnswer_collectDate#id##'}])
+  }
+
+  // STATUS
+  // //////
+  if (!"#engineON_id#id##".startsWith('#')) {
+    jeedom.cmd.addUpdateFunction('#engineON_id#id##', function(_options) {
+      let image = ''
+      if (_options.value == 1) {
+        image = 'engine_green.svg'
+      } else {
+        if (document.querySelector('body').getAttribute('data-theme').endsWith('Dark')) {
+          image = 'engine_grey_dark.svg'
+        } else {
+          image = 'engine_grey_light.svg'
+        }
+      }
+      let cmd = document.querySelector('.Cmd#engineON_id#id## img')
+      cmd.setAttribute('src','/plugins/volvocars/desktop/img/' + image)
+      cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#engineON_id#id##',
+                              value: '#engineON#id##',
+                              display_value: "#engineON_display_value#id##",
+                              unit: "#engineON_unit#id##",
+                              valueDate: '#engineON_valueDate#id##',
+                              collectDate: '#engineON_collectDate#id##'}])
   }
 
   // SERVICE
   if (!"#service_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#service_id#id##'] = function(_options) {
-      document.querySelector('.Cmd#service_id#id##').html(_options.display_value)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#service_id#id##', value: '#service_state#id##', display_value: '#service_display_value#id##'}])
+    jeedom.cmd.addUpdateFunction('#service_id#id##', function(_options) {
+      let cmd = document.querySelector('.Cmd#service_id#id##')
+      cmd.html(_options.display_value)
+      cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#service_id#id##',
+                              value: '#service#id##',
+                              display_value: "#service_display_value#id##",
+                              unit: "#service_unit#id##",
+                              valueDate: '#service_valueDate#id##',
+                              collectDate: '#service_collectDate#id##'}])
   }
   if (!"#engineHoursToService_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#engineHoursToService_id#id##'] = function(_options) {
-      document.querySelector('.Cmd#engineHoursToService_id#id##').html(_options.display_value + " " +_options.unit)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#engineHoursToService_id#id##', value: '#engineHoursToService_state#id##', display_value: '#engineHoursToService_display_value#id##', unit: '#engineHoursToService_unit#id##'}])
+    jeedom.cmd.addUpdateFunction('#engineHoursToService_id#id##', function(_options) {
+      let cmd = document.querySelector('.Cmd#engineHoursToService_id#id##')
+      cmd.html(_options.display_value + " " +_options.unit)
+      cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#engineHoursToService_id#id##',
+                              value: '#engineHoursToService#id##',
+                              display_value: "#engineHoursToService_display_value#id##",
+                              unit: "#engineHoursToService_unit#id##",
+                              valueDate: '#engineHoursToService_valueDate#id##',
+                              collectDate: '#engineHoursToService_collectDate#id##'}])
   }
   if (!"#distanceToService_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#distanceToService_id#id##'] = function(_options) {
-      document.querySelector('.Cmd#distanceToService_id#id##').html(_options.display_value + " " +_options.unit)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#distanceToService_id#id##', value: '#distanceToService_state#id##', display_value: '#distanceToService_display_value#id##', unit: '#distanceToService_unit#id##'}])
+    jeedom.cmd.addUpdateFunction('#distanceToService_id#id##', function(_options) {
+      let cmd = document.querySelector('.Cmd#distanceToService_id#id##')
+      cmd.html(_options.display_value + " " +_options.unit)
+      cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#distanceToService_id#id##',
+                              value: '#distanceToService#id##',
+                              display_value: "#distanceToService_display_value#id##",
+                              unit: "#distanceToService_unit#id##",
+                              valueDate: '#distanceToService_valueDate#id##',
+                              collectDate: '#distanceToService_collectDate#id##'}])
   }
   if (!"#timeToService_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#timeToService_id#id##'] = function(_options) {
-      document.querySelector('.Cmd#timeToService_id#id##').html(_options.display_value + " " +_options.unit)
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#timeToService_id#id##', value: '#timeToService_state#id##', display_value: '#timeToService_display_value#id##', unit: '#timeToService_unit#id##'}])
+    jeedom.cmd.addUpdateFunction('#timeToService_id#id##', function(_options) {
+      let cmd = document.querySelector('.Cmd#timeToService_id#id##')
+      cmd.html(_options.display_value + " " +_options.unit)
+      cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#timeToService_id#id##',
+                              value: '#timeToService#id##',
+                              display_value: "#timeToService_display_value#id##",
+                              unit: "#timeToService_unit#id##",
+                              valueDate: '#timeToService_valueDate#id##',
+                              collectDate: '#timeToService_collectDate#id##'}])
   }
   if (!"#serviceTrigger_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#serviceTrigger_id#id##'] = function(_options) {
-      document.querySelector('.Cmd#serviceTrigger_id#id##').html(_options.display_value + "&nbsp;")
-    }
-    jeedom.cmd.refreshValue([{cmd_id: '#serviceTrigger_id#id##', value: '#serviceTrigger_state#id##', display_value: '#serviceTrigger_display_value#id##'}])
+    jeedom.cmd.addUpdateFunction('#serviceTrigger_id#id##', function(_options) {
+      let cmd = document.querySelector('.Cmd#serviceTrigger_id#id##')
+      cmd.html(_options.display_value + "&nbsp;")
+      cmd.setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+    })
+    jeedom.cmd.refreshValue([{cmd_id: '#serviceTrigger_id#id##',
+                              value: '#serviceTrigger#id##',
+                              display_value: "#serviceTrigger_display_value#id##",
+                              unit: "#serviceTrigger_unit#id##",
+                              valueDate: '#serviceTrigger_valueDate#id##',
+                              collectDate: '#serviceTrigger_collectDate#id##'}])
   }
 
   // POSITION
@@ -1234,7 +1599,8 @@
   // MISE A JOUR DES TEXTES INFO
   // ===========================
   if (!"#msg2widget_id#id##".startsWith('#')) {
-    jeedom.cmd.update['#msg2widget_id#id##'] = function(_options) {
+    jeedom.cmd.addUpdateFunction('#msg2widget_id#id##', function(_options) {
+      console.log(_options)
       let messages = json_decode(_options.value)
       for (let cible in messages) {
         let msg = ''
@@ -1243,13 +1609,20 @@
           msg += sep + messages[cible][id]
           sep = '<br>'
         }
-        document.querySelector('#'+cible + '#id#').setAttribute('title',msg)
+        let cible_el = document.querySelector('#'+cible+'#id#')
+        if (is_object(cible_el)){
+          cible_el.setAttribute('data-msg',msg)
+          let title = '<b>' + msg + '</b><br>'
+          title += '{{Date de valeur}}: ' + cible_el.getAttribute('data-valueDate') + '<br>'
+          title += '{{Date de collecte}}: ' + cible_el.getAttribute('data-collectDate')
+          cible_el.setAttribute('title',title)
+        }
       }
-    }
+    })
     jeedom.cmd.refreshValue([{cmd_id: '#msg2widget_id#id##', value: "#msg2widget#id##"}])
   }
 </script>
 
 <!--
  vim: tabstop=2 autoindent expandtab
--->
+-->VarSet.largeur_basVarSet.largeur_basVarSet.largeur_bas

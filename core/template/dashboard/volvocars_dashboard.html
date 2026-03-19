@@ -59,7 +59,7 @@
 					<img/>
 				</span>
 				<span
-					id="div_al_brake#id#"
+					id="div_al_brakeFluid#id#"
 					class="#al_brakeFluid_history#id##"
 					data-cmd_id="#al_brakeFluid_id#id##"
 					>
@@ -73,16 +73,16 @@
 					<img/>
 				</span>
 				<span
-					id="div_al_fuelautonomy#id#"
-					class="#fuelEngineOnly#id## #al_fuelautonomy_history#id##"
-					data-cmd_id="#al_fuelautonomy_id#id##"
+					id="div_al_fuelAutonomy#id#"
+					class="#fuelEngineOnly#id## #al_fuelAutonomy_history#id##"
+					data-cmd_id="#al_fuelAutonomy_id#id##"
 					>
 					<img/>
 				</span>
 				<span
-					id="div_al_electricautonomy#id#"
-					class="#electricEngineOnly#id## #al_electricautonomy_history#id##"
-					data-cmd_id="#al_electricautonomy_id#id##"
+					id="div_al_electricAutonomy#id#"
+					class="#electricEngineOnly#id## #al_electricAutonomy_history#id##"
+					data-cmd_id="#al_electricAutonomy_id#id##"
 					>
 					<img/>
 				</span>
@@ -408,7 +408,7 @@ if (!"#al_coolant_id#id##".startsWith('#')) {
 // ========
 if (!"#al_brakeFluid_id#id##".startsWith('#')) {
 	jeedom.cmd.addUpdateFunction('#al_brakeFluid_id#id##', function(_options) {
-		if  (is_object(cmd = document.querySelector("#div_al_brake#id# img"))) {
+		if  (is_object(cmd = document.querySelector("#div_al_brakeFluid#id# img"))) {
 			let img = ""
 			if (_options.value == 1) {
 				img = 'brake_red.svg'
@@ -460,10 +460,10 @@ if (!"#al_washerFluid_id#id##".startsWith('#')) {
 
 // AL FUEL AUTONOMY
 // ================
-if (!"#al_fuelautonomy_id#id##".startsWith('#')) {
-	console.log("#div_al_fuelautonomy#id# img")
-	jeedom.cmd.addUpdateFunction('#al_fuelautonomy_id#id##', function(_options) {
-		if  (is_object(cmd = document.querySelector("#div_al_fuelautonomy#id# img"))) {
+if (!"#al_fuelAutonomy_id#id##".startsWith('#')) {
+	console.log("#div_al_fuelAutonomy#id# img")
+	jeedom.cmd.addUpdateFunction('#al_fuelAutonomy_id#id##', function(_options) {
+		if  (is_object(cmd = document.querySelector("#div_al_fuelAutonomy#id# img"))) {
 			let img = ""
 			if (_options.value == 1) {
 				img = 'station_gas_red.svg'
@@ -480,18 +480,18 @@ if (!"#al_fuelautonomy_id#id##".startsWith('#')) {
 		}
 	})
 
-	jeedom.cmd.refreshValue([{cmd_id: '#al_fuelautonomy_id#id##',
-							  value: "#al_fuelautonomy#id##",
-							  display_value: "#al_fuelautonomy_display_value#id##",
-							  valueDate: "#al_fuelautonomy_valueDate#id##",
-							  collectDate: "#al_fuelautonomy_collectDate#id##"}])
+	jeedom.cmd.refreshValue([{cmd_id: '#al_fuelAutonomy_id#id##',
+							  value: "#al_fuelAutonomy#id##",
+							  display_value: "#al_fuelAutonomy_display_value#id##",
+							  valueDate: "#al_fuelAutonomy_valueDate#id##",
+							  collectDate: "#al_fuelAutonomy_collectDate#id##"}])
 }
 
 // AL ELECTRIC AUTONOMY
 // ====================
-if (!"#al_electricautonomy_id#id##".startsWith('#')) {
-	jeedom.cmd.addUpdateFunction('#al_electricautonomy_id#id##', function(_options) {
-		if  (is_object(cmd = document.querySelector("#div_al_electricautonomy#id# img"))) {
+if (!"#al_electricAutonomy_id#id##".startsWith('#')) {
+	jeedom.cmd.addUpdateFunction('#al_electricAutonomy_id#id##', function(_options) {
+		if  (is_object(cmd = document.querySelector("#div_al_electricAutonomy#id# img"))) {
 			let img = ""
 			if (_options.value == 1) {
 				img = 'station_recharge_red.svg'
@@ -507,11 +507,11 @@ if (!"#al_electricautonomy_id#id##".startsWith('#')) {
 		}
 	})
 
-	jeedom.cmd.refreshValue([{cmd_id: '#al_electricautonomy_id#id##',
-							  value: "#al_electricautonomy#id##",
-							  display_value: "#al_electricautonomy_display_value#id##",
-							  valueDate: "#al_electricautonomy_valueDate#id##",
-							  collectDate: "#al_electricautonomy_collectDate#id##"}])
+	jeedom.cmd.refreshValue([{cmd_id: '#al_electricAutonomy_id#id##',
+							  value: "#al_electricAutonomy#id##",
+							  display_value: "#al_electricAutonomy_display_value#id##",
+							  valueDate: "#al_electricAutonomy_valueDate#id##",
+							  collectDate: "#al_electricAutonomy_collectDate#id##"}])
 }
 
 // AL TYRE

@@ -260,7 +260,7 @@ class volvocars extends eqLogic {
 	 */
 	public static function updateMessages($_options) {
 		$mapping = [
-			'div_al_brake' => [
+			'div_al_brakeFluid' => [
 				'al_brakeFluid' => [
 					'0' => __("Niveau liquide de frein OK",__FILE__),
 				],
@@ -286,7 +286,7 @@ class volvocars extends eqLogic {
 					"TOO_HIGH" => __("Niveau d'huile haut",__FILE__),
 				],
 			],
-			'div_al_wash' => [
+			'div_al_washerFluid' => [
 				'al_washerFluid' => [
 					'0' => __("Niveau lave-vitres OK", __FILE__),
 				],
@@ -294,12 +294,12 @@ class volvocars extends eqLogic {
 					'TOO_LOW' => __("Niveau liquide lave-vitres bas",__FILE__),
 				],
 			],
-			'div_al_fuelautonomy' => [
+			'div_al_fuelAutonomy' => [
 				'fuelAutonomy' => [
 					$_options['value'] => __("Autonomie:",__FILE__) . " #value# #unite#",
 				],
 			],
-			'div_al_electricautonomy' => [
+			'div_al_electricAutonomy' => [
 				'electricAutonomy' => [
 					$_options['value'] => __("Autonomie:",__FILE__) . " #value# #unite#",
 				],
@@ -1501,8 +1501,8 @@ class volvocars extends eqLogic {
 			'unavailableReason',
 			'al_brakeFluid',
 			'al_coolant',
-			'al_electricautonomy',
-			'al_fuelautonomy',
+			'al_electricAutonomy',
+			'al_fuelAutonomy',
 			'al_light',
 			'al_oil',
 			'al_tyre',

@@ -18,6 +18,34 @@
 
 require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 
+function volvocars_goto_10() {
+	$convert = array (
+		'div_al_brake' => 'div_al_brakeFluid',
+		'div_al_fuelautonomy' => 'div_al_fuelAutonomy',
+		'div_al_electricautonomy' => 'div_al_electricAutonomy',
+	);
+	$cars = volvocars::byType('volvocars');
+	foreach ($cars as $car){
+		$cmd = $car->getCmd('info','msg2widget');
+		if (is_object($cmd)) {
+			$changed = false;
+			$value = json_decode($cmd->getCache('value'),true);
+			foreach ($value as $k => $v) {
+				if (array_key_exists($k,$convert)) {
+					if (! array_key_exists($convert[$k],$value)) {
+						$value[$convert[$k]] = $v;
+					}
+					unset($value[$k]);
+					$changed = true;
+				}
+			}
+			if ($changed) {
+				$cmd->setCache('value',json_encode($value));
+			}
+		}
+	}
+}
+
 function volvocars_goto_9() {
 	$cars = volvocars::byType('volvocars');
 	foreach ($cars as $car){
@@ -218,7 +246,7 @@ function volvocars_goto_1() {
 
 function volvocars_upgrade() {
 
-	$lastLevel = 9;
+	$lastLevel = 10;
 
 	$pluginLevel = config::byKey('pluginLevel','volvocars',0);
 	log::add("volvocars","info","pluginLevel: " . $pluginLevel . " => " . $lastLevel);
