@@ -127,7 +127,7 @@ class socket_handler(StreamRequestHandler):
         auth_session = requests.session()
         auth_session.headers = {
             "authorization": "Basic aDRZZjBiOlU4WWtTYlZsNnh3c2c1WVFxWmZyZ1ZtSWFEcGhPc3kxUENhVXNpY1F0bzNUUjVrd2FKc2U0QVpkZ2ZJZmNMeXc=",
-            "User-Agent": "vca-android/5.58.1",
+            "User-Agent": "vca-android/6.7.0",
             "Accept-Encoding": "gzip",
             "Content-Type": "application/json; charset=utf-8"
         }
@@ -226,7 +226,7 @@ class socket_handler(StreamRequestHandler):
 
     def continue_auth(self, auth_session, data):
         next_url = data["_links"]["continueAuthentication"]["href"].replace("http://", "https://") + "?action=continueAuthentication"
-        auth = auth_session.get(next_url)
+        auth = auth_session.post(next_url, data="{}")
         logResponse("CONTINUEAUTHENTICATION", auth)
         if auth.status_code != 200:
             message = auth.json()
