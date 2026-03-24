@@ -2,6 +2,7 @@ on:
   # Workflows check plugin Jeedom
   push:
     branches:
+      - master
       - beta
   pull_request:
     branches:
