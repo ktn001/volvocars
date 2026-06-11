@@ -22,6 +22,9 @@ require_once __DIR__ . '/../../../../core/php/core.inc.php';
 require_once __DIR__ . '/volvoAccount.class.php';
 
 class volvocars extends eqLogic {
+	/* VARIABLES DE LA CLASSE */
+	public $_cmdsConfig; 
+	
 	/*	 * *************************Attributs****************************** */
 
 	const PYTHON_PATH = __DIR__ . '/../../resources/venv/bin/python3';
