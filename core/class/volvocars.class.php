@@ -1269,11 +1269,11 @@ class volvocars extends eqLogic {
 						$value = $infos[$key]['value'] == 'RUNNING' ? '1' : '0';
 						break;
 					default:
-						$value = $infos[$key]['value'];
+						$value = $infos[$key]['value'] ?? '';
 				}
 				$cmd = $this->getCmd('info',$logicalId);
 				if (!is_object($cmd)) {
-					$this->createCmd($logicalId, true, $infos[$key]['value']);
+					$this->createCmd($logicalId, true, $value););
 				}
 				$cmd = $this->getCmd('info',$logicalId);
 				if (!is_object($cmd)) {
