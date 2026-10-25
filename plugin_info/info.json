@@ -17,10 +17,10 @@
 	"hasDependency": true,
 	"hasOwnDeamon": true,
 	"maxDependancyInstallTime": 0,
-	"changelog": "https://ktn001.github.io/fr_FR/volvocars/changelog.html",
-	"documentation": "https://ktn001.github.io/fr_FR/volvocars/index.html",
-	"changelog_beta": "https://ktn001.github.io/fr_FR/volvocars/changelog.html",
-	"documentation_beta": "https://ktn001.github.io/fr_FR/volvocars/index.html",
+	"changelog": "https://docsjeedom.ockolly.ch/plugins/volvocars/fr_FR/changelog.html",
+	"documentation": "https://docsjeedom.ockolly.ch/plugins/volvocars/fr_FR/index.html",
+	"changelog_beta": "https://docsjeedom.ockolly.ch/plugins/volvocars/fr_FR/changelog.html",
+	"documentation_beta": "https://docsjeedom.ockolly.ch/plugins/volvocars/fr_FR/index.html",
 	"link": {
 		"forum": "https://community.jeedom.com/tag/plugin-volvocars"
 	},
