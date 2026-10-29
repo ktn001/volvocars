@@ -3,8 +3,10 @@
         "401 - Accès non autorisé": "401 - Nicht autorisierter Zugriff",
         "Aucune méthode correspondante à": "Keine passende Methode zu",
         "Création du compte %s": "Erstellen des Kontos %s",
+        "Envoi de username\/password au serveur volvocars via le daemon": "Übermittlung von Benutzername und Passwort an den Volvocars-Server über den Daemon",
         "Erreur HTTP %s lors de la demande de renvoi du OTP": "HTTP-Fehler %s bei der Aufforderung, das OTP zurückzugeben",
         "Erreur dans le flux de traitement de validation du login\/password (state: %s)": "Fehler im Verarbeitungsablauf der Login\/Passwort-Validierung (state: %s)",
+        "Erreur de socket: ": "Socket-Fehler: ",
         "Errreur indéterminée lors de la validation du login\/password": "Unbestimmter Fehler bei der Bestätigung von Login\/Passwort",
         "L'account %s à sauvegarder est introuvable": "Der zu sichernde Account %s wurde nicht gefunden",
         "L'id du compte n'est pas défini": "Die Konto-ID ist nicht gesetzt",
@@ -14,8 +16,9 @@
         "Le nom de l'account à sauvegarder est indéfini": "Der Name des zu sichernden Accounts ist undefiniert",
         "Le nom du compte n'est pas défini": "Der Name des Kontos ist nicht festgelegt",
         "Le véhicule %s est introuvable": "Das Fahrzeug %s ist nicht auffindbar",
+        "Lecture du résultat de l'envoi de username\/password": "Auslesen des Ergebnisses der Übermittlung von Benutzername und Passwort",
         "Pas de données pour la sauvegarde du compte": "Keine Daten für die Sicherung des Kontos",
-        "Validation username\/password de l'account": "Validierung von username\/password für den Account",
+        "Timeout lors de l'envoi du login\/password": "Zeitüberschreitung beim Senden von Benutzername und Passwort",
         "l'id du compte à supprimer n'est pas défini": "die id des zu löschenden Kontos ist nicht gesetzt",
         "l'id du compte à synchroniser n'est pas défini": "die id des zu synchronisierenden Kontos ist nicht festgelegt",
         "l'id du véhicule n'est pas défini": "die Fahrzeug-ID ist nicht definiert"
@@ -439,7 +442,7 @@
         "401 - Accès non autorisé": "401 - Nicht autorisierter Zugriff",
         "Authentification par courriel": "Authentifizierung per E-Mail",
         "Envoyer un nouveau code": "Einen neuen Code senden",
-        "Pour votre sécurité, nous avons envoyé un code de vérification à six chiffres à votre adresse courriel : ": "Zu Ihrer Sicherheit haben wir einen sechsstelligen Verifizierungscode an Ihre E-Mail-Adresse gesendet:",
+        "Pour votre sécurité, nous avons envoyé un code de vérification à six chiffres à votre adresse courriel.": "Zu Ihrer Sicherheit haben wir einen sechsstelligen Bestätigungscode an Ihre E-Mail-Adresse gesendet.",
         "Veuillez le saisir ci-dessous pour vérifier votre identité": "Bitte geben Sie es unten ein, um Ihre Identität zu überprüfen"
     },
     "plugins\/volvocars\/desktop\/modal\/rawData.php": {

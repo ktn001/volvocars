@@ -3,8 +3,10 @@
         "401 - Accès non autorisé": "401 - Acesso não autorizado",
         "Aucune méthode correspondante à": "Nenhum método correspondente a",
         "Création du compte %s": "Criar conta %s",
+        "Envoi de username\/password au serveur volvocars via le daemon": "Envio do nome de utilizador\/palavra-passe para o servidor volvocars através do daemon",
         "Erreur HTTP %s lors de la demande de renvoi du OTP": "Erro HTTP %s ao solicitar o reenvio de OTP",
         "Erreur dans le flux de traitement de validation du login\/password (state: %s)": "Erro no fluxo de processamento da validação de início de sessão\/palavra-passe (estado: %s)",
+        "Erreur de socket: ": "Erro de socket: ",
         "Errreur indéterminée lors de la validation du login\/password": "Erro indefinido ao validar o login\/palavra-passe",
         "L'account %s à sauvegarder est introuvable": "Não foi possível encontrar a conta %s da qual se pretende efetuar a cópia de segurança",
         "L'id du compte n'est pas défini": "ID da conta não definido",
@@ -14,8 +16,9 @@
         "Le nom de l'account à sauvegarder est indéfini": "O nome da conta a guardar é indefinido",
         "Le nom du compte n'est pas défini": "Nome da conta não definido",
         "Le véhicule %s est introuvable": "O veículo %s não pode ser encontrado",
+        "Lecture du résultat de l'envoi de username\/password": "Leitura do resultado do envio do nome de utilizador\/palavra-passe",
         "Pas de données pour la sauvegarde du compte": "Sem dados de cópia de segurança da conta",
-        "Validation username\/password de l'account": "Validação do nome de utilizador\/palavra-passe da conta",
+        "Timeout lors de l'envoi du login\/password": "Tempo limite esgotado ao enviar o nome de utilizador\/palavra-passe",
         "l'id du compte à supprimer n'est pas défini": "o id da conta a eliminar não está definido",
         "l'id du compte à synchroniser n'est pas défini": "a identificação da conta a sincronizar não está definida",
         "l'id du véhicule n'est pas défini": "identificação do veículo não definida"
@@ -439,7 +442,7 @@
         "401 - Accès non autorisé": "401 - Acesso não autorizado",
         "Authentification par courriel": "Autenticação de correio eletrónico",
         "Envoyer un nouveau code": "Enviar um novo código",
-        "Pour votre sécurité, nous avons envoyé un code de vérification à six chiffres à votre adresse courriel : ": "Para sua segurança, enviámos um código de verificação de seis dígitos para o seu endereço de correio eletrónico:",
+        "Pour votre sécurité, nous avons envoyé un code de vérification à six chiffres à votre adresse courriel.": "Para sua segurança, enviámos um código de verificação de seis dígitos para o seu endereço de e-mail.",
         "Veuillez le saisir ci-dessous pour vérifier votre identité": "Introduza-o abaixo para verificar a sua identidade"
     },
     "plugins\/volvocars\/desktop\/modal\/rawData.php": {
