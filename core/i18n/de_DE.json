@@ -35,6 +35,7 @@
         "Erreur de l'envoi d'une commande pour le véhicule '%s' (http_code: %s): %s": "Fehler beim Senden eines Befehls für das Fahrzeug '%s' (http_code: %s): %s",
         "Erreur de prise de lock": "Fehler bei der Lockaufnahme",
         "Erreur lors de la lecture du fichier %s": "Fehler beim Lesen der Datei %s",
+        "Erreur lors du renouvellement du token": "Fehler bei der Erneuerung des Tokens",
         "Fin de l'actualisation du véhicule '%s'": "Ende der Aktualisierung des Fahrzeugs '%s'",
         "Fin de la synchonisation de l'account %s": "Ende der Synchonisierung des Accounts %s",
         "Le compte %s est utilisé pour le véhicule %s": "Das Konto %s wird für das Fahrzeug %s verwendet",
