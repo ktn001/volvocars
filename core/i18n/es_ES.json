@@ -35,6 +35,7 @@
         "Erreur de l'envoi d'une commande pour le véhicule '%s' (http_code: %s): %s": "Error al enviar un comando para el vehículo '%s' (http_code: %s): %s",
         "Erreur de prise de lock": "Error de conector de cerradura",
         "Erreur lors de la lecture du fichier %s": "Error al leer el archivo %s",
+        "Erreur lors du renouvellement du token": "Error al renovar el token",
         "Fin de l'actualisation du véhicule '%s'": "Fin de la actualización del vehículo '%s",
         "Fin de la synchonisation de l'account %s": "Fin de la sincronización de la cuenta %s",
         "Le compte %s est utilisé pour le véhicule %s": "La cuenta %s se utiliza para el vehículo %s",

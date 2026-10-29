@@ -35,6 +35,7 @@
         "Erreur de l'envoi d'une commande pour le véhicule '%s' (http_code: %s): %s": "Error sending command for vehicle '%s' (http_code: %s): %s",
         "Erreur de prise de lock": "Lock connector error",
         "Erreur lors de la lecture du fichier %s": "Error reading %s file",
+        "Erreur lors du renouvellement du token": "Error renewing the token",
         "Fin de l'actualisation du véhicule '%s'": "End of vehicle update '%s",
         "Fin de la synchonisation de l'account %s": "End of account %s synchronization",
         "Le compte %s est utilisé pour le véhicule %s": "Account %s is used for vehicle %s",
