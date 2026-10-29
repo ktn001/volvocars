@@ -15,7 +15,7 @@
  * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
  */
 
-"use strict";
+"use strict"
 
 if (typeof volvocarsFrontEnd === "undefined") {
   var volvocarsFrontEnd = {
@@ -32,153 +32,103 @@ if (typeof volvocarsFrontEnd === "undefined") {
       /*
        * Event Click
        */
-      document
-        .getElementById("div_pageContainer")
-        .addEventListener("click", function (event) {
-          let _target = null;
+      document.getElementById("div_pageContainer").addEventListener("click", function (event) {
+          let _target = null
 
-          if ((_target = event.target.closest(".accountDisplayCard"))) {
-            volvocarsFrontEnd.editAccount(
-              _target.getAttribute("data-account_id"),
-            );
-            return;
+          if (_target = event.target.closest(".accountDisplayCard")) {
+            volvocarsFrontEnd.editAccount(_target.getAttribute("data-account_id"))
+            return
           }
 
-          if (
-            (_target = event.target.closest(".accountAction[data-action=add]"))
-          ) {
-            volvocarsFrontEnd.createAccount();
-            return;
+          if (_target = event.target.closest(".accountAction[data-action=add]")) {
+            volvocarsFrontEnd.createAccount()
+            return
           }
 
-          if (
-            (_target = event.target.closest(".accountAction[data-action=sync]"))
-          ) {
-            volvocarsFrontEnd.synchronizeAccount();
-            return;
+          if (_target = event.target.closest(".accountAction[data-action=sync]")) {
+            volvocarsFrontEnd.synchronizeAccount()
+            return
           }
 
-          if (
-            (_target = event.target.closest(".eqLogicAction[data-action=edit]"))
-          ) {
-            volvocarsFrontEnd.toggleEditVehicle(true);
-            return;
+          if (_target = event.target.closest(".eqLogicAction[data-action=edit]")) {
+            volvocarsFrontEnd.toggleEditVehicle(true)
+            return
           }
 
-          if (
-            (_target = event.target.closest(
-              ".eqLogicAction[data-action=protect]",
-            ))
-          ) {
-            volvocarsFrontEnd.toggleEditVehicle(false);
-            return;
+          if (_target = event.target.closest(".eqLogicAction[data-action=protect]")) {
+            volvocarsFrontEnd.toggleEditVehicle(false)
+            return
           }
 
-          if (
-            (_target = event.target.closest(
-              ".eqLogicAction[data-action=get_raw-datas]",
-            ))
-          ) {
-            volvocarsFrontEnd.showRawData();
-            return;
+          if (_target = event.target.closest( ".eqLogicAction[data-action=get_raw-datas]")) {
+            volvocarsFrontEnd.showRawData()
+            return
           }
 
-          if (
-            (_target = event.target.closest(
-              ".eqLogicAction[data-action=get_pos]",
-            ))
-          ) {
-            volvocarsFrontEnd.setSitePosition(_target);
-            return;
+          if (_target = event.target.closest(".eqLogicAction[data-action=get_pos]")) {
+            volvocarsFrontEnd.setSitePosition(_target)
+            return
           }
 
-          if (
-            (_target = event.target.closest(
-              ".cmdAction[data-action=removeOpen]",
-            ))
-          ) {
-            volvocarsFrontEnd.removeOpenOrClosedCmds("Open");
-            return;
+          if (_target = event.target.closest(".cmdAction[data-action=removeOpen]",)) {
+            volvocarsFrontEnd.removeOpenOrClosedCmds("Open")
+            return
           }
 
-          if (
-            (_target = event.target.closest(
-              ".cmdAction[data-action=removeClosed]",
-            ))
-          ) {
-            volvocarsFrontEnd.removeOpenOrClosedCmds("Closed");
-            return;
+          if (_target = event.target.closest(".cmdAction[data-action=removeClosed]",)) {
+            volvocarsFrontEnd.removeOpenOrClosedCmds("Closed")
+            return
           }
 
-          if (
-            (_target = event.target.closest(".cmdAction[data-action=recreate]"))
-          ) {
-            volvocarsFrontEnd.recreateMissingsCmds();
-            return;
+          if (_target = event.target.closest(".cmdAction[data-action=recreate]")) {
+            volvocarsFrontEnd.recreateMissingsCmds()
+            return
           }
 
-          if (
-            (_target = event.target.closest(".cmdAction[data-action=sort]"))
-          ) {
-            volvocarsFrontEnd.sortCmds();
-            return;
+          if (_target = event.target.closest(".cmdAction[data-action=sort]")) {
+            volvocarsFrontEnd.sortCmds()
+            return
           }
 
-          if ((_target = event.target.closest("#btn-get_image"))) {
-            volvocarsFrontEnd.GetImage();
-            return;
+          if (_target = event.target.closest("#btn-get_image")) {
+            volvocarsFrontEnd.GetImage()
+            return
           }
-        });
+        })
 
       /*
        * Event Change
        */
-      document
-        .getElementById("div_pageContainer")
-        .addEventListener("change", function (event) {
-          let _target = null;
+      document.getElementById("div_pageContainer").addEventListener("change", function (event) {
+          let _target = null
 
-          if (
-            (_target = event.target.closest(
-              ".eqLogicAttr[data-l2key=electricEngine]",
-            ))
-          ) {
-            volvocarsFrontEnd.toggleElectricEngine(_target.checked);
-            return;
+          if (_target = event.target.closest(".eqLogicAttr[data-l2key=electricEngine]")) {
+            volvocarsFrontEnd.toggleElectricEngine(_target.checked)
+            return
           }
 
-          if (
-            (_target = event.target.closest(
-              ".eqLogicAttr[data-l2key=fuelEngine]",
-            ))
-          ) {
-            volvocarsFrontEnd.toggleFuelEngine(_target.checked);
-            return;
+          if (_target = event.target.closest(".eqLogicAttr[data-l2key=fuelEngine]")) {
+            volvocarsFrontEnd.toggleFuelEngine(_target.checked)
+            return
           }
 
-          if (
-            (_target = event.target.closest(
-              "[data-l1key=configuration][data-l2key^=site][data-l2key$=_active]",
-            ))
-          ) {
-            volvocarsFrontEnd.siteActivation(_target);
-            return;
+          if (_target = event.target.closest("[data-l1key=configuration][data-l2key^=site][data-l2key$=_active]")) {
+            volvocarsFrontEnd.siteActivation(_target)
+            return
           }
-        });
+        })
 
       /*
        * Event Load
        */
       document.getElementById("img_car").addEventListener("load", function () {
-        volvocarsFrontEnd.onCarImageLoaded();
-      });
+        volvocarsFrontEnd.onCarImageLoaded()
+      })
 
       /*
        * Event Paste
        */
-      document
-        .getElementById("drop-area")
-        .addEventListener("paste", volvocarsFrontEnd.pasteImage);
+      document.getElementById("drop-area").addEventListener("paste", volvocarsFrontEnd.pasteImage)
     },
 
     /*
@@ -201,14 +151,14 @@ if (typeof volvocarsFrontEnd === "undefined") {
               jeedomUtils.showAlert({
                 message: data.result,
                 level: "danger",
-              });
-              return;
+              })
+              return
             }
-            let account = json_decode(data.result);
-            volvocarsFrontEnd.editAccount(account.id);
+            let account = json_decode(data.result)
+            volvocarsFrontEnd.editAccount(account.id)
           },
-        });
-      });
+        })
+      })
     },
 
     /*
@@ -227,10 +177,10 @@ if (typeof volvocarsFrontEnd === "undefined") {
         dataType: "json",
         success: function (data) {
           if (data.state != "ok") {
-            jeedomUtils.showAlert({ message: data.result, level: "danger" });
-            return;
+            jeedomUtils.showAlert({ message: data.result, level: "danger" })
+            return
           }
-          let account = json_decode(data.result);
+          let account = json_decode(data.result)
           jeeDialog.dialog({
             id: volvocarsFrontEnd.mdId_editAccount,
             title: "{{Compte}}: " + account.name,
@@ -241,16 +191,16 @@ if (typeof volvocarsFrontEnd === "undefined") {
               cancel: {
                 callback: {
                   click: function (event) {
-                    let account = editVolvocarsAccount.getAccount();
+                    let account = editVolvocarsAccount.getAccount()
                     let card = document.querySelector(
                       '.accountDisplayCard[data-account_id="' +
                         account.id +
                         '"]',
-                    );
+                    )
                     if (!card) {
-                      jeedomUtils.loadPage(document.URL);
+                      jeedomUtils.loadPage(document.URL)
                     }
-                    editVolvocarsAccount.close();
+                    editVolvocarsAccount.close()
                   },
                 },
               },
@@ -259,7 +209,7 @@ if (typeof volvocarsFrontEnd === "undefined") {
                 className: "danger",
                 callback: {
                   click: function (event) {
-                    let account = editVolvocarsAccount.getAccount();
+                    let account = editVolvocarsAccount.getAccount()
                     domUtils.ajax({
                       type: "POST",
                       async: false,
@@ -275,33 +225,33 @@ if (typeof volvocarsFrontEnd === "undefined") {
                           jeedomUtils.showAlert({
                             message: data.result,
                             level: "danger",
-                          });
-                          return;
+                          })
+                          return
                         }
                         let card = document.querySelector(
                           '.accountDisplayCard[data-account_id="' +
                             account.id +
                             '"]',
-                        );
+                        )
                         if (card) {
-                          card.remove();
+                          card.remove()
                         }
                         let option = document.querySelector(
                           '#sel_account option[value="' + account.id + '"]',
-                        );
+                        )
                         if (option) {
-                          option.remove();
+                          option.remove()
                         }
-                        editVolvocarsAccount.close();
+                        editVolvocarsAccount.close()
                       },
-                    });
+                    })
                   },
                 },
               },
               confirm: {
                 callback: {
                   click: function (event) {
-                    let account = editVolvocarsAccount.getAccount();
+                    let account = editVolvocarsAccount.getAccount()
                     domUtils.ajax({
                       url: volvocarsFrontEnd.ajaxUrl,
                       data: {
@@ -311,44 +261,43 @@ if (typeof volvocarsFrontEnd === "undefined") {
                       dataType: "json",
                       success: function (data) {
                         if (data.state != "ok") {
-                          let message = '';
-                          let level = '';
+                          let message = ''
+                          let level = ''
                           if (typeof(data.result) == 'string') {
-                            message = data.result;
+                            message = data.result
                             level = "danger"
                           } else {
-                            message = data.result.msg;
-                            level = data.result.level;
+                            message = data.result.msg
+                            level = data.result.level
                           }
                           jeedomUtils.showAlert({
                             message: message,
-                            level: level, 
-                          });
-                          return;
+                            level: level,
+                          })
+                          return
                         } else {
-                          let auth = json_decode(data.result);
-                          document.getElementById("error_message").innerText = "";
-                          editVolvocarsAccount.close();
-                          volvocarsFrontEnd.getOTP(auth, account.id);
+                          document.getElementById("error_message").innerText = ""
+                          editVolvocarsAccount.close()
+                          volvocarsFrontEnd.getOTP(account.id)
                         }
                       },
-                    });
+                    })
                   },
                 },
               },
             },
             callback: function () {
-              editVolvocarsAccount.init(account);
+              editVolvocarsAccount.init(account)
             },
-          });
+          })
         },
-      });
+      })
     },
 
     /*
      * Saisie et envoi du One Time Password
      */
-    getOTP: function (auth, account_id) {
+    getOTP: function (account_id) {
       jeeDialog.dialog({
         id: volvocarsFrontEnd.mdId_getOTP,
         title: "One Time Password",
@@ -359,13 +308,13 @@ if (typeof volvocarsFrontEnd === "undefined") {
           cancel: {
             callback: {
               click: function (event) {
-                volvocarsOTP.close();
-                let account = editVolvocarsAccount.getAccount();
+                volvocarsOTP.close()
+                let account = editVolvocarsAccount.getAccount()
                 let card = document.querySelector(
                   '.accountDisplayCard[data-account="' + account.id + '"]',
-                );
+                )
                 if (!card) {
-                  jeedomUtils.loadPage(document.URL);
+                  jeedomUtils.loadPage(document.URL)
                 }
               },
             },
@@ -373,8 +322,7 @@ if (typeof volvocarsFrontEnd === "undefined") {
           confirm: {
             callback: {
               click: function (event) {
-                let OTP = volvocarsOTP.getOTP();
-                let auth = volvocarsOTP.getAuth();
+                let OTP = volvocarsOTP.getOTP()
                 domUtils.ajax({
                   type: "POST",
                   async: false,
@@ -383,64 +331,63 @@ if (typeof volvocarsFrontEnd === "undefined") {
                   data: {
                     action: "sendOTP",
                     account_id: account_id,
-                    auth: json_encode(auth),
                     otp: OTP,
                   },
                   dataType: "json",
                   success: function (data) {
                     if (data.state != "ok") {
-                      let printAlert = true;
-                      let msg = "";
+                      let printAlert = true
+                      let msg = ""
                       if (typeof data.result === "object") {
                         if ("content" in data.result) {
-                          let content = "";
+                          let content = ""
                           try {
-                            content = JSON.parse(data.result.content);
+                            content = JSON.parse(data.result.content)
                             if ("code" in content) {
                               switch (content.code) {
                                 case "INVALID_OTP":
-                                  msg = "{{Le code est invalide ou a expiré}}";
-                                  printAlert = false;
-                                  break;
+                                  msg = "{{Le code est invalide ou a expiré}}"
+                                  printAlert = false
+                                  break
                               }
                             }
                           } catch (e) {}
                         }
                       }
-                      volvocarsOTP.setMessage(msg);
+                      volvocarsOTP.setMessage(msg)
                       if (printAlert) {
                         jeedomUtils.showAlert({
                           message: data.result,
                           level: "danger",
-                        });
+                        })
                       }
-                      return;
+                      return
                     }
-                    volvocarsOTP.close();
+                    volvocarsOTP.close()
                   },
-                });
+                })
               },
             },
           },
         },
-      });
+      })
       setTimeout(function () {
-        volvocarsOTP.init(auth);
-      }, 500);
+        volvocarsOTP.init()
+      }, 500)
     },
 
     /*
      * Synchronisation d'un account
      */
     synchronizeAccount: function () {
-      let options = [];
-      let accountCards = document.getElementsByClassName("accountDisplayCard");
+      let options = []
+      let accountCards = document.getElementsByClassName("accountDisplayCard")
       for (let i = 0; i < accountCards.length; i++) {
         let option = {
           value: accountCards[i].getAttribute("data-account_id"),
           text: accountCards[i].getAttribute("data-account_name"),
-        };
-        options.push(option);
+        }
+        options.push(option)
       }
       jeeDialog.prompt(
         {
@@ -451,9 +398,9 @@ if (typeof volvocarsFrontEnd === "undefined") {
         },
         function (accountId) {
           if (!accountId) {
-            return;
+            return
           }
-          domUtils.showLoading();
+          domUtils.showLoading()
           setTimeout(function () {
             domUtils.ajax({
               type: "POST",
@@ -470,16 +417,16 @@ if (typeof volvocarsFrontEnd === "undefined") {
                   jeedomUtils.showAlert({
                     message: data.result,
                     level: "danger",
-                  });
-                  domUtils.hideLoading();
-                  return;
+                  })
+                  domUtils.hideLoading()
+                  return
                 }
-                jeedomUtils.loadPage(document.URL);
+                jeedomUtils.loadPage(document.URL)
               },
-            });
-          });
+            })
+          })
         },
-      );
+      )
     },
 
     /*
@@ -489,35 +436,35 @@ if (typeof volvocarsFrontEnd === "undefined") {
       if (edit) {
         jeeDialog.alert(
           "{{Les données modifiées seront remises à jour lors de la prochaine synchronisation!}}",
-        );
+        )
         document
           .querySelector(".eqLogicAction[data-action=edit]")
-          .addClass("hide");
+          .addClass("hide")
         document
           .querySelector(".eqLogicAction[data-action=protect]")
-          .removeClass("hide");
+          .removeClass("hide")
         document
           .querySelectorAll(".eqLogicAttr.sensible")
-          .removeClass("disabled");
+          .removeClass("disabled")
         let checkboxes = document.querySelectorAll(
           "input.eqLogicAttr.sensible[type=checkbox]",
-        );
+        )
         for (let i = 0; i < checkboxes.length; i++) {
-          checkboxes[i].closest("label").removeClass("disabled");
+          checkboxes[i].closest("label").removeClass("disabled")
         }
       } else {
         document
           .querySelector(".eqLogicAction[data-action=edit]")
-          .removeClass("hide");
+          .removeClass("hide")
         document
           .querySelector(".eqLogicAction[data-action=protect]")
-          .addClass("hide");
-        document.querySelectorAll(".eqLogicAttr.sensible").addClass("disabled");
+          .addClass("hide")
+        document.querySelectorAll(".eqLogicAttr.sensible").addClass("disabled")
         let checkboxes = document.querySelectorAll(
           "input.eqLogicAttr.sensible[type=checkbox]",
-        );
+        )
         for (let i = 0; i < checkboxes.length; i++) {
-          checkboxes[i].closest("label").addClass("disabled");
+          checkboxes[i].closest("label").addClass("disabled")
         }
       }
     },
@@ -526,7 +473,7 @@ if (typeof volvocarsFrontEnd === "undefined") {
      * Action du bouton Données brutes
      */
     showRawData: function () {
-      let carId = document.querySelector(".eqLogicAttr[data-l1key=id]").value;
+      let carId = document.querySelector(".eqLogicAttr[data-l1key=id]").value
       jeeDialog.dialog({
         id: volvocarsFrontEnd.mdId_rawDatas,
         title: "{{RawData}}: ",
@@ -542,28 +489,28 @@ if (typeof volvocarsFrontEnd === "undefined") {
           confirm: {
             callback: {
               click: function () {
-                document.getElementById("mod_rawDatas")._jeeDialog.close();
+                document.getElementById("mod_rawDatas")._jeeDialog.close()
               },
             },
           },
         },
-      });
+      })
     },
 
     /*
      * Action bouton de récupération position pour un site
      */
     setSitePosition: function (button) {
-      let site = button.getAttribute("data-site");
-      let source = button.getAttribute("data-src");
-      let id = "";
+      let site = button.getAttribute("data-site")
+      let source = button.getAttribute("data-src")
+      let id = ""
       if (source == "car") {
-        id = document.querySelector(".eqLogicAttr[data-l1key=id]").value;
+        id = document.querySelector(".eqLogicAttr[data-l1key=id]").value
       }
       if (source == "jeedom") {
-        id = "jeedom";
+        id = "jeedom"
       }
-      domUtils.showLoading();
+      domUtils.showLoading()
       domUtils.ajax({
         type: "POST",
         async: false,
@@ -576,169 +523,169 @@ if (typeof volvocarsFrontEnd === "undefined") {
         dataType: "json",
         success: function (data) {
           if (data.state != "ok") {
-            jeedomUtils.showAlert({ message: data.result, level: "danger" });
-            domUtils.hideLoading();
-            return;
+            jeedomUtils.showAlert({ message: data.result, level: "danger" })
+            domUtils.hideLoading()
+            return
           }
           document.querySelector("[data-l2key=" + site + "_lat").value =
-            data.result.lat;
+            data.result.lat
           document.querySelector("[data-l2key=" + site + "_long").value =
-            data.result.long;
-          domUtils.hideLoading();
+            data.result.long
+          domUtils.hideLoading()
         },
-      });
+      })
     },
 
     /*
      * Supression des commandes *_open on *_closed
      */
     removeOpenOrClosedCmds: function (state) {
-      let ids = [];
+      let ids = []
       document
         .querySelectorAll("#table_cmd .cmdAttr[data-l1key=logicalId]")
         .forEach(function (logicalIdEl) {
           if (logicalIdEl.value.endsWith(state)) {
             let id = logicalIdEl
               .closest("tr")
-              .querySelector(".cmdAttr[data-l1key=id]").textContent;
-            ids.push(id);
+              .querySelector(".cmdAttr[data-l1key=id]").textContent
+            ids.push(id)
           }
-        });
-      volvocarsFrontEnd.removeCmds(ids);
+        })
+      volvocarsFrontEnd.removeCmds(ids)
     },
 
     /*
      * Ajout d'une commande dans la table
      */
     addCmdToTable: function (_cmd) {
-      blur = "";
+      blur = ""
       if (!isset(_cmd)) {
-        let _cmd = { configuration: {} };
+        let _cmd = { configuration: {} }
       }
       if (!isset(_cmd.configuration)) {
-        _cmd.configuration = {};
+        _cmd.configuration = {}
       }
       if (isset(_cmd.logicalId)) {
         if (_cmd.logicalId.endsWith("Open")) {
           if (!_cmd.logicalId.startsWith("all")) {
             document
               .querySelector(".cmdAction[data-action=removeOpen]")
-              .removeClass("hidden");
+              .removeClass("hidden")
           }
         }
         if (_cmd.logicalId.endsWith("Closed")) {
           if (!_cmd.logicalId.startsWith("all")) {
             document
               .querySelector(".cmdAction[data-action=removeClosed]")
-              .removeClass("hidden");
+              .removeClass("hidden")
           }
         }
         if (_cmd.logicalId == "position") {
-          blur = "blur";
+          blur = "blur"
         }
       }
-      let tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">';
+      let tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">'
       // ID
-      tr += '<td class="hidden-xs">';
-      tr += '<span class="cmdAttr" data-l1key="id"></span>';
+      tr += '<td class="hidden-xs">'
+      tr += '<span class="cmdAttr" data-l1key="id"></span>'
       tr +=
-        '<span class="cmdAttr hidden" data-l1key="configuration" data-l2key="onlyFor"></span>';
-      tr += "</td>";
+        '<span class="cmdAttr hidden" data-l1key="configuration" data-l2key="onlyFor"></span>'
+      tr += "</td>"
       // Nom
-      tr += "<td>";
-      tr += '<div class="input-group">';
+      tr += "<td>"
+      tr += '<div class="input-group">'
       tr +=
-        '<input class="cmdAttr form-control input-sm roundedLeft" data-l1key="name" placeholder="{{Nom de la commande}}">';
+        '<input class="cmdAttr form-control input-sm roundedLeft" data-l1key="name" placeholder="{{Nom de la commande}}">'
       tr +=
-        '<span class="input-group-btn"><a class="cmdAction btn btn-sm btn-default" data-l1key="chooseIcon" title="{{Choisir une icône}}"><i class="fas fa-icons"></i></a></span>';
+        '<span class="input-group-btn"><a class="cmdAction btn btn-sm btn-default" data-l1key="chooseIcon" title="{{Choisir une icône}}"><i class="fas fa-icons"></i></a></span>'
       tr +=
-        '<span class="cmdAttr input-group-addon roundedRight" data-l1key="display" data-l2key="icon" style="font-size:19px;padding:0 5px 0 0!important;"></span>';
-      tr += "</div>";
+        '<span class="cmdAttr input-group-addon roundedRight" data-l1key="display" data-l2key="icon" style="font-size:19px;padding:0 5px 0 0!important;"></span>'
+      tr += "</div>"
       tr +=
-        '<select class="cmdAttr form-control input-sm" data-l1key="value" style="display:none;margin-top:5px;" title="{{Commande info liée}}">';
-      tr += '<option value="">{{Aucune}}</option>';
-      tr += "</select>";
+        '<select class="cmdAttr form-control input-sm" data-l1key="value" style="display:none;margin-top:5px;" title="{{Commande info liée}}">'
+      tr += '<option value="">{{Aucune}}</option>'
+      tr += "</select>"
       // Type
-      tr += "</td>";
-      tr += "<td>";
+      tr += "</td>"
+      tr += "<td>"
       tr +=
         '<span class="type" type="' +
         init(_cmd.type) +
         '">' +
         jeedom.cmd.availableType() +
-        "</span>";
+        "</span>"
       tr +=
-        '<span class="subType" subType="' + init(_cmd.subType) + '"></span>';
-      tr += "</td>";
+        '<span class="subType" subType="' + init(_cmd.subType) + '"></span>'
+      tr += "</td>"
       // LogicalId
-      tr += "<td>";
+      tr += "<td>"
       tr +=
-        '<input class="cmdAttr form-control input-sm" data-l1key="logicalId" placeholder="LogicalId">';
-      tr += "</td>";
+        '<input class="cmdAttr form-control input-sm" data-l1key="logicalId" placeholder="LogicalId">'
+      tr += "</td>"
       // Paramètres
-      tr += "<td>";
-      tr += "</td>";
+      tr += "<td>"
+      tr += "</td>"
       // Options
-      tr += "<td>";
+      tr += "<td>"
       tr +=
-        '<label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="isVisible" checked/>{{Afficher}}</label> ';
+        '<label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="isVisible" checked/>{{Afficher}}</label> '
       tr +=
-        '<label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="isHistorized" checked/>{{Historiser}}</label> ';
+        '<label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="isHistorized" checked/>{{Historiser}}</label> '
       tr +=
-        '<label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="display" data-l2key="invertBinary"/>{{Inverser}}</label> ';
-      tr += '<div style="margin-top:7px;">';
+        '<label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="display" data-l2key="invertBinary"/>{{Inverser}}</label> '
+      tr += '<div style="margin-top:7px;">'
       tr +=
-        '<input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="minValue" placeholder="{{Min}}" title="{{Min}}" style="width:30%;max-width:80px;display:inline-block;margin-right:2px;">';
+        '<input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="minValue" placeholder="{{Min}}" title="{{Min}}" style="width:30%;max-width:80px;display:inline-block;margin-right:2px;">'
       tr +=
-        '<input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="maxValue" placeholder="{{Max}}" title="{{Max}}" style="width:30%;max-width:80px;display:inline-block;margin-right:2px;">';
+        '<input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="maxValue" placeholder="{{Max}}" title="{{Max}}" style="width:30%;max-width:80px;display:inline-block;margin-right:2px;">'
       tr +=
-        '<input class="tooltips cmdAttr form-control input-sm" data-l1key="unite" placeholder="Unité" title="{{Unité}}" style="width:30%;max-width:80px;display:inline-block;margin-right:2px;">';
-      tr += "</div>";
-      tr += "</td>";
+        '<input class="tooltips cmdAttr form-control input-sm" data-l1key="unite" placeholder="Unité" title="{{Unité}}" style="width:30%;max-width:80px;display:inline-block;margin-right:2px;">'
+      tr += "</div>"
+      tr += "</td>"
       // Etat
-      tr += "<td>";
-      tr += '<span class="cmdAttr ' + blur + '" data-l1key="htmlstate"></span>';
-      tr += "</td>";
+      tr += "<td>"
+      tr += '<span class="cmdAttr ' + blur + '" data-l1key="htmlstate"></span>'
+      tr += "</td>"
       // Actions
-      tr += "<td>";
+      tr += "<td>"
       if (is_numeric(_cmd.id)) {
         tr +=
-          '<a class="btn btn-default btn-xs cmdAction" data-action="configure"><i class="fas fa-cogs"></i></a> ';
+          '<a class="btn btn-default btn-xs cmdAction" data-action="configure"><i class="fas fa-cogs"></i></a> '
         tr +=
-          '<a class="btn btn-default btn-xs cmdAction" data-action="test"><i class="fas fa-rss"></i> {{Tester}}</a>';
+          '<a class="btn btn-default btn-xs cmdAction" data-action="test"><i class="fas fa-rss"></i> {{Tester}}</a>'
       }
       if (
         isset(_cmd.configuration.removable) &&
         _cmd.configuration.removable == 1
       ) {
         tr +=
-          '<i class="fas fa-minus-circle pull-right cmdAction cursor" data-action="remove" title="{{Supprimer la commande}}"></i>';
+          '<i class="fas fa-minus-circle pull-right cmdAction cursor" data-action="remove" title="{{Supprimer la commande}}"></i>'
       }
-      tr += "</td>";
-      tr += "</tr>";
+      tr += "</td>"
+      tr += "</tr>"
 
-      let newRow = document.createElement("tr");
-      newRow.innerHTML = tr;
-      newRow.addClass("cmd");
-      newRow.setAttribute("data-cmd_id", init(_cmd.id));
+      let newRow = document.createElement("tr")
+      newRow.innerHTML = tr
+      newRow.addClass("cmd")
+      newRow.setAttribute("data-cmd_id", init(_cmd.id))
       document
         .getElementById("table_cmd")
         .querySelector("tbody")
-        .appendChild(newRow);
+        .appendChild(newRow)
       jeedom.eqLogic.buildSelectCmd({
         id: document.querySelector('.eqLogicAttr[data-l1key="id"]').jeeValue(),
         filter: { type: "info" },
         error: function (error) {
-          jeedomUtils.showAlert({ message: error.message, level: "danger" });
+          jeedomUtils.showAlert({ message: error.message, level: "danger" })
         },
         success: function (result) {
           newRow
             .querySelector('.cmdAttr[data-l1key="value"]')
-            .insertAdjacentHTML("beforeend", result);
-          newRow.setJeeValues(_cmd, ".cmdAttr");
-          jeedom.cmd.changeType(newRow, init(_cmd.subType));
+            .insertAdjacentHTML("beforeend", result)
+          newRow.setJeeValues(_cmd, ".cmdAttr")
+          jeedom.cmd.changeType(newRow, init(_cmd.subType))
         },
-      });
+      })
     },
 
     /*
@@ -757,52 +704,52 @@ if (typeof volvocarsFrontEnd === "undefined") {
         dataType: "json",
         success: function (data) {
           if (data.state != "ok") {
-            jeedomUtils.showAlert({ message: data.result, level: "danger" });
-            return;
+            jeedomUtils.showAlert({ message: data.result, level: "danger" })
+            return
           }
-          let uses = json_decode(data.result);
+          let uses = json_decode(data.result)
           let text =
-            "{{Êtes-vous sûr de vouloir supprimer les commandes}}" + "?<br>";
+            "{{Êtes-vous sûr de vouloir supprimer les commandes}}" + "?<br>"
           for (let id in uses) {
             let name = document.querySelector(
               '#table_cmd tr[data-cmd_id="' +
                 id +
                 '"]' +
                 " .cmdAttr[data-l1key=name]",
-            ).value;
-            text += "- <b>" + name + "</b><br>";
-            let usageText = "";
+            ).value
+            text += "- <b>" + name + "</b><br>"
+            let usageText = ""
             for (composant in uses[id]) {
               switch (composant) {
                 case "cmd":
-                  display_composant = "{{Commande}}";
-                  break;
+                  display_composant = "{{Commande}}"
+                  break
                 case "eqLogic":
-                  display_composant = "{{Equipement}}";
-                  break;
+                  display_composant = "{{Equipement}}"
+                  break
                 case "interactDef":
-                  display_composant = "{{Intéraction}}";
-                  break;
+                  display_composant = "{{Intéraction}}"
+                  break
                 case "object":
-                  display_composant = "{{Objet}}";
-                  break;
+                  display_composant = "{{Objet}}"
+                  break
                 case "plan":
-                  display_composant = "{{Plan}}";
-                  break;
+                  display_composant = "{{Plan}}"
+                  break
                 case "plan3d":
-                  display_composant = "{{Plan3d}}";
-                  break;
+                  display_composant = "{{Plan3d}}"
+                  break
                 case "plugin":
-                  display_composant = "{{Plugin}}";
-                  break;
+                  display_composant = "{{Plugin}}"
+                  break
                 case "scenario":
-                  display_composant = "{{Scénario}}";
-                  break;
+                  display_composant = "{{Scénario}}"
+                  break
                 case "view":
-                  display_composant = "{{Vue}}";
-                  break;
+                  display_composant = "{{Vue}}"
+                  break
                 default:
-                  display_composant = composant;
+                  display_composant = composant
               }
               for (entry in uses[id][composant]) {
                 usageText +=
@@ -810,7 +757,7 @@ if (typeof volvocarsFrontEnd === "undefined") {
                   display_composant +
                   " :  <b>" +
                   uses[id][composant][entry].name +
-                  "</b><br>";
+                  "</b><br>"
               }
             }
             if (usageText.length > 0) {
@@ -818,21 +765,21 @@ if (typeof volvocarsFrontEnd === "undefined") {
                 "&nbsp;&nbsp;&nbsp;&nbsp;" +
                 "{{Utilisé par:}}" +
                 "<br>" +
-                usageText;
+                usageText
             }
           }
           jeeDialog.confirm(text, function (response) {
             if (response) {
-              jeeFrontEnd.modifyWithoutSave = true;
+              jeeFrontEnd.modifyWithoutSave = true
               cmdIds.forEach(function (id) {
                 document
                   .querySelector('#table_cmd tr.cmd[data-cmd_id="' + id + '"]')
-                  .remove();
-              });
+                  .remove()
+              })
             }
-          });
+          })
         },
-      });
+      })
     },
 
     /*
@@ -842,11 +789,11 @@ if (typeof volvocarsFrontEnd === "undefined") {
       if (jeeFrontEnd.modifyWithoutSave) {
         jeeDialog.alert(
           "{{Vous devez sauvegarder vos modifications en cours avant de lancer cette opération!}}",
-        );
-        return;
+        )
+        return
       }
-      domUtils.showLoading();
-      let carId = document.querySelector(".eqLogicAttr[data-l1key=id]").value;
+      domUtils.showLoading()
+      let carId = document.querySelector(".eqLogicAttr[data-l1key=id]").value
       domUtils.ajax({
         type: "POST",
         async: false,
@@ -859,12 +806,12 @@ if (typeof volvocarsFrontEnd === "undefined") {
         dataType: "json",
         success: function (data) {
           if (data.state != "ok") {
-            jeedomUtils.showAlert({ message: data.result, level: "danger" });
-            return;
+            jeedomUtils.showAlert({ message: data.result, level: "danger" })
+            return
           }
-          jeedomUtils.loadPage(document.URL);
+          jeedomUtils.loadPage(document.URL)
         },
-      });
+      })
     },
 
     /*
@@ -874,11 +821,11 @@ if (typeof volvocarsFrontEnd === "undefined") {
       if (jeeFrontEnd.modifyWithoutSave) {
         jeeDialog.alert(
           "{{Vous devez sauvegarder vos modifications en cours avant de lancer cette opération!}}",
-        );
-        return;
+        )
+        return
       }
-      domUtils.showLoading();
-      let carId = document.querySelector(".eqLogicAttr[data-l1key=id]").value;
+      domUtils.showLoading()
+      let carId = document.querySelector(".eqLogicAttr[data-l1key=id]").value
       domUtils.ajax({
         type: "POST",
         async: false,
@@ -891,12 +838,12 @@ if (typeof volvocarsFrontEnd === "undefined") {
         dataType: "json",
         success: function (data) {
           if (data.state != "ok") {
-            jeedomUtils.showAlert({ message: data.result, level: "danger" });
-            return;
+            jeedomUtils.showAlert({ message: data.result, level: "danger" })
+            return
           }
-          jeedomUtils.loadPage(document.URL);
+          jeedomUtils.loadPage(document.URL)
         },
-      });
+      })
     },
 
     /*
@@ -904,17 +851,17 @@ if (typeof volvocarsFrontEnd === "undefined") {
      */
     toggleElectricEngine: function (checked) {
       if (checked) {
-        document.getElementById("electricAutonomy").removeClass("hide");
+        document.getElementById("electricAutonomy").removeClass("hide")
         document
           .querySelector(".eqLogicAttr[data-l2key=batteryCapacityKWH]")
           .closest("div.form-group")
-          .removeClass("hide");
+          .removeClass("hide")
       } else {
-        document.getElementById("electricAutonomy").addClass("hide");
+        document.getElementById("electricAutonomy").addClass("hide")
         document
           .querySelector(".eqLogicAttr[data-l2key=batteryCapacityKWH]")
           .closest("div.form-group")
-          .addClass("hide");
+          .addClass("hide")
       }
     },
 
@@ -923,9 +870,9 @@ if (typeof volvocarsFrontEnd === "undefined") {
      */
     toggleFuelEngine: function (checked) {
       if (checked) {
-        document.getElementById("fuelAutonomy").removeClass("hide");
+        document.getElementById("fuelAutonomy").removeClass("hide")
       } else {
-        document.getElementById("fuelAutonomy").addClass("hide");
+        document.getElementById("fuelAutonomy").addClass("hide")
       }
     },
 
@@ -933,39 +880,39 @@ if (typeof volvocarsFrontEnd === "undefined") {
      * Action sur (dés)activation d'un site
      */
     siteActivation: function (_checkbox) {
-      let site = _checkbox.getAttribute("data-site");
+      let site = _checkbox.getAttribute("data-site")
       if (_checkbox.checked) {
-        document.querySelectorAll("div." + site + " *").seen();
+        document.querySelectorAll("div." + site + " *").seen()
       } else {
-        document.querySelectorAll("div." + site + " *").unseen();
-        let cmds = [];
+        document.querySelectorAll("div." + site + " *").unseen()
+        let cmds = []
         document
           .querySelectorAll(
             "#table_cmd span[data-l1key=configuration][data-l2key=onlyFor]",
           )
           .forEach(function (node) {
             if (node.textContent != site) {
-              return;
+              return
             }
             let name = node
               .closest("tr")
-              .querySelector(".cmdAttr[data-l1key=name]").value;
+              .querySelector(".cmdAttr[data-l1key=name]").value
             let logicalId = node
               .closest("tr")
-              .querySelector(".cmdAttr[data-l1key=logicalId]").value;
-            cmds.push({ name: name, logicalId: logicalId });
-          });
+              .querySelector(".cmdAttr[data-l1key=logicalId]").value
+            cmds.push({ name: name, logicalId: logicalId })
+          })
         if (cmds.length) {
           let message =
             "{{Les commandes suivantes seront supprimées lors de la sauvegarde}}" +
-            ":<br>";
-          message += "<ul>";
+            ":<br>"
+          message += "<ul>"
           cmds.forEach(function (cmd) {
             message +=
-              "<li>" + cmd.name + " (logicalId: " + cmd.logicalId + ")</li>";
-          });
-          message += "</ul>";
-          jeeDialog.alert(message);
+              "<li>" + cmd.name + " (logicalId: " + cmd.logicalId + ")</li>"
+          })
+          message += "</ul>"
+          jeeDialog.alert(message)
         }
       }
     },
@@ -978,8 +925,8 @@ if (typeof volvocarsFrontEnd === "undefined") {
         .querySelector(
           '.eqLogicDisplayCard[data-eqLogic_id="' + data.id + '"] img',
         )
-        .getAttribute("src");
-      document.querySelector("#img_car").setAttribute("src", img);
+        .getAttribute("src")
+      document.querySelector("#img_car").setAttribute("src", img)
     },
 
     /*
@@ -987,31 +934,31 @@ if (typeof volvocarsFrontEnd === "undefined") {
      */
     onCarImageLoaded: function (count = 0) {
       if (count > 50) {
-        return;
+        return
       }
-      let theme = document.querySelector("body").getAttribute("data-theme");
+      let theme = document.querySelector("body").getAttribute("data-theme")
       if (theme === null) {
         setTimeout(function () {
-          count = count + 1;
-          volvocarsFrontEnd.onCarImageLoaded(count);
-        }, 100);
-        return;
+          count = count + 1
+          volvocarsFrontEnd.onCarImageLoaded(count)
+        }, 100)
+        return
       }
 
-      let el_img = document.querySelector("#img_car");
-      let url = el_img.getAttribute("src");
+      let el_img = document.querySelector("#img_car")
+      let url = el_img.getAttribute("src")
       if (url.includes("volvocars_icon")) {
         if (theme.endsWith("_Light")) {
-          el_img.style.filter = "invert(100%)";
+          el_img.style.filter = "invert(100%)"
         }
-        document.getElementById("div-get_image").removeClass("hidden");
-        document.getElementById("drop-area").addClass("hidden");
+        document.getElementById("div-get_image").removeClass("hidden")
+        document.getElementById("drop-area").addClass("hidden")
       } else if (url.includes("volvocars.com")) {
-        document.getElementById("div-get_image").addClass("hidden");
-        document.getElementById("drop-area").removeClass("hidden");
+        document.getElementById("div-get_image").addClass("hidden")
+        document.getElementById("drop-area").removeClass("hidden")
       } else {
-        document.getElementById("div-get_image").addClass("hidden");
-        document.getElementById("drop-area").addClass("hidden");
+        document.getElementById("div-get_image").addClass("hidden")
+        document.getElementById("drop-area").addClass("hidden")
       }
     },
 
@@ -1019,13 +966,13 @@ if (typeof volvocarsFrontEnd === "undefined") {
      * Récupération image véhicule
      */
     GetImage: function () {
-      let id = getUrlVars("id");
+      let id = getUrlVars("id")
       if (!is_numeric) {
         jeedomUtils.showAlert({
           message: "{{L'id du véhicule est indéfini}}",
           level: "danger",
-        });
-        return;
+        })
+        return
       }
       domUtils.ajax({
         type: "POST",
@@ -1039,26 +986,26 @@ if (typeof volvocarsFrontEnd === "undefined") {
         dataType: "json",
         success: function (data) {
           if (data.state != "ok") {
-            jeedomUtils.showAlert({ message: data.result, level: "danger" });
-            return;
+            jeedomUtils.showAlert({ message: data.result, level: "danger" })
+            return
           }
-          let url = data.result;
-          let el_img = document.getElementById("img_car");
-          el_img.src = url;
-          el_img.style.filter = "invert(0%)";
+          let url = data.result
+          let el_img = document.getElementById("img_car")
+          el_img.src = url
+          el_img.style.filter = "invert(0%)"
         },
-      });
+      })
     },
 
     pasteImage: function (e) {
-      let data = e.clipboardData.items;
+      let data = e.clipboardData.items
       for (let i = 0; i < data.length; i += 1) {
         if (data[i].kind === "file" && data[i].type === "image/png") {
-          let image = data[i].getAsFile();
-          let reader = new FileReader();
+          let image = data[i].getAsFile()
+          let reader = new FileReader()
           reader.addEventListener("load", function () {
-            let dropedImage = document.querySelector("#drop-area img").remove();
-            let id = getUrlVars("id");
+            let dropedImage = document.querySelector("#drop-area img").remove()
+            let id = getUrlVars("id")
             domUtils.ajax({
               type: "POST",
               async: false,
@@ -1075,26 +1022,26 @@ if (typeof volvocarsFrontEnd === "undefined") {
                   jeedomUtils.showAlert({
                     message: data.result,
                     level: "danger",
-                  });
-                  return;
+                  })
+                  return
                 }
-                document.getElementById("drop-area").addClass("hidden");
-                document.getElementById("img_car").src = data.result;
+                document.getElementById("drop-area").addClass("hidden")
+                document.getElementById("img_car").src = data.result
                 document.querySelector(
                   '.eqLogicDisplayCard[data-eqLogic_id="' + id + '"] img',
-                ).src = data.result;
+                ).src = data.result
               },
-            });
-          });
+            })
+          })
 
-          reader.readAsDataURL(image);
-          break;
+          reader.readAsDataURL(image)
+          break
         }
       }
     },
-  };
+  }
 }
-volvocarsFrontEnd.init();
-volvocarsFrontEnd.toggleEditVehicle(false);
-addCmdToTable = volvocarsFrontEnd.addCmdToTable;
-printEqLogic = volvocarsFrontEnd.printEqLogic;
+volvocarsFrontEnd.init()
+volvocarsFrontEnd.toggleEditVehicle(false)
+addCmdToTable = volvocarsFrontEnd.addCmdToTable
+printEqLogic = volvocarsFrontEnd.printEqLogic

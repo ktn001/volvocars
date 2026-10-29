@@ -12,6 +12,12 @@ import socketserver
 import json
 from socketserver import StreamRequestHandler, ThreadingTCPServer
 
+libDir = os.path.realpath(os.path.dirname(os.path.abspath(__file__)) + "/../lib")
+sys.path.append(libDir)
+
+import oauth
+import util
+
 OAUTH_AUTH_URL = "https://volvoid.eu.volvocars.com/as/authorization.oauth2"
 OAUTH_TOKEN_URL = "https://volvoid.eu.volvocars.com/as/token.oauth2"
 
@@ -52,27 +58,6 @@ def options():
         _apikey = args.apikey
 
 
-def logResponse(title, response):
-    logging.debug("-DEBUT-------------" + title + "--------------------")
-    logging.debug("  Request")
-    logging.debug("    URL")
-    logging.debug("      " + response.request.url)
-    logging.debug("    Body")
-    if response.request.body:
-        if type(response.request.body) is bytes:
-            logging.debug("      " + response.request.body.decode("utf-8"))
-        else:
-            logging.debug("      " + response.request.body)
-    logging.debug("    Headers")
-    for header in response.request.headers:
-        logging.debug("      " + header + ": " + response.request.headers[header])
-    logging.debug("  Response")
-    logging.debug(f"    Code: {response.status_code}")
-    logging.debug("    Body")
-    logging.debug("      " + response.content.decode("utf-8"))
-    logging.debug("-FIN---------------" + title + "--------------------")
-
-
 # ------------------------------------------------------------------------------------------------------
 # Exceptions
 # ------------------------------------------------------------------------------------------------------
@@ -88,6 +73,9 @@ class otpException(Exception):
 class socket_handler(StreamRequestHandler):
 
     sessions = dict()
+    otp_urls = dict()
+    verifiers = dict()
+    states = dict()
 
     def handle(self):
         data = self.rfile.readline().strip().decode('utf-8')
@@ -96,12 +84,23 @@ class socket_handler(StreamRequestHandler):
         try:
             if 'action' not in data:
                 raise myException("Action non définie dans le message reçu par le daemon")
+
             if data['action'] == 'login':
-                message = self.run(data)
+                if 'login' not in data:
+                    raise myException("Login pas définini dans le message reçu par le deamon")
+                if 'password' not in data:
+                    raise myException("Password pas définini dans le message reçu par le deamon")
+                self.login(data['account_id'], data['login'], data['password'])
+                message = { "type" : "ok" }
+
             elif data['action'] == 'sendOTP':
-                message = self.run(data)
+                token_data = self.send_otp(data['otp'], data['account_id'])
+                message = { "type" : "token",
+                            "token_data" : token_data }
+
             else:
                 raise myException(f"Action <{data['action']}> inconnue dans le daemon")
+
         except credentialException as e:
             message = { "type" : "message",
                         "level": "warning",
@@ -120,132 +119,28 @@ class socket_handler(StreamRequestHandler):
                         "message": e.args[0] }
         self.wfile.write(json.dumps(message).encode('utf-8'))
 
-    def get_auth_session(self, id=None):
-        if id != None and id in self.sessions:
-            return self.sessions[id]
+    def login(self, account_id, login, password):
+        logging.debug("start_login")
+        socket_handler.sessions[account_id] = requests.session()
 
-        auth_session = requests.session()
-        auth_session.headers = {
-            "authorization": "Basic aDRZZjBiOlU4WWtTYlZsNnh3c2c1WVFxWmZyZ1ZtSWFEcGhPc3kxUENhVXNpY1F0bzNUUjVrd2FKc2U0QVpkZ2ZJZmNMeXc=",
-            "User-Agent": "vca-android/6.7.0",
-            "Accept-Encoding": "gzip",
-            "Content-Type": "application/json; charset=utf-8"
-        }
-        return auth_session
+        user_agent = "vca-android/" + util.get_volvo_app_version()
+        verifier, state, login_action = oauth.start_login(socket_handler.sessions[account_id], user_agent)
+        socket_handler.verifiers[account_id] = verifier
+        socket_handler.states[account_id] = state
 
-    def run(self, data):
-        if data['action'] == 'login':
-            auth_session = self.get_auth_session()
-            response = self.login(auth_session, data)
-            auth_session.headers.update({"x-xsrf-header": "PingFederate"})
-        elif data['action'] == 'sendOTP':
-            auth = json.loads(data['auth'])
-            id = auth['id']
-            auth_session = self.get_auth_session(id)
-            auth_session.headers.update({"x-xsrf-header": "PingFederate"})
-            response = self.send_otp(auth_session,data)
-        else:
-            return
-        while 1:
-            status = response["status"]
+        socket_handler.otp_urls[account_id] = oauth.submit_credentials(socket_handler.sessions[account_id], login_action, login, password)
+        logging.info(socket_handler.otp_urls[account_id])
+        return
 
-            if status == "USERNAME_PASSWORD_REQUIRED":
-                if 'login' not in data:
-                    raise myException("Login pas définini dans le message reçu par le deamon")
-                if 'password' not in data:
-                    raise myException("Password pas définini dans le message reçu par le deamon")
-                response = self.check_username_password(auth_session, response, data['login'], data['password'])
-                continue
+    def send_otp(self,otp, account_id):
+        logging.debug("send_otp")
+        verifier = socket_handler.verifiers[account_id]
+        state = socket_handler.states[account_id]
 
-            if status == "OTP_REQUIRED":
-                return response
-                continue
-
-            if status == "OTP_VERIFIED":
-                response = self.continue_auth(auth_session, response)
-                continue
-                
-            if status == "COMPLETED":
-                token = self.get_token(auth_session, response)
-                return token
-
-            raise myException(f"Status <{status}> inconnu")
-
-
-    def login(self, auth_session, data):
-        url_params = ("?client_id=h4Yf0b"
-                      "&response_type=code"
-                      "&acr_values=urn:volvoid:aal:bronze:2sv"
-                      "&response_mode=pi.flow"
-                      "&scope=openid email profile care_by_volvo:financial_information:invoice:read care_by_volvo:financial_information:payment_method care_by_volvo:subscription:read customer:attributes customer:attributes:write order:attributes vehicle:attributes tsp_customer_api:all conve:brake_status conve:climatization_start_stop conve:command_accessibility conve:commands conve:diagnostics_engine_status conve:diagnostics_workshop conve:doors_status conve:engine_status conve:environment conve:fuel_status conve:honk_flash conve:lock conve:lock_status conve:navigation conve:odometer_status conve:trip_statistics conve:tyre_status conve:unlock conve:vehicle_relation conve:warnings conve:windows_status energy:battery_charge_level energy:charging_connection_status energy:charging_system_status energy:electric_range energy:estimated_charging_time energy:recharge_status vehicle:attributes")
-
-        auth = auth_session.get(OAUTH_AUTH_URL + url_params)
-        logResponse("START LOGIN",auth)
-        if auth.status_code != 200:
-            message = auth.json()
-            raise myException(message["details"][0]["userMessage"])
-        response = auth.json()
-        return response
-
-
-    def check_username_password(self, auth_session, data, username, password):
-        next_url = data["_links"]["checkUsernamePassword"]["href"].replace("http://", "https://") + "?action=checkUsernamePassword"
-        body = {"username": username, "password": password}
-        auth = auth_session.post(next_url, data=json.dumps(body))
-        logResponse("CHECK USER PASSWORD", auth)
-        if auth.status_code == 400:
-            message = auth.json()
-            if "code" in message and message['code'] == 'VALIDATION_ERROR':
-                if message['details'][0]['code'] == "CREDENTIAL_VALIDATION_FAILED":
-                    raise credentialException("Nous n'avons pas reconnu le nom d'utilisateur ou le mot de passe que vous avez saisi. Veuillez réessayer.")
-        if auth.status_code != 200:
-            message = auth.json()
-            raise myException(message["details"][0]["userMessage"])
-        id = auth.json()['id']
-        self.sessions[id] = auth_session
-        return auth.json()
-
-
-    def send_otp(self, auth_session, data):
-        auth = json.loads(data['auth'])
-        next_url = auth['_links']['checkOtp']['href'].replace("http://","https://") + "?action=checkOtp"
-        body = {"otp": data['otp']}
-
-        auth = auth_session.post(next_url, data=json.dumps(body))
-        logResponse("CHECK OTP", auth)
-        if auth.status_code == 400:
-            message = auth.json()
-            if message['details'][0]['code'] == "INVALID_OTP":
-                raise myException(message["details"][0]['userMessage'])
-        if auth.status_code != 200:
-            message = auth.json()
-            raise otpException("Ce code est invalide ou a expiré")
-        response = auth.json()
-        return response
-
-
-    def continue_auth(self, auth_session, data):
-        next_url = data["_links"]["continueAuthentication"]["href"].replace("http://", "https://") + "?action=continueAuthentication"
-        auth = auth_session.post(next_url, data="{}")
-        logResponse("CONTINUEAUTHENTICATION", auth)
-        if auth.status_code != 200:
-            message = auth.json()
-            raise myException(message["details"][0]["userMessage"])
-        response = auth.json()
-        return response
-
-    def get_token(self, auth_session, data):
-        auth_session.headers.update({"content-type": "application/x-www-form-urlencoded"})
-        body = {"code": data['authorizeResponse']['code'], "grant_type": "authorization_code"}
-        auth = auth_session.post(OAUTH_TOKEN_URL, data=body)
-        logResponse("GET_TOKEN", auth)
-        if auth.status_code != 200:
-            message = auth.json()
-            raise myException(message["details"][0]["userMessage"])
-        response = auth.json()
-        return response
-
-
+        callback_url = oauth.submit_otp(socket_handler.sessions[account_id], socket_handler.otp_urls[account_id], otp)
+        token_data = oauth.exchange_code(socket_handler.sessions[account_id], callback_url, verifier, state)
+        return token_data
+        
 def set_log_level(level="error"):
     LEVELS = {
         "debug": logging.DEBUG,

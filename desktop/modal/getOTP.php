@@ -23,7 +23,7 @@ if (!isConnect('admin')) {
 
 <h4>{{Authentification par courriel}}</h4>
 <div id="volvocarsOTP_T1">
-	{{Pour votre sécurité, nous avons envoyé un code de vérification à six chiffres à votre adresse courriel : }}
+	{{Pour votre sécurité, nous avons envoyé un code de vérification à six chiffres à votre adresse courriel.}}
 </div>
 <div id="email"></div>
 <div id="volvocarsOTP_T2">{{Veuillez le saisir ci-dessous pour vérifier votre identité}}</div>
@@ -35,9 +35,7 @@ if (!isConnect('admin')) {
 
 if (typeof volvocarsOTP === "undefined") {
     var volvocarsOTP = {
-    	init: function (auth){
-			volvocarsOTP.auth = auth
-			document.querySelector('#' + volvocarsFrontEnd.mdId_getOTP + ' #email').innerText = auth.devices[0].target
+    	init: function (){
 			document.querySelector('#volvocarsOTP_code input').focus()
 		},
 		close: function(){
@@ -48,9 +46,6 @@ if (typeof volvocarsOTP === "undefined") {
 		},
 		getOTP: function(){
 			return document.querySelector('#volvocarsOTP_code input').value
-		},
-		getAuth: function(){
-			return volvocarsOTP.auth
 		},
 		resendOTP: function(){
 			domUtils.ajax({

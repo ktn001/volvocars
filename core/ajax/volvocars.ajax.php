@@ -56,7 +56,8 @@ try {
 		if ($data['name'] == ''){
 			throw new Exception(__("Le nom de l'account à sauvegarder est indéfini",__FILE__));
 		}
-		log::add("volvocars","info",__("Validation username/password de l'account",__FILE__));
+
+		log::add("volvocars","info",__("Envoi de username/password au serveur volvocars via le daemon",__FILE__));
 		$socket = socket_create(AF_INET,SOCK_STREAM,SOL_TCP);
 		if ($socket === false) {
 			throw new Exception ("Erreur de socket: " . socket_strerror(socket_last_error()));
@@ -66,22 +67,40 @@ try {
 		if ($connection === false) {
 			throw new Exception ("Erreur de socket: " . socket_strerror(socket_last_error($socket)));
 		}
-		$message = array (
+		$message_to_daemon = array (
 			'apikey' => jeedom::getapiKey('volvocars'),
 			'action' => 'login',
+            'account_id' => $data['id'],
 			'login' => $data['login'],
 			'password' => $data['password'],
 		);
-		$message = json_encode($message) . "\n";
-		socket_write($socket,$message,strlen($message));
-		$auth = chop(socket_read($socket, 8192));
-		log::add("volvocars","debug","auth: " . print_r($auth,true));
-		$message = is_json($auth,$auth);
-		if (isset($message['type']) && $message['type'] == 'message') {
-			$level = isset($message['level']) ? $message['level'] : "error";
-			$code = isset($message['code']) ? $message['code'] : "unknow";
-			$msg = isset($message['message']) ? $message['message'] : "undefined message";
-			log::add("volvocars",$level,$message['message']);
+		$message_to_daemon = json_encode($message_to_daemon) . "\n";
+		socket_write($socket,$message_to_daemon,strlen($message_to_daemon));
+
+        log::add("volvocars","info",__("Lecture du résultat de l'envoi de username/password",__FILE__));
+        socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array("sec" => 15, "usec" => 0));
+		$message_from_daemon = chop(socket_read($socket, 8192));
+        if ($message_from_daemon == false) {
+            $error_code = socket_last_error($socket);
+            log::add("volvocars","error","socket error_code" . $error_code);
+            if ($error_code == SOCKET_EAGAIN || $error_code == SOCKET_EWOULDBLOCK) {
+                $message_from_daemon = [
+                    "type"    => "message",
+                    "message" => __("Timeout lors de l'envoi du login/password",__FILE__)
+                ];
+            } else {
+                $message_from_daemon = [
+                    "type"    => "message",
+                    "message" => __("Erreur de socket: ",__FILE__) . socket_strerror($error_code)
+                ];
+            }
+        }
+		$message_from_daemon = is_json($message_from_daemon,$message_from_daemon);
+		if (isset($message_from_daemon['type']) && $message_from_daemon['type'] == 'message') {
+			$level = isset($message_from_daemon['level']) ? $message_from_daemon['level'] : "error";
+			$code = isset($message_from_daemon['code']) ? $message_from_daemon['code'] : "unknow";
+			$msg = isset($message_from_daemon['message']) ? $message_from_daemon['message'] : "undefined message";
+			log::add("volvocars",$level,$message_from_daemon['message']);
 			$data = array (
 				'level' => $level,
 				'msg' => $msg,
@@ -95,13 +114,11 @@ try {
 		}
 		utils::a2o($account,$data);
 		$account->save(true);
-		ajax::success($auth);
+		ajax::success($message_from_daemon);
 	}
 
 	if ($action == 'sendOTP') {
 		$account_id = init('account_id');
-		$auth = init('auth');
-		log::add("volvocars","debug","auth: " . print_r($auth,true));
 		$otp = init('otp');
 		$socket = socket_create(AF_INET,SOCK_STREAM,SOL_TCP);
 		if ($socket === false) {
@@ -112,23 +129,31 @@ try {
 		if ($connection === false) {
 			throw new Exception ("Erreur de socket: " . socket_strerror(socket_last_error($socket)));
 		}
-		$message = array(
+		$message_to_daemon = array(
 			'apikey' => jeedom::getapiKey('volvocars'),
 			'action' => 'sendOTP',
 			'account_id' => $account_id,
 			'otp' => $otp,
-			'auth' => $auth,
 		);
-		$message = json_encode($message) . "\n";
-		socket_write($socket,$message,strlen($message));
-		$token = chop(socket_read($socket, 8192));
-		log::add("volvocars","debug","tokens: " . print_r($token,true));
-		$token=is_json($token,$token);
-		if (isset($token['message'])) {
-			log::add("volvocars",$token['level'],$token['message']);
-			ajax::error($token['message']);
+		$message_to_daemon = json_encode($message_to_daemon) . "\n";
+		socket_write($socket,$message_to_daemon,strlen($message_to_daemon));
+		$message_from_daemon = chop(socket_read($socket, 8192));
+		log::add("volvocars","debug","tokens: " . print_r($message_from_daemon,true));
+		$message_from_daemon=is_json($message_from_daemon,$message_from_daemon);
+		if (isset($message_from_daemon['type']) && $message_from_daemon['type'] == 'message') {
+			$level = isset($message_from_daemon['level']) ? $message_from_daemon['level'] : "error";
+			$code = isset($message_from_daemon['code']) ? $message_from_daemon['code'] : "unknow";
+			$msg = isset($message_from_daemon['message']) ? $message_from_daemon['message'] : "undefined message";
+			log::add("volvocars",$level,$message_from_daemon['message']);
+			$data = array (
+				'level' => $level,
+				'msg' => $msg,
+			);
+			ajax::error($data,$code);
 		}
-		volvoAccount::saveToken($token, $account_id);
+		if (isset($message_from_daemon['type']) and $message_from_daemon['type'] === 'token') {
+		    volvoAccount::saveToken($message_from_daemon['token_data'], $account_id);
+		}
 		ajax::success();
 	}
 
