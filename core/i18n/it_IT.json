@@ -3,8 +3,10 @@
         "401 - Accès non autorisé": "401 - Accesso non autorizzato",
         "Aucune méthode correspondante à": "Nessun metodo corrispondente a",
         "Création du compte %s": "Crea account %s",
+        "Envoi de username\/password au serveur volvocars via le daemon": "Invio di nome utente\/password al server volvocars tramite il daemon",
         "Erreur HTTP %s lors de la demande de renvoi du OTP": "Errore HTTP %s durante la richiesta di reinvio OTP",
         "Erreur dans le flux de traitement de validation du login\/password (state: %s)": "Errore nel flusso di elaborazione della convalida di login\/password (stato: %s)",
+        "Erreur de socket: ": "Errore di socket: ",
         "Errreur indéterminée lors de la validation du login\/password": "Errore non definito durante la convalida di login\/password",
         "L'account %s à sauvegarder est introuvable": "L'account %s di cui eseguire il backup non può essere trovato",
         "L'id du compte n'est pas défini": "ID account non definito",
@@ -14,8 +16,9 @@
         "Le nom de l'account à sauvegarder est indéfini": "Il nome dell'account da salvare è indefinito",
         "Le nom du compte n'est pas défini": "Nome dell'account non definito",
         "Le véhicule %s est introuvable": "Il veicolo %s non può essere trovato",
+        "Lecture du résultat de l'envoi de username\/password": "Lettura del risultato dell'invio di nome utente\/password",
         "Pas de données pour la sauvegarde du compte": "Nessun account di backup dei dati",
-        "Validation username\/password de l'account": "Convalida del nome utente e della password dell'account",
+        "Timeout lors de l'envoi du login\/password": "Timeout durante l'invio di nome utente\/password",
         "l'id du compte à supprimer n'est pas défini": "l'id dell'account da cancellare non è definito",
         "l'id du compte à synchroniser n'est pas défini": "l'id dell'account da sincronizzare non è definito",
         "l'id du véhicule n'est pas défini": "iD veicolo non definito"
@@ -439,7 +442,7 @@
         "401 - Accès non autorisé": "401 - Accesso non autorizzato",
         "Authentification par courriel": "Autenticazione via e-mail",
         "Envoyer un nouveau code": "Inviare un nuovo codice",
-        "Pour votre sécurité, nous avons envoyé un code de vérification à six chiffres à votre adresse courriel : ": "Per la vostra sicurezza, abbiamo inviato un codice di verifica a sei cifre al vostro indirizzo e-mail:",
+        "Pour votre sécurité, nous avons envoyé un code de vérification à six chiffres à votre adresse courriel.": "Per la tua sicurezza, ti abbiamo inviato un codice di verifica a sei cifre al tuo indirizzo e-mail.",
         "Veuillez le saisir ci-dessous pour vérifier votre identité": "Inserirlo qui sotto per verificare la propria identità"
     },
     "plugins\/volvocars\/desktop\/modal\/rawData.php": {

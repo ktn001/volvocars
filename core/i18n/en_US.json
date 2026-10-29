@@ -3,8 +3,10 @@
         "401 - Accès non autorisé": "401 - Unauthorized access",
         "Aucune méthode correspondante à": "No corresponding method for",
         "Création du compte %s": "Create %s account",
+        "Envoi de username\/password au serveur volvocars via le daemon": "Sending username\/password to the volvocars server via the daemon",
         "Erreur HTTP %s lors de la demande de renvoi du OTP": "HTTP error %s when requesting OTP resend",
         "Erreur dans le flux de traitement de validation du login\/password (state: %s)": "Error in login\/password validation processing flow (state: %s)",
+        "Erreur de socket: ": "Socket error: ",
         "Errreur indéterminée lors de la validation du login\/password": "Unspecified error when validating login\/password",
         "L'account %s à sauvegarder est introuvable": "Account %s to be saved cannot be found",
         "L'id du compte n'est pas défini": "Account id not defined",
@@ -14,8 +16,9 @@
         "Le nom de l'account à sauvegarder est indéfini": "The name of the account to be saved is undefined",
         "Le nom du compte n'est pas défini": "Account name not defined",
         "Le véhicule %s est introuvable": "Vehicle %s cannot be found",
+        "Lecture du résultat de l'envoi de username\/password": "Reading the result of sending the username and password",
         "Pas de données pour la sauvegarde du compte": "No data for account backup",
-        "Validation username\/password de l'account": "Account username\/password validation",
+        "Timeout lors de l'envoi du login\/password": "Timeout when sending login\/password",
         "l'id du compte à supprimer n'est pas défini": "the id of the account to be deleted is not defined",
         "l'id du compte à synchroniser n'est pas défini": "the id of the account to be synchronized is not defined",
         "l'id du véhicule n'est pas défini": "vehicle id not defined"
@@ -439,7 +442,7 @@
         "401 - Accès non autorisé": "401 - Unauthorized access",
         "Authentification par courriel": "Email authentication",
         "Envoyer un nouveau code": "Send a new code",
-        "Pour votre sécurité, nous avons envoyé un code de vérification à six chiffres à votre adresse courriel : ": "For your security, we have sent a six-digit verification code to your email address:",
+        "Pour votre sécurité, nous avons envoyé un code de vérification à six chiffres à votre adresse courriel.": "For your security, we have sent a six-digit verification code to your email address.",
         "Veuillez le saisir ci-dessous pour vérifier votre identité": "Please enter it below to verify your identity"
     },
     "plugins\/volvocars\/desktop\/modal\/rawData.php": {
