@@ -52,5 +52,3 @@ if (!isConnect()) {
         </div>
     </fieldset>
 </form>
-
-<?php include_file('desktop', 'configuration', 'js', 'volvocars'); ?>
