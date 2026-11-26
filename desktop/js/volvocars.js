@@ -1,4 +1,3 @@
-// vim: tabstop=2 autoindent expandtab
 /* This file is part of Jeedom.
  *
  * Jeedom is free software: you can redistribute it and/or modify
@@ -20,7 +19,6 @@
 if (typeof volvocarsFrontEnd === "undefined") {
   var volvocarsFrontEnd = {
     mdId_editAccount: "mod_editVolvocarsAccount",
-    mdId_getOTP: "mod_getOTP",
     mdId_rawDatas: "mod_rawDatas",
     accountNeedReload: false,
     ajaxUrl: "plugins/volvocars/core/ajax/volvocars.ajax.php",
@@ -135,245 +133,85 @@ if (typeof volvocarsFrontEnd === "undefined") {
      * Création d'un account
      */
     createAccount: function () {
-      jeeDialog.prompt({ title: "{{Nom de l'account}}:" }, function (name) {
-        domUtils.ajax({
-          type: "POST",
-          async: false,
-          global: false,
-          url: volvocarsFrontEnd.ajaxUrl,
-          data: {
-            action: "createAccount",
-            name: name,
-          },
-          dataType: "json",
-          success: function (data) {
-            if (data.state != "ok") {
-              jeedomUtils.showAlert({
-                message: data.result,
-                level: "danger",
-              })
-              return
-            }
-            let account = json_decode(data.result)
-            volvocarsFrontEnd.editAccount(account.id)
-          },
-        })
-      })
+      volvocarsFrontEnd.editAccount('')
     },
 
     /*
      * Edition d'un account
      */
-    editAccount: function (account_id) {
-      domUtils.ajax({
-        type: "POST",
-        async: false,
-        global: false,
-        url: volvocarsFrontEnd.ajaxUrl,
-        data: {
-          action: "getAccount",
-          id: account_id,
+    editAccount: function (accountId) {
+      jeeDialog.dialog({
+        id: volvocarsFrontEnd.mdId_editAccount,
+        title: "{{Compte}}: ",
+        height: 380,
+        width: '80%',
+        contentUrl: "index.php?v=d&plugin=volvocars&modal=editAccount",
+        callback: function () {editAccount.init(accountId)},
+        beforeClose: function() {
+          let value = editAccount.beforeClose()
+          console.log(value)
+          return value
         },
-        dataType: "json",
-        success: function (data) {
-          if (data.state != "ok") {
-            jeedomUtils.showAlert({ message: data.result, level: "danger" })
-            return
-          }
-          let account = json_decode(data.result)
-          jeeDialog.dialog({
-            id: volvocarsFrontEnd.mdId_editAccount,
-            title: "{{Compte}}: " + account.name,
-            height: 280,
-            width: 400,
-            contentUrl: "index.php?v=d&plugin=volvocars&modal=editAccount",
-            buttons: {
-              cancel: {
-                callback: {
-                  click: function (event) {
-                    let account = editVolvocarsAccount.getAccount()
-                    let card = document.querySelector(
-                      '.accountDisplayCard[data-account_id="' +
-                        account.id +
-                        '"]',
-                    )
-                    if (!card) {
-                      jeedomUtils.loadPage(document.URL)
-                    }
-                    editVolvocarsAccount.close()
-                  },
-                },
-              },
-              delete: {
-                label: '<i class="fa fa-times"></i> {{Supprimer}}',
-                className: "danger",
-                callback: {
-                  click: function (event) {
-                    let account = editVolvocarsAccount.getAccount()
-                    domUtils.ajax({
-                      type: "POST",
-                      async: false,
-                      global: false,
-                      url: volvocarsFrontEnd.ajaxUrl,
-                      data: {
-                        action: "removeAccount",
-                        id: account.id,
-                      },
-                      dataType: "json",
-                      success: function (data) {
-                        if (data.state != "ok") {
-                          jeedomUtils.showAlert({
-                            message: data.result,
-                            level: "danger",
-                          })
-                          return
-                        }
-                        let card = document.querySelector(
-                          '.accountDisplayCard[data-account_id="' +
-                            account.id +
-                            '"]',
-                        )
-                        if (card) {
-                          card.remove()
-                        }
-                        let option = document.querySelector(
-                          '#sel_account option[value="' + account.id + '"]',
-                        )
-                        if (option) {
-                          option.remove()
-                        }
-                        editVolvocarsAccount.close()
-                      },
-                    })
-                  },
-                },
-              },
-              confirm: {
-                callback: {
-                  click: function (event) {
-                    let account = editVolvocarsAccount.getAccount()
-                    domUtils.ajax({
-                      url: volvocarsFrontEnd.ajaxUrl,
-                      data: {
-                        action: "saveAccount",
-                        account: json_encode(account),
-                      },
-                      dataType: "json",
-                      success: function (data) {
-                        if (data.state != "ok") {
-                          let message = ''
-                          let level = ''
-                          if (typeof(data.result) == 'string') {
-                            message = data.result
-                            level = "danger"
-                          } else {
-                            message = data.result.msg
-                            level = data.result.level
-                          }
-                          jeedomUtils.showAlert({
-                            message: message,
-                            level: level,
-                          })
-                          return
-                        } else {
-                          document.getElementById("error_message").innerText = ""
-                          editVolvocarsAccount.close()
-                          volvocarsFrontEnd.getOTP(account.id)
-                        }
-                      },
-                    })
-                  },
-                },
-              },
+        onClose: function() {editAccount.onClose()},
+        buttons: {
+          cancel: {
+            className: "btn btn-warning",
+            callback: {
+              click: function(event) {editAccount.cancel()},
             },
-            callback: function () {
-              editVolvocarsAccount.init(account)
+          },
+          delete: {
+            label: '<i class="fas fa-minus-circle"></i> {{Supprimer}}',
+            className: "btn btn-danger",
+            callback: {
+              click: function(event) {editAccount.delete()},
             },
-          })
+          },
+          save: {
+            className: "btn btn-primary",
+            label: '<i class="fas fa-save"></i> {{Sauvegarder}}',
+            callback: {
+              click: function(event) {editAccount.save()},
+            }
+          },
+          confirm: {
+            className: "btn btn-success",
+            callback: {
+              click: function(event) {editAccount.saveAndClose()},
+            },
+          },
         },
       })
     },
 
     /*
-     * Saisie et envoi du One Time Password
+     * Mise a jour du nom d'un account dans sa card ou ajout de la card
      */
-    getOTP: function (account_id) {
-      jeeDialog.dialog({
-        id: volvocarsFrontEnd.mdId_getOTP,
-        title: "One Time Password",
-        height: 295,
-        width: 400,
-        contentUrl: "index.php?v=d&plugin=volvocars&modal=getOTP",
-        buttons: {
-          cancel: {
-            callback: {
-              click: function (event) {
-                volvocarsOTP.close()
-                let account = editVolvocarsAccount.getAccount()
-                let card = document.querySelector(
-                  '.accountDisplayCard[data-account="' + account.id + '"]',
-                )
-                if (!card) {
-                  jeedomUtils.loadPage(document.URL)
-                }
-              },
-            },
-          },
-          confirm: {
-            callback: {
-              click: function (event) {
-                let OTP = volvocarsOTP.getOTP()
-                domUtils.ajax({
-                  type: "POST",
-                  async: false,
-                  global: false,
-                  url: volvocarsFrontEnd.ajaxUrl,
-                  data: {
-                    action: "sendOTP",
-                    account_id: account_id,
-                    otp: OTP,
-                  },
-                  dataType: "json",
-                  success: function (data) {
-                    if (data.state != "ok") {
-                      let printAlert = true
-                      let msg = ""
-                      if (typeof data.result === "object") {
-                        if ("content" in data.result) {
-                          let content = ""
-                          try {
-                            content = JSON.parse(data.result.content)
-                            if ("code" in content) {
-                              switch (content.code) {
-                                case "INVALID_OTP":
-                                  msg = "{{Le code est invalide ou a expiré}}"
-                                  printAlert = false
-                                  break
-                              }
-                            }
-                          } catch (e) {}
-                        }
-                      }
-                      volvocarsOTP.setMessage(msg)
-                      if (printAlert) {
-                        jeedomUtils.showAlert({
-                          message: data.result,
-                          level: "danger",
-                        })
-                      }
-                      return
-                    }
-                    volvocarsOTP.close()
-                  },
-                })
-              },
-            },
-          },
-        },
-      })
-      setTimeout(function () {
-        volvocarsOTP.init()
-      }, 500)
+    updateOrAddAccountCard: function(id , name) {
+      let card = document.getElementById("div_pageContainer").querySelector('.accountDisplayCard[data-account_id="' + id + '"]')
+      if (card) {
+        card.querySelector('.name').textContent = name
+      } else {
+        let cardContent = "<img src='/plugins/volvocars/desktop/img/account.png'/>"
+        cardContent += "<br>"
+        cardContent += "<span class='name'>" + name + "</span>"
+        let newCard = document.createElement("div")
+        newCard.innerHTML = cardContent
+        newCard.addClass("accountDisplayCard", "cursor")
+        newCard.setAttribute("data-account_id", id)
+        newCard.setAttribute("data-account_name", name)
+        document.getElementById('accountCardsContainer').appendChild(newCard)
+      }
+    },
+
+    /*
+     * Retrait de la card d'un account
+     */
+    removeAccountCard: function(id) {
+      let card = document.getElementById("div_pageContainer").querySelector('.accountDisplayCard[data-account_id="' + id + '"]')
+      if (card) {
+        card.remove();
+      }
     },
 
     /*
@@ -381,7 +219,7 @@ if (typeof volvocarsFrontEnd === "undefined") {
      */
     synchronizeAccount: function () {
       let options = []
-      let accountCards = document.getElementsByClassName("accountDisplayCard")
+      let accountCards = document.getElementById('accountCardsContainer').querySelectorAll(".accountDisplayCard")
       for (let i = 0; i < accountCards.length; i++) {
         let option = {
           value: accountCards[i].getAttribute("data-account_id"),

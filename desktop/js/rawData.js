@@ -1,4 +1,3 @@
-// vim: tabstop=2 autoindent expandtab
 /* This file is part of Jeedom.
  *
  * Jeedom is free software: you can redistribute it and/or modify

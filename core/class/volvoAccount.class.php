@@ -15,19 +15,18 @@
  * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/volvoException.class.php';
-require_once __DIR__ . '/endpoint.class.php';
+require_once __DIR__ . '/../php/volvocars.inc.php';
+
 class volvoAccount {
 
     const TOKEN_URL = "https://volvoid.eu.volvocars.com/as/token.oauth2";
     const OAUTH_AUTH_URL = "https://volvoid.eu.volvocars.com/as/authorization.oauth2";
-    const USER_AGENT = "vca-android/7.5.0";
-    const CLIENT_ID = "mo2qy9h_10";
 
     private $id = -1;
     private $name = '';
-    private $login = '';
-    private $password = '';
+    private $clientId = '';
+    private $clientSecret = '';
+    private $vccApiKey = '';
     private $_token = null;
     private $_fd = null;
 
@@ -45,23 +44,6 @@ class volvoAccount {
     }
 
     /*
-     * Création d'un account
-     */
-    public static function create($name) {
-        $id = self::nextId();
-        $key = 'account::' . $id;
-        $config = config::byKey($key, 'volvocars');
-        if ($config != '') {
-            throw new Exception (sprintf(__('Un compte nommé %s existe déjà',__FILE__),$name));
-        }
-        $account = new self();
-        $account->setId($id);
-        $account->setName($name);
-        $account->save();
-        return $account;
-    }
-
-    /*
      * Tous les accounts
      */
     public static function all($_onlyEnable = false) {
@@ -73,13 +55,11 @@ class volvoAccount {
                     continue;
                 }
             }
-            if (isset($config['value']['password'])) {
-                $config['value']['password'] = utils::decrypt($config['value']['password']);
-            } else {
-                $config['value']['password'] = '';
-            }
             $account = new self();
             utils::a2o($account,$config['value']);
+            $account->setVccApiKey(utils::decrypt($account->getVccApiKey()));
+            $account->setClientId(utils::decrypt($account->getClientId()));
+            $account->setClientSecret(utils::decrypt($account->getClientSecret()));
             $accounts[] = $account;
         }
         return $accounts;
@@ -95,13 +75,11 @@ class volvoAccount {
             return null;
         }
         $value = is_json($value,$value);
-        if (isset($value['password'])) {
-            $value['password'] = utils::decrypt($value['password']);
-        } else {
-            $value['password'] = '';
-        }
         $account = new self();
         utils::a2o($account,$value);
+        $account->setVccApiKey(utils::decrypt($account->getVccApiKey()));
+        $account->setClientId(utils::decrypt($account->getClientId()));
+        $account->setClientSecret(utils::decrypt($account->getClientSecret()));
         return $account;
     }
 
@@ -114,46 +92,15 @@ class volvoAccount {
         foreach ($configs as $config) {
             $value = $config['value'];
             if ($value['name'] == $name) {
-                if (isset($value['password'])) {
-                    $value['password'] = utils::decrypt($value['password']);
-                } else {
-                    $value['password'] = '';
-                }
                 $account = new self();
                 utils::a2o($account,$value);
+                $account->setVccApiKey(utils::decrypt($account->getVccApiKey()));
+                $account->setClientId(utils::decrypt($account->getClientId()));
+                $account->setClientSecret(utils::decrypt($account->getClientSecret()));
                 return $account;
             }
         }
         return null;
-    }
-
-    public static function tokenFile () {
-        return __DIR__ . "/../../data/tokens.json";
-    }
-
-    public static function getTokens() {
-        $tokenFileName = self::tokenFile();
-        if (file_exists($tokenFileName)) {
-            $tokens = json_decode(file_get_contents($tokenFileName),true);
-            if ($tokens === false) {
-                throw new Exception(sprintf(__("Erreur lors de la lecture du fichier %s",__FILE__),$tokenFileName));
-            }
-        }  else {
-            $tokens = array();
-        }
-        return $tokens;
-    }
-
-    public static function saveToken ($token, $account_id) {
-        $token['expires_at'] = time() + $token['expires_in'];
-        $tokens = self::getTokens();
-        $tokens[$account_id] = $token;
-        $tokenFileName = self::tokenFile();
-        if (!file_exists(dirname($tokenFileName))) {
-            mkdir (dirname($tokenFileName), 0777, true);
-            chmod (dirname($tokenFileName), 0775);
-        }
-        file_put_contents($tokenFileName,json_encode($tokens,JSON_PRETTY_PRINT));
     }
 
     /* *************************************************** */
@@ -171,12 +118,16 @@ class volvoAccount {
         if (is_object($acc) and $acc->getId() != $this->getId()) {
             throw new Exception (sprintf(__('Un compte nommé %s existe déjà',__FILE__),$this->getName()));
         }
+        if (!$this->getId()) {
+            $this->setId(self::nextId());
+        }
         $value = utils::o2a($this);
-        $value['password'] = utils::encrypt($value['password']);
+        $value['vccApiKey'] = utils::encrypt($value['vccApiKey']);
+        $value['clientId'] = utils::encrypt($value['clientId']);
+        $value['clientSecret'] = utils::encrypt($value['clientSecret']);
         $value = json_encode($value);
         $key = 'account::' . $this->id;
         config::save($key, $value, 'volvocars');
-        cache::delete($this->cacheKey());
     }
 
     /*
@@ -185,86 +136,109 @@ class volvoAccount {
     public function remove() {
         $cars = volvocars::byAccount_id($this->getId(), false);
         if (count($cars) > 0) {
-            throw new Exception (sprintf(__("Le compte %s est utilisé pour le véhicule %s",__FILE__), $this->name, $cars[0]->getName()));
+            throw new Exception (
+                sprintf(
+                    __("Le compte %s est utilisé pour le véhicule %s",__FILE__),
+                    $this->name,
+                    $cars[0]->getName()
+                )
+            );
         }
-        cache::delete($this->cacheKey());
+        $token = $this->getToken();
+        if ($token) {
+            $token->remove();
+        }
         $key = 'account::' . $this->id;
         return config::remove($key,'volvocars');
     }
 
-    private function cacheKey(){
-        return 'volvoAccountToken'. $this->getId();
+    /*
+     * L'url de rediction pour l'authorisation OAuth
+     */
+    public function getRedirectUri() {
+        $redirectUri = config::byKey('externalProtocol','core','https://');
+        $redirectAddr = config::byKey('externalAddr');
+        if ($redirectAddr == '') {
+            throw new Exception(__("L'adresse externe doit être configurée dans Jeedom.",__FILE__));
+        }
+        $redirectUri .= $redirectAddr; # . ':' . config::byKey('externalPort','core','443');
+        $redirectComplement = config::byKey('externalComplement');
+        if ($redirectComplement) {
+            $redirectUri .= '/' . $redirectComplement;
+        }
+        $redirectUri .= '/plugins/volvocars/core/php/oauth.php';
+        return $redirectUri;
     }
 
-    private function refreshToken() {
-        log::add("volvocars","info",sprintf(__("Rafraîchissement du token du compte %s",__FILE__). "...", $this->getName()));
+    /*
+     * L'url pour la demande OAuth
+     */
+    public function getAuthorizationUrl() {
+        log::add("volvocars","debug",sprintf(__("Récupération de l'URL d'autorisation pour le compte '%s'",__FILE__),$this->getName()));
 
-        $tokens = self::getTokens();
-        if (! isset($tokens[$this->getId()])){
-            throw new Exception (sprintf(__("Token pour le compte %s introuvable. Veuillez refaire une sauvegarde de ce compte",__FILE__),$this->getName()));
-        }
-        $token = $tokens[$this->getId()];
+        $redirectUri = $this->getRedirectUri();
+        log::add("volvocars","debug","redirect URL: " . $redirectUri);
 
-        if (! isset($token['refresh_token'])){
-            throw new Exception (sprintf(__("Token de renouvellement pour le compte %s introuvable. Veuillez refaire une sauvegarde de ce compte",__FILE__),$this->getName()));
-        }
+        $scopes = endpoint::getScopes();
+        sort ($scopes);
+        $scopes = implode(' ', $scopes);
+        log::add("volvocars","debug","scopes: " . $scopes);
 
+        $codeVerifier = rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
+        $codeChallenge = rtrim(strtr(base64_encode(hash('sha256', $codeVerifier, true)), '+/', '-_'), '=');
+        $state = bin2hex(random_bytes(16));
         $data = [
-            'grant_type' => 'refresh_token',
-            'client_id'  =>  self::CLIENT_ID,
-            'refresh_token' => $token['refresh_token']
+            'codeVerifier' => $codeVerifier,
+            'accountId'    => $this->getId()
         ];
-        $headers = [
-            'Accept: application/json',
-            'User-agent: ' . self::USER_AGENT
-        ];
+        cache::set('volvocars::' . $state, $data, 604800);
 
-        $ch = curl_init(self::TOKEN_URL);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
-        $result = curl_exec($ch);
-        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        if ($code != 200) {
-            throw new Exception (__("Erreur lors du renouvellement du token",__FILE__) . ": " . $result);
-        }
-        $newToken = is_json($result,$result);
-        $newToken['refresh_token'] = $newToken['refresh_token'] ?? $token['refresh_token'];
-        self::saveToken($newToken, $this->getId());
+        $authUrl = "https://auth.volvocars.com/realms/volvocars/protocol/openid-connect/auth?";
+        $authUrl .= http_build_query([
+            'response_type'         => 'code',
+            'client_id'             => $this->getClientId(),
+            'redirect_uri'          => $redirectUri,
+            'scope'                 => $scopes,
+            'state'                 => $state,
+            'code_challenge'        => $codeChallenge,
+            'code_challenge_method' => 'S256'
+        ]);
+        #], '', '&', PHP_QUERY_RFC3986);
+
+        return $authUrl;
     }
 
+    /*
+     * Retourne l'objet qui contient les tokens
+     */
     private function getToken() {
-        $tokens = self::getTokens();
-        if (! isset($tokens[$this->getId()])){
-            throw new Exception (sprintf(__("Token pour le compte %s introuvable. Veuillez refaire une sauvegarde de ce compte",__FILE__),$this->getName()));
+        if (!$this->_token) {
+            $this->_token = volvoToken::byId($this->getId(), false);
         }
-        $token = $tokens[$this->getId()];
-        if (($token['expires_at'] - ($token['expires_in']/2)) < time()) {
-            $this->refreshToken();
-            return $this->getToken();
-        }
-        return $token;
+        return $this->_token;
     }
 
-    public function getAccessToken() {
+    /*
+     * retourne l'accessToken
+     */
+    private function accessToken() {
         $token = $this->getToken();
-        return $token['access_token'];
+        if ($token) {
+            return $token->accessToken();
+        }
+        return null;
     }
 
-    public function session($url, $endpoint = null) {
-        $accessToken = $this->getAccessToken();
+    public function session($url, $endpointId = null) {
         $session = curl_init($url);
-        if ($endpoint === null) {
+        if ($endpointId === null) {
             $accept = "application/json";
         } else {
-            $accept = $endpoint->getAccept();
+            $accept = endpoint::getAccept($endpointId);
         }
-        $vccApiKey = config::byKey('vcc-api-key','volvocars');
         curl_setopt($session, CURLOPT_HTTPHEADER, [
-            "authorization: Bearer " . $accessToken,
-            "vcc-api-key: " . $vccApiKey,
+            "authorization: Bearer " . $this->accessToken(),
+            "vcc-api-key: " . $this->getVccApiKey(),
             "accept: " . $accept,
             "content-type: application/json"
         ]);
@@ -313,93 +287,114 @@ class volvoAccount {
 
     public function getRawDatas($vin) {
         $return = array();
-        foreach (endpoint::all('info') as $endpoint) {
-            $return[$endpoint->getId()] = $this->getInfos($endpoint->getId(), $vin, true)['rawData'];
+        foreach (endpoint::byType('info') as $endpointiId) {
+            $return[$endpointId] = $this->getInfos($endpointId, $vin, true)['rawData'];
         }
         return $return;
     }
 
-    public function getInfos($_endpoint_id, $vin=null, $_force = false) {
-        $endpoint = endpoint::byId($_endpoint_id);
-        if ($endpoint === null) {
-            log::add("volvocars","error",sprintf(__("URL pour le endpoint %s non définie",__FILE__),$endpoint));
-            return false;
-        }
-        if (!$_force and !$this->shouldRequest($_endpoint_id, $vin)) {
-            log::add("volvocars","debug","│ " . __("Pas nécessaire",__FILE__));
-            return false;
-        }
-        $url = sprintf($endpoint->getUrl(),$vin);
-        log::add("volvocars","debug","│ URL: " .$url);
-        try {
-            $session = $this->session($url, $endpoint);
-        } catch (volvocarApiException $e){
-            log::add("volvocars","error",$e->getMessage());
-            return array();
-        }
-        $this->incrementEndpointCounter($_endpoint_id, $vin);
-        $content = curl_exec($session);
-        $rawData = str_replace($vin,'{VIN}',$content);
-        if ($_endpoint_id == 'location') {
-            $rawData = preg_replace("/\d+\.\d{4,}/","#.#####",$rawData);
-        }
-        log::add("volvocars","debug","│ ".$content);
-        $return = array(
-            'httpCode' => curl_getinfo($session,CURLINFO_HTTP_CODE),
-            'rawData' => $rawData,
-        );
-        $content = is_json($content,$content);
-        if ( $return['httpCode'] == 200) {
-            $return['status'] = 'ok';
-            if (isset($content['data'])) {
-                $content = $content['data'];
-            }
-            if ($_endpoint_id == 'location'){
-                if(isset($content['type'])){
-                    unset ($content['type']);
-                }
-                if(isset($content['properties'])){
-                    unset ($content['properties']);
-                }
-                if(isset($content['geometry'])){
-                    $content['location'] = $content['geometry'];
-                    unset ($content['geometry']);
-                }
-            }
-            if ($_endpoint_id == 'diagnostics') {
-                if ($content['timeToService']['unit'] == 'months') {
-                    $content['timeToService']['value'] *= 30;
-                    $content['timeToService']['unit'] = 'days';
-                }
-            }
-            foreach($endpoint->getDefaults() as $info => $defaultValue) {
-                if (!isset($content[$info])) {
-                    $content[$info] = array(
-                        "value" => $defaultValue,
-                    );
-                }
-            }
-            $return['data'] = $content;
-        } else {
-            $return['status'] = 'ko';
-            if (isset($content['error'])) {
-                if (isset($content['error']['messages'])) {
-                    $return['message'] = $content['error']['message'];
-                }
-                if (isset($content['error']['description'])) {
-                    $return['description'] = $content['error']['description'];
-                }
-            } else {
-                if (isset($content['messages'])) {
-                    $return['message'] = $content['message'];
-                }
-                if (isset($content['description'])) {
-                    $return['description'] = $content['description'];
-                }
-            }
-        }
+    public function getInfos($endpointId, $vin=null, $force = false) {
 
-        return $return;
+        try {
+            if (!$force and !$this->shouldRequest($endpointId, $vin)) {
+                log::add("volvocars","debug","│ " . __("Pas nécessaire",__FILE__));
+                return false;
+            }
+
+            $url = endpoint::getUrl($endpointId);
+            if ($url === null) {
+                log::add("volvocars","error",sprintf(__("URL pour le endpoint %s non définie",__FILE__),$endpoint));
+                return false;
+            }
+            log::add("volvocars","debug","│ URL: " .$url);
+            $url = str_replace('#VIN#',$vin,$url);
+
+            $session = $this->session($url, $endpointId);
+
+            $this->incrementEndpointCounter($endpointId, $vin);
+
+            $response   = curl_exec($session);
+            $httpCode  = curl_getinfo($session, CURLINFO_HTTP_CODE);
+            $curlError = curl_error($session);
+
+            if ($curlError) {
+                throw new Exception (__("Erreur cURL : ",__FILE__) . $curlError);
+            }
+
+            if ($httpCode !== 200) {
+                $response = is_json($response,$response);
+                $txt = $response;
+                if (is_array($response)) {
+                    $txt = ($response['error_description'] ?? '') ?: print_r($response,true);
+                }
+                throw new Exception (sprintf(__("Erreur API Volvo (HTTP %s) %s",__FILE__), $httpCode, $txt));
+            }
+
+            $rawData = str_replace($vin,'{VIN}',$response);
+            if ($endpointId == 'location') {
+                $rawData = preg_replace("/\d+\.\d{4,}/","#.#####",$rawData);
+            }
+            
+            $return = array(
+                'httpCode' => curl_getinfo($session,CURLINFO_HTTP_CODE),
+                'rawData' => $rawData,
+            );
+            $response = is_json($response,$response);
+            if ( $return['httpCode'] == 200) {
+                $return['status'] = 'ok';
+                if (isset($response['data'])) {
+                    $response = $response['data'];
+                }
+                if ($endpointId == 'location'){
+                    if(isset($response['type'])){
+                        unset ($response['type']);
+                    }
+                    if(isset($response['properties'])){
+                        unset ($response['properties']);
+                    }
+                    if(isset($response['geometry'])){
+                        $response['location'] = $response['geometry'];
+                        unset ($response['geometry']);
+                    }
+                }
+                if ($endpointId == 'diagnostics') {
+                    if ($response['timeToService']['unit'] == 'months') {
+                        $response['timeToService']['value'] *= 30;
+                        $response['timeToService']['unit'] = 'days';
+                    }
+                }
+                foreach(endpoint::getDefaults($endpointId) as $info => $defaultValue) {
+                    if (!isset($response[$info])) {
+                        $response[$info] = array(
+                            "value" => $defaultValue,
+                        );
+                    }
+                }
+                $return['data'] = $response;
+            } else {
+                $return['status'] = 'ko';
+                if (isset($response['error'])) {
+                    if (isset($response['error']['messages'])) {
+                        $return['message'] = $response['error']['message'];
+                    }
+                    if (isset($response['error']['description'])) {
+                        $return['description'] = $response['error']['description'];
+                    }
+                } else {
+                    if (isset($response['messages'])) {
+                        $return['message'] = $response['message'];
+                    }
+                    if (isset($response['description'])) {
+                        $return['description'] = $response['description'];
+                    }
+                }
+            }
+
+            return $return;
+        }
+        catch (Exception $e) {
+            log::add('volvocars','error','[getInfos] ' . $e->getMessage());
+        }
     }
 
     public function sendCommand($cmd, $payload = null) {
@@ -520,24 +515,23 @@ class volvoAccount {
         return;
     }
 
-    public function shouldRequest($_endpoint_id, $_vin) {
+    public function shouldRequest($endpointId, $vin) {
         $lastAccess = $this->getCache('lastEndpointAccess');
         if (!is_array($lastAccess)) {
             $lastAccess = array();
         }
-        if (!isset($lastAccess[$_endpoint_id]) or !is_array($lastAccess[$_endpoint_id])) {
-            $lastAccess[$_endpoint_id] = array();
+        if (!isset($lastAccess[$endpointId]) or !is_array($lastAccess[$endpointId])) {
+            $lastAccess[$endpointId] = array();
         }
-        if (!isset($lastAccess[$_endpoint_id][$_vin])) {
-            $lastAccess[$_endpoint_id][$_vin] = 0;
+        if (!isset($lastAccess[$endpointId][$vin])) {
+            $lastAccess[$endpointId][$vin] = 0;
         }
-        $lastAccessTime = intval($lastAccess[$_endpoint_id][$_vin]);
-        $endpoint = new endpoint($_endpoint_id);
-        $refreshDelai = $endpoint->getRefreshDelai();
-        if ($refreshDelai === null) {
+        $lastAccessTime = intval($lastAccess[$endpointId][$vin]);
+        $refreshDelay = endpoint::getRefreshDelay($endpointId);
+        if ($refreshDelay === null) {
             return false;
         }
-        if ((intval(date('U')) - $lastAccessTime) <= (($refreshDelai * 60)-20)) {
+        if ((intval(date('U')) - $lastAccessTime) <= (($refreshDelay * 60)-20)) {
             return false;
         }
         return true;
@@ -552,7 +546,7 @@ class volvoAccount {
         return $this->_fd;
     }
 
-    public function incrementEndpointCounter($_endpoint_id, $_vin) {
+    public function incrementEndpointCounter($endpointId, $vin) {
         $fd = $this->getFileDescriptorLock();
         $waitIfLocked = true;
         if (@flock($fd, LOCK_EX, $waitIfLocked)) {
@@ -571,25 +565,25 @@ class volvoAccount {
                 $cache['endpointAccessCount']['countFrom'] = date('U');
             }
 
-            if (!isset($cache['endpointAccessCount'][$_endpoint_id])) {
-                $cache['endpointAccessCount'][$_endpoint_id] = array();
+            if (!isset($cache['endpointAccessCount'][$endpointId])) {
+                $cache['endpointAccessCount'][$endpointId] = array();
             }
 
-            if (!isset($cache['endpointAccessCount'][$_endpoint_id][$_vin])) {
-                $cache['endpointAccessCount'][$_endpoint_id][$_vin] = 1;
+            if (!isset($cache['endpointAccessCount'][$endpointId][$vin])) {
+                $cache['endpointAccessCount'][$endpointId][$vin] = 1;
             } else {
-                $cache['endpointAccessCount'][$_endpoint_id][$_vin]++;
+                $cache['endpointAccessCount'][$endpointId][$vin]++;
             }
 
             if (!isset($cache['lastEndpointAccess']) or !is_array($cache['lastEndpointAccess'])) {
                 $cache['lastEndpointAccess'] = array();
             }
 
-            if (!isset($cache['lastEndpointAccess'][$_endpoint_id]) or !is_array($cache['lastEndpointAccess'][$_endpoint_id])) {
-                $cache['lastEndpointAccess'][$_endpoint_id] = array();
+            if (!isset($cache['lastEndpointAccess'][$endpointId]) or !is_array($cache['lastEndpointAccess'][$endpointId])) {
+                $cache['lastEndpointAccess'][$endpointId] = array();
             }
 
-            $cache['lastEndpointAccess'][$_endpoint_id][$_vin] = date('U');
+            $cache['lastEndpointAccess'][$endpointId][$vin] = date('U');
 
             $this->setCache($cache);
             @flock($fd, LOCK_UN);
@@ -606,13 +600,10 @@ class volvoAccount {
         $endpointStats = array();
         $apiStats = array();
 
-        $endpoints = array();
-        foreach ($counter as $endpoint_id => $values) {
-            if ($endpoint_id == 'countFrom') continue;
-
-            if (!isset ($endpoints[$endpoint_id])) $endpoints[$endpoint_id] = new endpoint($endpoint_id);
-            if (!is_object ($endpoints[$endpoint_id])) continue;
-            $api = $endpoints[$endpoint_id]->getApi();
+        $endpointIds = array();
+        foreach ($counter as $endpointId => $values) {
+            if ($endpointId == 'countFrom') continue;
+            $api = endpoint::getApi($endpointId);
 
             foreach ($values as $vin => $count) {
                 if (!isset ($carStats[$vin])) $carStats[$vin] = array('total' => 0);
@@ -620,7 +611,7 @@ class volvoAccount {
                 $carStats['total'] += $count;
                 $carStats[$vin]['total'] += $count;
                 $carStats[$vin][$api]['total'] += $count;
-                $carStats[$vin][$api][$endpoint_id] = $count;
+                $carStats[$vin][$api][$endpointId] = $count;
             }
         }
 
@@ -675,6 +666,39 @@ class volvoAccount {
     }
 
     /*
+     * clientId
+     */
+    public function setClientId($_clientId) {
+        $this->clientId = $_clientId;
+        return $this;
+    }
+    public function getClientId() {
+        return $this->clientId;
+    }
+
+    /*
+     * clientSecret
+     */
+    public function setClientSecret($_clientSecret) {
+        $this->clientSecret = $_clientSecret;
+        return $this;
+    }
+    public function getClientSecret() {
+        return $this->clientSecret;
+    }
+
+    /*
+     * vccApiKey
+     */
+    public function setVccApiKey($_vccApiKey) {
+        $this->vccApiKey = $_vccApiKey;
+        return $this;
+    }
+    public function getVccApiKey() {
+        return $this->vccApiKey;
+    }
+
+    /*
      * name
      */
     public function setName($_name) {
@@ -683,28 +707,6 @@ class volvoAccount {
     }
     public function getName() {
         return $this->name;
-    }
-
-    /*
-     * login
-     */
-    public function setLogin($_login) {
-        $this->login = $_login;
-        return $this;
-    }
-    public function getLogin() {
-        return $this->login;
-    }
-
-    /*
-     * password
-     */
-    public function setPassword($_password) {
-        $this->password = $_password;
-        return $this;
-    }
-    public function getPassword() {
-        return $this->password;
     }
 
 }

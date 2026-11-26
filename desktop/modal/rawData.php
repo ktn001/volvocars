@@ -23,11 +23,11 @@ if (!isConnect('admin')) {
 }
 
 if (!isset($_GET['eqLogicId'])) {
-	throw new Exception (__("ID du véhicule indéfini",__FILE__));
+    throw new Exception (__("ID du véhicule indéfini",__FILE__));
 }
 $car = eqLogic::byId($_GET['eqLogicId']);
 if (!is_object($car)) {
-	throw new Exception(sprintf(__("Véhicule %s introuvable",__FILE__),$_GET['eqLogicId']));
+    throw new Exception(sprintf(__("Véhicule %s introuvable",__FILE__),$_GET['eqLogicId']));
 }
 
 log::add("volvocars","debug","┌ " . __("Début de la récupération des données bruts",__FILE__));
@@ -36,28 +36,28 @@ $data = $car->getRawDatas();
 log::add("volvocars","debug","└ " . __("Fin de la récupération des données bruts",__FILE__));
 ?>
 <div class="input-group pull-right" style="display:inline-flex">
-	<a class="btn btn-sm btn-default rawDataAction roundleft" data-action="plie">
-		<i class="fas fa-caret-right"></i> <span>{{Plie tout}}</span>
-	</a>
-	<a class="btn btn-sm btn-default rawDataAction roundleft" data-action="deplie">
-		<i class="fas fa-caret-down"></i> <span>{{Déplie tout}}</span>
-	</a>
+    <a class="btn btn-sm btn-default rawDataAction roundleft" data-action="plie">
+        <i class="fas fa-caret-right"></i> <span>{{Plie tout}}</span>
+    </a>
+    <a class="btn btn-sm btn-default rawDataAction roundleft" data-action="deplie">
+        <i class="fas fa-caret-down"></i> <span>{{Déplie tout}}</span>
+    </a>
 </div>
 <div id="rawData">
 <?php
 foreach ($data as $endpoint => $values) {
-	?>
-	<div class="endpointEntry">
-		<div class="endpointHeader">
-			<span class="show_values"> <i class="fas fa-caret-right"></i> </span>
-			<span class="hidde_values"> <i class="fas fa-caret-down"></i> </span>
-			Endpoint: <span class="endpointName"><?=$endpoint?>
-		</div>
-		<div class="endpointValue">
-			<pre><?= $values ?></pre>
-		</div>
-	</div>
-	<?php
+    ?>
+    <div class="endpointEntry">
+        <div class="endpointHeader">
+            <span class="show_values"> <i class="fas fa-caret-right"></i> </span>
+            <span class="hidde_values"> <i class="fas fa-caret-down"></i> </span>
+            Endpoint: <span class="endpointName"><?=$endpoint?>
+        </div>
+        <div class="endpointValue">
+            <pre><?= $values ?></pre>
+        </div>
+    </div>
+    <?php
 }
 ?>
 </div>

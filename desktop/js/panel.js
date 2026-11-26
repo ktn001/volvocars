@@ -1,5 +1,3 @@
-// vim: tabstop=2 autoindent expandtab
-
 "use strict";
 
 if (typeof volvocarsPanel === "undefined") {

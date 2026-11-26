@@ -21,4 +21,8 @@ require_once __DIR__  . '/../../../../core/php/core.inc.php';
 * Fichier d’inclusion si vous avez plusieurs fichiers de class ou 3rdParty à inclure
 *
 */
+require_once __DIR__ . '/../class/volvocars.class.php';
+require_once __DIR__ . '/../class/endpoint.class.php';
+require_once __DIR__ . '/../class/volvoException.class.php';
 require_once __DIR__ . '/../class/volvoAccount.class.php';
+require_once __DIR__ . '/../class/volvoToken.class.php';

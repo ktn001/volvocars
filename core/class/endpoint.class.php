@@ -1,6 +1,4 @@
 <?php
-// vi: tabstop=4 autoindent
-
 /* This file is part of Jeedom.
  *
  * Jeedom is free software: you can redistribute it and/or modify
@@ -17,350 +15,132 @@
  * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once __DIR__ . '/../php/volvocars.inc.php';
+
 class endpoint {
-	private static $_endpoints = [
-		"accessibility" => [
-			"API" => "Connected-vehicle",
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/command-accessibility",
-			"accept" => "application/json",
-			"type" => "info",
-			"refreshDelai" => 5,
-			"cmds" => [
-				"availabilityStatus" => ["availability", "unavailableReason" ],
-			],
-		],
-		"brakes" => [
-			"API" => "Connected-vehicle",
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/brakes",
-			"accept" => "application/json",
-			"type" => "info",
-			"refreshDelai" => 60,
-			"cmds" => [
-				"brakeFluidLevelWarning" => "brakeFluidLevel",
-			],
-		],
-		"commands" => [
-			"API" => "Connected-vehicle",
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/commands",
-			"accept" => "application/json",
-			"type" => "info",
-			"refreshDelai" => 0,
-		],
-		"details" => [
-			"API" => "Connected-vehicle",
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s",
-			"accept" => "application/json",
-			"type" => "info",
-			"refreshDelai" => 0,
-		],
-		"diagnostics" => [
-			"API" => "Connected-vehicle",
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/diagnostics",
-			"accept" => "application/json",
-			"type" => "info",
-			"refreshDelai" => 10,
-			"cmds" => [
-				"serviceWarning"          => "service",
-				"serviceTrigger"          => "serviceTrigger",
-				"engineHoursToService"    => "engineHoursToService",
-				"distanceToService"       => "distanceToService",
-				"timeToService"           => "timeToService",
-				"washerFluidLevelWarning" => "washerFluidLevel",
-			],
-			"defaults" => [
-				"serviceTrigger" => "&nbsp;",
-			],
-			"options" => [
-				"timeToService" => "convertToDays",
-			]
-		],
-		"doors" => [
-			"API" => "Connected-vehicle",
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/doors",
-			"accept" => "application/json",
-			"type" => "info",
-			"refreshDelai" => 2,
-			"cmds" => [
-				"centralLock"     => "locked",
-				"frontLeftDoor"   => "doorFlState",
-				"frontRightDoor"  => "doorFrState",
-				"rearLeftDoor"    => "doorRlState",
-				"rearRightDoor"   => "doorRrState",
-				"hood"            => "hoodState",
-				"tailgate"        => "tailState",
-				"tankLid"         => "tankState",
-			],
-		],
-		"engine_diagnostics" => [
-			"API" => "Connected-vehicle",
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/engine",
-			"accept" => "application/json",
-			"type" => "info",
-			"refreshDelai" => 15,
-			"cmds" => [
-				"engineCoolantLevelWarning"  => "coolantLevel",
-				"oilLevelWarning"            => "oilLevel",
-			],
-		],
-		"engine_status" => [
-			"API" => "Connected-vehicle",
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/engine-status",
-			"accept" => "application/json",
-			"type" => "info",
-			"refreshDelai" => 5,
-			"cmds" => [
-				"engineStatus" => "engineON",
-			],
-		],
-		"fuel" => [
-			"API" => "Connected-vehicle",
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/fuel",
-			"accept" => "application/json",
-			"type" => "info",
-			"refreshDelai" => 30,
-			"cmds" => [
-				"fuelAmount" => "fuelAmount",
-			],
-		],
-		"location" => [
-			"API" => "Location",
-			"url" => "https://api.volvocars.com/location/v1/vehicles/%s/location",
-			"accept" => "application/json",
-			"type" => "info",
-			"refreshDelai" => 1,
-			"cmds" => [
-				"location" => "position",
-			],
-		],
-		"odometer" => [
-			"API" => "Connected-vehicle",
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/odometer",
-			"accept" => "application/json",
-			"type" => "info",
-			"refreshDelai" => 15,
-			"cmds" => [
-				"odometer" => "odometer",
-			],
-		],
-		"state" => [
-			"API" => "Energy",
-			"url" => "https://api.volvocars.com/energy/v2/vehicles/%s/state",
-			"accept" => "application/json",
-			"type" => "info",
-			"refreshDelai" => 5,
-			"cmds" => [
-				"batteryChargeLevel"    						    => "batteryLevel",
-				"electricRange"										=> "electricAutonomy",
-				"chargerConnectionStatus"							=> "connectorStatus",
-				"chargingStatus"									=> "chargingStatus",
-				"estimatedChargingTimeToTargetBatteryChargeLevel"	=> "chargingRemainingTime",
-			],
-		],
-		"statistics" => [
-			"API" => "Connected-vehicle",
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/statistics",
-			"accept" => "application/json",
-			"type" => "info",
-			"refreshDelai" => 10,
-			"cmds" => [
-				"averageEnergyConsumption"        => "consoElectric",
-				"averageFuelConsumption"          => "consoFuel",
-				"averageFuelConsumptionAutomatic" => "consoFuelTrip",
-				"distanceToEmptyBattery"          => "electricAutonomy",
-				"distanceToEmptyTank"             => "fuelAutonomy",
-			],
-		],
-		"tyre" => [
-			"API" => "Connected-vehicle",
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/tyres",
-			"accept" => "application/json",
-			"type" => "info",
-			"refreshDelai" => 30,
-			"cmds" => [
-				"frontLeft"  => "tyreFl",
-				"frontRight" => "tyreFr",
-				"rearLeft"   => "tyreRl",
-				"rearRight"  => "tyreRr",
-			],
-		],
-		"vehicles" => [
-			"API" => "Connected-vehicle",
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles",
-			"accept" => "application/json",
-			"type" => "account_info",
-			"refreshDelai" => 0,
-		],
-		"warnings" => [
-			"API" => "Connected-vehicle",
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/warnings",
-			"accept" => "application/json",
-			"type" => "info",
-			"refreshDelai" => 30,
-			"cmds" => [
-				"brakeLightCenterWarning"          => "al_brakeLightC",
-				"brakeLightLeftWarning"            => "al_brakeLightL",
-				"brakeLightRightWarning"           => "al_brakeLightR",
-				"daytimeRunningLightLeftWarning"   => "al_daytimeRunningLightL",
-				"daytimeRunningLightRightWarning"  => "al_daytimeRunningLightR",
-				"fogLightFrontWarning"             => "al_fogLightF",
-				"fogLightRearWarning"              => "al_fogLightR",
-				"hazardLightsWarning"              => "al_hazardLights",
-				"highBeamLeftWarning"              => "al_highBeamL",
-				"highBeamRightWarning"             => "al_highBeamR",
-				"lowBeamLeftWarning"               => "al_lowBeamL",
-				"lowBeamRightWarning"              => "al_lowBeamR",
-				"positionLightFrontLeftWarning"    => "al_positionLightFl",
-				"positionLightFrontRightWarning"   => "al_positionLightFr",
-				"positionLightRearLeftWarning"     => "al_positionLightRl",
-				"positionLightRearRightWarning"    => "al_positionLightRr",
-				"registrationPlateLightWarning"    => "al_registrationPlateLight",
-				"reverseLightsWarning"             => "al_reverseLights",
-				"sideMarkLightsWarning"            => "al_sideMarkLights",
-				"turnIndicationFrontLeftWarning"   => "al_turnIndicationFl",
-				"turnIndicationFrontRightWarning"  => "al_turnIndicationFr",
-				"turnIndicationRearLeftWarning"    => "al_turnIndicationRl",
-				"turnIndicationRearRightWarning"   => "al_turnIndicationRr",
-			],
-		],
-		"windows" => [
-			"API" => "Connected-vehicle",
-			"url" => "https://api.volvocars.com/connected-vehicle/v2/vehicles/%s/windows",
-			"accept" => "application/json",
-			"type" => "info",
-			"refreshDelai" => 2,
-			"cmds" => [
-				"frontLeftWindow"   => "winFlState",
-				"frontRightWindow"  => "winFrState",
-				"rearLeftWindow"    => "winRlState",
-				"rearRightWindow"   => "winRrState",
-				"sunroof"           => "roofState",
-			],
-		],
-	];
-	private $endpoint_id;
 
-	static function byId($_endpoint_id) {
-		if (!array_key_exists($_endpoint_id,self::$_endpoints)) {
-			return null;
-		}
-		return new endpoint($_endpoint_id);
-	}
+    //=====================================================================
+    //============================= ATTRIBUTS =============================
+    //=====================================================================
+    private static $endpointsConfig = null;
 
-	static function getEndpoint_ids() {
-		return array_keys(self::$_endpoints);
-	}
+    /*
+     * Met en cache les données de configuration des endpoint si pas déjàs
+     * fait. Puis retourne les données d'un endpoint ou de tous
+     */
+    private static function getEndpointConfig ($endpointId = null) {
+        if (self::$endpointsConfig == null) {
+            $endpointsFileName = __DIR__ . "/../config/endpoints.json";
+            self::$endpointsConfig = json_decode(file_get_contents($endpointsFileName),true);
+        }
+        if ($endpointId) {
+            return self::$endpointsConfig[$endpointId] ?? null;
+        }
+        return self::$endpointsConfig;
+    }
 
-	static function all($_type = null, $toRefresh = false) {
-		$return = array();
-		foreach (self::$_endpoints as $endpoint_id => $value) {
-			if (!is_array($value)) {
-				continue;
-			}
-			if (!isset($value['type'])) {
-				continue;
-			}
-			if ($_type !== null and $value['type'] != $_type) {
-				continue;
-			}
-			if ($toRefresh) {
-				if (!isset($value['cmds'])) {
-					continue;
-				}
-				if (!isset($value['refreshDelai'])) {
-					continue;
-				}
-				if ($value['refreshDelai'] == 0) {
-					continue;
-				}
-			}
-			$return[] = self::byId($endpoint_id);
-		}
-		return $return;
-	}
+    /*
+     * Retourne la liste des ids des endpoints d'un certain type
+     */
+    public static function byType ($type) {
+        $endpointIds = [];
+        foreach (self::getEndpointConfig() as $id => $config) {
+            if ($type === $config['type'] ?? '') {
+                $endpointIds[] = $id;
+            }
+        }
+        return $endpointIds;
+    }
 
-	function __construct ($endpoint_id) {
-		if (array_key_exists($endpoint_id,self::$_endpoints)) {
-			$this->endpoint_id = $endpoint_id;
-		} else {
-			$this->endpoint_id = null;
-		}
-	}
+    /*
+     * Retourne la liste des logicalId des commandes dépendantes d'un endpoint
+     * et éventuellement d'une seule des infos de l'endpoint
+     */
+    public static function getLogicalIds($endpointId, $info = null) {
+        $endpointConfig = self::getEndpointConfig($endpointId);
+        if ($info) {
+            $logicalIds = $endpointConfig['cmds'][$info] ?? [];
+            if (is_array($logicalIds)) {
+                return $logicalIds;
+            }
+            return [$logicalIds];
+        }
+        $logicalIds = [];
+        foreach ($endpointConfig['cmds'] ?? [] as $logicalId) {
+            if (is_array($logicalId)) {
+                $logicalIds = array_merge($logicalIds,$logicalId);
+            } else {
+                if ($logicalId) {
+                    $logicalIds[] = $logicalId;
+                }
+            }
+        }
+        return array_unique($logicalIds);
+    }
 
-	function getLogicalIds($_info = null) {
-		if ($this->endpoint_id === null) {
-			return array();
-		}
-		if (!array_key_exists('cmds',self::$_endpoints[$this->endpoint_id])) {
-			return array();
-		}
-		$infos = self::$_endpoints[$this->endpoint_id]['cmds'];
-		if (count($infos) == 0) {
-			return array();
-		}
-		$logicalIds = array();
-		foreach ($infos as $info => $value) {
-			if ($_info == null or $_info == $info) {
-				if (is_array($value)) {
-					$logicalIds = array_merge($logicalIds,$value);
-				} else {
-					$logicalIds[] = $value;
-				}
-			}
-		}
-		return array_unique($logicalIds);
-	}
+    /*
+     * Retourne l'url d'un endpoint
+     */
+    public static function getUrl($endpointId, $vin = null) {
+        $endpointConfig = self::getEndpointConfig($endpointId);
+        $url = $endpointConfig['url'] ?? null;
+        if (!$url) {
+            return null;
+        }
+        if ($vin) {
+            $url = str_replace('#VIN#', $vin, $url);
+        }
+        return $url;
+    }
 
-	function getRefreshDelai() {
-		if ($this->endpoint_id === null) {
-			return null;
-		}
-		if (!array_key_exists('refreshDelai',self::$_endpoints[$this->endpoint_id])) {
-			return null;
-		}
-		return self::$_endpoints[$this->endpoint_id]['refreshDelai'];
-	}
+    /*
+     * Retourne le délai d'attente pour un endpoint
+     */
+    public static function getRefreshDelay($endpointId) {
+        $endpointConfig = self::getEndpointConfig($endpointId);
+        return $endpointConfig['refreshDelay'] ?? null;
+    }
 
-	function getId() {
-		return $this->endpoint_id;
-	}
+    /*
+     * Retourne les valeurs par défaut
+     */
+    public static function getDefaults($endpointId) {
+        $endpointConfig = self::getEndpointConfig($endpointId);
+        return $endpointConfig['defaults'] ?? [];
+    }
 
-	function getUrl() {
-		if ($this->endpoint_id === null) {
-			return null;
-		}
-		if (!array_key_exists('url',self::$_endpoints[$this->endpoint_id])) {
-			return null;
-		}
-	 	return self::$_endpoints[$this->endpoint_id]['url'];
-	}
+    /*
+     * Retourne l'API d'un endpoint
+     */
+    public static function getApi($endpointId) {
+        $endpointConfig = self::getEndpointConfig($endpointId);
+        return $endpointConfig['API'] ?? null;
+    }
 
-	function getAccept() {
-		return self::$_endpoints[$this->endpoint_id]['accept'];
-	}
+    /*
+     * Retourne le format de retour accepté
+     */
+    public static function getAccept($endpointId) {
+        $endpointConfig = self::getEndpointConfig($endpointId);
+        return $endpointConfig['accept'] ?? null;
+    }
 
-	function getDefaults() {
-		if ($this->endpoint_id === null) {
-			return array();
-		}
-		if (!array_key_exists('defaults',self::$_endpoints[$this->endpoint_id])) {
-			return array();
-		}
-		return self::$_endpoints[$this->endpoint_id]['defaults'];
-	}
-
-	function getOptions() {
-		if ($this->endpoint_id === null) {
-			return array();
-		}
-		if (!array_key_exists('options',self::$_endpoints[$this->endpoint_id])) {
-			return array();
-		}
-		return self::$_endpoints[$this->endpoint_id]['options'];
-	}
-
-	function getApi() {
-		return self::$_endpoints[$this->endpoint_id]['API'];
-	}
-
+    /*
+     * Retourne la liste des scopes
+     */
+    public static function getScopes($endpointId = null) {
+        $endpointConfig = self::getEndpointConfig($endpointId);
+        if ($endpointId) {
+            return $endpointConfig['scope'] ?? [];
+        }
+        $scopes = [];
+        foreach ($endpointConfig as $config) {
+            if (is_array($config['scopes'] ?? [])) {
+                $scopes = array_merge($scopes,$config['scopes'] ?? []);
+            } else {
+                $scopes[] = $config['scopes'];
+            }
+        }
+        return array_unique($scopes);
+    }
 }
-

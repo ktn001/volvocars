@@ -1,0 +1,382 @@
+{
+  "accessibility": {
+    "API": "Connected-vehicle",
+    "url": "https://api.volvocars.com/connected-vehicle/v2/vehicles/#VIN#/command-accessibility",
+    "scopes": [
+      "openid",
+      "conve:command_accessibility"
+    ],
+    "accept": "application/json",
+    "type": "info",
+    "refreshDelay": 5,
+    "cmds": {
+      "availabilityStatus": [
+        "availability",
+        "unavailableReason"
+      ]
+    }
+  },
+  "brakes": {
+    "API": "Connected-vehicle",
+    "url": "https://api.volvocars.com/connected-vehicle/v2/vehicles/#VIN#/brakes",
+    "scopes": [
+      "openid",
+       "conve:brake_status"
+    ],
+    "accept": "application/json",
+    "type": "info",
+    "refreshDelay": 60,
+    "cmds": {
+      "brakeFluidLevelWarning": "brakeFluidLevel"
+    }
+  },
+  "CLIMATIZATION_START": {
+    "API": "Connected-vehicle",
+    "scopes": [
+      "openid",
+      "conve:climatization_start_stop"
+    ],
+    "type": "action",
+    "cmd": "climStart" 
+  },
+  "CLIMATIZATION_STOP": {
+    "API": "Connected-vehicle",
+    "scopes": [
+      "openid",
+      "conve:climatization_start_stop"
+    ],
+    "type": "action",
+    "cmd": "climStop" 
+  },
+  "commands": {
+    "API": "Connected-vehicle",
+    "url": "https://api.volvocars.com/connected-vehicle/v2/vehicles/#VIN#/commands",
+    "scopes": [
+      "openid",
+      "conve:commands"
+    ],
+    "accept": "application/json",
+    "type": "info",
+    "refreshDelay": 0
+  },
+  "details": {
+    "API": "Connected-vehicle",
+    "url": "https://api.volvocars.com/connected-vehicle/v2/vehicles/#VIN#",
+    "scopes": [
+      "openid",
+      "conve:vehicle_relation"
+    ],
+    "accept": "application/json",
+    "type": "info",
+    "refreshDelay": 0
+  },
+  "diagnostics": {
+    "API": "Connected-vehicle",
+    "url": "https://api.volvocars.com/connected-vehicle/v2/vehicles/#VIN#/diagnostics",
+    "scopes": [
+      "openid",
+      "conve:diagnostics_workshop"
+    ],
+    "accept": "application/json",
+    "type": "info",
+    "refreshDelay": 10,
+    "cmds": {
+      "serviceWarning": "service",
+      "serviceTrigger": "serviceTrigger",
+      "engineHoursToService": "engineHoursToService",
+      "distanceToService": "distanceToService",
+      "timeToService": "timeToService",
+      "washerFluidLevelWarning": "washerFluidLevel"
+    },
+    "defaults": {
+      "serviceTrigger": "&nbsp;"
+    },
+    "options": {
+      "timeToService": "convertToDays"
+    }
+  },
+  "doors": {
+    "API": "Connected-vehicle",
+    "url": "https://api.volvocars.com/connected-vehicle/v2/vehicles/#VIN#/doors",
+    "scopes": [
+      "openid",
+      "conve:doors_status",
+       "conve:lock_status"
+    ],
+    "accept": "application/json",
+    "type": "info",
+    "refreshDelay": 2,
+    "cmds": {
+      "centralLock": "locked",
+      "frontLeftDoor": "doorFlState",
+      "frontRightDoor": "doorFrState",
+      "rearLeftDoor": "doorRlState",
+      "rearRightDoor": "doorRrState",
+      "hood": "hoodState",
+      "tailgate": "tailState",
+      "tankLid": "tankState"
+    }
+  },
+  "engine_diagnostics": {
+    "API": "Connected-vehicle",
+    "url": "https://api.volvocars.com/connected-vehicle/v2/vehicles/#VIN#/engine",
+    "scopes": [
+      "openid",
+      "conve:diagnostics_engine_status"
+    ],
+    "accept": "application/json",
+    "type": "info",
+    "refreshDelay": 15,
+    "cmds": {
+      "engineCoolantLevelWarning": "coolantLevel",
+      "oilLevelWarning": "oilLevel"
+    }
+  },
+  "ENGINE_START": {
+    "API": "Connected-vehicle",
+    "scopes": [
+      "openid",
+      "conve:engine_start_stop"
+    ],
+    "type": "action",
+    "cmd": "engineStart" 
+  },
+  "ENGINE_STOP": {
+    "API": "Connected-vehicle",
+    "scopes": [
+      "openid",
+      "conve:engine_start_stop"
+    ],
+    "type": "action",
+    "cmd": "engineStop" 
+  },
+  "engine_status": {
+    "API": "Connected-vehicle",
+    "url": "https://api.volvocars.com/connected-vehicle/v2/vehicles/#VIN#/engine-status",
+    "scopes": [
+      "openid",
+      "conve:engine_status"
+    ],
+    "accept": "application/json",
+    "type": "info",
+    "refreshDelay": 5,
+    "cmds": {
+      "engineStatus": "engineON"
+    }
+  },
+  "FLASH": {
+    "API": "Connected-vehicle",
+    "scopes": [
+      "openid",
+      "conve:honk_flash"
+    ],
+    "type": "action",
+    "cmd": "flash" 
+  },
+  "fuel": {
+    "API": "Connected-vehicle",
+    "url": "https://api.volvocars.com/connected-vehicle/v2/vehicles/#VIN#/fuel",
+    "scopes": [
+      "openid",
+      "conve:fuel_status",
+      "conve:battery_charge_level"
+    ],
+    "accept": "application/json",
+    "type": "info",
+    "refreshDelay": 30,
+    "cmds": {
+      "fuelAmount": "fuelAmount"
+    }
+  },
+  "HONK": {
+    "API": "Connected-vehicle",
+    "scopes": [
+      "openid",
+      "conve:honk_flash"
+    ],
+    "type": "action",
+    "cmd": "honk" 
+  },
+  "HONK_AND_FLASH": {
+    "API": "Connected-vehicle",
+    "scopes": [
+      "openid",
+      "conve:honk_flash"
+    ],
+    "type": "action",
+    "cmd": "honk_flash" 
+  },
+  "location": {
+    "API": "Location",
+    "url": "https://api.volvocars.com/location/v1/vehicles/#VIN#/location",
+    "scopes": [
+      "openid",
+      "location:read"
+    ],
+    "accept": "application/json",
+    "type": "info",
+    "refreshDelay": 1,
+    "cmds": {
+      "location": "position"
+    }
+  },
+  "LOCK": {
+    "API": "Connected-vehicle",
+    "scopes": [
+      "openid",
+      "conve:lock"
+    ],
+    "type": "action",
+    "cmd": "lock" 
+  },
+  "LOCK_REDUCED_GUARD": {
+    "API": "Connected-vehicle",
+    "scopes": [
+      "openid",
+      "conve:lock"
+    ],
+    "type": "action",
+    "cmd": "lockReduced" 
+  },
+  "odometer": {
+    "API": "Connected-vehicle",
+    "url": "https://api.volvocars.com/connected-vehicle/v2/vehicles/#VIN#/odometer",
+    "scopes": [
+      "openid",
+      "conve:odometer_status"
+    ],
+    "accept": "application/json",
+    "type": "info",
+    "refreshDelay": 15,
+    "cmds": {
+      "odometer": "odometer"
+    }
+  },
+  "state": {
+    "API": "Energy",
+    "url": "https://api.volvocars.com/energy/v2/vehicles/#VIN#/state",
+    "scopes": [
+      "openid",
+      "energy:state:read"
+    ],
+    "accept": "application/json",
+    "type": "info",
+    "refreshDelay": 5,
+    "cmds": {
+      "batteryChargeLevel": "batteryLevel",
+      "electricRange": "electricAutonomy",
+      "chargerConnectionStatus": "connectorStatus",
+      "chargingStatus": "chargingStatus",
+      "estimatedChargingTimeToTargetBatteryChargeLevel": "chargingRemainingTime"
+    }
+  },
+  "statistics": {
+    "API": "Connected-vehicle",
+    "url": "https://api.volvocars.com/connected-vehicle/v2/vehicles/#VIN#/statistics",
+    "scopes": [
+      "openid",
+      "conve:trip_statistics"
+    ],
+    "accept": "application/json",
+    "type": "info",
+    "refreshDelay": 10,
+    "cmds": {
+      "averageEnergyConsumption": "consoElectric",
+      "averageFuelConsumption": "consoFuel",
+      "averageFuelConsumptionAutomatic": "consoFuelTrip",
+      "distanceToEmptyBattery": "electricAutonomy",
+      "distanceToEmptyTank": "fuelAutonomy"
+    }
+  },
+  "tyre": {
+    "API": "Connected-vehicle",
+    "url": "https://api.volvocars.com/connected-vehicle/v2/vehicles/#VIN#/tyres",
+    "scopes": [
+      "openid",
+      "conve:tyre_status"
+    ],
+    "accept": "application/json",
+    "type": "info",
+    "refreshDelay": 30,
+    "cmds": {
+      "frontLeft": "tyreFl",
+      "frontRight": "tyreFr",
+      "rearLeft": "tyreRl",
+      "rearRight": "tyreRr"
+    }
+  },
+  "UNLOCK": {
+    "API": "Connected-vehicle",
+    "scopes": [
+      "openid",
+      "conve:unlock"
+    ],
+    "type": "action",
+    "cmd": "unlock" 
+  },
+  "vehicles": {
+    "API": "Connected-vehicle",
+    "url": "https://api.volvocars.com/connected-vehicle/v2/vehicles",
+    "scopes": [
+      "openid",
+      "conve:vehicle_relation"
+    ],
+    "accept": "application/json",
+    "type": "account_info",
+    "refreshDelay": 0
+  },
+  "warnings": {
+    "API": "Connected-vehicle",
+    "url": "https://api.volvocars.com/connected-vehicle/v2/vehicles/#VIN#/warnings",
+    "scopes": [
+      "openid",
+      "conve:warnings"
+    ],
+    "accept": "application/json",
+    "type": "info",
+    "refreshDelay": 30,
+    "cmds": {
+      "brakeLightCenterWarning": "al_brakeLightC",
+      "brakeLightLeftWarning": "al_brakeLightL",
+      "brakeLightRightWarning": "al_brakeLightR",
+      "daytimeRunningLightLeftWarning": "al_daytimeRunningLightL",
+      "daytimeRunningLightRightWarning": "al_daytimeRunningLightR",
+      "fogLightFrontWarning": "al_fogLightF",
+      "fogLightRearWarning": "al_fogLightR",
+      "hazardLightsWarning": "al_hazardLights",
+      "highBeamLeftWarning": "al_highBeamL",
+      "highBeamRightWarning": "al_highBeamR",
+      "lowBeamLeftWarning": "al_lowBeamL",
+      "lowBeamRightWarning": "al_lowBeamR",
+      "positionLightFrontLeftWarning": "al_positionLightFl",
+      "positionLightFrontRightWarning": "al_positionLightFr",
+      "positionLightRearLeftWarning": "al_positionLightRl",
+      "positionLightRearRightWarning": "al_positionLightRr",
+      "registrationPlateLightWarning": "al_registrationPlateLight",
+      "reverseLightsWarning": "al_reverseLights",
+      "sideMarkLightsWarning": "al_sideMarkLights",
+      "turnIndicationFrontLeftWarning": "al_turnIndicationFl",
+      "turnIndicationFrontRightWarning": "al_turnIndicationFr",
+      "turnIndicationRearLeftWarning": "al_turnIndicationRl",
+      "turnIndicationRearRightWarning": "al_turnIndicationRr"
+    }
+  },
+  "windows": {
+    "API": "Connected-vehicle",
+    "url": "https://api.volvocars.com/connected-vehicle/v2/vehicles/#VIN#/windows",
+    "scopes": [
+      "openid",
+      "conve:windows_status"
+    ],
+    "accept": "application/json",
+    "type": "info",
+    "refreshDelay": 2,
+    "cmds": {
+      "frontLeftWindow": "winFlState",
+      "frontRightWindow": "winFrState",
+      "rearLeftWindow": "winRlState",
+      "rearRightWindow": "winRrState",
+      "sunroof": "roofState"
+    }
+  }
+}
