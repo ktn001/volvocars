@@ -287,7 +287,7 @@ class volvoAccount {
 
     public function getRawDatas($vin) {
         $return = array();
-        foreach (endpoint::byType('info') as $endpointiId) {
+        foreach (endpoint::byType('info') as $endpointId) {
             $return[$endpointId] = $this->getInfos($endpointId, $vin, true)['rawData'];
         }
         return $return;

@@ -182,12 +182,10 @@ if (typeof editAccount === "undefined") {
     },
 
     beforeClose: function() {
-      console.log("BEFORE_CLOSE")
       return false
     },
 
     onClose: function() {
-      console.log("ON_CLOSE")
       jeeDialog.get(editAccount.modal).destroy()
     },
 

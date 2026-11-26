@@ -89,12 +89,12 @@ class volvocars extends eqLogic {
      */
     static public function cron() {
         volvoToken::refreshAll();
-        #foreach (volvocars::byType(__CLASS__, true) as $car) {
-        #    if ($car->getIsEnable() == 1) {
-        #        log::add("volvocars","debug","cron pour : " . $car->getName());
-        #        $car->refresh(false);
-        #    }
-        #}
+        foreach (volvocars::byType(__CLASS__, true) as $car) {
+            if ($car->getIsEnable() == 1) {
+                log::add("volvocars","debug","cron pour : " . $car->getName());
+                $car->refresh(false);
+            }
+        }
     }
 
     static public function cronHourly() {

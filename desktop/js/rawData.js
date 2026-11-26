@@ -17,55 +17,56 @@
 "use strict";
 
 if (typeof volvocarsRawData === "undefined") {
-  var volvocarsRawData = {};
+  var volvocarsRawData = {
 
-  volvocarsRawData.init = function () {
-    document
-      .getElementById(volvocarsFrontEnd.mdId_rawDatas)
-      .addEventListener("click", function (event) {
-        let _target = null;
-
-        if ((_target = event.target.closest(".endpointEntry"))) {
-          if (_target.getElementsByClassName("show_values")[0].isHidden()) {
-            _target.getElementsByClassName("show_values")[0].seen();
-            _target.getElementsByClassName("hidde_values")[0].unseen();
-            _target.getElementsByClassName("endpointValue")[0].unseen();
-          } else {
-            _target.getElementsByClassName("show_values")[0].unseen();
-            _target.getElementsByClassName("hidde_values")[0].seen();
-            _target.getElementsByClassName("endpointValue")[0].seen();
+    init: function () {
+      document
+        .getElementById(volvocarsFrontEnd.mdId_rawDatas)
+        .addEventListener("click", function (event) {
+          let _target = null;
+  
+          if (_target = event.target.closest(".endpointEntry")) {
+            volvocarsRawData.toggle(_target)
+            return;
           }
-          return;
-        }
-
-        if (
-          (_target = event.target.closest(".rawDataAction[data-action=plie]"))
-        ) {
-          document
-            .querySelectorAll(".endpointHeader .show_values")
-            .forEach(function (node) {
-              node.unseen();
-              node.click();
+  
+          if (_target = event.target.closest(".rawDataAction[data-action=plie]")) {
+            document.querySelectorAll(".endpointEntry").forEach(function (entry) {
+              volvocarsRawData.hidde(entry)
             });
-        }
-        if (
-          (_target = event.target.closest(".rawDataAction[data-action=deplie]"))
-        ) {
-          document
-            .querySelectorAll(".endpointHeader .show_values")
-            .forEach(function (node) {
-              node.seen();
-              node.click();
-            });
-        }
-      });
+          }
+          if (_target = event.target.closest(".rawDataAction[data-action=deplie]")) {
+            document.querySelectorAll(".endpointEntry").forEach(function (entry) {
+              volvocarsRawData.show(entry)
+            })
+          }
+        });
+  
+      document
+        .getElementById(volvocarsFrontEnd.mdId_rawDatas)
+        .querySelector('.rawDataAction[data-action=plie')
+        .click()
+    },
 
-    document
-      .querySelectorAll(".endpointHeader .show_values")
-      .forEach(function (node) {
-        node.unseen();
-        node.click();
-      });
-  };
+    toggle: function (entry) {
+      if (entry.querySelector('.show_values').isHidden()) {
+        volvocarsRawData.hidde(entry)
+      } else {
+        volvocarsRawData.show(entry)
+      }
+    },
+
+    show: function (entry) {
+      entry.querySelector('.show_values').unseen()
+      entry.querySelector('.hidde_values').seen()
+      entry.querySelector('.endpointValue').seen()
+    },
+
+    hidde: function (entry) {
+      entry.querySelector('.show_values').seen()
+      entry.querySelector('.hidde_values').unseen()
+      entry.querySelector('.endpointValue').unseen()
+    },
+  }
 }
 volvocarsRawData.init();

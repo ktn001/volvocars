@@ -149,7 +149,6 @@ if (typeof volvocarsFrontEnd === "undefined") {
         callback: function () {editAccount.init(accountId)},
         beforeClose: function() {
           let value = editAccount.beforeClose()
-          console.log(value)
           return value
         },
         onClose: function() {editAccount.onClose()},
