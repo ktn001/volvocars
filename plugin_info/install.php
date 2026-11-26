@@ -31,9 +31,7 @@ function volvocars_goto_11() {
         'deamonRestartNumber',
         'deamonAutoMode',
     ];
-    log::add("volvocars","warning",print_r($configsToRemove,true));
     foreach ($configsToRemove as $configToRemove) {
-        log::add("volvocars","warning",$configToRemove);
         config::remove($configToRemove, 'volvocars');
     }
 }
