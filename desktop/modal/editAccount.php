@@ -29,28 +29,6 @@ if (!isConnect('admin')) {
                 <input type="text" class="accountAttr form-control col-sm-7" data-l1key="name"/>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label">vcc-api-key</label>
-                <div class="input-group col-sm-7" style="padding-right:0px !important; padding-left:0px !important">
-                    <input class="accountAttr form-control inputPassword roudedLeft" type="text" data-l1key="vccApiKey">
-                    <span class="input-group-btn">
-                        <a class="btn btn-default form-control bt_showPass roundedRight"><i class="fas fa-eye"></i></a>
-                    </span>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">Client ID</label>
-                <input type="text" class="accountAttr form-control col-sm-7" data-l1key="clientId"/>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">Client secret</label>
-                <div class="input-group col-sm-7" style="padding-right:0px !important; padding-left:0px !important">
-                    <input class="accountAttr form-control inputPassword roudedLeft" type="text" data-l1key="clientSecret">
-                    <span class="input-group-btn">
-                        <a class="btn btn-default form-control bt_showPass roundedRight"><i class="fas fa-eye"></i></a>
-                    </span>
-                </div>
-            </div>
-            <div class="form-group">
                 <label class="col-sm-3 control-label">{{Statut}}</label>
                 <div class="col-sm-2">
                     <span class="label" id='authStatus'></span>
@@ -62,7 +40,7 @@ if (!isConnect('admin')) {
             <div class="form-group">
                 <label class="col-sm-3 control-label"></label>
                 <div class="col-sm-9">
-                    <a class="btn btn-primary btn-xs" id="bt_resetOAuthLink"><i class="fas fa-link"></i> {{Lier Jeedom et Volvocars}}</a>
+                    <a class="btn btn-primary btn-xs" id="bt_resetOAuthLink"><i class="fas fa-link"></i> {{Autoriser l'accès aux données}}</a>
                 </div>
             </div>
         </fieldset>

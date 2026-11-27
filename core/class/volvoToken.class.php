@@ -124,7 +124,7 @@ class volvoToken {
             self::remove($this->getId());
             throw new Exception(sprintf(__("Account %s introuvable! Suppression du token %s",__FILE__,$this-getId(), $this->getId())));
         }
-        $basicAuth = base64_encode($account->getClientId() . ':' . $account->getClientSecret());
+        $basicAuth = base64_encode(config::byKey('clientId','volvocars') . ':' . config::byKey('clientSecret','volvocars'));
         $headers = [
             'content-type: application/x-www-form-urlencoded',
             'authorization: Basic ' . $basicAuth,

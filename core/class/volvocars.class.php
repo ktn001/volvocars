@@ -23,7 +23,7 @@ class volvocars extends eqLogic {
 
     const PYTHON_PATH = __DIR__ . '/../../resources/venv/bin/python3';
 
-    public static $_encryptConfigKey = array('clientId','clientSecret');
+    public static $_encryptConfigKey = array('clientId','clientSecret','vcc-api-key');
     public $_cmdsConfig;
 
     /* * ***********************Methode static*************************** */

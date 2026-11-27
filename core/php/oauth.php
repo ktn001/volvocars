@@ -55,8 +55,8 @@ try {
     if (!is_object($account)) {
         throw new Exception(sprintf(__("account %s introuvable.",__FILE__),$fromCache['accountId']));
     }
-    $clientId = $account->getClientId();
-    $clientSecret = $account->getClientSecret();
+    $clientId = config::byKey('clientId','volvocars');
+    $clientSecret = config::byKey('clientSecret','volvocars');
 
     log::add("volvocars_oauth","debug",__("Envoi de la requête pour obtenir le token",__FILE__));
     $tokenUrl = 'https://auth.volvocars.com/realms/volvocars/protocol/openid-connect/token';

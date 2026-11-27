@@ -166,13 +166,6 @@ if (typeof volvocarsFrontEnd === "undefined") {
               click: function(event) {editAccount.delete()},
             },
           },
-          save: {
-            className: "btn btn-primary",
-            label: '<i class="fas fa-save"></i> {{Sauvegarder}}',
-            callback: {
-              click: function(event) {editAccount.save()},
-            }
-          },
           confirm: {
             className: "btn btn-success",
             callback: {

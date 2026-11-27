@@ -24,9 +24,6 @@ class volvoAccount {
 
     private $id = -1;
     private $name = '';
-    private $clientId = '';
-    private $clientSecret = '';
-    private $vccApiKey = '';
     private $_token = null;
     private $_fd = null;
 
@@ -57,9 +54,6 @@ class volvoAccount {
             }
             $account = new self();
             utils::a2o($account,$config['value']);
-            $account->setVccApiKey(utils::decrypt($account->getVccApiKey()));
-            $account->setClientId(utils::decrypt($account->getClientId()));
-            $account->setClientSecret(utils::decrypt($account->getClientSecret()));
             $accounts[] = $account;
         }
         return $accounts;
@@ -77,9 +71,6 @@ class volvoAccount {
         $value = is_json($value,$value);
         $account = new self();
         utils::a2o($account,$value);
-        $account->setVccApiKey(utils::decrypt($account->getVccApiKey()));
-        $account->setClientId(utils::decrypt($account->getClientId()));
-        $account->setClientSecret(utils::decrypt($account->getClientSecret()));
         return $account;
     }
 
@@ -94,9 +85,6 @@ class volvoAccount {
             if ($value['name'] == $name) {
                 $account = new self();
                 utils::a2o($account,$value);
-                $account->setVccApiKey(utils::decrypt($account->getVccApiKey()));
-                $account->setClientId(utils::decrypt($account->getClientId()));
-                $account->setClientSecret(utils::decrypt($account->getClientSecret()));
                 return $account;
             }
         }
@@ -122,9 +110,6 @@ class volvoAccount {
             $this->setId(self::nextId());
         }
         $value = utils::o2a($this);
-        $value['vccApiKey'] = utils::encrypt($value['vccApiKey']);
-        $value['clientId'] = utils::encrypt($value['clientId']);
-        $value['clientSecret'] = utils::encrypt($value['clientSecret']);
         $value = json_encode($value);
         $key = 'account::' . $this->id;
         config::save($key, $value, 'volvocars');
@@ -196,7 +181,7 @@ class volvoAccount {
         $authUrl = "https://auth.volvocars.com/realms/volvocars/protocol/openid-connect/auth?";
         $authUrl .= http_build_query([
             'response_type'         => 'code',
-            'client_id'             => $this->getClientId(),
+            'client_id'             => config::byKey('clientId','volvocars'),
             'redirect_uri'          => $redirectUri,
             'scope'                 => $scopes,
             'state'                 => $state,
@@ -238,7 +223,7 @@ class volvoAccount {
         }
         curl_setopt($session, CURLOPT_HTTPHEADER, [
             "authorization: Bearer " . $this->accessToken(),
-            "vcc-api-key: " . $this->getVccApiKey(),
+            "vcc-api-key: " . config::byKey("vcc-api-key"),
             "accept: " . $accept,
             "content-type: application/json"
         ]);
@@ -657,8 +642,8 @@ class volvoAccount {
     /*
      * id
      */
-    public function setId($_id) {
-        $this->id = $_id;
+    public function setId($id) {
+        $this->id = $id;
         return $this;
     }
     public function getId() {
@@ -666,43 +651,10 @@ class volvoAccount {
     }
 
     /*
-     * clientId
-     */
-    public function setClientId($_clientId) {
-        $this->clientId = $_clientId;
-        return $this;
-    }
-    public function getClientId() {
-        return $this->clientId;
-    }
-
-    /*
-     * clientSecret
-     */
-    public function setClientSecret($_clientSecret) {
-        $this->clientSecret = $_clientSecret;
-        return $this;
-    }
-    public function getClientSecret() {
-        return $this->clientSecret;
-    }
-
-    /*
-     * vccApiKey
-     */
-    public function setVccApiKey($_vccApiKey) {
-        $this->vccApiKey = $_vccApiKey;
-        return $this;
-    }
-    public function getVccApiKey() {
-        return $this->vccApiKey;
-    }
-
-    /*
      * name
      */
-    public function setName($_name) {
-        $this->name = $_name;
+    public function setName($name) {
+        $this->name = $name;
         return $this;
     }
     public function getName() {
