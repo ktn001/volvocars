@@ -441,7 +441,6 @@
         "Plan3d": "Plan3d",
         "Plugin": "Plugin",
         "RawData": "RawData",
-        "Sauvegarder": "Save",
         "Scénario": "Scenario",
         "Supprimer": "Delete",
         "Supprimer la commande": "Delete command",
@@ -456,8 +455,8 @@
         "401 - Accès non autorisé": "401 - Unauthorized access",
         "Actualiser": "Refresh",
         "Actualiser le statut": "Refresh status",
+        "Autoriser l'accès aux données": "Grant access to data",
         "Compte VolvoId": "VolvoId account",
-        "Lier Jeedom et Volvocars": "Connecting Jeedom and Volvocars",
         "Nom": "Name",
         "Statut": "Status"
     },
@@ -556,6 +555,8 @@
         "vin du véhicule": "vehicle vin"
     },
     "plugins\/volvocars\/plugin_info\/configuration.php": {
+        "API": "APIs",
+        "Clé VCC API": "VCC API Key",
         "Commandes": "Commands",
         "Commandes à créer lors des synchronisations": "Commands to be created during synchronization",
         "Dashboard": "Dashboard",
@@ -564,7 +565,9 @@
         "Ouvert": "Open",
         "Prend la valeur 1 (true) lorsque l'ouvrant est fermé": "Takes value 1 (true) when sash is closed",
         "Prend la valeur 1 (true) lorsque l'ouvrant est ouvert": "Sets value to 1 (true) when sash is open",
-        "Utiliser le widget du plugin": "Using the plugin widget"
+        "Utiliser le widget du plugin": "Using the plugin widget",
+        "voir la documentation pour la création d'une application sur https:\/\/developer.volvocars.com": "See the documentation on creating an app at https:\/\/developer.volvocars.com",
+        "voir la documentation pour la publication d'une application sur https:\/\/developer.volvocars.com": "See the documentation on publishing an app at https:\/\/developer.volvocars.com"
     },
     "plugins\/volvocars\/plugin_info\/install.php": {
         "Création de la commande %s": "Create %s command",

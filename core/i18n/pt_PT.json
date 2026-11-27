@@ -441,7 +441,6 @@
         "Plan3d": "Plan3d",
         "Plugin": "Plugar",
         "RawData": "Dados brutos",
-        "Sauvegarder": "Guardar",
         "Scénario": "Cenário",
         "Supprimer": "Eliminar",
         "Supprimer la commande": "Apagar comando",
@@ -456,8 +455,8 @@
         "401 - Accès non autorisé": "401 - Acesso não autorizado",
         "Actualiser": "Atualizar",
         "Actualiser le statut": "Atualizar o estado",
+        "Autoriser l'accès aux données": "Autorizar o acesso aos dados",
         "Compte VolvoId": "Conta VolvoId",
-        "Lier Jeedom et Volvocars": "Ligar o Jeedom ao Volvocars",
         "Nom": "Nome",
         "Statut": "Estado"
     },
@@ -556,6 +555,8 @@
         "vin du véhicule": "vin de veículo"
     },
     "plugins\/volvocars\/plugin_info\/configuration.php": {
+        "API": "APIs",
+        "Clé VCC API": "Chave VCC API",
         "Commandes": "Comandos",
         "Commandes à créer lors des synchronisations": "Comandos a criar durante a sincronização",
         "Dashboard": "Painel",
@@ -564,7 +565,9 @@
         "Ouvert": "Aberto",
         "Prend la valeur 1 (true) lorsque l'ouvrant est fermé": "Assume o valor 1 (verdadeiro) quando o caixilho está fechado",
         "Prend la valeur 1 (true) lorsque l'ouvrant est ouvert": "Assume o valor 1 (verdadeiro) quando a folha está aberta",
-        "Utiliser le widget du plugin": "Utilizar o widget do plugin"
+        "Utiliser le widget du plugin": "Utilizar o widget do plugin",
+        "voir la documentation pour la création d'une application sur https:\/\/developer.volvocars.com": "Consulte a documentação sobre a criação de uma aplicação em https:\/\/developer.volvocars.com",
+        "voir la documentation pour la publication d'une application sur https:\/\/developer.volvocars.com": "Consulte a documentação sobre a publicação de uma aplicação em https:\/\/developer.volvocars.com"
     },
     "plugins\/volvocars\/plugin_info\/install.php": {
         "Création de la commande %s": "Criar comando %s",
