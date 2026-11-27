@@ -441,7 +441,6 @@
         "Plan3d": "Plan3d",
         "Plugin": "Enchufar",
         "RawData": "RawData",
-        "Sauvegarder": "Para salvaguardar",
         "Scénario": "Escenario",
         "Supprimer": "Eliminar",
         "Supprimer la commande": "Eliminar comando",
@@ -456,8 +455,8 @@
         "401 - Accès non autorisé": "401 - Acceso no autorizado",
         "Actualiser": "Actualizar",
         "Actualiser le statut": "Actualizar el estado",
+        "Autoriser l'accès aux données": "Autorizar el acceso a los datos",
         "Compte VolvoId": "Cuenta VolvoId",
-        "Lier Jeedom et Volvocars": "Conectar Jeedom y Volvocars",
         "Nom": "Nombre",
         "Statut": "Estado"
     },
@@ -556,6 +555,8 @@
         "vin du véhicule": "vehículo vin"
     },
     "plugins\/volvocars\/plugin_info\/configuration.php": {
+        "API": "API",
+        "Clé VCC API": "Clave VCC API",
         "Commandes": "Comandos",
         "Commandes à créer lors des synchronisations": "Comandos que se crearán durante la sincronización",
         "Dashboard": "Panel",
@@ -564,7 +565,9 @@
         "Ouvert": "Abierto",
         "Prend la valeur 1 (true) lorsque l'ouvrant est fermé": "Toma el valor 1 (verdadero) cuando la hoja está cerrada",
         "Prend la valeur 1 (true) lorsque l'ouvrant est ouvert": "Toma el valor 1 (verdadero) cuando la hoja está abierta",
-        "Utiliser le widget du plugin": "Uso del widget del plugin"
+        "Utiliser le widget du plugin": "Uso del widget del plugin",
+        "voir la documentation pour la création d'une application sur https:\/\/developer.volvocars.com": "Consulta la documentación para crear una aplicación en https:\/\/developer.volvocars.com",
+        "voir la documentation pour la publication d'une application sur https:\/\/developer.volvocars.com": "Consulta la documentación sobre cómo publicar una aplicación en https:\/\/developer.volvocars.com"
     },
     "plugins\/volvocars\/plugin_info\/install.php": {
         "Création de la commande %s": "Crear comando %s",

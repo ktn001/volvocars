@@ -441,7 +441,6 @@
         "Plan3d": "Plan3d",
         "Plugin": "Plugin",
         "RawData": "Dati grezzi",
-        "Sauvegarder": "Sauvegarder",
         "Scénario": "Scena",
         "Supprimer": "Supprimer",
         "Supprimer la commande": "Comando di cancellazione",
@@ -456,8 +455,8 @@
         "401 - Accès non autorisé": "401 - Accesso non autorizzato",
         "Actualiser": "Aggiorna",
         "Actualiser le statut": "Aggiorna lo stato",
+        "Autoriser l'accès aux données": "Autorizza l'accesso ai dati",
         "Compte VolvoId": "Conto VolvoId",
-        "Lier Jeedom et Volvocars": "Collegare Jeedom e Volvocars",
         "Nom": "Nome",
         "Statut": "Stato"
     },
@@ -556,6 +555,8 @@
         "vin du véhicule": "veicolo vin"
     },
     "plugins\/volvocars\/plugin_info\/configuration.php": {
+        "API": "API",
+        "Clé VCC API": "Chiave API VCC",
         "Commandes": "Comandi",
         "Commandes à créer lors des synchronisations": "Comandi da creare durante la sincronizzazione",
         "Dashboard": "Dashboard",
@@ -564,7 +565,9 @@
         "Ouvert": "Aperto",
         "Prend la valeur 1 (true) lorsque l'ouvrant est fermé": "Assume il valore 1 (vero) quando l'anta è chiusa",
         "Prend la valeur 1 (true) lorsque l'ouvrant est ouvert": "Assume il valore 1 (vero) quando l'anta è aperta",
-        "Utiliser le widget du plugin": "Utilizzo del widget del plugin"
+        "Utiliser le widget du plugin": "Utilizzo del widget del plugin",
+        "voir la documentation pour la création d'une application sur https:\/\/developer.volvocars.com": "consultare la documentazione per la creazione di un'applicazione su https:\/\/developer.volvocars.com",
+        "voir la documentation pour la publication d'une application sur https:\/\/developer.volvocars.com": "consultare la documentazione relativa alla pubblicazione di un'applicazione su https:\/\/developer.volvocars.com"
     },
     "plugins\/volvocars\/plugin_info\/install.php": {
         "Création de la commande %s": "Creare il comando %s",

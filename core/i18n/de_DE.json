@@ -441,7 +441,6 @@
         "Plan3d": "Plan3d",
         "Plugin": "Plugin",
         "RawData": "RawData",
-        "Sauvegarder": "Zu schützen",
         "Scénario": "Szenario",
         "Supprimer": "Entfernen",
         "Supprimer la commande": "Befehl löschen",
@@ -456,8 +455,8 @@
         "401 - Accès non autorisé": "401 - Nicht autorisierter Zugriff",
         "Actualiser": "Aktualisieren",
         "Actualiser le statut": "Status aktualisieren",
+        "Autoriser l'accès aux données": "Zugriff auf Daten gewähren",
         "Compte VolvoId": "VolvoId-Konto",
-        "Lier Jeedom et Volvocars": "Jeedom und Volvocars verbinden",
         "Nom": "Name",
         "Statut": "Status"
     },
@@ -556,6 +555,8 @@
         "vin du véhicule": "fahrzeugwein"
     },
     "plugins\/volvocars\/plugin_info\/configuration.php": {
+        "API": "APIs",
+        "Clé VCC API": "VCC-API-Schlüssel",
         "Commandes": "Befehle",
         "Commandes à créer lors des synchronisations": "Befehle, die bei Synchronisierungen erstellt werden sollen",
         "Dashboard": "Armaturenbrett",
@@ -564,7 +565,9 @@
         "Ouvert": "Offen",
         "Prend la valeur 1 (true) lorsque l'ouvrant est fermé": "Nimmt den Wert 1 (true) an, wenn der Flügel geschlossen ist",
         "Prend la valeur 1 (true) lorsque l'ouvrant est ouvert": "Nimmt den Wert 1 (true) an, wenn der Flügel geöffnet ist",
-        "Utiliser le widget du plugin": "Das Widget des Plugins verwenden"
+        "Utiliser le widget du plugin": "Das Widget des Plugins verwenden",
+        "voir la documentation pour la création d'une application sur https:\/\/developer.volvocars.com": "Siehe die Dokumentation zur Erstellung einer Anwendung unter https:\/\/developer.volvocars.com",
+        "voir la documentation pour la publication d'une application sur https:\/\/developer.volvocars.com": "Siehe die Dokumentation zur Veröffentlichung einer App unter https:\/\/developer.volvocars.com"
     },
     "plugins\/volvocars\/plugin_info\/install.php": {
         "Création de la commande %s": "Erstellen des Befehls %s",
